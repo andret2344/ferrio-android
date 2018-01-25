@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Tablets 7" -->
+    <dimen name="fragment_day_date_text">50sp</dimen>
+    <dimen name="adapter_holiday_main_text">40sp</dimen>
+    <dimen name="adapter_month_holiday_main_text">24sp</dimen>
+    <dimen name="fragment_day_share_button">20sp</dimen>
+    <dimen name="adapter_day_calendar_date_text">15sp</dimen>
+    <dimen name="adapter_day_calendar_holiday_text">15sp</dimen>
+    <dimen name="adapter_day_calendar_more_text">15sp</dimen>
+    <dimen name="drawer_list_name_text">26sp</dimen>
+    <dimen name="fragment_month_month_text">50sp</dimen>
+
+</resources>

@@ -1,0 +1,20 @@
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alert_survey_radiogroup_selection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <android.support.v7.widget.AppCompatRadioButton
+        android:id="@+id/alert_survey_radiobutton_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/survey_answer_yes" />
+
+    <android.support.v7.widget.AppCompatRadioButton
+        android:id="@+id/alert_survey_radiobutton_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/survey_answer_no" />
+
+</RadioGroup>

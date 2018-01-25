@@ -1,0 +1,37 @@
+<resources>
+
+    <string name="pref_category_app">Aplikacja</string>
+    <string name="pref_category_widget">Widgety</string>
+    <string name="pref_title_app_theme"><u>Styl aplikacji</u></string>
+
+    <string-array name="pref_theme_application_list">
+        <item>@string/theme_holo_dark</item>
+        <item>@string/theme_holo_light</item>
+    </string-array>
+    <string-array name="pref_theme_application_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+    <string-array name="pref_theme_application_funmade_list">
+        <item>@string/theme_holo_pink</item>
+        <item>@string/theme_holo_dark</item>
+        <item>@string/theme_holo_light</item>
+    </string-array>
+    <string-array name="pref_theme_application_funmade_values">
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string name="pref_title_widgets_theme">Styl widgetu</string>
+
+    <string-array name="pref_theme_widgets_list">
+        <item>@string/theme_holo_dark</item>
+        <item>@string/theme_holo_light</item>
+    </string-array>
+    <string-array name="pref_theme_widgets_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+</resources>

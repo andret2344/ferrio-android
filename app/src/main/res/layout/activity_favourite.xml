@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favourites_relative_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ListView
+        android:id="@+id/favourites_listview_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/favourites_adview_bottom"
+        android:background="#000000"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp" >
+    </ListView>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/favourites_adview_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
+
+</RelativeLayout>

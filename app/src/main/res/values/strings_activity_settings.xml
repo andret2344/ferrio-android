@@ -1,0 +1,46 @@
+<resources>
+
+    <string name="pref_category_app">Application</string>
+    <string name="pref_category_widget">Widgets</string>
+    <string name="pref_title_app_theme"><u>Theme of application</u></string>
+
+    <string-array name="pref_theme_application_list">
+        <item>@string/theme_holo_dark</item>
+        <item>@string/theme_holo_light</item>
+    </string-array>
+    <string-array name="pref_theme_application_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+    <string-array name="pref_theme_application_funmade_list">
+        <item>@string/theme_holo_pink</item>
+        <item>@string/theme_holo_dark</item>
+        <item>@string/theme_holo_light</item>
+    </string-array>
+    <string-array name="pref_theme_application_funmade_values">
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string name="pref_title_widgets_theme">Theme of widgets</string>
+    <string name="pref_title_widgets_type">Type of widget</string>
+
+    <string-array name="pref_theme_widgets_list">
+        <item>@string/theme_holo_dark</item>
+        <item>@string/theme_holo_light</item>
+    </string-array>
+    <string-array name="pref_theme_widgets_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+    <string-array name="pref_type_widgets_list">
+        <item>@string/type_modern</item>
+        <item>@string/type_retro</item>
+    </string-array>
+    <string-array name="pref_type_widgets_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+</resources>

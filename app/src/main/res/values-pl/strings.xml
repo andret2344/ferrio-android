@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Kalendarz świąt nietypowych</string>
+    <string name="unusual_holiday">Nietypowe święto</string>
+    <string name="check_it_yourself">Sprawdź sam!</string>
+    <string name="share_via">Udostępnij przez</string>
+    <string name="today_is">Dzisiaj jest:</string>
+    <string name="share">Udostępnij</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="ok">OK</string>
+    <string name="caution">Uwaga!</string>
+    <string name="settings">Ustawienia</string>
+    <string name="search">Szukaj</string>
+    <string name="see_more">więcej</string>
+    <string name="holidays">Święta</string>
+    <string name="menu_favourites">Ulubione</string>
+    <string name="are_you_sure">Jestes pewien?</string>
+    <string name="deleting">Usuwanie</string>
+    <string name="today">Dzisiaj</string>
+    <string name="colorized_days">Kolorowe dni</string>
+    <string name="colorized_days_desc">Jeśli zaznaczone, każdy dzień ma swój własny kolor na podstawie swojej daty.</string>
+    <string name="usual_holidays">Dołącz święta typowe</string>
+    <string name="usual_holidays_desc">Jeśli zaznaczony, widoczne są równie święta typowe, np. Nowy Rok.</string>
+    <string name="favourite_today">Dzisiaj jest Twój ulubiony dzień! Sprawdź tutaj&#8230;</string>
+
+    <string-array name="months">
+        <item>Styczeń</item>
+        <item>Luty</item>
+        <item>Marzec</item>
+        <item>Kwiecień</item>
+        <item>Maj</item>
+        <item>Czerwiec</item>
+        <item>Lipiec</item>
+        <item>Sierpień</item>
+        <item>Wrzesień</item>
+        <item>Październik</item>
+        <item>Listopad</item>
+        <item>Grudzień</item>
+    </string-array>
+    <string-array name="months_genitive">
+        <item>Stycznia</item>
+        <item>Lutego</item>
+        <item>Marca</item>
+        <item>Kwietnia</item>
+        <item>Maja</item>
+        <item>Czerwca</item>
+        <item>Lipca</item>
+        <item>Sierpnia</item>
+        <item>Września</item>
+        <item>Października</item>
+        <item>Listopada</item>
+        <item>Grudnia</item>
+    </string-array>
+
+    <string name="about_app">O aplikacji</string>
+    <string name="about_app_text">To jest moja pierwsza publiczna aplikacja na Androida. 
+        Obecnie jej jedynym celem jest zabawa. Doskonale wiem, 
+        że nie jest to duża aplikacja, ale ciągle rośnie.</string>
+    <string name="drawer_open">Otwórz menu boczne</string>
+    <string name="drawer_close">Zamknij menu boczne</string>
+    <string name="rate">Oceń aplikację</string>
+    <string name="menu_item_random">Losowe (Beta)</string>
+    <string name="google_link">Ta aplikacja nie jest zainstalowana z Google Play i może zawiera bugi itd. Proszę, zainstaluj aplikację stąd: <a href="market://details?id=eu.andret.kalendarzswiatnietypowych">Unusual Holiday Calendar</a>.</string>
+    <string name="type_here">Czego szukasz?</string>
+    <string name="typical_day">Brak nietypowych świąt.</string>
+    <string name="report_tutorial_info">To jest sposób zgłaszania źle przetłumaczonych świąt, 
+        literówek, czy jakichkolwiek problemów z tekstem święta.
+        Na pewno chcesz kontynuować zgłaszanie?</string>
+    <string name="dont_show_again">Nie pokazuj ponownie</string>
+    <string name="report_sending">Wysyłanie&#8230;</string>
+    <string name="report_sent">Zgłoszenie wysyłano!</string>
+    <string name="theme_holo_light">Holo light</string>
+    <string name="theme_holo_dark">Holo dark</string>
+    <string name="theme_holo_pink">Holo pink</string>
+    <string name="letter_r">R</string>
+    <string name="letter_g">G</string>
+    <string name="letter_b">B</string>
+    <string name="about_calendar">O kalendarzu</string>
+    <string name="about_calendar_text">Kalendarz Świąt Nietypowych to kalendarz stworzony przez imperialistów z Ententy podczas I wojny światowej. Powstał on na użytek Cesarstwa Niemieckiego, aby ludzie świętowali tak długo i często, żeby nie mieli czasu walczyć na froncie o ojczyznę. Gromadzi on święta, które nie zostały dopuszczone przez zwykłe święta do ich kalendarzy.</string>
+    <string name="recomend_also">Polecam także&#8230;</string>
+    <string name="no_internet">Urządzenie nie jest połączone z internetem. Zanim możliwe bedzie wysyłanie raportów, połączenie internetowe musi zostać nawiązane.</string>
+    <string name="about_holidays">O świętach</string>
+    <string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
+    <string name="languages">Języki</string>
+    <string name="title_activity_language">Wybierz język</string>
+    <string name="delete_language">Usuń język</string>
+    <string name="downloading_language">Pobieranie języka</string>
+    <string name="downloaded">Pobrano</string>
+    <string name="download">Pobierz</string>
+    <string name="exit">Wyjdź</string>
+    <string name="no_languages">Aplikacja nie ma pobranych języków. Pobrać je teraz?</string>
+    <string name="updating">Aktualizowanie</string>
+    <string name="downloading_data">Pobieranie danych&#8230;</string>
+    <string name="nothing_chosen">Nic nie zostało wybrane. Aplikacja może być bezużyteczna. Kontynuować?</string>
+    <string name="question">Drogi użytkowniku!\n
+        Kalendarz Świąt Nietypowych jest szybko rozwijającą się aplikacją. Stąd też pojawił się pomysł, by użytkownicy mogli dodawać własne święta. Ponieważ niektórzy użytkownicy mają odmienną opinię, ciężko jest podjąć jakąkolwiek decyzję na ten temat. Dlatego też zwracam się z pytaniem właśnie do Ciebie:\n\n
+        Czy użytkownicy powinni mieć możliwość dodawania własnych świąt?</string>
+    <string name="survey_answer_yes">Tak, to powinno być dodane.</string>
+    <string name="survey_answer_no">Nie, nie powinno tego być.</string>
+    <string name="send">Wyślij</string>
+    <string name="no_languages_explaination">Dlaczego nie ma więcej języków? Święta nie zostały jeszcze przetłumaczone na inne języki. Prosimy o cierpliwość, wkrótce się pojawią.</string>
+    <string name="oops">Ups!</string>
+    <string name="something_went_wrong">Tak mi przykro. Coś poszło źle.</string>
+    <string name="display_shortcuts">Wyświetlaj skróty świąt</string>
+    <string name="display_shortcuts_desc">Jeśli zaznaczony, wyświetla skróty świąt w widoku miesiąca</string>
+
+</resources>

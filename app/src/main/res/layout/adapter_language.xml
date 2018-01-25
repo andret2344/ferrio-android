@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/adapter_language_linear_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="3dp" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/adapter_language_text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:padding="3dp"
+            android:textSize="@dimen/drawer_list_name_text" />
+
+        <TextView
+            android:id="@+id/adapter_language_text_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:padding="3dp"
+            android:textSize="@dimen/adapter_day_calendar_date_text" />
+
+        <TextView
+            android:id="@+id/adapter_language_text_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:padding="3dp"
+            android:textSize="@dimen/adapter_day_calendar_date_text"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/adapter_language_progress_downloading"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:padding="3dp"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="false" >
+
+        <ImageView
+            android:id="@+id/adapter_language_image_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center|center"
+            android:layout_margin="0dp"
+            android:contentDescription="@string/about_app"
+            android:padding="0dp"
+            android:src="@drawable/ic_autorenew_black_36dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <ImageView
+            android:id="@+id/adapter_language_image_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center|center"
+            android:layout_margin="0dp"
+            android:contentDescription="@string/about_app"
+            android:padding="0dp"
+            android:src="@drawable/ic_file_download_black_36dp" />
+
+        <RadioButton
+            android:id="@+id/adapter_language_radiobutton_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center|center"
+            android:layout_margin="0dp"
+            android:checked="false"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="0dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+</LinearLayout>
