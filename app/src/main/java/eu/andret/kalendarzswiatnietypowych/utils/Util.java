@@ -1,7 +1,3 @@
-/**
- * Author: Andret
- * Copying and modifying allowed only keeping git link
- */
 package eu.andret.kalendarzswiatnietypowych.utils;
 
 import com.google.android.gms.ads.AdRequest;
