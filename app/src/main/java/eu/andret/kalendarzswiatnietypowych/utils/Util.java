@@ -43,7 +43,7 @@ public class Util {
 	}
 	
 	public void createNotification(String title, String text, int ico, Intent intent, boolean cancelOnClick) {
-		NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
+		NotificationCompat.Builder notification = new NotificationCompat.Builder(context, "UHC");
 		notification.setSmallIcon(ico);
 		notification.setContentTitle(title);
 		notification.setContentText(text);

@@ -114,5 +114,6 @@
     <string name="pointer">\u00B7</string>
     <string name="display_shortcuts">Display holidays\' shortcuts</string>
     <string name="display_shortcuts_desc">If checked, you can see holidays\' shortcuts on month view</string>
+    <string name="answer">Answer…</string>
 
 </resources>

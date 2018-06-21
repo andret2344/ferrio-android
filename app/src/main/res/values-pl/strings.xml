@@ -105,5 +105,6 @@
     <string name="something_went_wrong">Tak mi przykro. Coś poszło źle.</string>
     <string name="display_shortcuts">Wyświetlaj skróty świąt</string>
     <string name="display_shortcuts_desc">Jeśli zaznaczony, wyświetla skróty świąt w widoku miesiąca</string>
+    <string name="answer">Odpowiedź…</string>
 
 </resources>
