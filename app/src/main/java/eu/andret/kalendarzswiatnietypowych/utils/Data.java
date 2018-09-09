@@ -4,19 +4,20 @@
  */
 package eu.andret.kalendarzswiatnietypowych.utils;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 
+import java.util.Locale;
+
 public final class Data {
-	private Data() {}
-	
+	private Data() {
+	}
+
 	public static SharedPreferences getPreferences(Context context, Prefs type) {
 		return context.getSharedPreferences(type.getName(), Context.MODE_PRIVATE);
 	}
-	
+
 	public static AppColorSet getColors(int number) {
 		switch (number) {
 			case 0:
@@ -28,18 +29,19 @@ public final class Data {
 				return new AppColorSet(true, MyColor.BLACK, MyColor.WHITE);
 		}
 	}
-	
+
 	public static class AppColorSet {
-		public final int background, forground;
+		public final int background;
+		public final int forground;
 		public final boolean dark;
-		
+
 		private AppColorSet(boolean dark, int background, int forground) {
 			this.background = background;
 			this.forground = forground;
 			this.dark = dark;
 		}
 	}
-	
+
 	public enum Prefs {
 		THEME,
 		FAVOURITES,
@@ -47,12 +49,12 @@ public final class Data {
 		LANGUAGE,
 		SURVEY,
 		DEFAULT;
-		
+
 		public String getName() {
 			return name().toLowerCase(Locale.US);
 		}
 	}
-	
+
 	public static class MyColor {
 		public static final int WHITE = Color.rgb(238, 238, 238);
 		public static final int BLACK = Color.rgb(33, 33, 33);
@@ -60,5 +62,8 @@ public final class Data {
 		// public static final int PINK = Color.rgb(255, 165, 103); //By Brokos
 		public static final int GRAY_LIGHT = Color.rgb(200, 200, 200);
 		public static final int GRAY_DARK = Color.rgb(100, 100, 100);
+
+		private MyColor() {
+		}
 	}
 }

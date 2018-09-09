@@ -1,9 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Random;
-
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Random;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapters.HolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
@@ -21,9 +22,12 @@ import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay;
 
 public class DayFragment extends Fragment {
-	private int day, month, id;
 	private static final Random random = new Random();
-	
+
+	private int day;
+	private int month;
+	private int id;
+
 	@Override
 	public void setArguments(Bundle args) {
 		super.setArguments(args);
@@ -31,10 +35,10 @@ public class DayFragment extends Fragment {
 		month = args.getInt("month");
 		id = args.getInt("id");
 	}
-	
+
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-		final View dayView = inflater.inflate(R.layout.fragment_day, parent, false);
+		View dayView = inflater.inflate(R.layout.fragment_day, parent, false);
 		if (day == -1 || month == -1) {
 			Calendar calendar = Calendar.getInstance();
 			if (new GregorianCalendar().isLeapYear(calendar.get(Calendar.YEAR))) {
@@ -68,10 +72,10 @@ public class DayFragment extends Fragment {
 				}
 			}
 		}
-		final SharedPreferences theme = Data.getPreferences(getActivity(), Data.Prefs.THEME);
+		SharedPreferences theme = Data.getPreferences(getActivity(), Data.Prefs.THEME);
 		Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
 		HolidayDay holidays = HolidayCalendar.getInstance(getActivity()).getMonth(month).getDay(day);
-		if (holidays == null || !holidays.hasHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false))) {
+		if (!holidays.hasHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false))) {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setBackgroundColor(Color.GRAY);
@@ -86,7 +90,7 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(color.background);
 		}
 		((ListView) dayView.findViewById(R.id.fragment_day_list_holidays)).setAdapter(new HolidayAdapter(getActivity(), holidays, c, true));
-		
+
 		// final SharedPreferences favourites = Data.getPreferences(getActivity(), Data.Prefs.FAVOURITES);
 		// final ImageView iv = (ImageView) dayView.findViewById(R.id.colectionday_image_favourite);
 		// final Set<String> set = favourites.getStringSet(Data.favourites, new HashSet<String>());
@@ -130,11 +134,11 @@ public class DayFragment extends Fragment {
 		// ta.recycle();
 		return dayView;
 	}
-	
+
 	public int getDay() {
 		return day;
 	}
-	
+
 	public int getMonth() {
 		return month;
 	}
