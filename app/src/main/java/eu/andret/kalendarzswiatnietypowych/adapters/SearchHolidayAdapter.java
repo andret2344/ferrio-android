@@ -62,7 +62,11 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		holder.border.setBackgroundColor(color.background);
 		convertView.setBackgroundColor(color.forground);
 
-		holder.date.setText(getItem(position).getDate());
+		HolidayDay day = getItem(position);
+		if (day == null) {
+			return convertView;
+		}
+		holder.date.setText(day.getDate());
 		int c;
 		boolean colorized;
 		try {
@@ -76,14 +80,14 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 		if (colorized) {
 			Random r = new Random();
-			r.setSeed(getItem(position).getSeed());
+			r.setSeed(day.getSeed());
 			boolean dark = Data.getColors(Integer.parseInt(Data.getPreferences(context, Prefs.THEME).getString(getContext().getResources().getString(R.string.settings_theme_app), "1"))).dark;
 			c = Color.rgb(r.nextInt(127) + (dark ? 0 : 127), r.nextInt(127) + (dark ? 0 : 127), r.nextInt(127) + (dark ? 0 : 127));
 			holder.border.setBackgroundColor(c);
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
-		for (Holiday h : getItem(position).getHolidays()) {
+		for (Holiday h : day.getHolidays()) {
 			if (!h.isUsual() || theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) {
 				TextView tv = new TextView(getContext());
 				LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -101,8 +105,8 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 
 		convertView.setOnClickListener(v -> {
 			Intent i = new Intent(getContext(), DayActivity.class);
-			i.putExtra("day", getItem(position).getDay());
-			i.putExtra("month", getItem(position).getMonth().getMonth());
+			i.putExtra("day", day.getDay());
+			i.putExtra("month", day.getMonth().getMonth());
 			getContext().startActivity(i);
 		});
 

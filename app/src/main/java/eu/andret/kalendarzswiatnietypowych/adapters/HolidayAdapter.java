@@ -74,37 +74,28 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 		holder.holiday.setTextColor(appColorSet.forground);
 		holder.background.setBackgroundColor(color);
 		convertView.setBackgroundColor(color);
-		if (allowReports) {
-			holder.report.setVisibility(View.VISIBLE);
-			holder.report.setOnClickListener(v -> {
-				SharedPreferences tutorial = Data.getPreferences(context, Data.Prefs.TUTORIAL);
-				boolean reportInfo = tutorial.getBoolean(context.getResources().getString(R.string.settings_tutorial_reports), false);
-				if (!reportInfo) {
-					AlertDialog.Builder alert = new AlertDialog.Builder(context);
-					LayoutInflater adbInflater = LayoutInflater.from(context);
-					View eulaLayout = adbInflater.inflate(R.layout.checkbox, parent, false);
-					CheckBox dontShowAgain = eulaLayout.findViewById(R.id.skip);
-					dontShowAgain.setOnClickListener(v1 -> {
-						SharedPreferences.Editor editor = tutorial.edit();
-						editor.putBoolean(context.getResources().getString(R.string.settings_tutorial_reports), dontShowAgain.isChecked());
-						editor.apply();
-					});
-					alert.setView(eulaLayout);
-					alert.setTitle(R.string.caution);
-					alert.setMessage(R.string.report_tutorial_info);
-					alert.setPositiveButton(R.string.yes, (dialog, which) -> {
-						if (util.isConnection()) {
-							Toast.makeText(getContext(), R.string.report_sending, Toast.LENGTH_LONG).show();
-							h.report();
-							Toast.makeText(getContext(), R.string.report_sent, Toast.LENGTH_SHORT).show();
-						} else {
-							util.createAlert(getContext().getResources().getString(R.string.caution), getContext().getResources().getString(R.string.no_internet));
-						}
-					});
-
-					alert.setNegativeButton(R.string.no, null);
-					alert.show();
-				} else {
+		if (!allowReports) {
+			holder.report.setVisibility(View.INVISIBLE);
+			return convertView;
+		}
+		holder.report.setVisibility(View.VISIBLE);
+		holder.report.setOnClickListener(v -> {
+			SharedPreferences tutorial = Data.getPreferences(context, Data.Prefs.TUTORIAL);
+			boolean reportInfo = tutorial.getBoolean(context.getResources().getString(R.string.settings_tutorial_reports), false);
+			if (!reportInfo) {
+				AlertDialog.Builder alert = new AlertDialog.Builder(context);
+				LayoutInflater adbInflater = LayoutInflater.from(context);
+				View eulaLayout = adbInflater.inflate(R.layout.checkbox, parent, false);
+				CheckBox dontShowAgain = eulaLayout.findViewById(R.id.skip);
+				dontShowAgain.setOnClickListener(v1 -> {
+					SharedPreferences.Editor editor = tutorial.edit();
+					editor.putBoolean(context.getResources().getString(R.string.settings_tutorial_reports), dontShowAgain.isChecked());
+					editor.apply();
+				});
+				alert.setView(eulaLayout);
+				alert.setTitle(R.string.caution);
+				alert.setMessage(R.string.report_tutorial_info);
+				alert.setPositiveButton(R.string.yes, (dialog, which) -> {
 					if (util.isConnection()) {
 						Toast.makeText(getContext(), R.string.report_sending, Toast.LENGTH_LONG).show();
 						h.report();
@@ -112,12 +103,20 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 					} else {
 						util.createAlert(getContext().getResources().getString(R.string.caution), getContext().getResources().getString(R.string.no_internet));
 					}
+				});
+
+				alert.setNegativeButton(R.string.no, null);
+				alert.show();
+			} else {
+				if (util.isConnection()) {
+					Toast.makeText(getContext(), R.string.report_sending, Toast.LENGTH_LONG).show();
+					h.report();
+					Toast.makeText(getContext(), R.string.report_sent, Toast.LENGTH_SHORT).show();
+				} else {
+					util.createAlert(getContext().getResources().getString(R.string.caution), getContext().getResources().getString(R.string.no_internet));
 				}
-			});
-			// TODO: alert with option "report"
-		} else {
-			holder.report.setVisibility(View.INVISIBLE);
-		}
+			}
+		});
 		return convertView;
 	}
 }

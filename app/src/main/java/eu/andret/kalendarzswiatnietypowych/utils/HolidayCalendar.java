@@ -144,7 +144,7 @@ public class HolidayCalendar {
 				this(other.day, other.holidays);
 			}
 
-			private HolidayDay(int day, List<Holiday> holidays) {
+			public HolidayDay(int day, List<Holiday> holidays) {
 				this.day = day;
 				this.holidays = holidays == null ? new ArrayList<>() : holidays;
 				days.add(this);

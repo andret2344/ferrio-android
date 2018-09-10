@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -92,7 +93,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			intent.putExtra("day", ho.getDay());
 			intent.putExtra("month", ho.getMonth().getMonth() - 1);
 			intent.putExtra("from", "calendar");
-			getContext().startActivity(intent);
+			((Activity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
 		});
 
 		boolean display = theme.getBoolean(getContext().getResources().getString(R.string.settings_display_shortcuts), true);

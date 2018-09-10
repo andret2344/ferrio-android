@@ -1,10 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.activities;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.Random;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,6 +9,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.Random;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapters.DayFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.fragment.DayFragment;
@@ -25,7 +27,7 @@ public class DayActivity extends AppCompatActivity {
 	private Util util;
 	private ViewPager pager;
 	private final Random random = new Random();
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,15 +35,15 @@ public class DayActivity extends AppCompatActivity {
 		util = new Util(this);
 		util.applyTheme();
 		setContentView(R.layout.activity_day);
-		
+
 		pager = findViewById(R.id.day_pager_days);
 		pager.setOffscreenPageLimit(10);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(true);
 		getSupportActionBar().setDisplayShowCustomEnabled(false);
-		
-		final int day = getIntent().getIntExtra("day", -1);
-		final int month = getIntent().getIntExtra("month", -1);
+
+		int day = getIntent().getIntExtra("day", -1);
+		int month = getIntent().getIntExtra("month", -1);
 		Calendar c = Calendar.getInstance();
 		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager()));
 		c.set(Calendar.MONTH, month);
@@ -59,22 +61,24 @@ public class DayActivity extends AppCompatActivity {
 				DayFragment fragment = (DayFragment) pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
 				getSupportActionBar().setTitle(fragment.getDay() + getAddition(fragment.getDay()) + " " + util.getMonthGenitive(fragment.getMonth() - 1));
 			}
-			
+
 			@Override
-			public void onPageSelected(int position) { }
-			
+			public void onPageSelected(int position) {
+			}
+
 			@Override
-			public void onPageScrollStateChanged(int state) {}
+			public void onPageScrollStateChanged(int state) {
+			}
 		});
 		util.createAd(R.id.day_adview_bottom);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.day, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
@@ -110,25 +114,28 @@ public class DayActivity extends AppCompatActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
+
 	@Override
 	public void onBackPressed() {
 		try {
 			int id = pager.getCurrentItem();
 			Calendar c = Calendar.getInstance();
-			
+
 			if (id > 58) {
 				id -= new GregorianCalendar().isLeapYear(c.get(Calendar.YEAR)) ? 1 : 2;
 			}
 			c.set(Calendar.DAY_OF_YEAR, id + 1);
 
-			MainActivity.getInstance().set(c.get(Calendar.MONTH), false);
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra("month", c.get(Calendar.MONTH));
+			setResult(Activity.RESULT_OK, returnIntent);
 		} catch (Exception ex) {
 			util.createAlert(R.string.oops, R.string.something_went_wrong);
 		}
 		super.onBackPressed();
 	}
-	
+
 	public String getAddition(int day) {
 		if (Locale.getDefault().getLanguage().equalsIgnoreCase("en")) {
 			if (day % 100 >= 10 && day % 100 <= 20) {
