@@ -38,6 +38,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 		image.setImageResource(R.drawable.ic_app_logo);
 		preloaderLayout.addView(image);
 
-		HolidaysDBHelper.getInstance(this).test1();
+//		HolidaysDBHelper.getInstance(this).test1();
 
 		TextView text = new TextView(this);
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 		// Log.d("AC", "density=" + getApplicationContext().getResources().getDisplayMetrics().density);
 
 		setContentView(R.layout.activity_main);
+		MobileAds.initialize(this, "ca-app-pub-3410450408196791~3872850665");
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		assert pm != null;
 		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());

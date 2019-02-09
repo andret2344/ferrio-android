@@ -312,6 +312,7 @@ public class HolidayCalendar {
 		this.context = context;
 		SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
 		language = prefs.getInt("selected", -1);
+		this.clear();
 		HolidaysDBHelper.getInstance(context).reload(language);
 	}
 

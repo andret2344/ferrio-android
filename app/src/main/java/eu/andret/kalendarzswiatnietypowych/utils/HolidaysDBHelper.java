@@ -156,7 +156,6 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
     }
 
     public synchronized void reload(int language) {
-        HolidayCalendar.getInstance(context).clear();
         if (language == -1) {
             return;
         }
