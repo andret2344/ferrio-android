@@ -1,7 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.adapters;
 
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -13,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerImage;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerItem;
@@ -23,12 +24,12 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 	public DrawerAdapter(Context context, List<ViewItem> values) {
 		super(context, R.layout.drawer_list_item, values);
 	}
-	
+
 	private static class ViewHolder {
 		private TextView name;
 		private ImageView icon;
 	}
-	
+
 	@NonNull
 	@Override
 	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -56,7 +57,7 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 			convertView.setOnClickListener(ndi.getListener());
 		} else if (v instanceof NavigationDrawerImage) {
 			NavigationDrawerImage ndi = (NavigationDrawerImage) v;
-			holder.icon.setImageDrawable(ndi.getIcon());
+			holder.icon.setImageDrawable(ndi.getImage());
 			holder.icon.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			convertView.setOnClickListener(ndi.getListener());
 		}

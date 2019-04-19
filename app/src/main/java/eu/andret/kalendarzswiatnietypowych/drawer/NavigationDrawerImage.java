@@ -7,20 +7,20 @@ package eu.andret.kalendarzswiatnietypowych.drawer;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-public class NavigationDrawerImage implements ViewItem {
-	private final Drawable image;
-	private final View.OnClickListener listener;
-	
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
+public class NavigationDrawerImage extends ViewItem {
+	private Drawable image;
+
+	public NavigationDrawerImage(Drawable image) {
+		this(image, null);
+	}
+
 	public NavigationDrawerImage(Drawable image, View.OnClickListener listener) {
+		super(listener);
 		this.image = image;
-		this.listener = listener;
-	}
-	
-	public Drawable getIcon() {
-		return image;
-	}
-	
-	public View.OnClickListener getListener() {
-		return listener;
 	}
 }

@@ -3,12 +3,30 @@ package eu.andret.kalendarzswiatnietypowych.utils;
 import java.util.Date;
 import java.util.Locale;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.Value;
+import lombok.experimental.NonFinal;
+
+@EqualsAndHashCode(of = "locale")
+@ToString(exclude = "date")
+@Value
+@AllArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor(access = AccessLevel.NONE)
 public class LanguagePacket implements Comparable<LanguagePacket> {
 	private final int id;
 	private final Locale locale;
 	private final int translated;
+	@NonFinal
+	@Setter
 	private boolean downloaded;
 	private final boolean update;
+	@NonFinal
+	@Setter
 	private Date date;
 
 	public LanguagePacket(int id, Locale locale, int translated, boolean downloaded, boolean update) {
@@ -19,71 +37,8 @@ public class LanguagePacket implements Comparable<LanguagePacket> {
 		this.update = update;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public int getTranslated() {
-		return translated;
-	}
-
-	public boolean isDownloaded() {
-		return downloaded;
-	}
-
-	public void setDownloaded(boolean downloaded) {
-		this.downloaded = downloaded;
-	}
-
-	public boolean isUpdate() {
-		return update;
-	}
-
-	@Override
-	public String toString() {
-		return "LangPacket [id=" + id + ", locale=" + locale + ", translated=" + translated + ", downloaded=" + downloaded + ", update=" + update + "]";
-	}
-
 	@Override
 	public int compareTo(LanguagePacket o) {
 		return locale.getDisplayName().compareTo(o.locale.getDisplayName());
-	}
-
-	@Override
-	public int hashCode() {
-		int prime = 31;
-		int result = 1;
-		result = prime * result + (locale == null ? 0 : locale.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		LanguagePacket other = (LanguagePacket) obj;
-		if ((locale == null && other.locale != null) || (locale != null && other.locale == null)) {
-			return false;
-		}
-		return locale.equals(other.locale);
 	}
 }

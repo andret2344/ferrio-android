@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 	private ListView list;
 	private PowerManager.WakeLock wakeLock;
 	private LinearLayout preloaderLayout;
-	private int counter = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 	public void setUpNavigationDrawer() {
 		TypedArray ta = obtainStyledAttributes(R.styleable.images);
 		List<ViewItem> data = new ArrayList<>();
-		data.add(new NavigationDrawerImage(ContextCompat.getDrawable(this, R.drawable.ic_launcher), null));
+		data.add(new NavigationDrawerImage(ContextCompat.getDrawable(this, R.drawable.ic_launcher)));
 		data.add(new NavigationDrawerItem(R.string.settings, ta.getDrawable(R.styleable.images_settings), v -> startActivityForResult(new Intent(getApplicationContext(), SettingsActivity.class), getApplicationContext().getResources().getInteger(R.integer.request_code_settings))));
 
 		// data.add(

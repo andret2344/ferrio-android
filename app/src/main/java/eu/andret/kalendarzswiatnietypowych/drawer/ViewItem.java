@@ -4,6 +4,15 @@
  */
 package eu.andret.kalendarzswiatnietypowych.drawer;
 
-public interface ViewItem {
-	
+import android.view.View;
+
+import lombok.Data;
+
+@Data
+public abstract class ViewItem {
+	protected View.OnClickListener listener;
+
+	public ViewItem(View.OnClickListener listener) {
+		this.listener = listener;
+	}
 }

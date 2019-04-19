@@ -20,11 +20,14 @@ import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay;
+import lombok.Getter;
 
 public class DayFragment extends Fragment {
 	private static final Random random = new Random();
 
+	@Getter
 	private int day;
+	@Getter
 	private int month;
 	private int id;
 
@@ -133,13 +136,5 @@ public class DayFragment extends Fragment {
 		// });
 		// ta.recycle();
 		return dayView;
-	}
-
-	public int getDay() {
-		return day;
-	}
-
-	public int getMonth() {
-		return month;
 	}
 }

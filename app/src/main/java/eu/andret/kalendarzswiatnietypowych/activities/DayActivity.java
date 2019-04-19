@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -31,7 +32,7 @@ public class DayActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
+		Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
 		util = new Util(this);
 		util.applyTheme();
 		setContentView(R.layout.activity_day);
@@ -59,7 +60,7 @@ public class DayActivity extends AppCompatActivity {
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 				DayFragment fragment = (DayFragment) pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
-				getSupportActionBar().setTitle(fragment.getDay() + getAddition(fragment.getDay()) + " " + util.getMonthGenitive(fragment.getMonth() - 1));
+				Objects.requireNonNull(getSupportActionBar()).setTitle(fragment.getDay() + getAddition(fragment.getDay()) + " " + util.getMonthGenitive(fragment.getMonth() - 1));
 			}
 
 			@Override
