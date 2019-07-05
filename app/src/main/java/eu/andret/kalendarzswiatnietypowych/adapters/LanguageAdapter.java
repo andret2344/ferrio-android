@@ -1,13 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -284,7 +286,7 @@ public class LanguageAdapter extends ArrayAdapter<LanguagePacket> {
 					}
 				}
 				in.close();
-				json = new String(bytes, "UTF-8");
+				json = new String(bytes, StandardCharsets.UTF_8);
 				handler.post(() -> {
 					holder.progress.setIndeterminate(true);
 					holder.progress.getIndeterminateDrawable().setColorFilter(Color.rgb(200, 20, 20), PorterDuff.Mode.SRC_ATOP);

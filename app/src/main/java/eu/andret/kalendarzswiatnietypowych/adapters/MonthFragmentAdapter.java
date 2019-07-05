@@ -1,17 +1,19 @@
 package eu.andret.kalendarzswiatnietypowych.adapters;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 
 public class MonthFragmentAdapter extends FragmentStatePagerAdapter {
-	
+
 	public MonthFragmentAdapter(FragmentManager fm) {
 		super(fm);
 	}
-	
+
 	@Override
 	public Fragment getItem(int id) {
 		MonthFragment fragment = new MonthFragment();
@@ -20,7 +22,7 @@ public class MonthFragmentAdapter extends FragmentStatePagerAdapter {
 		fragment.setArguments(args);
 		return fragment;
 	}
-	
+
 	@Override
 	public int getCount() {
 		return 12;

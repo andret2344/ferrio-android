@@ -5,14 +5,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.provider.Settings.Secure;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -88,7 +90,7 @@ public class HolidayCalendar {
 								data += "&date=" + System.currentTimeMillis() / 1000;
 								data += "&uuid=" + deviceId;
 								data += "&language=" + language;
-								byte[] dataBytes = data.getBytes("UTF-8");
+								byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
 
 								HttpURLConnection conn = (HttpURLConnection) new URL("https://andret.eu/uhc/api/report.php").openConnection();
 								conn.setRequestMethod("POST");
@@ -312,7 +314,7 @@ public class HolidayCalendar {
 		this.context = context;
 		SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
 		language = prefs.getInt("selected", -1);
-		this.clear();
+		clear();
 		HolidaysDBHelper.getInstance(context).reload(language);
 	}
 

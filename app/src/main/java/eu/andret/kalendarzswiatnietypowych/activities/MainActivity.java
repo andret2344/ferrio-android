@@ -14,14 +14,8 @@ import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,8 +29,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.ads.MobileAds;
 
@@ -73,8 +75,9 @@ import eu.andret.kalendarzswiatnietypowych.utils.LanguagePacket;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class MainActivity extends AppCompatActivity {
-	private Util util;
 	private final Calendar calendar = Calendar.getInstance();
+
+	private Util util;
 	private DrawerLayout navigationDrawer;
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
@@ -154,22 +157,26 @@ public class MainActivity extends AppCompatActivity {
 		pager = findViewById(R.id.main_pager_months);
 		pager.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager()));
 		pager.setCurrentItem(calendar.get(Calendar.MONTH));
-		getSupportActionBar().setTitle(new Util(this).getMonth(pager.getCurrentItem()));
+		getSupportActionBar().setTitle(util.getMonth(pager.getCurrentItem()));
 		pager.setOffscreenPageLimit(12);
 		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-				getSupportActionBar().setTitle(new Util(MainActivity.this).getMonth(position));
+				getSupportActionBar().setTitle(util.getMonth(position));
 			}
 
 			@Override
 			public void onPageSelected(int position) {
+				// do nothing
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
+				// do nothing
 			}
 		});
+
+		new Handler().postDelayed(MainActivity.this::dismissPreloader, 4000);
 
 		util.createAd(R.id.main_adview_bottom);
 		// util.createNotification("UHC", "Today is", R.drawable.ic_launcher, getIntent(), false);
@@ -181,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (navigationDrawer.isDrawerOpen(Gravity.START)) {
-			navigationDrawer.closeDrawer(Gravity.START);
+		if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
+			navigationDrawer.closeDrawer(GravityCompat.START);
 		} else {
 			wakeLock.release();
 			super.onBackPressed();
@@ -432,7 +439,10 @@ public class MainActivity extends AppCompatActivity {
 		SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
 		SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
 		MainActivity.this.list.setAdapter(adapter);
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+		if (searchView == null) {
+			return true;
+		} // TODO
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				return true;
@@ -497,13 +507,9 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_main_today:
-				Calendar cal = Calendar.getInstance();
-				pager.setCurrentItem(cal.get(Calendar.MONTH));
-				break;
-			default:
-				break;
+		if (item.getItemId() == R.id.menu_main_today) {
+			Calendar cal = Calendar.getInstance();
+			pager.setCurrentItem(cal.get(Calendar.MONTH));
 		}
 		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
