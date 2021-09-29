@@ -21,9 +21,6 @@
     <!--
         <uses-permission
         android:name="com.android.vending.BILLING" />
-
-
-
     -->
 
     <application
@@ -45,7 +42,8 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="sensorPortrait" >
+            android:screenOrientation="fullSensor"
+            android:exported="true">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN" />
@@ -59,17 +57,18 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
             android:name=".activities.DayActivity"
-            android:screenOrientation="sensorPortrait" >
+            android:screenOrientation="fullSensor" >
         </activity>
         <activity
             android:name=".activities.FavouriteActivity"
-            android:screenOrientation="sensorPortrait" >
+            android:screenOrientation="fullSensor" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.andret.kalendarzswiatnietypowych.activities.MainActivity" />
         </activity>
 
         <receiver
+            android:exported="true"
             android:name="eu.andret.kalendarzswiatnietypowych.MyWidgetProvider" >
             <intent-filter>
                 <action
@@ -86,7 +85,7 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/settings"
-            android:screenOrientation="sensorPortrait" >
+            android:screenOrientation="fullSensor" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.andret.kalendarzswiatnietypowych.activities.MainActivity" />
@@ -100,9 +99,6 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
-
-
         -->
         <activity
             android:name=".activities.LanguageActivity"
