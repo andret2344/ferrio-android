@@ -12,12 +12,9 @@
 	e - drobne zmiany i poprawki
     -->
 
-    <uses-permission
-        android:name="android.permission.INTERNET" />
-    <uses-permission
-        android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission
-        android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--
         <uses-permission
         android:name="com.android.vending.BILLING" />
@@ -37,44 +34,38 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3410450408196791~3872850665" />
 
-        <service
-            android:name=".NotificationService" />
+        <service android:name=".NotificationService" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="fullSensor"
             android:exported="true">
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
-            android:name=".activities.DayActivity"
-            android:screenOrientation="fullSensor" >
-        </activity>
+            android:name=".activity.DayActivity"
+            android:screenOrientation="fullSensor"></activity>
         <activity
-            android:name=".activities.FavouriteActivity"
-            android:screenOrientation="fullSensor" >
+            android:name=".activity.FavouriteActivity"
+            android:screenOrientation="fullSensor">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.andret.kalendarzswiatnietypowych.activities.MainActivity" />
+                android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
         </activity>
 
         <receiver
             android:exported="true"
-            android:name="eu.andret.kalendarzswiatnietypowych.MyWidgetProvider" >
+            android:name="eu.andret.kalendarzswiatnietypowych.MyWidgetProvider">
             <intent-filter>
-                <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action
-                    android:name="eu.andret.kalendarzswiatnietypowych.CLICK_MY_BUTTON" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="eu.andret.kalendarzswiatnietypowych.CLICK_MY_BUTTON" />
             </intent-filter>
 
             <meta-data
@@ -83,12 +74,12 @@
         </receiver>
 
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/settings"
-            android:screenOrientation="fullSensor" >
+            android:screenOrientation="fullSensor">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.andret.kalendarzswiatnietypowych.activities.MainActivity" />
+                android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
         </activity>
         <!--
          <activity
@@ -101,15 +92,11 @@
         </activity>
         -->
         <activity
-            android:name=".activities.LanguageActivity"
-            android:label="@string/title_activity_language" >
+            android:name=".activity.LanguageActivity"
+            android:label="@string/title_activity_language">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.andret.kalendarzswiatnietypowych.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name="eu.andret.kalendarzswiatnietypowych.activities.SurveyActivity"
-            android:label="@string/title_activity_survey" >
+                android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
         </activity>
     </application>
 

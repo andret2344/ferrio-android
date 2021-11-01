@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.os.Bundle;
 
@@ -13,11 +13,11 @@ public class DayFragmentAdapter extends FragmentStatePagerAdapter {
 	private final int month;
 	private final int day;
 
-	public DayFragmentAdapter(FragmentManager fm) {
+	public DayFragmentAdapter(final FragmentManager fm) {
 		this(fm, -1, -1);
 	}
 
-	private DayFragmentAdapter(FragmentManager fm, int month, int day) {
+	private DayFragmentAdapter(final FragmentManager fm, final int month, final int day) {
 		super(fm);
 		this.month = month;
 		this.day = day;
@@ -25,9 +25,9 @@ public class DayFragmentAdapter extends FragmentStatePagerAdapter {
 	}
 
 	@Override
-	public Fragment getItem(int id) {
-		DayFragment fragment = new DayFragment();
-		Bundle args = new Bundle();
+	public Fragment getItem(final int id) {
+		final DayFragment fragment = new DayFragment();
+		final Bundle args = new Bundle();
 		args.putInt("id", id);
 		args.putInt("day", day);
 		args.putInt("month", month);

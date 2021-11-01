@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.activities;
+package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,9 +22,8 @@ import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class SettingsActivity extends AppCompatActivity {
-
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			onBackPressed();
 			return true;
@@ -34,23 +33,23 @@ public class SettingsActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-		Intent returnIntent = new Intent();
+		final Intent returnIntent = new Intent();
 		setResult(Activity.RESULT_OK, returnIntent);
 		NavUtils.navigateUpFromSameTask(this);
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Util util = new Util(this);
+		final Util util = new Util(this);
 		util.applyTheme();
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		int[] prefs = {R.string.settings_theme_app, R.string.settings_theme_widgets, R.string.settings_theme_colorized, R.string.settings_usual_holidays, R.string.settings_display_shortcuts};// ,
+		final int[] prefs = {R.string.settings_theme_app, R.string.settings_theme_widgets, R.string.settings_theme_colorized, R.string.settings_usual_holidays, R.string.settings_display_shortcuts};// ,
 		// R.string.settings_theme_notification};
-		PrefsFragment p = new PrefsFragment();
-		Bundle args = new Bundle();
+		final PrefsFragment p = new PrefsFragment();
+		final Bundle args = new Bundle();
 		args.putIntArray("data", prefs);
 		p.setArguments(args);
 		getFragmentManager().beginTransaction().replace(android.R.id.content, p).commit();
@@ -60,23 +59,24 @@ public class SettingsActivity extends AppCompatActivity {
 	@SuppressLint("ValidFragment")
 	public class PrefsFragment extends PreferenceFragment {
 		@Override
-		public void onCreate(Bundle savedInstanceState) {
+		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences);
-			for (int s : getArguments().getIntArray("data")) {
-				String current = getResources().getString(s);
-				Preference pref = findPreference(current);
+			for (final int s : getArguments().getIntArray("data")) {
+				final String current = getResources().getString(s);
+				final Preference pref = findPreference(current);
 				if (pref instanceof ListPreference) {
-					ListPreference list = (ListPreference) pref;
+					final ListPreference list = (ListPreference) pref;
 					pref.setSummary(list.getEntry());
 				}
 				if (current.equals(SettingsActivity.this.getResources().getString(R.string.settings_theme_notification))) {
 					pref.setOnPreferenceClickListener(preference -> {
-						Calendar now = Calendar.getInstance();
+						final Calendar now = Calendar.getInstance();
 						new TimePickerDialog(SettingsActivity.this, 0, (picker, hour, minute) -> {
 							String shortcut = "";
 							// Log.d("AC", hour + "h " + minute + "m");
-							String h, m;
+							final String h;
+							final String m;
 							if (picker.is24HourView()) {
 								hour = hour == 0 ? 24 : hour;
 								h = (hour < 10 ? "0" : "") + hour;
@@ -89,8 +89,8 @@ public class SettingsActivity extends AppCompatActivity {
 							}
 
 							pref.setSummary("Notification scheduled: " + h + ":" + m + " " + shortcut);
-							SharedPreferences prefs = Data.getPreferences(SettingsActivity.this, Data.Prefs.THEME);
-							SharedPreferences.Editor editor = prefs.edit();
+							final SharedPreferences prefs = Data.getPreferences(SettingsActivity.this, Data.Prefs.THEME);
+							final SharedPreferences.Editor editor = prefs.edit();
 							editor.putString(current, hour + ":" + minute);
 							editor.apply();
 
@@ -100,8 +100,8 @@ public class SettingsActivity extends AppCompatActivity {
 				}
 
 				pref.setOnPreferenceChangeListener((preference, value) -> {
-					SharedPreferences prefs = Data.getPreferences(SettingsActivity.this, Data.Prefs.THEME);
-					SharedPreferences.Editor editor = prefs.edit();
+					final SharedPreferences prefs = Data.getPreferences(SettingsActivity.this, Data.Prefs.THEME);
+					final SharedPreferences.Editor editor = prefs.edit();
 					if (value instanceof Boolean) {
 						editor.putBoolean(current, (Boolean) value);
 					} else {
@@ -109,7 +109,7 @@ public class SettingsActivity extends AppCompatActivity {
 					}
 					editor.apply();
 					if (pref instanceof ListPreference) {
-						ListPreference list = (ListPreference) pref;
+						final ListPreference list = (ListPreference) pref;
 						pref.setSummary(list.getEntries()[list.findIndexOfValue(String.valueOf(value))]);
 						if (current.equals(SettingsActivity.this.getResources().getString(R.string.settings_theme_app))) {
 							recreate();

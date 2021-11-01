@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,32 +19,33 @@ import java.util.List;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activities.DayActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
 
 public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 	private final Context context;
+	private final Random random = new Random();
 
-	private class ViewHolder {
+	private static class ViewHolder {
 		private TextView date;
 		private LinearLayout holidays;
 		private LinearLayout border;
 	}
 
-	public SearchHolidayAdapter(Context context, List<HolidayDay> values) {
+	public SearchHolidayAdapter(final Context context, final List<HolidayDay> values) {
 		super(context, R.layout.adapter_search, values);
 		this.context = context;
 	}
 
 	@NonNull
 	@Override
-	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-		ViewHolder holder;
+	public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
+		final ViewHolder holder;
 		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			assert inflater != null;
 			convertView = inflater.inflate(R.layout.adapter_search, parent, false);
 			holder = new ViewHolder();
@@ -56,48 +57,47 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
+		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
 
-		holder.date.setTextColor(color.forground);
+		holder.date.setTextColor(color.foreground);
 		holder.border.setBackgroundColor(color.background);
-		convertView.setBackgroundColor(color.forground);
+		convertView.setBackgroundColor(color.foreground);
 
-		HolidayDay day = getItem(position);
+		final HolidayDay day = getItem(position);
 		if (day == null) {
 			return convertView;
 		}
 		holder.date.setText(day.getDate());
-		int c;
+		final int c;
 		boolean colorized;
 		try {
 			colorized = theme.getBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), false);
-		} catch (ClassCastException ex) {
+		} catch (final ClassCastException ex) {
 			colorized = theme.getString(getContext().getResources().getString(R.string.settings_theme_colorized), "false").equals("true");
-			SharedPreferences.Editor editor = theme.edit();
+			final SharedPreferences.Editor editor = theme.edit();
 			editor.remove(getContext().getResources().getString(R.string.settings_theme_colorized));
 			editor.putBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), colorized);
 			editor.apply();
 		}
 		if (colorized) {
-			Random r = new Random();
-			r.setSeed(day.getSeed());
-			boolean dark = Data.getColors(Integer.parseInt(Data.getPreferences(context, Prefs.THEME).getString(getContext().getResources().getString(R.string.settings_theme_app), "1"))).dark;
-			c = Color.rgb(r.nextInt(127) + (dark ? 0 : 127), r.nextInt(127) + (dark ? 0 : 127), r.nextInt(127) + (dark ? 0 : 127));
+			random.setSeed(day.getSeed());
+			final boolean dark = Data.getColors(Integer.parseInt(Data.getPreferences(context, Prefs.THEME).getString(getContext().getResources().getString(R.string.settings_theme_app), "1"))).dark;
+			c = Color.rgb(random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127));
 			holder.border.setBackgroundColor(c);
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
-		for (Holiday h : day.getHolidays()) {
+		for (final Holiday h : day.getHolidays()) {
 			if (!h.isUsual() || theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) {
-				TextView tv = new TextView(getContext());
-				LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+				final TextView tv = new TextView(getContext());
+				final LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 				p.setMargins(0, 2, 0, 2);
 				tv.setLayoutParams(p);
 				tv.setText(getContext().getResources().getString(R.string.pointer) + " " + h.getText());
 				tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 				holder.holidays.addView(tv);
-				tv.setTextColor(color.forground);
+				tv.setTextColor(color.foreground);
 				if (h.isUsual()) {
 					tv.setTypeface(null, Typeface.BOLD);
 				}
@@ -105,7 +105,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		convertView.setOnClickListener(v -> {
-			Intent i = new Intent(getContext(), DayActivity.class);
+			final Intent i = new Intent(getContext(), DayActivity.class);
 			i.putExtra("day", day.getDay());
 			i.putExtra("month", day.getMonth().getMonth());
 			getContext().startActivity(i);

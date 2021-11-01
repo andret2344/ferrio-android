@@ -7,7 +7,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 43
-        versionName "2.1.0.10010"
+        versionName "2.2.0"
     }
     buildTypes {
         release {
@@ -19,14 +19,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '30.0.2'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
-    implementation 'com.android.support:support-v4:30.0.0'
-    implementation 'com.android.support:customtabs:30.0.0'
-    implementation 'com.android.support:appcompat-v7:30.0.0'
-    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    //noinspection AnnotationProcessorOnCompilePath
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    implementation group: 'com.android.support', name: 'support-v4', version: '30.0.0'
+    implementation group: 'com.android.support', name: 'customtabs', version: '30.0.0'
+    implementation group: 'com.android.support', name: 'appcompat-v7', version: '30.0.0'
+    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '20.4.0'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
 }

@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,9 +19,9 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class HolidayAdapter extends ArrayAdapter<Holiday> {
@@ -36,7 +36,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 		private ImageView report;
 	}
 
-	public HolidayAdapter(Context context, HolidayDay holiday, int color, boolean allowReports) {
+	public HolidayAdapter(final Context context, final HolidayDay holiday, final int color, final boolean allowReports) {
 		super(context, R.layout.adapter_holiday, holiday == null ? new ArrayList<>() : holiday.getHolidaysList(Data.getPreferences(context, Data.Prefs.THEME).getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)));
 		this.context = context;
 		this.color = color;
@@ -46,10 +46,10 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 
 	@NonNull
 	@Override
-	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-		ViewHolder holder;
+	public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
+		final ViewHolder holder;
 		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			assert inflater != null;
 			convertView = inflater.inflate(R.layout.adapter_holiday, parent, false);
 			holder = new ViewHolder();
@@ -61,7 +61,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Holiday h = getItem(position);
+		final Holiday h = getItem(position);
 		if (h == null) {
 			return convertView;
 		}
@@ -70,9 +70,9 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 		if (h.isUsual()) {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}
-		SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		Data.AppColorSet appColorSet = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
-		holder.holiday.setTextColor(appColorSet.forground);
+		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
+		final Data.AppColorSet appColorSet = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		holder.holiday.setTextColor(appColorSet.foreground);
 		holder.background.setBackgroundColor(color);
 		convertView.setBackgroundColor(color);
 		if (!allowReports) {
@@ -81,15 +81,15 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 		}
 		holder.report.setVisibility(View.VISIBLE);
 		holder.report.setOnClickListener(v -> {
-			SharedPreferences tutorial = Data.getPreferences(context, Data.Prefs.TUTORIAL);
-			boolean reportInfo = tutorial.getBoolean(context.getResources().getString(R.string.settings_tutorial_reports), false);
+			final SharedPreferences tutorial = Data.getPreferences(context, Data.Prefs.TUTORIAL);
+			final boolean reportInfo = tutorial.getBoolean(context.getResources().getString(R.string.settings_tutorial_reports), false);
 			if (!reportInfo) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(context);
-				LayoutInflater adbInflater = LayoutInflater.from(context);
-				View eulaLayout = adbInflater.inflate(R.layout.checkbox, parent, false);
-				CheckBox dontShowAgain = eulaLayout.findViewById(R.id.skip);
+				final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+				final LayoutInflater adbInflater = LayoutInflater.from(context);
+				final View eulaLayout = adbInflater.inflate(R.layout.checkbox, parent, false);
+				final CheckBox dontShowAgain = eulaLayout.findViewById(R.id.skip);
 				dontShowAgain.setOnClickListener(v1 -> {
-					SharedPreferences.Editor editor = tutorial.edit();
+					final SharedPreferences.Editor editor = tutorial.edit();
 					editor.putBoolean(context.getResources().getString(R.string.settings_tutorial_reports), dontShowAgain.isChecked());
 					editor.apply();
 				});

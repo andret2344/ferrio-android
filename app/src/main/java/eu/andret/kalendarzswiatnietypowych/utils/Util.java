@@ -21,7 +21,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 
@@ -31,7 +30,7 @@ public class Util {
 	private static String[] monthsGenitive;
 	private final NetworkInfo networkInfo;
 
-	public Util(Context context) {
+	public Util(final Context context) {
 		this.context = context;
 		if (months == null) {
 			months = context.getResources().getStringArray(R.array.months);
@@ -39,22 +38,22 @@ public class Util {
 		if (monthsGenitive == null) {
 			monthsGenitive = context.getResources().getStringArray(R.array.months_genitive);
 		}
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		networkInfo = connectivityManager.getActiveNetworkInfo();
 	}
 
-	public void createNotification(String title, String text, int ico, Intent intent, boolean cancelOnClick) {
-		NotificationCompat.Builder notification = new NotificationCompat.Builder(context, "UHC");
+	public void createNotification(final String title, final String text, final int ico, final Intent intent, final boolean cancelOnClick) {
+		final NotificationCompat.Builder notification = new NotificationCompat.Builder(context, "UHC");
 		notification.setSmallIcon(ico);
 		notification.setContentTitle(title);
 		notification.setContentText(text);
 
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 		stackBuilder.addNextIntent(intent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		final PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification n = notification.build();
+		final NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		final Notification n = notification.build();
 		if (cancelOnClick) {
 			n.flags |= Notification.FLAG_AUTO_CANCEL;
 		} else {
@@ -67,38 +66,38 @@ public class Util {
 		return networkInfo != null && networkInfo.isConnected();
 	}
 
-	public void createAlert(String title, String text) {
-		Builder alert = new Builder(context);
+	public void createAlert(final String title, final String text) {
+		final Builder alert = new Builder(context);
 		alert.setTitle(title);
 		alert.setMessage(text);
 		alert.setPositiveButton(R.string.ok, null);
 		alert.show();
 	}
 
-	public void createAlert(int title, int text) {
-		Builder alert = new Builder(context);
+	public void createAlert(final int title, final int text) {
+		final Builder alert = new Builder(context);
 		alert.setTitle(title);
 		alert.setMessage(text);
 		alert.setPositiveButton(R.string.ok, null);
 		alert.show();
 	}
 
-	public void createAlertWithImage(int img, int title, int text) {
-		Builder alert = new Builder(context);
+	public void createAlertWithImage(final int img, final int title, final int text) {
+		final Builder alert = new Builder(context);
 		alert.setTitle(title);
-		LinearLayout layout = new LinearLayout(context);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LinearLayout layout = new LinearLayout(context);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params.setMargins(0, 30, 0, 0);
 		layout.setLayoutParams(params);
 		layout.setOrientation(LinearLayout.VERTICAL);
-		ImageView image = new ImageView(context);
+		final ImageView image = new ImageView(context);
 		image.setImageResource(img);
 		layout.addView(image);
-		TextView tv = new TextView(context);
+		final TextView tv = new TextView(context);
 		tv.setText(text);
 		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.drawer_list_name_text));
 		layout.addView(tv);
-		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		llp.setMargins(30, 20, 30, 20); // llp.setMargins(left, top, right, bottom);
 		tv.setLayoutParams(llp);
 		alert.setView(layout);
@@ -106,22 +105,22 @@ public class Util {
 		alert.show();
 	}
 
-	public void createAd(int viewId) {
-		MobileAds.initialize(context, context.getResources().getString(R.string.banner_ad_unit_id));
-		AdView adView = ((Activity) context).findViewById(viewId);
+	public void createAd(final int viewId) {
+//		MobileAds.initialize(context, context.getResources().getString(R.string.banner_ad_unit_id));
+		final AdView adView = ((Activity) context).findViewById(viewId);
 		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	public void applyTheme() {
-		SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
+		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
 		context.setTheme(theme.getString(context.getResources().getString(R.string.settings_theme_app), "1").equals("1") ? R.style.AppTheme_Dark : R.style.AppTheme);
 	}
 
-	public String getMonth(int id) {
+	public String getMonth(final int id) {
 		return months[id];
 	}
 
-	public String getMonthGenitive(int id) {
+	public String getMonthGenitive(final int id) {
 		return monthsGenitive[id];
 	}
 }

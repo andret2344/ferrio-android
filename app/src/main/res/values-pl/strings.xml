@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="banner_ad_unit_id">ca-app-pub-3410450408196791/4823111464</string>
     <string name="app_name">Kalendarz świąt nietypowych</string>
     <string name="unusual_holiday">Nietypowe święto</string>
     <string name="check_it_yourself">Sprawdź sam!</string>
@@ -54,16 +55,10 @@
         <item>Grudnia</item>
     </string-array>
 
-    <string name="about_app">O aplikacji</string>
-    <string name="about_app_text">To jest moja pierwsza publiczna aplikacja na Androida. 
-        Obecnie jej jedynym celem jest zabawa. Doskonale wiem, 
-        że nie jest to duża aplikacja, ale ciągle rośnie.</string>
     <string name="drawer_open">Otwórz menu boczne</string>
     <string name="drawer_close">Zamknij menu boczne</string>
     <string name="rate">Oceń aplikację</string>
     <string name="menu_item_random">Losowe (Beta)</string>
-    <string name="google_link">Ta aplikacja nie jest zainstalowana z Google Play i może zawiera bugi itd. Proszę, zainstaluj aplikację stąd: <a href="market://details?id=eu.andret.kalendarzswiatnietypowych">Unusual Holiday Calendar</a>.</string>
-    <string name="type_here">Czego szukasz?</string>
     <string name="typical_day">Brak nietypowych świąt.</string>
     <string name="report_tutorial_info">To jest sposób zgłaszania źle przetłumaczonych świąt, 
         literówek, czy jakichkolwiek problemów z tekstem święta.
@@ -71,38 +66,29 @@
     <string name="dont_show_again">Nie pokazuj ponownie</string>
     <string name="report_sending">Wysyłanie&#8230;</string>
     <string name="report_sent">Zgłoszenie wysyłano!</string>
-    <string name="theme_holo_light">Holo light</string>
-    <string name="theme_holo_dark">Holo dark</string>
-    <string name="theme_holo_pink">Holo pink</string>
+    <string name="theme_light">Motyw jasny</string>
+    <string name="theme_dark">Motyw ciemny</string>
+    <string name="theme_system">Ustawienie systemowe</string>
+    <string name="type_modern">Nowoczesne</string>
+    <string name="type_retro">Retro</string>
     <string name="letter_r">R</string>
     <string name="letter_g">G</string>
     <string name="letter_b">B</string>
     <string name="about_calendar">O kalendarzu</string>
     <string name="about_calendar_text">Kalendarz Świąt Nietypowych to kalendarz stworzony przez imperialistów z Ententy podczas I wojny światowej. Powstał on na użytek Cesarstwa Niemieckiego, aby ludzie świętowali tak długo i często, żeby nie mieli czasu walczyć na froncie o ojczyznę. Gromadzi on święta, które nie zostały dopuszczone przez zwykłe święta do ich kalendarzy.</string>
-    <string name="recomend_also">Polecam także&#8230;</string>
+    <string name="recommend_also">Polecam także&#8230;</string>
     <string name="no_internet">Urządzenie nie jest połączone z internetem. Zanim możliwe bedzie wysyłanie raportów, połączenie internetowe musi zostać nawiązane.</string>
     <string name="about_holidays">O świętach</string>
     <string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
     <string name="languages">Języki</string>
     <string name="title_activity_language">Wybierz język</string>
-    <string name="delete_language">Usuń język</string>
-    <string name="downloading_language">Pobieranie języka</string>
-    <string name="downloaded">Pobrano</string>
-    <string name="download">Pobierz</string>
     <string name="exit">Wyjdź</string>
     <string name="no_languages">Aplikacja nie ma pobranych języków. Pobrać je teraz?</string>
-    <string name="updating">Aktualizowanie</string>
     <string name="downloading_data">Pobieranie danych&#8230;</string>
-    <string name="nothing_chosen">Nic nie zostało wybrane. Aplikacja może być bezużyteczna. Kontynuować?</string>
-    <string name="question">Drogi użytkowniku!\n
-        Kalendarz Świąt Nietypowych jest szybko rozwijającą się aplikacją. Stąd też pojawił się pomysł, by użytkownicy mogli dodawać własne święta. Ponieważ niektórzy użytkownicy mają odmienną opinię, ciężko jest podjąć jakąkolwiek decyzję na ten temat. Dlatego też zwracam się z pytaniem właśnie do Ciebie:\n\n
-        Czy użytkownicy powinni mieć możliwość dodawania własnych świąt?</string>
-    <string name="survey_answer_yes">Tak, to powinno być dodane.</string>
-    <string name="survey_answer_no">Nie, nie powinno tego być.</string>
     <string name="send">Wyślij</string>
-    <string name="no_languages_explaination">Dlaczego nie ma więcej języków? Święta nie zostały jeszcze przetłumaczone na inne języki. Prosimy o cierpliwość, wkrótce się pojawią.</string>
     <string name="oops">Ups!</string>
     <string name="something_went_wrong">Tak mi przykro. Coś poszło źle.</string>
+    <string name="pointer">\u00B7</string>
     <string name="display_shortcuts">Wyświetlaj skróty świąt</string>
     <string name="display_shortcuts_desc">Jeśli zaznaczony, wyświetla skróty świąt w widoku miesiąca</string>
     <string name="answer">Odpowiedź…</string>

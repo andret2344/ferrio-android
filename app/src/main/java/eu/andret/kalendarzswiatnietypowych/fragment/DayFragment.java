@@ -16,11 +16,11 @@ import java.util.GregorianCalendar;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapters.HolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay;
 import lombok.Getter;
 
 public class DayFragment extends Fragment {
@@ -33,7 +33,7 @@ public class DayFragment extends Fragment {
 	private int id;
 
 	@Override
-	public void setArguments(Bundle args) {
+	public void setArguments(final Bundle args) {
 		super.setArguments(args);
 		day = args.getInt("day");
 		month = args.getInt("month");
@@ -41,10 +41,10 @@ public class DayFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-		View dayView = inflater.inflate(R.layout.fragment_day, parent, false);
+	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
+		final View dayView = inflater.inflate(R.layout.fragment_day, parent, false);
 		if (day == -1 || month == -1) {
-			Calendar calendar = Calendar.getInstance();
+			final Calendar calendar = Calendar.getInstance();
 			if (new GregorianCalendar().isLeapYear(calendar.get(Calendar.YEAR))) {
 				if (id < 60) {
 					calendar.set(Calendar.DAY_OF_YEAR, id + 1);
@@ -76,9 +76,9 @@ public class DayFragment extends Fragment {
 				}
 			}
 		}
-		SharedPreferences theme = Data.getPreferences(getActivity(), Data.Prefs.THEME);
-		Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
-		HolidayDay holidays = HolidayCalendar.getInstance(getActivity()).getMonth(month).getDay(day);
+		final SharedPreferences theme = Data.getPreferences(getActivity(), Data.Prefs.THEME);
+		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		final HolidayDay holidays = HolidayCalendar.getInstance(getActivity()).getMonth(month).getDay(day);
 		if (!holidays.hasHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false))) {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
@@ -87,7 +87,7 @@ public class DayFragment extends Fragment {
 		int c = color.background;
 		if (theme.getBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), false)) {
 			random.setSeed(holidays.getSeed());
-			boolean dark = Data.getColors(Integer.parseInt(Data.getPreferences(getActivity(), Prefs.THEME).getString(getContext().getResources().getString(R.string.settings_theme_app), "1"))).dark;
+			final boolean dark = Data.getColors(Integer.parseInt(Data.getPreferences(getActivity(), Prefs.THEME).getString(getContext().getResources().getString(R.string.settings_theme_app), "1"))).dark;
 			c = Color.rgb(random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127));
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(c);
 		} else {

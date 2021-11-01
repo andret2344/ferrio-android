@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.utils;
+package eu.andret.kalendarzswiatnietypowych.entity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,8 +21,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.utils.Data;
+import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 
 public class HolidayCalendar {
 	@SuppressLint("StaticFieldLeak")
@@ -31,7 +33,7 @@ public class HolidayCalendar {
 	private final HolidayMonth[] months = new HolidayMonth[12];
 	private final Context context;
 
-	private int language;
+	private String language;
 
 	public class HolidayMonth implements Comparable<HolidayMonth> {
 		private final List<HolidayDay> days = new ArrayList<>();
@@ -47,7 +49,7 @@ public class HolidayCalendar {
 				private final boolean usual;
 				private final String externalLink;
 
-				public Holiday(int metadataId, String text, boolean usual, String externalLink) {
+				public Holiday(final int metadataId, final String text, final boolean usual, final String externalLink) {
 					this.text = text;
 					this.usual = usual;
 					this.externalLink = externalLink;
@@ -55,7 +57,7 @@ public class HolidayCalendar {
 					holidays.add(this);
 				}
 
-				public Holiday(int hId, String text, boolean usual) {
+				public Holiday(final int hId, final String text, final boolean usual) {
 					this(hId, text, usual, null);
 				}
 
@@ -82,28 +84,28 @@ public class HolidayCalendar {
 				public void report() {
 					new AsyncTask<String, Void, String>() {
 						@Override
-						protected String doInBackground(String... params) {
+						protected String doInBackground(final String... params) {
 							try {
-								String deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+								final String deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
 								String data = "cmd=1";
 								data += "&hid=" + metadataId;
 								data += "&date=" + System.currentTimeMillis() / 1000;
 								data += "&uuid=" + deviceId;
 								data += "&language=" + language;
-								byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
+								final byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
 
-								HttpURLConnection conn = (HttpURLConnection) new URL("https://andret.eu/uhc/api/report.php").openConnection();
+								final HttpURLConnection conn = (HttpURLConnection) new URL("https://andret.eu/uhc/api/report.php").openConnection();
 								conn.setRequestMethod("POST");
 								conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 								conn.setRequestProperty("Content-Length", String.valueOf(dataBytes.length));
 								conn.setDoOutput(true);
 								conn.getOutputStream().write(dataBytes);
 								conn.getOutputStream().close();
-								BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-								String result = reader.readLine();
+								final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+								final String result = reader.readLine();
 								reader.close();
 								return result;
-							} catch (IOException ex) {
+							} catch (final IOException ex) {
 								Log.getStackTraceString(ex);
 							}
 							return null;
@@ -112,7 +114,7 @@ public class HolidayCalendar {
 				}
 
 				@Override
-				public int compareTo(@NonNull Holiday o) {
+				public int compareTo(@NonNull final Holiday o) {
 					if (usual != o.usual) {
 						return usual ? -1 : 1;
 					}
@@ -120,14 +122,14 @@ public class HolidayCalendar {
 				}
 
 				@Override
-				public boolean equals(Object o) {
+				public boolean equals(final Object o) {
 					if (this == o) {
 						return true;
 					}
 					if (o == null || getClass() != o.getClass()) {
 						return false;
 					}
-					Holiday holiday = (Holiday) o;
+					final Holiday holiday = (Holiday) o;
 					return usual == holiday.usual && text.equals(holiday.text);
 				}
 
@@ -142,11 +144,11 @@ public class HolidayCalendar {
 				}
 			}
 
-			public HolidayDay(HolidayDay other) {
+			public HolidayDay(final HolidayDay other) {
 				this(other.day, other.holidays);
 			}
 
-			public HolidayDay(int day, List<Holiday> holidays) {
+			public HolidayDay(final int day, final List<Holiday> holidays) {
 				this.day = day;
 				this.holidays = holidays == null ? new ArrayList<>() : holidays;
 				days.add(this);
@@ -157,8 +159,8 @@ public class HolidayCalendar {
 				return day;
 			}
 
-			public Holiday find(String text) {
-				for (Holiday h : holidays) {
+			public Holiday find(final String text) {
+				for (final Holiday h : holidays) {
 					if (h.text.equalsIgnoreCase(text)) {
 						return h;
 					}
@@ -187,8 +189,8 @@ public class HolidayCalendar {
 				return holidays;
 			}
 
-			public boolean hasHolidays(boolean includeUsual) {
-				for (Holiday h : holidays) {
+			public boolean hasHolidays(final boolean includeUsual) {
+				for (final Holiday h : holidays) {
 					if (!h.usual || includeUsual) {
 						return true;
 					}
@@ -196,9 +198,9 @@ public class HolidayCalendar {
 				return false;
 			}
 
-			public List<Holiday> getHolidaysList(boolean includeUsual) {
-				List<Holiday> list = new ArrayList<>();
-				for (Holiday h : holidays) {
+			public List<Holiday> getHolidaysList(final boolean includeUsual) {
+				final List<Holiday> list = new ArrayList<>();
+				for (final Holiday h : holidays) {
 					if (!h.usual || includeUsual) {
 						list.add(h);
 					}
@@ -206,9 +208,9 @@ public class HolidayCalendar {
 				return list;
 			}
 
-			public int countHolidays(boolean includeUsual) {
+			public int countHolidays(final boolean includeUsual) {
 				int counter = 0;
-				for (Holiday h : holidays) {
+				for (final Holiday h : holidays) {
 					if (!h.usual || includeUsual) {
 						counter++;
 					}
@@ -221,7 +223,7 @@ public class HolidayCalendar {
 			}
 
 			@Override
-			public int compareTo(@NonNull HolidayDay another) {
+			public int compareTo(@NonNull final HolidayDay another) {
 				if (getMonth().getMonth() == another.getMonth().getMonth()) {
 					return day - another.day;
 				}
@@ -229,7 +231,7 @@ public class HolidayCalendar {
 			}
 
 			@Override
-			public boolean equals(Object o) {
+			public boolean equals(final Object o) {
 				if (this == o) {
 					return true;
 				}
@@ -237,7 +239,7 @@ public class HolidayCalendar {
 					return false;
 				}
 
-				HolidayDay that = (HolidayDay) o;
+				final HolidayDay that = (HolidayDay) o;
 
 				return day == that.day && getMonth().equals(that.getMonth());
 			}
@@ -253,7 +255,7 @@ public class HolidayCalendar {
 			}
 		}
 
-		private HolidayMonth(int month) {
+		private HolidayMonth(final int month) {
 			this.month = month;
 		}
 
@@ -262,8 +264,8 @@ public class HolidayCalendar {
 		}
 
 		@NonNull
-		public HolidayDay getDay(int number) {
-			for (HolidayDay day : days) {
+		public HolidayDay getDay(final int number) {
+			for (final HolidayDay day : days) {
 				if (day.day == number) { // FIXME
 					return day;
 				}
@@ -276,19 +278,19 @@ public class HolidayCalendar {
 		}
 
 		@Override
-		public int compareTo(@NonNull HolidayMonth another) {
+		public int compareTo(@NonNull final HolidayMonth another) {
 			return month - another.month;
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(final Object o) {
 			if (this == o) {
 				return true;
 			}
 			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
-			HolidayMonth that = (HolidayMonth) o;
+			final HolidayMonth that = (HolidayMonth) o;
 			return month == that.month;
 		}
 
@@ -307,13 +309,13 @@ public class HolidayCalendar {
 		}
 	}
 
-	private HolidayCalendar(Context context) {
+	private HolidayCalendar(final Context context) {
 		for (int i = 0; i < 12; i++) {
 			months[i] = new HolidayMonth(i + 1);
 		}
 		this.context = context;
-		SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
-		language = prefs.getInt("selected", -1);
+		final SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
+		language = prefs.getString("selected", null);
 		clear();
 		HolidaysDBHelper.getInstance(context).reload(language);
 	}
@@ -322,32 +324,32 @@ public class HolidayCalendar {
 	 * @param month month number 1-12
 	 * @return HolidayMonth object representing month
 	 */
-	public HolidayMonth getMonth(int month) {
+	public HolidayMonth getMonth(final int month) {
 		return months[month - 1];
 	}
 
 	void clear() {
-		for (HolidayMonth month : months) {
+		for (final HolidayMonth month : months) {
 			month.clear();
 		}
 	}
 
 	public void refresh() {
-		SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
-		language = prefs.getInt("selected", -1);
+		final SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
+		language = prefs.getString("selected", null);
 		HolidaysDBHelper.getInstance(context).reload(language);
 	}
 
 	public final HolidayDay getTodayHolidays() {
-		Calendar c = Calendar.getInstance();
+		final Calendar c = Calendar.getInstance();
 		return months[c.get(Calendar.MONTH)].getDay(c.get(Calendar.DAY_OF_MONTH));
 	}
 
-	public final List<HolidayDay> getHolidayDaysInDateRange(Calendar begin, Calendar end, boolean fillEmptys) {
-		List<HolidayDay> holidays = new ArrayList<>();
-		for (Calendar date = (Calendar) begin.clone(); date.before(end); date.add(Calendar.DATE, 1)) {
-			HolidayMonth hm = months[date.get(Calendar.MONTH)];
-			HolidayDay hd = hm.getDay(date.get(Calendar.DAY_OF_MONTH));
+	public final List<HolidayDay> getHolidayDaysInDateRange(final Calendar begin, final Calendar end, final boolean fillEmptys) {
+		final List<HolidayDay> holidays = new ArrayList<>();
+		for (final Calendar date = (Calendar) begin.clone(); date.before(end); date.add(Calendar.DATE, 1)) {
+			final HolidayMonth hm = months[date.get(Calendar.MONTH)];
+			final HolidayDay hd = hm.getDay(date.get(Calendar.DAY_OF_MONTH));
 			if (hd != null) {
 				holidays.add(hd);
 			} else if (fillEmptys) {
@@ -357,12 +359,12 @@ public class HolidayCalendar {
 		return holidays;
 	}
 
-	public static HolidayCalendar getNewInstance(Context context) {
+	public static HolidayCalendar getNewInstance(final Context context) {
 		instance = new HolidayCalendar(context);
 		return instance;
 	}
 
-	public static HolidayCalendar getInstance(Context context) {
+	public static HolidayCalendar getInstance(final Context context) {
 		if (instance == null) {
 			instance = new HolidayCalendar(context);
 		}
@@ -374,16 +376,16 @@ public class HolidayCalendar {
 	}
 
 	public List<HolidayDay> getAllDays() {
-		List<HolidayDay> days = new ArrayList<>();
-		for (HolidayMonth hm : months) {
+		final List<HolidayDay> days = new ArrayList<>();
+		for (final HolidayMonth hm : months) {
 			days.addAll(hm.getDays());
 		}
 		return days;
 	}
 
 	public List<Holiday> getAllHolidays() {
-		List<Holiday> days = new ArrayList<>();
-		for (HolidayDay hd : getAllDays()) {
+		final List<Holiday> days = new ArrayList<>();
+		for (final HolidayDay hd : getAllDays()) {
 			days.addAll(hd.getHolidays());
 		}
 		return days;

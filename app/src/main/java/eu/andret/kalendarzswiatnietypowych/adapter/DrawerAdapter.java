@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,7 +22,7 @@ import eu.andret.kalendarzswiatnietypowych.drawer.ViewItem;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 
 public class DrawerAdapter extends ArrayAdapter<ViewItem> {
-	public DrawerAdapter(Context context, List<ViewItem> values) {
+	public DrawerAdapter(final Context context, final List<ViewItem> values) {
 		super(context, R.layout.drawer_list_item, values);
 	}
 
@@ -33,10 +33,10 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 
 	@NonNull
 	@Override
-	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-		ViewHolder holder;
+	public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
+		final ViewHolder holder;
 		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			assert inflater != null;
 			convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
 			holder = new ViewHolder();
@@ -46,18 +46,18 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		SharedPreferences theme = Data.getPreferences(getContext(), Data.Prefs.THEME);
-		Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
-		holder.name.setTextColor(color.forground);
+		final SharedPreferences theme = Data.getPreferences(getContext(), Data.Prefs.THEME);
+		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		holder.name.setTextColor(color.foreground);
 		convertView.setBackgroundColor(color.background);
-		ViewItem v = getItem(position);
+		final ViewItem v = getItem(position);
 		if (v instanceof NavigationDrawerItem) {
-			NavigationDrawerItem ndi = (NavigationDrawerItem) v;
+			final NavigationDrawerItem ndi = (NavigationDrawerItem) v;
 			holder.icon.setImageDrawable(ndi.getIcon());
 			holder.name.setText(ndi.getName());
 			convertView.setOnClickListener(ndi.getListener());
 		} else if (v instanceof NavigationDrawerImage) {
-			NavigationDrawerImage ndi = (NavigationDrawerImage) v;
+			final NavigationDrawerImage ndi = (NavigationDrawerImage) v;
 			holder.icon.setImageDrawable(ndi.getImage());
 			holder.icon.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			convertView.setOnClickListener(ndi.getListener());

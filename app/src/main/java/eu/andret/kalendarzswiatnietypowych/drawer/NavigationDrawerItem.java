@@ -9,14 +9,14 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class NavigationDrawerItem extends ViewItem {
-	private int name;
-	private Drawable icon;
+	int name;
+	Drawable icon;
 
-	public NavigationDrawerItem(int name, Drawable icon) {
+	public NavigationDrawerItem(final int name, final Drawable icon) {
 		this(name, icon, null);
 	}
 
-	public NavigationDrawerItem(int name, Drawable icon, View.OnClickListener listener) {
+	public NavigationDrawerItem(final int name, final Drawable icon, final View.OnClickListener listener) {
 		super(listener);
 		this.name = name;
 		this.icon = icon;

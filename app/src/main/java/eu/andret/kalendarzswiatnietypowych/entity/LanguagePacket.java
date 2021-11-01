@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.utils;
+package eu.andret.kalendarzswiatnietypowych.entity;
 
 import java.util.Date;
 import java.util.Locale;
@@ -18,18 +18,18 @@ import lombok.experimental.NonFinal;
 @AllArgsConstructor(access = AccessLevel.NONE)
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class LanguagePacket implements Comparable<LanguagePacket> {
-	private final int id;
-	private final Locale locale;
-	private final int translated;
+	int id;
+	Locale locale;
+	int translated;
 	@NonFinal
 	@Setter
-	private boolean downloaded;
-	private final boolean update;
+	boolean downloaded;
+	boolean update;
 	@NonFinal
 	@Setter
-	private Date date;
+	Date date;
 
-	public LanguagePacket(int id, Locale locale, int translated, boolean downloaded, boolean update) {
+	public LanguagePacket(final int id, final Locale locale, final int translated, final boolean downloaded, final boolean update) {
 		this.id = id;
 		this.locale = locale;
 		this.translated = translated;
@@ -38,7 +38,7 @@ public class LanguagePacket implements Comparable<LanguagePacket> {
 	}
 
 	@Override
-	public int compareTo(LanguagePacket o) {
+	public int compareTo(final LanguagePacket o) {
 		return locale.getDisplayName().compareTo(o.locale.getDisplayName());
 	}
 }

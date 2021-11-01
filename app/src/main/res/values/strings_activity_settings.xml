@@ -5,17 +5,16 @@
     <string name="pref_title_app_theme"><u>Theme of application</u></string>
 
     <string-array name="pref_theme_application_list">
-        <item>@string/theme_holo_dark</item>
-        <item>@string/theme_holo_light</item>
+        <item>@string/theme_dark</item>
+        <item>@string/theme_light</item>
     </string-array>
     <string-array name="pref_theme_application_values">
         <item>1</item>
         <item>0</item>
     </string-array>
     <string-array name="pref_theme_application_funmade_list">
-        <item>@string/theme_holo_pink</item>
-        <item>@string/theme_holo_dark</item>
-        <item>@string/theme_holo_light</item>
+        <item>@string/theme_dark</item>
+        <item>@string/theme_light</item>
     </string-array>
     <string-array name="pref_theme_application_funmade_values">
         <item>2</item>
@@ -27,8 +26,8 @@
     <string name="pref_title_widgets_type">Type of widget</string>
 
     <string-array name="pref_theme_widgets_list">
-        <item>@string/theme_holo_dark</item>
-        <item>@string/theme_holo_light</item>
+        <item>@string/theme_dark</item>
+        <item>@string/theme_light</item>
     </string-array>
     <string-array name="pref_theme_widgets_values">
         <item>1</item>
