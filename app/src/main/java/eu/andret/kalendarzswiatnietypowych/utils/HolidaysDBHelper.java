@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +62,22 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		final boolean result = cursor.moveToFirst();
 		cursor.close();
 		return result;
+	}
+
+	public List<Language> getLanguages() {
+		final SQLiteDatabase db = getReadableDatabase();
+		final Cursor cursor = db.rawQuery("SELECT code, name FROM uhc_language", null);
+		if (cursor == null) {
+			return Collections.emptyList();
+		}
+		final List<Language> languages = new ArrayList<>();
+		while (cursor.moveToNext()) {
+			final String code = cursor.getString(0);
+			final String name = cursor.getString(1);
+			languages.add(new Language(name, code));
+		}
+		cursor.close();
+		return languages;
 	}
 
 	public void insertLanguage(final Language language) {

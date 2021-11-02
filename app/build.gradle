@@ -8,16 +8,24 @@ android {
         targetSdkVersion 30
         versionCode 43
         versionName "2.2.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
         }
     }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
     buildToolsVersion '30.0.2'
 }
@@ -26,9 +34,14 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection AnnotationProcessorOnCompilePath
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    //noinspection AnnotationProcessorOnCompilePath
+    compileOnly group: 'org.jetbrains', name: 'annotations', version: '21.0.1'
     implementation group: 'com.android.support', name: 'support-v4', version: '30.0.0'
     implementation group: 'com.android.support', name: 'customtabs', version: '30.0.0'
     implementation group: 'com.android.support', name: 'appcompat-v7', version: '30.0.0'
     implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '20.4.0'
+    implementation group: 'com.android.support', name: 'multidex', version: '2.0.1'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    annotationProcessor group: 'org.jetbrains', name: 'annotations', version: '21.0.1'
+    coreLibraryDesugaring group: 'com.android.tools', name: 'desugar_jdk_libs', version: '1.1.5'
 }

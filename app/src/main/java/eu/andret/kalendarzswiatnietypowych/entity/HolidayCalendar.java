@@ -15,9 +15,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -341,19 +342,19 @@ public class HolidayCalendar {
 	}
 
 	public final HolidayDay getTodayHolidays() {
-		final Calendar c = Calendar.getInstance();
-		return months[c.get(Calendar.MONTH)].getDay(c.get(Calendar.DAY_OF_MONTH));
+		final LocalDate date = LocalDate.now();
+		return months[date.getMonthValue()].getDay(date.getDayOfMonth());
 	}
 
-	public final List<HolidayDay> getHolidayDaysInDateRange(final Calendar begin, final Calendar end, final boolean fillEmptys) {
+	public final List<HolidayDay> getHolidayDaysInDateRange(final LocalDate begin, final LocalDate end, final boolean fillEmpties) {
 		final List<HolidayDay> holidays = new ArrayList<>();
-		for (final Calendar date = (Calendar) begin.clone(); date.before(end); date.add(Calendar.DATE, 1)) {
-			final HolidayMonth hm = months[date.get(Calendar.MONTH)];
-			final HolidayDay hd = hm.getDay(date.get(Calendar.DAY_OF_MONTH));
+		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.minusDays(1)) {
+			final HolidayMonth hm = months[date.getMonthValue()];
+			final HolidayDay hd = hm.getDay(date.getDayOfMonth());
 			if (hd != null) {
 				holidays.add(hd);
-			} else if (fillEmptys) {
-				holidays.add(hm.new HolidayDay(date.get(Calendar.DAY_OF_MONTH), null));
+			} else if (fillEmpties) {
+				holidays.add(hm.new HolidayDay(date.getDayOfMonth(), null));
 			}
 		}
 		return holidays;

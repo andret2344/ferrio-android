@@ -11,8 +11,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -44,37 +44,9 @@ public class DayFragment extends Fragment {
 	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
 		final View dayView = inflater.inflate(R.layout.fragment_day, parent, false);
 		if (day == -1 || month == -1) {
-			final Calendar calendar = Calendar.getInstance();
-			if (new GregorianCalendar().isLeapYear(calendar.get(Calendar.YEAR))) {
-				if (id < 60) {
-					calendar.set(Calendar.DAY_OF_YEAR, id + 1);
-					day = calendar.get(Calendar.DAY_OF_MONTH);
-					month = 1 + calendar.get(Calendar.MONTH);
-				} else if (id == 60) {
-					day = 30;
-					month = 2;
-				} else {
-					calendar.set(Calendar.DAY_OF_YEAR, id);
-					day = calendar.get(Calendar.DAY_OF_MONTH);
-					month = 1 + calendar.get(Calendar.MONTH);
-				}
-			} else {
-				if (id < 59) {
-					calendar.set(Calendar.DAY_OF_YEAR, id + 1);
-					day = calendar.get(Calendar.DAY_OF_MONTH);
-					month = 1 + calendar.get(Calendar.MONTH);
-				} else if (id == 59) {
-					day = 29;
-					month = 2;
-				} else if (id == 60) {
-					day = 30;
-					month = 2;
-				} else {
-					calendar.set(Calendar.DAY_OF_YEAR, id - 1);
-					day = calendar.get(Calendar.DAY_OF_MONTH);
-					month = calendar.get(Calendar.MONTH) + 1;
-				}
-			}
+			final LocalDate date = calculateDates();
+			day = date.getDayOfMonth();
+			month = date.getMonthValue();
 		}
 		final SharedPreferences theme = Data.getPreferences(getActivity(), Data.Prefs.THEME);
 		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
@@ -94,48 +66,29 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(color.background);
 		}
 		((ListView) dayView.findViewById(R.id.fragment_day_list_holidays)).setAdapter(new HolidayAdapter(getActivity(), holidays, c, true));
-
-		// final SharedPreferences favourites = Data.getPreferences(getActivity(), Data.Prefs.FAVOURITES);
-		// final ImageView iv = (ImageView) dayView.findViewById(R.id.colectionday_image_favourite);
-		// final Set<String> set = favourites.getStringSet(Data.favourites, new HashSet<String>());
-		// favourites.getStringSet(Data.favourites, new HashSet<String>());
-		// All().get(Data.favourites);
-		// Log.d("AC", favourites.getAll().toString());
-		// if (set.contains(current)) {
-		// iv.setImageResource(R.drawable.star_yellow);
-		// }
-		// iv.setVisibility(View.INVISIBLE);
-		// if (new SimpleDateFormat("dd.MM", Locale.US).format(new Date()).equals(current)) {
-		// SharedPreferences.Editor editor = favourites.edit();
-		// editor.putString(Data.lastShow, current);
-		// editor.apply();
-		// }
-		// final TypedArray ta = getContext().obtainStyledAttributes(R.styleable.images);
-		// final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-		// alert.setTitle(getResources().getString(R.string.deleting));
-		// alert.setMessage(getResources().getString(R.string.are_you_sure));
-		// alert.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
-		// SharedPreferences.Editor editor = favourites.edit();
-		// Set<String> copy = new HashSet<String>(set);
-		// copy.remove(current);
-		// editor.putStringSet(Data.favourites, copy);
-		// editor.apply();
-		// iv.setImageDrawable(ta.getDrawable(R.styleable.images_star));
-		// iv.invalidate();
-		// Toast.makeText(DayFragment.this.getActivity(), "Removed current day (" + current + ") from favourites",
-		// Toast.LENGTH_SHORT).show();
-		// }
-		// });
-		// alert.setNegativeButton(getResources().getString(R.string.no), null);
-		// iv.setOnClickListener(new View.OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// Toast.makeText(getActivity(), current, Toast.LENGTH_LONG).show();
-		// }
-		// });
-		// ta.recycle();
 		return dayView;
+	}
+
+	private LocalDate calculateDates() {
+		final LocalDate now = LocalDate.now();
+		if (now.isLeapYear()) {
+			if (id < 60) {
+				return LocalDate.ofYearDay(now.getYear(), id + 1);
+			}
+			if (id == 60) {
+				return LocalDate.of(now.getYear(), Month.FEBRUARY, 30);
+			}
+			return LocalDate.ofYearDay(now.getYear(), id);
+		}
+		if (id < 59) {
+			return LocalDate.ofYearDay(now.getYear(), id + 1);
+		}
+		if (id == 59) {
+			return LocalDate.of(now.getYear(), Month.FEBRUARY, 29);
+		}
+		if (id == 60) {
+			return LocalDate.of(now.getYear(), Month.FEBRUARY, 30);
+		}
+		return LocalDate.ofYearDay(now.getYear(), id);
 	}
 }

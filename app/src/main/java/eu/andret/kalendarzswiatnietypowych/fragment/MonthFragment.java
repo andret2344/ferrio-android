@@ -10,9 +10,11 @@ import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.util.Calendar;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
@@ -24,40 +26,14 @@ public class MonthFragment extends Fragment {
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
 		final View month = inflater.inflate(R.layout.fragment_month, parent, false);
-		final int current = getArguments().getInt("month", 1);
+		final int current = Optional.ofNullable(getArguments())
+				.map(x -> x.getInt("month", 1))
+				.orElseThrow(() -> new UnsupportedOperationException("No passed arguments!"));
 
-		final Calendar c = Calendar.getInstance();
-		c.set(Calendar.MONTH, current);
-		c.set(Calendar.DAY_OF_MONTH, 1);
-		c.get(Calendar.DAY_OF_YEAR);
-		if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			c.add(Calendar.DATE, -1);
-		}
-		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		c.get(Calendar.DAY_OF_YEAR);
-		final Calendar before = (Calendar) c.clone();
-
-		c.set(Calendar.MONTH, current);
-		c.set(Calendar.DAY_OF_MONTH, 1);
-		c.get(Calendar.DAY_OF_YEAR);
-		c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-		final int w = c.get(Calendar.WEEK_OF_YEAR);
-		c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		c.set(Calendar.WEEK_OF_YEAR, w);
-		c.get(Calendar.DAY_OF_YEAR);
-		c.add(Calendar.DAY_OF_YEAR, 1);
-		c.get(Calendar.DAY_OF_YEAR);
-		final Calendar after = (Calendar) c.clone();
-
-		final int diffDays = (int) TimeUnit.MILLISECONDS.toDays(after.getTimeInMillis() - before.getTimeInMillis());
-		final int diffWeeks = diffDays / 7 + (diffDays % 7 == 0 ? 0 : 1);
-		if (diffWeeks < 6) {
-			after.add(Calendar.WEEK_OF_MONTH, 6 - diffWeeks);
-		}
-
+		final LocalDate before = getBefore(current);
+		final LocalDate after = getAfter(current, before);
 		final SharedPreferences theme = Data.getPreferences(getActivity(), Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		final Data.AppColorSet color = Data.getColors(theme.getInt(getContext().getResources().getString(R.string.settings_theme_app), 1));
 		final List<HolidayDay> holidays = HolidayCalendar.getInstance(getContext()).getHolidayDaysInDateRange(before, after, true);
 		final GridView grid = month.findViewById(R.id.fragment_month_grid_days);
 		grid.measure(0, 0);
@@ -74,5 +50,35 @@ public class MonthFragment extends Fragment {
 		});
 		month.findViewById(R.id.fragment_month_grid_days).setBackgroundColor(color.background);
 		return month;
+	}
+
+	private LocalDate getBefore(final int month) {
+		LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, 1);
+		if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+			date = date.minusDays(1);
+		}
+		while (!date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+			date = date.minusDays(1);
+		}
+		return date;
+	}
+
+	private LocalDate getLastDay(final int month) {
+		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, 1);
+		return date.plusDays(date.lengthOfMonth()).minusDays(1);
+	}
+
+	private LocalDate getAfter(final int month, final LocalDate before) {
+		LocalDate date = getLastDay(month);
+		while (!date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+			date = date.plusDays(1);
+		}
+		date = date.plusDays(1);
+		final long diffDays = before.until(date, ChronoUnit.DAYS);
+		final long diffWeeks = diffDays / 7 + (diffDays % 7 == 0 ? 0 : 1);
+		if (diffWeeks < 6) {
+			date = date.plusDays(7 * (6 - diffWeeks));
+		}
+		return date;
 	}
 }

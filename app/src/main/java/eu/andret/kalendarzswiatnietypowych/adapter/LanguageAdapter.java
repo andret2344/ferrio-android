@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -28,7 +29,6 @@ import java.util.concurrent.Future;
 import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activity.LanguageActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
@@ -78,7 +78,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					final Future<List<HolidayDay>> future = executorService.submit(new Downloader(language));
 					final List<HolidayDay> data = future.get();
 					dialog.dismiss();
-					((LanguageActivity) getContext()).getListView().setItemChecked(position, true);
+					((ListView) parent).setItemChecked(position, true);
 					final HolidaysDBHelper instance = HolidaysDBHelper.getInstance(getContext());
 					if (!instance.languageExists(language.getCode())) {
 						instance.insertLanguage(language);

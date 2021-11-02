@@ -34,8 +34,6 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3410450408196791~3872850665" />
 
-        <service android:name=".NotificationService" />
-
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="fullSensor"
@@ -52,13 +50,6 @@
         <activity
             android:name=".activity.DayActivity"
             android:screenOrientation="fullSensor"></activity>
-        <activity
-            android:name=".activity.FavouriteActivity"
-            android:screenOrientation="fullSensor">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
-        </activity>
 
         <receiver
             android:exported="true"

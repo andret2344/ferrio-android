@@ -5,11 +5,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -37,8 +34,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -61,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String FROM = "from";
-	private final Calendar calendar = Calendar.getInstance();
 
 	private Util util;
 	private DrawerLayout navigationDrawer;
@@ -74,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
-		final String f = getIntent().getStringExtra(FROM);
-		if (f != null && (f.equals("widget") || f.equals("notification"))) {
-			final Intent i = new Intent(this, DayActivity.class);
-			i.putExtra(FROM, "calendar");
-			i.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
-			i.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
-			startActivityForResult(i, getResources().getInteger(R.integer.request_code_change_month));
+		final String stringFrom = getIntent().getStringExtra(FROM);
+		if (stringFrom != null && (stringFrom.equals("widget") || stringFrom.equals("notification"))) {
+			final Intent intent = new Intent(this, DayActivity.class);
+			intent.putExtra(FROM, "calendar");
+			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
+			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
+			startActivityForResult(intent, getResources().getInteger(R.integer.request_code_change_month));
 		}
 		super.onCreate(savedInstanceState);
 
@@ -108,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 		text.setText(R.string.app_name);
 		text.setLayoutParams(textParams);
 		text.setTextSize(getResources().getDimension(R.dimen.drawer_list_name_text));
-		// preloaderLayout.addView(text);
 
 		final ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleLarge);
 		final LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
@@ -117,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
 		preloaderLayout.addView(progress);
 
 		setContentView(R.layout.activity_main);
-//		MobileAds.initialize(this, "ca-app-pub-3410450408196791~3872850665");
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if (pm != null) {
 			wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
@@ -129,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 		setUpNavigationDrawer();
 		pager = findViewById(R.id.main_pager_months);
 		pager.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager()));
-		pager.setCurrentItem(calendar.get(Calendar.MONTH));
+		pager.setCurrentItem(LocalDate.now().getMonthValue());
 		getSupportActionBar().setTitle(util.getMonth(pager.getCurrentItem()));
 		pager.setOffscreenPageLimit(12);
 		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -150,13 +144,8 @@ public class MainActivity extends AppCompatActivity {
 		});
 
 		new Handler().postDelayed(MainActivity.this::dismissPreLoader, 4000);
-
 		util.createAd(R.id.main_adview_bottom);
-		// util.createNotification("UHC", "Today is", R.drawable.ic_launcher, getIntent(), false);
-
-		// startService(new Intent(this, NotificationService.class));
 		update();
-
 	}
 
 	@Override
@@ -175,67 +164,11 @@ public class MainActivity extends AppCompatActivity {
 		data.add(new NavigationDrawerImage(ContextCompat.getDrawable(this, R.drawable.ic_launcher)));
 		data.add(new NavigationDrawerItem(R.string.settings, ta.getDrawable(R.styleable.images_settings), v -> startActivityForResult(new Intent(getApplicationContext(), SettingsActivity.class), getApplicationContext().getResources().getInteger(R.integer.request_code_settings))));
 
-		// data.add(
-		new NavigationDrawerItem(R.string.menu_favourites, ta.getDrawable(R.styleable.images_star), v -> {
-
-		});
-		// );
-
 		data.add(new NavigationDrawerItem(R.string.languages, ta.getDrawable(R.styleable.images_translate), v -> startActivity(new Intent(getApplicationContext(), LanguageActivity.class))));
-
-		data.add(new NavigationDrawerItem(R.string.rate, ta.getDrawable(R.styleable.images_thumb_up), v -> {
-			final String packet = "eu.andret.kalendarzswiatnietypowych";
-			final Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packet));
-			boolean marketFound = false;
-
-			final List<ResolveInfo> otherApps = getPackageManager().queryIntentActivities(rateIntent, 0);
-			for (final ResolveInfo otherApp : otherApps) {
-				if (otherApp.activityInfo.applicationInfo.packageName.equals("com.android.vending")) {
-					final ActivityInfo otherAppActivity = otherApp.activityInfo;
-					final ComponentName componentName = new ComponentName(otherAppActivity.applicationInfo.packageName, otherAppActivity.name);
-					rateIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					rateIntent.setComponent(componentName);
-					startActivity(rateIntent);
-					marketFound = true;
-					break;
-				}
-			}
-
-			if (!marketFound) {
-				final Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packet));
-				startActivity(webIntent);
-			}
-		}));
 
 		data.add(new NavigationDrawerItem(R.string.about_calendar, ta.getDrawable(R.styleable.images_event), v -> util.createAlert(R.string.about_calendar, R.string.about_calendar_text)));
 
 		data.add(new NavigationDrawerItem(R.string.about_holidays, ta.getDrawable(R.styleable.images_format_quote), v -> util.createAlertWithImage(R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text)));
-
-		// data.add(
-		new NavigationDrawerItem(R.string.recommend_also, ta.getDrawable(R.styleable.images_myfeasts), v -> {
-			final String pck = "eu.deyanix.myfeasts";
-			final Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + pck));
-			boolean marketFound = false;
-
-			final List<ResolveInfo> otherApps = getPackageManager().queryIntentActivities(rateIntent, 0);
-			for (final ResolveInfo otherApp : otherApps) {
-				if (otherApp.activityInfo.applicationInfo.packageName.equals("com.android.vending")) {
-					final ActivityInfo otherAppActivity = otherApp.activityInfo;
-					final ComponentName componentName = new ComponentName(otherAppActivity.applicationInfo.packageName, otherAppActivity.name);
-					rateIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					rateIntent.setComponent(componentName);
-					startActivity(rateIntent);
-					marketFound = true;
-					break;
-				}
-			}
-
-			if (!marketFound) {
-				final Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + pck));
-				startActivity(webIntent);
-			}
-		});
-		// );
 
 		navigationDrawer = findViewById(R.id.main_drawer_main);
 		drawerList = findViewById(R.id.main_list_drawer);
@@ -298,7 +231,6 @@ public class MainActivity extends AppCompatActivity {
 			public boolean onQueryTextChange(final String newText) {
 				list.clear();
 				if (newText == null || newText.equals("")) {
-					list.clear();
 					list.addAll(originalList);
 					MainActivity.this.list.setVisibility(View.INVISIBLE);
 					pager.setVisibility(View.VISIBLE);
@@ -338,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == getResources().getInteger(R.integer.request_code_change_month)) {
 			if (resultCode == RESULT_OK) {
-				set(data.getIntExtra(MONTH, calendar.get(Calendar.MONTH)), false);
+				set(data.getIntExtra(MONTH, LocalDate.now().getMonthValue()), false);
 			} else {
 				Toast.makeText(this, "unknown error", Toast.LENGTH_SHORT).show();
 			}
@@ -354,8 +286,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == R.id.menu_main_today) {
-			final Calendar cal = Calendar.getInstance();
-			pager.setCurrentItem(cal.get(Calendar.MONTH));
+			pager.setCurrentItem(LocalDate.now().getMonthValue());
 		}
 		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
@@ -366,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 		pager.invalidate();
 		pager.refreshDrawableState();
 		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getResources().getString(R.string.settings_theme_app), "1")));
+		final Data.AppColorSet color = Data.getColors(theme.getInt(getResources().getString(R.string.settings_theme_app), 1));
 		navigationDrawer.setBackgroundColor(color.background);
 		drawerList.setBackgroundColor(color.background);
 		findViewById(R.id.main_relative_main).setBackgroundColor(color.background);

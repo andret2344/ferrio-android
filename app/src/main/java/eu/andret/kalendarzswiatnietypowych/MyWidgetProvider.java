@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
@@ -22,9 +22,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
 	public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 		final boolean dark = Data.getPreferences(context, Data.Prefs.THEME).getString(context.getResources().getString(R.string.settings_theme_widgets), "1").equals("1");
-		final Calendar c = Calendar.getInstance();
-		final int day = c.get(Calendar.DAY_OF_MONTH);
-		final int month = c.get(Calendar.MONTH);
+		final LocalDate now = LocalDate.now();
+		final int day = now.getDayOfMonth();
+		final int month = now.getMonthValue();
 		final Intent intent = new Intent(context, MainActivity.class);
 		intent.putExtra("from", "widget");
 		intent.putExtra("day", day);

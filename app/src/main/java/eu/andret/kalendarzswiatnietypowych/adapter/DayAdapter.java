@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +28,6 @@ import eu.andret.kalendarzswiatnietypowych.utils.Data.MyColor;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;
 
 public class DayAdapter extends ArrayAdapter<HolidayDay> {
-	private final Calendar calendar = Calendar.getInstance();
 	private final Random random = new Random();
 	private final int month;
 
@@ -77,7 +76,8 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			return convertView;
 		}
 
-		if (ho.getDay() == calendar.get(Calendar.DAY_OF_MONTH) && ho.getMonth().getMonth() == calendar.get(Calendar.MONTH) + 1) {
+		final LocalDate now = LocalDate.now();
+		if (ho.getDay() == now.getDayOfMonth() && ho.getMonth().getMonth() == now.getMonthValue()) {
 			convertView.setBackgroundColor(color.dark ? Color.rgb(55, 0, 0) : Color.rgb(200, 255, 255));
 		}
 
@@ -97,8 +97,6 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			((Activity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
 		});
 
-		final boolean display = theme.getBoolean(getContext().getResources().getString(R.string.settings_display_shortcuts), true);
-
 		boolean full = true;
 		if (ho.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
 			holder.sad.setVisibility(View.VISIBLE);
@@ -106,6 +104,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		} else {
 			final String text = ho.getHolidaysList(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)).get(0).getText();
 			holder.sad.setVisibility(View.INVISIBLE);
+			final boolean display = theme.getBoolean(getContext().getResources().getString(R.string.settings_display_shortcuts), true);
 			if (display) {
 				final String[] arr = text.split(" ");
 				StringBuilder result = new StringBuilder();

@@ -11,8 +11,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
@@ -46,12 +45,10 @@ public class DayActivity extends AppCompatActivity {
 
 		final int day = getIntent().getIntExtra("day", -1);
 		final int month = getIntent().getIntExtra("month", -1);
-		final Calendar c = Calendar.getInstance();
 		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager()));
-		c.set(Calendar.MONTH, month);
-		c.set(Calendar.DAY_OF_MONTH, day);
-		final boolean leap = new GregorianCalendar().isLeapYear(c.get(Calendar.YEAR));
-		int id = c.get(Calendar.DAY_OF_YEAR);
+		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
+		final boolean leap = date.isLeapYear();
+		int id = date.getDayOfYear();
 		if (id > (leap ? 60 : 59)) {
 			id += leap ? 1 : 2;
 		}
@@ -89,9 +86,9 @@ public class DayActivity extends AppCompatActivity {
 			onBackPressed();
 			return true;
 		} else if (item.getItemId() == R.id.menu_day_today) {
-			final Calendar c = Calendar.getInstance();
-			final boolean leap = new GregorianCalendar().isLeapYear(c.get(Calendar.YEAR));
-			int id = c.get(Calendar.DAY_OF_YEAR);
+			final LocalDate date = LocalDate.now();
+			final boolean leap = date.isLeapYear();
+			int id = date.getDayOfYear();
 			if (id > (leap ? 60 : 59)) {
 				id += leap ? 0 : 1;
 			}
@@ -123,15 +120,14 @@ public class DayActivity extends AppCompatActivity {
 	public void onBackPressed() {
 		try {
 			int id = pager.getCurrentItem();
-			final Calendar c = Calendar.getInstance();
 
 			if (id > 58) {
-				id -= new GregorianCalendar().isLeapYear(c.get(Calendar.YEAR)) ? 1 : 2;
+				id -= LocalDate.now().isLeapYear() ? 1 : 2;
 			}
-			c.set(Calendar.DAY_OF_YEAR, id + 1);
 
+			final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), id + 1);
 			final Intent returnIntent = new Intent();
-			returnIntent.putExtra("month", c.get(Calendar.MONTH));
+			returnIntent.putExtra("month", date.getMonthValue());
 			setResult(Activity.RESULT_OK, returnIntent);
 		} catch (final Exception ex) {
 			util.createAlert(R.string.oops, R.string.something_went_wrong);

@@ -16,9 +16,9 @@ public class MonthFragmentAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(final int id) {
 		final MonthFragment fragment = new MonthFragment();
-		final Bundle args = new Bundle();
-		args.putInt("month", id);
-		fragment.setArguments(args);
+		final Bundle bundle = new Bundle();
+		bundle.putInt("month", id);
+		fragment.setArguments(bundle);
 		return fragment;
 	}
 

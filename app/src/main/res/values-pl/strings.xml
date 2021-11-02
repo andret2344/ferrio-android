@@ -16,7 +16,6 @@
     <string name="search">Szukaj</string>
     <string name="see_more">więcej</string>
     <string name="holidays">Święta</string>
-    <string name="menu_favourites">Ulubione</string>
     <string name="are_you_sure">Jestes pewien?</string>
     <string name="deleting">Usuwanie</string>
     <string name="today">Dzisiaj</string>
@@ -63,7 +62,7 @@
     <string name="report_tutorial_info">To jest sposób zgłaszania źle przetłumaczonych świąt, 
         literówek, czy jakichkolwiek problemów z tekstem święta.
         Na pewno chcesz kontynuować zgłaszanie?</string>
-    <string name="dont_show_again">Nie pokazuj ponownie</string>
+    <string name="do_not_show_again">Nie pokazuj ponownie</string>
     <string name="report_sending">Wysyłanie&#8230;</string>
     <string name="report_sent">Zgłoszenie wysyłano!</string>
     <string name="theme_light">Motyw jasny</string>
@@ -82,8 +81,6 @@
     <string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
     <string name="languages">Języki</string>
     <string name="title_activity_language">Wybierz język</string>
-    <string name="exit">Wyjdź</string>
-    <string name="no_languages">Aplikacja nie ma pobranych języków. Pobrać je teraz?</string>
     <string name="downloading_data">Pobieranie danych&#8230;</string>
     <string name="send">Wyślij</string>
     <string name="oops">Ups!</string>
@@ -91,6 +88,5 @@
     <string name="pointer">\u00B7</string>
     <string name="display_shortcuts">Wyświetlaj skróty świąt</string>
     <string name="display_shortcuts_desc">Jeśli zaznaczony, wyświetla skróty świąt w widoku miesiąca</string>
-    <string name="answer">Odpowiedź…</string>
 
 </resources>

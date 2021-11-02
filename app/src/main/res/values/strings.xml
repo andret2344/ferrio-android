@@ -2,8 +2,8 @@
 <resources>
 
     <string name="banner_ad_unit_id">ca-app-pub-3410450408196791/4823111464</string>
-    <string name="app_name">Unususal Holiday Calendar</string>
-    <string name="unusual_holiday">Unususal holiday</string>
+    <string name="app_name">Unusual Holiday Calendar</string>
+    <string name="unusual_holiday">Unusual holiday</string>
     <string name="check_it_yourself">Check it yourself!</string>
     <string name="share_via">Share via</string>
     <string name="today_is">Today is:</string>
@@ -16,14 +16,13 @@
     <string name="search">Search</string>
     <string name="see_more">more</string>
     <string name="holidays">Holidays</string>
-    <string name="menu_favourites">Favourites</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="deleting">Deleting</string>
     <string name="today">Today</string>
     <string name="colorized_days">Colorized days</string>
     <string name="colorized_days_desc">If selected, every day has its own color based on each date.</string>
     <string name="usual_holidays">Include usual holidays</string>
-    <string name="usual_holidays_desc">If selected, regullar holidays are also viewable, e.g. New Year\'s Eve.</string>
+    <string name="usual_holidays_desc">If selected, regular holidays are also viewable, e.g. New Year\'s Eve.</string>
     <string name="favourite_today">Today is your favourite day! Check it here&#8230;</string>
 
     <string-array name="months">
@@ -63,7 +62,7 @@
     <string name="report_tutorial_info">This is the way of reporting wrongly translated holidays, 
         or typos or any other problems with text of holidays.
         Do you really want to proceed with reporting?</string>
-    <string name="dont_show_again">Don\'t show again</string>
+    <string name="do_not_show_again">Don\'t show again</string>
     <string name="report_sending">Sending&#8230;</string>
     <string name="report_sent">Report sent!</string>
     <string name="theme_light">Light theme</string>
@@ -75,15 +74,13 @@
     <string name="letter_g">G</string>
     <string name="letter_b">B</string>
     <string name="about_calendar">About calendar</string>
-    <string name="about_calendar_text">The Unusual Holiday Calendar is a calendar created by imperialists from Ententa during World War One. It was created for the purpose of the German Empire, so that people could celebrate so long and often that they had no time to fight for their homeland on the battlefront. It collects holidays, which weren\'t permitted by usual holidays to theirs\' calendars.</string>
+    <string name="about_calendar_text">The Unusual Holiday Calendar is a calendar created by imperialists from Entente during World War One. It was created for the purpose of the German Empire, so that people could celebrate so long and often that they had no time to fight for their homeland on the battlefront. It collects holidays, which were not permitted by usual holidays to theirs\' calendars.</string>
     <string name="recommend_also">I recommend also&#8230;</string>
-    <string name="no_internet">Your device is not connected to the internet. Until report sending will be available, the internet connectivity must be estabilished.</string>
+    <string name="no_internet">Your device is not connected to the internet. Until report sending will be available, the internet connectivity must be established.</string>
     <string name="about_holidays">About holidays</string>
     <string name="about_holidays_text">All holidays - even those most unusual - are an opportunity to look in a different way at people, and appreciate phenomena we usually ignore.</string>
     <string name="title_activity_language">Select language</string>
     <string name="languages">Languages</string>
-    <string name="exit">Exit</string>
-    <string name="no_languages">There are no languages in the app. Would you like to download them now?</string>
     <string name="downloading_data">Downloading data&#8230;</string>
     <string name="send">Send</string>
     <string name="oops">Oops!</string>
@@ -91,6 +88,5 @@
     <string name="pointer">\u00B7</string>
     <string name="display_shortcuts">Display holidays\' shortcuts</string>
     <string name="display_shortcuts_desc">If checked, you can see holidays\' shortcuts on month view</string>
-    <string name="answer">Answer…</string>
 
 </resources>

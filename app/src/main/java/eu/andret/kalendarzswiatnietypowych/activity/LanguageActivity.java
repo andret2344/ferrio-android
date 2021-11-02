@@ -13,14 +13,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -31,42 +34,42 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.LanguageAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
+import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
-import lombok.SneakyThrows;
 
 public class LanguageActivity extends AppCompatActivity {
 	private Dialog progressDialog;
-	private ListView listView;
+	private Util util;
 
-	@SneakyThrows
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		final Util util = new Util(this);
+		util = new Util(this);
 		util.applyTheme();
 		setContentView(R.layout.activity_language);
-		progressDialog = new Dialog(this);
 
 		util.createAd(R.id.language_adview_bottom);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		listView = findViewById(R.id.language_list_languages);
+		final ListView listView = findViewById(R.id.language_list_languages);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+		final Set<Language> languages = new HashSet<>(HolidaysDBHelper.getInstance(this).getLanguages());
 		if (util.isConnection()) {
-			progressDialog.setTitle(getResources().getString(R.string.downloading_data));
-			progressDialog.setCancelable(false);
-			progressDialog.show();
-			final ExecutorService executorService = Executors.newSingleThreadExecutor();
-			final Future<List<Language>> future = executorService.submit(new LanguageActivity.Downloader());
-			final List<Language> languages = future.get();
-			progressDialog.dismiss();
-			listView.setAdapter(new LanguageAdapter(this, languages));
+			try {
+				progressDialog = new Dialog(this);
+				progressDialog.setTitle(getResources().getString(R.string.downloading_data));
+				progressDialog.setCancelable(false);
+				progressDialog.show();
+				final ExecutorService executorService = Executors.newSingleThreadExecutor();
+				final Future<List<Language>> future = executorService.submit(new Downloader());
+				languages.addAll(future.get());
+				progressDialog.dismiss();
+			} catch (final InterruptedException | ExecutionException e) {
+				Thread.currentThread().interrupt();
+			}
 		}
-	}
-
-	public ListView getListView() {
-		return listView;
+		listView.setAdapter(new LanguageAdapter(this, new ArrayList<>(languages)));
 	}
 
 	@Override
@@ -96,19 +99,23 @@ public class LanguageActivity extends AppCompatActivity {
 		super.onDestroy();
 	}
 
-	private static class Downloader implements Callable<List<Language>> {
+	private class Downloader implements Callable<List<Language>> {
 		@Override
 		public List<Language> call() throws IOException, JSONException {
 			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/language/").openConnection();
-			con.setRequestMethod("GET");
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			final StringBuilder stringBuilder = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				stringBuilder.append(line);
+			final InputStream in = con.getInputStream();
+			final int length = con.getHeaderFieldInt("Content-Length", -1);
+
+			final byte[] bytes = new byte[length];
+			for (int i = 0; i < length; i++) {
+				if (!util.isConnection()) {
+					util.createAlert(R.string.caution, R.string.no_internet);
+					return Collections.emptyList();
+				}
+				bytes[i] = (byte) in.read();
 			}
-			reader.close();
-			final String result = stringBuilder.toString();
+			in.close();
+			final String result = new String(bytes, StandardCharsets.UTF_8);
 			if (result.isEmpty()) {
 				return Collections.emptyList();
 			}
