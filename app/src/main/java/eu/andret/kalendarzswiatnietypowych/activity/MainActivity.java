@@ -23,12 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 	private ViewPager pager;
 	private ListView list;
 	private PowerManager.WakeLock wakeLock;
-	private LinearLayout preloaderLayout;
+	private LinearLayout preLoaderLayout;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -84,18 +84,18 @@ public class MainActivity extends AppCompatActivity {
 		util.applyTheme();
 
 		final ViewGroup v = (ViewGroup) getWindow().getDecorView().getRootView();
-		preloaderLayout = new LinearLayout(this);
-		preloaderLayout.setOrientation(LinearLayout.VERTICAL);
-		preloaderLayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		preloaderLayout.setBackgroundColor(Data.MyColor.BLACK);
-		v.addView(preloaderLayout);
+		preLoaderLayout = new LinearLayout(this);
+		preLoaderLayout.setOrientation(LinearLayout.VERTICAL);
+		preLoaderLayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		preLoaderLayout.setBackgroundColor(Data.MyColor.BLACK);
+		v.addView(preLoaderLayout);
 
 		final ImageView image = new ImageView(this);
 		final LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
 		imageParams.gravity = Gravity.CENTER;
 		image.setLayoutParams(imageParams);
 		image.setImageResource(R.drawable.ic_app_logo);
-		preloaderLayout.addView(image);
+		preLoaderLayout.addView(image);
 
 		final TextView text = new TextView(this);
 		final LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 		final LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
 		progressParams.gravity = Gravity.CENTER;
 		progress.setLayoutParams(progressParams);
-		preloaderLayout.addView(progress);
+		preLoaderLayout.addView(progress);
 
 		setContentView(R.layout.activity_main);
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 		final ArrayList<HolidayDay> list = new ArrayList<>(originalList);
 		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
 		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
-		MainActivity.this.list.setAdapter(adapter);
+		this.list.setAdapter(adapter);
 		if (searchView == null) {
 			return true;
 		} // TODO
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == getResources().getInteger(R.integer.request_code_change_month)) {
 			if (resultCode == RESULT_OK) {
-				set(data.getIntExtra(MONTH, LocalDate.now().getMonthValue()), false);
+				set(data.getIntExtra(MONTH, LocalDate.now().getMonthValue()) - 1);
 			} else {
 				Toast.makeText(this, "unknown error", Toast.LENGTH_SHORT).show();
 			}
@@ -303,8 +303,8 @@ public class MainActivity extends AppCompatActivity {
 		findViewById(R.id.main_relative_main).setBackgroundColor(color.background);
 	}
 
-	private void set(final int id, final boolean smooth) {
-		pager.setCurrentItem(id, smooth);
+	private void set(final int id) {
+		pager.setCurrentItem(id, false);
 	}
 
 	public void dismissPreLoader() {
@@ -325,9 +325,9 @@ public class MainActivity extends AppCompatActivity {
 
 			@Override
 			public void onAnimationEnd(final Animation animation) {
-				preloaderLayout.setVisibility(View.INVISIBLE);
+				preLoaderLayout.setVisibility(View.INVISIBLE);
 			}
 		});
-		preloaderLayout.startAnimation(fadeOut);
+		preLoaderLayout.startAnimation(fadeOut);
 	}
 }

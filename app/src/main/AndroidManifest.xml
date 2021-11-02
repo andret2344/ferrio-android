@@ -3,22 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="eu.andret.kalendarzswiatnietypowych">
 
-    <!--
-    a.b.c.de
-    a - zmiana rdzenia, calkowita zmiana kodu, pisanie od 0
-    b - mocna optymalizacja i duze poprawki
-    c - nowo dodane funkcje
-	d - zakodowana data (mmdd)
-	e - drobne zmiany i poprawki
-    -->
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--
-        <uses-permission
-        android:name="com.android.vending.BILLING" />
-    -->
 
     <application
         android:allowBackup="true"
@@ -49,7 +36,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
             android:name=".activity.DayActivity"
-            android:screenOrientation="fullSensor"></activity>
+            android:screenOrientation="fullSensor" />
 
         <receiver
             android:exported="true"
@@ -72,16 +59,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
         </activity>
-        <!--
-         <activity
-            android:name="eu.andret.kalendarzswiatnietypowych.activities.WidgetConfigurationActivity"
-            android:label="@string/settings"
-            android:theme="@android:style/Theme.Dialog" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-        -->
         <activity
             android:name=".activity.LanguageActivity"
             android:label="@string/title_activity_language">

@@ -40,8 +40,8 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 			assert inflater != null;
 			convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
 			holder = new ViewHolder();
-			holder.name = convertView.findViewById(R.id.draweritem_text_name);
-			holder.icon = convertView.findViewById(R.id.draweritem_image_icon);
+			holder.name = convertView.findViewById(R.id.drawer_item_text_name);
+			holder.icon = convertView.findViewById(R.id.drawer_item_image_icon);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();

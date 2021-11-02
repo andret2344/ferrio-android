@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +43,6 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		this.month = month;
 	}
 
-	@SuppressLint("SetTextI18n")
 	@NonNull
 	@Override
 	public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
@@ -64,7 +62,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		final SharedPreferences theme = Data.getPreferences(getContext(), Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		final Data.AppColorSet color = Data.getColors(theme.getInt(getContext().getResources().getString(R.string.settings_theme_app), 1));
 
 		holder.dateSmall.setTextColor(color.foreground);
 		holder.holiday.setTextColor(color.foreground);
@@ -77,11 +75,11 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		final LocalDate now = LocalDate.now();
-		if (ho.getDay() == now.getDayOfMonth() && ho.getMonth().getMonth() == now.getMonthValue()) {
+		if (ho.getDay() == now.getDayOfMonth() && ho.getMonth().getMonth().getValue() == now.getMonthValue()) {
 			convertView.setBackgroundColor(color.dark ? Color.rgb(55, 0, 0) : Color.rgb(200, 255, 255));
 		}
 
-		if (ho.getMonth().getMonth() != month + 1) {
+		if (ho.getMonth().getMonth().getValue() != month) {
 			convertView.setBackgroundColor(color.dark ? MyColor.GRAY_DARK : MyColor.GRAY_LIGHT);
 		} else if (theme.getBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), false)) {
 			random.setSeed(ho.getSeed());
@@ -92,8 +90,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		convertView.setOnClickListener(v -> {
 			final Intent intent = new Intent(getContext(), DayActivity.class);
 			intent.putExtra("day", ho.getDay());
-			intent.putExtra("month", ho.getMonth().getMonth() - 1);
-			intent.putExtra("from", "calendar");
+			intent.putExtra("month", ho.getMonth().getMonth().getValue());
 			((Activity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
 		});
 

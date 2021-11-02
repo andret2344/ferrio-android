@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,15 +42,16 @@ public class SettingsActivity extends AppCompatActivity {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 		final int[] prefs = {R.string.settings_theme_app, R.string.settings_theme_widgets, R.string.settings_theme_colorized, R.string.settings_usual_holidays, R.string.settings_display_shortcuts};
-		final PrefsFragment p = new PrefsFragment();
-		final Bundle args = new Bundle();
-		args.putIntArray("data", prefs);
-		p.setArguments(args);
-		getFragmentManager().beginTransaction().replace(android.R.id.content, p).commit();
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		final PrefsFragment prefsFragment = new PrefsFragment();
+		final Bundle bundle = new Bundle();
+		bundle.putIntArray("data", prefs);
+		prefsFragment.setArguments(bundle);
+		getFragmentManager()
+				.beginTransaction()
+				.replace(android.R.id.content, prefsFragment)
+				.commit();
 	}
 
-	@SuppressLint("ValidFragment")
 	public class PrefsFragment extends PreferenceFragment {
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
@@ -67,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
 				}
 
 				pref.setOnPreferenceChangeListener((preference, value) -> {
-					final SharedPreferences prefs = Data.getPreferences(SettingsActivity.this, Data.Prefs.THEME);
+					final SharedPreferences prefs = Data.getPreferences(getActivity(), Data.Prefs.THEME);
 					final SharedPreferences.Editor editor = prefs.edit();
 					if (value instanceof Boolean) {
 						editor.putBoolean(current, (Boolean) value);
@@ -78,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
 					if (pref instanceof ListPreference) {
 						final ListPreference list = (ListPreference) pref;
 						pref.setSummary(list.getEntries()[list.findIndexOfValue(String.valueOf(value))]);
-						if (current.equals(SettingsActivity.this.getResources().getString(R.string.settings_theme_app))) {
+						if (current.equals(getActivity().getResources().getString(R.string.settings_theme_app))) {
 							recreate();
 						}
 					}

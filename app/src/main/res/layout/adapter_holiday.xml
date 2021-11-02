@@ -8,7 +8,7 @@
         android:id="@+id/adapter_holiday_text_holiday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/adapter_holiday_image_report"
+        android:layout_toStartOf="@+id/adapter_holiday_image_report"
         android:gravity="center_horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/adapter_holiday_text_holiday"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/about_calendar"
         android:src="@drawable/ic_flag_black_32dp" />

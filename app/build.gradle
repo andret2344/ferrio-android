@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "eu.andret.kalendarzswiatnietypowych"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 43
         versionName "2.2.0"
         multiDexEnabled true
@@ -20,6 +20,7 @@ android {
         debug {
             applicationIdSuffix ".debug"
             debuggable true
+            shrinkResources false
         }
     }
     compileOptions {

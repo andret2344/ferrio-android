@@ -99,7 +99,7 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		final SQLiteStatement hStatement = dbWritable.compileStatement(hSQL);
 		for (final HolidayDay ho : list) {
 			final int day = ho.getDay();
-			final int month = ho.getMonth().getMonth();
+			final int month = ho.getMonth().getMonth().getValue();
 			for (final Holiday h : ho.getHolidays()) {
 				mStatement.bindLong(1, h.getMetadataId());
 				mStatement.bindLong(2, day);
@@ -118,12 +118,12 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 				hStatement.bindLong(2, h.getMetadataId());
 				hStatement.bindString(3, language.getCode());
 				hStatement.bindLong(4, new Date().getTime() / 1000);
-				hStatement.bindString(5, h.getExternalLink());
+				hStatement.bindString(5, h.getUrl());
 				values.put("metadata", h.getMetadataId());
 				values.put("language", language.getCode());
 				values.put("text", h.getText());
 				values.put("date_updated", new Date().getTime() / 1000);
-				values.put("url", h.getExternalLink());
+				values.put("url", h.getUrl());
 				cursor = dbReadable.rawQuery("SELECT text FROM uhc_holidays WHERE language = ? AND metadata = ?", new String[]{language.getCode(), "" + h.getMetadataId()});
 				if (cursor.moveToFirst()) {
 					dbWritable.update("uhc_holidays", values, "language = ? AND metadata = ?", new String[]{language.getCode(), "" + h.getMetadataId()});

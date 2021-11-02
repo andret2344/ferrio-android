@@ -16,9 +16,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +26,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.H
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
+import lombok.Value;
 
 public class HolidayCalendar {
 	@SuppressLint("StaticFieldLeak")
@@ -36,47 +37,22 @@ public class HolidayCalendar {
 
 	private String language;
 
+	@Value
 	public class HolidayMonth implements Comparable<HolidayMonth> {
-		private final List<HolidayDay> days = new ArrayList<>();
-		private final int month;
+		List<HolidayDay> days = new ArrayList<>();
+		Month month;
 
+		@Value
 		public class HolidayDay implements Comparable<HolidayDay> {
-			private final int day;
-			private final List<Holiday> holidays;
+			int day;
+			List<Holiday> holidays;
 
+			@Value
 			public class Holiday implements Comparable<Holiday> {
-				private final int metadataId;
-				private final String text;
-				private final boolean usual;
-				private final String externalLink;
-
-				public Holiday(final int metadataId, final String text, final boolean usual, final String externalLink) {
-					this.text = text;
-					this.usual = usual;
-					this.externalLink = externalLink;
-					this.metadataId = metadataId;
-					holidays.add(this);
-				}
-
-				public Holiday(final int hId, final String text, final boolean usual) {
-					this(hId, text, usual, null);
-				}
-
-				public String getText() {
-					return text;
-				}
-
-				public boolean isUsual() {
-					return usual;
-				}
-
-				public String getExternalLink() {
-					return externalLink;
-				}
-
-				public int getMetadataId() {
-					return metadataId;
-				}
+				int metadataId;
+				String text;
+				boolean usual;
+				String url;
 
 				public HolidayDay getDay() {
 					return HolidayDay.this;
@@ -121,28 +97,6 @@ public class HolidayCalendar {
 					}
 					return text.compareTo(o.text);
 				}
-
-				@Override
-				public boolean equals(final Object o) {
-					if (this == o) {
-						return true;
-					}
-					if (o == null || getClass() != o.getClass()) {
-						return false;
-					}
-					final Holiday holiday = (Holiday) o;
-					return usual == holiday.usual && text.equals(holiday.text);
-				}
-
-				@Override
-				public int hashCode() {
-					return text.hashCode() + (usual ? 1 : 0);
-				}
-
-				@Override
-				public String toString() {
-					return "Holiday [id=" + metadataId + ", text=\"" + text + "\", usual=" + usual + ", externalLink=\"" + externalLink + "\"]";
-				}
 			}
 
 			public HolidayDay(final HolidayDay other) {
@@ -154,10 +108,6 @@ public class HolidayCalendar {
 				this.holidays = holidays == null ? new ArrayList<>() : holidays;
 				days.add(this);
 				Collections.sort(this.holidays);
-			}
-
-			public int getDay() {
-				return day;
 			}
 
 			public Holiday find(final String text) {
@@ -179,15 +129,11 @@ public class HolidayCalendar {
 					result += "0";
 				}
 				result += day + ".";
-				if (month < 10) {
+				if (month.getValue() < 10) {
 					result += "0";
 				}
 				result += month;
 				return result;
-			}
-
-			public List<Holiday> getHolidays() {
-				return holidays;
 			}
 
 			public boolean hasHolidays(final boolean includeUsual) {
@@ -230,38 +176,6 @@ public class HolidayCalendar {
 				}
 				return getMonth().compareTo(another.getMonth());
 			}
-
-			@Override
-			public boolean equals(final Object o) {
-				if (this == o) {
-					return true;
-				}
-				if (o == null || getClass() != o.getClass()) {
-					return false;
-				}
-
-				final HolidayDay that = (HolidayDay) o;
-
-				return day == that.day && getMonth().equals(that.getMonth());
-			}
-
-			@Override
-			public int hashCode() {
-				return day;
-			}
-
-			@Override
-			public String toString() {
-				return "HolidayObject [day=" + day + ", holidays=" + holidays + "]";
-			}
-		}
-
-		private HolidayMonth(final int month) {
-			this.month = month;
-		}
-
-		public List<HolidayDay> getDays() {
-			return days;
 		}
 
 		@NonNull
@@ -274,45 +188,19 @@ public class HolidayCalendar {
 			return new HolidayDay(number, new ArrayList<>());
 		}
 
-		public int getMonth() {
-			return month;
-		}
-
 		@Override
 		public int compareTo(@NonNull final HolidayMonth another) {
-			return month - another.month;
-		}
-
-		@Override
-		public boolean equals(final Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-			final HolidayMonth that = (HolidayMonth) o;
-			return month == that.month;
-		}
-
-		@Override
-		public int hashCode() {
-			return month;
+			return month.compareTo(another.getMonth());
 		}
 
 		void clear() {
 			days.clear();
 		}
-
-		@Override
-		public String toString() {
-			return "HolidayMonth [month=" + month + ", days=" + days + "]";
-		}
 	}
 
 	private HolidayCalendar(final Context context) {
 		for (int i = 0; i < 12; i++) {
-			months[i] = new HolidayMonth(i + 1);
+			months[i] = new HolidayMonth(Month.of(i + 1));
 		}
 		this.context = context;
 		final SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
@@ -327,6 +215,10 @@ public class HolidayCalendar {
 	 */
 	public HolidayMonth getMonth(final int month) {
 		return months[month - 1];
+	}
+
+	public HolidayMonth getMonth(final Month month) {
+		return getMonth(month.getValue());
 	}
 
 	void clear() {
@@ -348,8 +240,8 @@ public class HolidayCalendar {
 
 	public final List<HolidayDay> getHolidayDaysInDateRange(final LocalDate begin, final LocalDate end, final boolean fillEmpties) {
 		final List<HolidayDay> holidays = new ArrayList<>();
-		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.minusDays(1)) {
-			final HolidayMonth hm = months[date.getMonthValue()];
+		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.plusDays(1)) {
+			final HolidayMonth hm = months[date.getMonthValue() - 1];
 			final HolidayDay hd = hm.getDay(date.getDayOfMonth());
 			if (hd != null) {
 				holidays.add(hd);
@@ -390,10 +282,5 @@ public class HolidayCalendar {
 			days.addAll(hd.getHolidays());
 		}
 		return days;
-	}
-
-	@Override
-	public String toString() {
-		return "HolidayCalendar [language=" + language + ", months=" + Arrays.asList(months) + "]";
 	}
 }

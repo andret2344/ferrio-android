@@ -9,7 +9,7 @@
         <item name="flag">@drawable/ic_flag_black_32dp</item>
         <item name="format_quote">@drawable/ic_format_quote_black_36dp</item>
         <item name="info">@drawable/ic_info_black_36dp</item>
-        <item name="menu">@drawable/ic_menu_white_24dp</item>
+        <item name="menu">@drawable/ic_info_black_36dp</item>
         <item name="search">@drawable/ic_search_black_36dp</item>
         <item name="settings">@drawable/ic_settings_black_36dp</item>
         <item name="shuffle">@drawable/ic_shuffle_white_24dp</item>
@@ -28,7 +28,7 @@
         <item name="flag">@drawable/ic_flag_black_32dp</item>
         <item name="format_quote">@drawable/ic_format_quote_white_36dp</item>
         <item name="info">@drawable/ic_info_white_36dp</item>
-        <item name="menu">@drawable/ic_menu_white_24dp</item>
+        <item name="menu">@drawable/ic_info_white_36dp</item>
         <item name="search">@drawable/ic_search_white_36dp</item>
         <item name="settings">@drawable/ic_settings_white_36dp</item>
         <item name="shuffle">@drawable/ic_shuffle_white_24dp</item>

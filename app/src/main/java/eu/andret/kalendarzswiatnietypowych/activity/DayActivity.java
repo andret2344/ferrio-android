@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -21,7 +20,6 @@ import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
-import eu.andret.kalendarzswiatnietypowych.fragment.DayFragment;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class DayActivity extends AppCompatActivity {
@@ -38,7 +36,6 @@ public class DayActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_day);
 
 		pager = findViewById(R.id.day_pager_days);
-		pager.setOffscreenPageLimit(10);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(true);
 		getSupportActionBar().setDisplayShowCustomEnabled(false);
@@ -57,8 +54,8 @@ public class DayActivity extends AppCompatActivity {
 		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				final DayFragment fragment = (DayFragment) Objects.requireNonNull(pager.getAdapter()).instantiateItem(pager, pager.getCurrentItem());
-				Objects.requireNonNull(getSupportActionBar()).setTitle(fragment.getDay() + getAddition(fragment.getDay()) + " " + util.getMonthGenitive(fragment.getMonth() - 1));
+				final Util.MonthDayPair pair = util.calculateDates(position + 1);
+				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth().getValue()));
 			}
 
 			@Override
@@ -98,40 +95,33 @@ public class DayActivity extends AppCompatActivity {
 			pager.setCurrentItem(random.nextInt(367), true);
 			return true;
 		} else if (item.getItemId() == R.id.menu_day_share) {
-			final Intent i = new Intent(Intent.ACTION_SEND);
-			i.setType("text/plain");
-			i.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
-			final DayFragment fragment = (DayFragment) Objects.requireNonNull(pager.getAdapter()).instantiateItem(pager, pager.getCurrentItem());
-			final String date = fragment.getDay() + getAddition(fragment.getDay()) + " " + util.getMonthGenitive(fragment.getMonth() - 1);
+			final Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
+			final Util.MonthDayPair pair = util.calculateDates(pager.getCurrentItem());
+			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth().getValue() - 1);
 			final StringBuilder holidays = new StringBuilder();
-			final HolidayDay d = HolidayCalendar.getInstance(this).getMonth(fragment.getMonth()).getDay(fragment.getDay());
-			for (final Holiday h : d.getHolidays()) {
+			final HolidayDay holidayDay = HolidayCalendar.getInstance(this).getMonth(pair.getMonth()).getDay(pair.getDay());
+			for (final Holiday h : holidayDay.getHolidays()) {
 				holidays.append("\n").append(getResources().getString(R.string.pointer)).append(" ").append(h.getText());
 			}
-			i.putExtra(Intent.EXTRA_TEXT, date + ":\n" + holidays + "\n\n" + getResources().getString(R.string.check_it_yourself) + "\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych");
-			startActivity(Intent.createChooser(i, getResources().getString(R.string.share_via)));
+			intent.putExtra(Intent.EXTRA_TEXT, date + ":\n" + holidays + "\n\n" + getResources().getString(R.string.check_it_yourself) + "\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych");
+			startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_via)));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	@Override
 	public void onBackPressed() {
-		try {
-			int id = pager.getCurrentItem();
-
-			if (id > 58) {
-				id -= LocalDate.now().isLeapYear() ? 1 : 2;
-			}
-
-			final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), id + 1);
-			final Intent returnIntent = new Intent();
-			returnIntent.putExtra("month", date.getMonthValue());
-			setResult(Activity.RESULT_OK, returnIntent);
-		} catch (final Exception ex) {
-			util.createAlert(R.string.oops, R.string.something_went_wrong);
+		int id = pager.getCurrentItem();
+		if (id > 58) {
+			id -= LocalDate.now().isLeapYear() ? 0 : 1;
 		}
+		final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), id);
+		final Intent returnIntent = new Intent();
+		returnIntent.putExtra("month", date.getMonthValue());
+		setResult(RESULT_OK, returnIntent);
 		super.onBackPressed();
 	}
 

@@ -1,8 +1,8 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:key="app"
-        android:title="@string/pref_category_app" >
+        android:title="@string/pref_category_app">
         <ListPreference
             android:defaultValue="1"
             android:dialogTitle="@string/pref_title_app_theme"
@@ -34,12 +34,17 @@
              <Preference
             android:key="@string/settings_theme_notification"
             android:summary="Reschedule using current setting"
-            android:title="Reschedule" />
+            android:title="Reschedule" />
+
+
+
+
+
         -->
     </PreferenceCategory>
     <PreferenceCategory
         android:key="widgets"
-        android:title="@string/pref_category_widget" >
+        android:title="@string/pref_category_widget">
         <ListPreference
             android:defaultValue="1"
             android:dialogTitle="@string/pref_title_widgets_theme"
@@ -58,7 +63,11 @@
             android:key="@string/settings_type_widgets"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
-            android:title="@string/pref_title_widgets_type" />
+            android:title="@string/pref_title_widgets_type" />
+
+
+
+
         -->
     </PreferenceCategory>
 
