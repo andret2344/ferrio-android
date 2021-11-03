@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		final String stringFrom = getIntent().getStringExtra(FROM);
-		if (stringFrom != null && (stringFrom.equals("widget") || stringFrom.equals("notification"))) {
+		if (stringFrom != null && stringFrom.equals("widget")) {
 			final Intent intent = new Intent(this, DayActivity.class);
 			intent.putExtra(FROM, "calendar");
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));

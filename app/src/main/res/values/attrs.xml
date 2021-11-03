@@ -1,18 +1,14 @@
 <resources>
-	<declare-styleable name="images" >
-		<attr name="autorenew" format="reference"/>
-		<attr name="event" format="reference"/>
-		<attr name="file_download" format="reference"/>
-		<attr name="flag" format="reference"/>
-		<attr name="format_quote" format="reference"/>
-		<attr name="info" format="reference"/>
-		<attr name="menu" format="reference"/>
-		<attr name="search" format="reference"/>
-		<attr name="settings" format="reference"/>
-		<attr name="shuffle" format="reference"/>
-		<attr name="star" format="reference"/>
-		<attr name="thumb_up" format="reference"/>
-		<attr name="translate" format="reference"/>
-		<attr name="myfeasts" format="reference"/>
+    <declare-styleable name="images">
+        <attr name="event" format="reference" />
+        <attr name="flag" format="reference" />
+        <attr name="format_quote" format="reference" />
+        <attr name="info" format="reference" />
+        <attr name="menu" format="reference" />
+        <attr name="search" format="reference" />
+        <attr name="settings" format="reference" />
+        <attr name="shuffle" format="reference" />
+        <attr name="star" format="reference" />
+        <attr name="translate" format="reference" />
     </declare-styleable>
 </resources>

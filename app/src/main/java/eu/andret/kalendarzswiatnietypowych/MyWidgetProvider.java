@@ -34,7 +34,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		String output = "";
 		final HolidayDay ho = HolidayCalendar.getInstance(context).getTodayHolidays();
 		if (ho.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
-			output += context.getResources().getString(R.string.typical_day);
+			output += context.getResources().getString(R.string.no_unusual_holidays);
 		} else {
 			final StringBuilder outputBuilder = new StringBuilder();
 			for (final Holiday s : ho.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false))) {

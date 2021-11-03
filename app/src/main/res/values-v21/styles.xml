@@ -3,39 +3,27 @@
     <style name="AppTheme" parent="android:Theme.Material.Light">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="autorenew">@drawable/ic_autorenew_black_36dp</item>
         <item name="event">@drawable/ic_event_black_36dp</item>
-        <item name="file_download">@drawable/ic_file_download_black_36dp</item>
-        <item name="flag">@drawable/ic_flag_black_32dp</item>
+        <item name="flag">@drawable/baseline_flag_black_36</item>
         <item name="format_quote">@drawable/ic_format_quote_black_36dp</item>
         <item name="info">@drawable/ic_info_black_36dp</item>
         <item name="menu">@drawable/ic_info_black_36dp</item>
-        <item name="search">@drawable/ic_search_black_36dp</item>
         <item name="settings">@drawable/ic_settings_black_36dp</item>
         <item name="shuffle">@drawable/ic_shuffle_white_24dp</item>
-        <item name="star">@drawable/ic_star_black_24dp</item>
-        <item name="thumb_up">@drawable/ic_thumb_up_black_36dp</item>
         <item name="translate">@drawable/ic_translate_black_36dp</item>
-        <item name="myfeasts">@drawable/mf_black_36dp</item>
     </style>
 
     <style name="AppTheme.Dark" parent="android:Theme.Material">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="autorenew">@drawable/ic_autorenew_white_36dp</item>
         <item name="event">@drawable/ic_event_white_36dp</item>
-        <item name="file_download">@drawable/ic_file_download_white_36dp</item>
-        <item name="flag">@drawable/ic_flag_black_32dp</item>
+        <item name="flag">@drawable/baseline_flag_white_36</item>
         <item name="format_quote">@drawable/ic_format_quote_white_36dp</item>
         <item name="info">@drawable/ic_info_white_36dp</item>
-        <item name="menu">@drawable/ic_info_white_36dp</item>
         <item name="search">@drawable/ic_search_white_36dp</item>
         <item name="settings">@drawable/ic_settings_white_36dp</item>
         <item name="shuffle">@drawable/ic_shuffle_white_24dp</item>
-        <item name="star">@drawable/ic_star_white_24dp</item>
-        <item name="thumb_up">@drawable/ic_thumb_up_white_36dp</item>
         <item name="translate">@drawable/ic_translate_white_36dp</item>
-        <item name="myfeasts">@drawable/mf_white_36dp</item>
     </style>
 
 </resources>

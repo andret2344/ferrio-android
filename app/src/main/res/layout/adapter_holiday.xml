@@ -23,6 +23,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/about_calendar"
-        android:src="@drawable/ic_flag_black_32dp" />
+        android:src="?attr/flag" />
 
 </RelativeLayout>

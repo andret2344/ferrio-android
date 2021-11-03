@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
+import androidx.fragment.app.Fragment;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
@@ -46,44 +51,48 @@ public class SettingsActivity extends AppCompatActivity {
 		final Bundle bundle = new Bundle();
 		bundle.putIntArray("data", prefs);
 		prefsFragment.setArguments(bundle);
-		getFragmentManager()
+		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(android.R.id.content, prefsFragment)
 				.commit();
 	}
 
-	public class PrefsFragment extends PreferenceFragment {
+	public static class PrefsFragment extends PreferenceFragmentCompat {
 		@Override
-		public void onCreate(final Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.preferences);
-			for (final int s : getArguments().getIntArray("data")) {
-				final String current = getResources().getString(s);
-				final Preference pref = findPreference(current);
-				if (pref instanceof ListPreference) {
-					final ListPreference list = (ListPreference) pref;
-					pref.setSummary(list.getEntry());
-				}
-
-				pref.setOnPreferenceChangeListener((preference, value) -> {
-					final SharedPreferences prefs = Data.getPreferences(getActivity(), Data.Prefs.THEME);
-					final SharedPreferences.Editor editor = prefs.edit();
-					if (value instanceof Boolean) {
-						editor.putBoolean(current, (Boolean) value);
-					} else {
-						editor.putString(current, value.toString());
-					}
-					editor.apply();
-					if (pref instanceof ListPreference) {
-						final ListPreference list = (ListPreference) pref;
-						pref.setSummary(list.getEntries()[list.findIndexOfValue(String.valueOf(value))]);
-						if (current.equals(getActivity().getResources().getString(R.string.settings_theme_app))) {
-							recreate();
+		public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
+			setPreferencesFromResource(R.xml.preferences, rootKey);
+			Optional.of(this)
+					.map(Fragment::getArguments)
+					.map(bundle -> bundle.getIntArray("data"))
+					.map(Arrays::stream)
+					.orElse(IntStream.empty())
+					.forEach(s -> {
+						final String current = getResources().getString(s);
+						final Preference pref = findPreference(current);
+						if (pref instanceof ListPreference) {
+							final ListPreference list = (ListPreference) pref;
+							pref.setSummary(list.getEntry());
 						}
-					}
-					return true;
-				});
-			}
+
+						pref.setOnPreferenceChangeListener((preference, value) -> {
+							final SharedPreferences prefs = Data.getPreferences(getActivity(), Data.Prefs.THEME);
+							final SharedPreferences.Editor editor = prefs.edit();
+							if (value instanceof Boolean) {
+								editor.putBoolean(current, (Boolean) value);
+							} else {
+								editor.putString(current, value.toString());
+							}
+							editor.apply();
+							if (pref instanceof ListPreference) {
+								final ListPreference list = (ListPreference) pref;
+								pref.setSummary(list.getEntries()[list.findIndexOfValue(String.valueOf(value))]);
+								if (current.equals(getActivity().getResources().getString(R.string.settings_theme_app))) {
+									getActivity().recreate();
+								}
+							}
+							return true;
+						});
+					});
 		}
 	}
 }

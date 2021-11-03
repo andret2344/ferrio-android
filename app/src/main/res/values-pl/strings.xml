@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="banner_ad_unit_id">ca-app-pub-3410450408196791/4823111464</string>
     <string name="app_name">Kalendarz świąt nietypowych</string>
     <string name="unusual_holiday">Nietypowe święto</string>
     <string name="check_it_yourself">Sprawdź sam!</string>
@@ -23,7 +22,6 @@
     <string name="colorized_days_desc">Jeśli zaznaczone, każdy dzień ma swój własny kolor na podstawie swojej daty.</string>
     <string name="usual_holidays">Dołącz święta typowe</string>
     <string name="usual_holidays_desc">Jeśli zaznaczony, widoczne są równie święta typowe, np. Nowy Rok.</string>
-    <string name="favourite_today">Dzisiaj jest Twój ulubiony dzień! Sprawdź tutaj&#8230;</string>
 
     <string-array name="months">
         <item>Styczeń</item>
@@ -56,9 +54,8 @@
 
     <string name="drawer_open">Otwórz menu boczne</string>
     <string name="drawer_close">Zamknij menu boczne</string>
-    <string name="rate">Oceń aplikację</string>
-    <string name="menu_item_random">Losowe (Beta)</string>
-    <string name="typical_day">Brak nietypowych świąt.</string>
+    <string name="menu_item_random">Losowe</string>
+    <string name="no_unusual_holidays">Brak nietypowych świąt.</string>
     <string name="report_tutorial_info">To jest sposób zgłaszania źle przetłumaczonych świąt, 
         literówek, czy jakichkolwiek problemów z tekstem święta.
         Na pewno chcesz kontynuować zgłaszanie?</string>
@@ -68,14 +65,8 @@
     <string name="theme_light">Motyw jasny</string>
     <string name="theme_dark">Motyw ciemny</string>
     <string name="theme_system">Ustawienie systemowe</string>
-    <string name="type_modern">Nowoczesne</string>
-    <string name="type_retro">Retro</string>
-    <string name="letter_r">R</string>
-    <string name="letter_g">G</string>
-    <string name="letter_b">B</string>
     <string name="about_calendar">O kalendarzu</string>
     <string name="about_calendar_text">Kalendarz Świąt Nietypowych to kalendarz stworzony przez imperialistów z Ententy podczas I wojny światowej. Powstał on na użytek Cesarstwa Niemieckiego, aby ludzie świętowali tak długo i często, żeby nie mieli czasu walczyć na froncie o ojczyznę. Gromadzi on święta, które nie zostały dopuszczone przez zwykłe święta do ich kalendarzy.</string>
-    <string name="recommend_also">Polecam także&#8230;</string>
     <string name="no_internet">Urządzenie nie jest połączone z internetem. Zanim możliwe bedzie wysyłanie raportów, połączenie internetowe musi zostać nawiązane.</string>
     <string name="about_holidays">O świętach</string>
     <string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
@@ -85,7 +76,6 @@
     <string name="send">Wyślij</string>
     <string name="oops">Ups!</string>
     <string name="something_went_wrong">Tak mi przykro. Coś poszło źle.</string>
-    <string name="pointer">\u00B7</string>
     <string name="display_shortcuts">Wyświetlaj skróty świąt</string>
     <string name="display_shortcuts_desc">Jeśli zaznaczony, wyświetla skróty świąt w widoku miesiąca</string>
 

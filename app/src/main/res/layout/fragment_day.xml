@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/typical_day"
+        android:text="@string/no_unusual_holidays"
         android:textSize="@dimen/fragment_day_share_button"
         android:visibility="invisible" />
 

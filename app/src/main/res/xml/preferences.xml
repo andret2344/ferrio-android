@@ -29,18 +29,6 @@
             android:key="@string/settings_display_shortcuts"
             android:summary="@string/display_shortcuts_desc"
             android:title="@string/display_shortcuts" />
-
-        <!--
-             <Preference
-            android:key="@string/settings_theme_notification"
-            android:summary="Reschedule using current setting"
-            android:title="Reschedule" />
-
-
-
-
-
-        -->
     </PreferenceCategory>
     <PreferenceCategory
         android:key="widgets"
@@ -54,21 +42,6 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_title_widgets_theme" />
-        <!--
-            <ListPreference
-            android:defaultValue="1"
-            android:dialogTitle="@string/pref_title_widgets_type"
-            android:entries="@array/pref_type_widgets_list"
-            android:entryValues="@array/pref_type_widgets_values"
-            android:key="@string/settings_type_widgets"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:title="@string/pref_title_widgets_type" />
-
-
-
-
-        -->
     </PreferenceCategory>
 
 </PreferenceScreen>

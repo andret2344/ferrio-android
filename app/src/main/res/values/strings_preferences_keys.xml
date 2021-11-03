@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings_theme_widgets">widgets_theme</string>
-    <string name="settings_type_widgets">widgets_type</string>
-    <string name="settings_theme_app">app_theme</string>
-    <string name="settings_theme_colorized">colorized</string>
-    <string name="settings_usual_holidays">usual_holidays</string>
-    <string name="settings_theme_notification">notification</string>
-    <string name="settings_tutorial_reports">tutorial_reports</string>
-    <string name="settings_display_shortcuts">display_shortcuts</string>
+    <string name="settings_theme_widgets" translatable="false">widgets_theme</string>
+    <string name="settings_type_widgets" translatable="false">widgets_type</string>
+    <string name="settings_theme_app" translatable="false">app_theme</string>
+    <string name="settings_theme_colorized" translatable="false">colorized</string>
+    <string name="settings_usual_holidays" translatable="false">usual_holidays</string>
+    <string name="settings_tutorial_reports" translatable="false">tutorial_reports</string>
+    <string name="settings_display_shortcuts" translatable="false">display_shortcuts</string>
 
 </resources>

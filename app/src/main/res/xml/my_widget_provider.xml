@@ -7,8 +7,6 @@
     android:minWidth="110dp"
     android:previewImage="@drawable/widget_icon"
     android:resizeMode="vertical|horizontal"
-    android:updatePeriodMillis="1800000" >
-
-    <!-- android:configure="eu.andret.kalendarzswiatnietypowych.activities.WidgetConfigurationActivity" -->
+    android:updatePeriodMillis="1800000">
 
 </appwidget-provider>
