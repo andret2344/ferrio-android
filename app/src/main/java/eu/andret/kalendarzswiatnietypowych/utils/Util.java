@@ -91,14 +91,21 @@ public class Util {
 	}
 
 	public void createAd(final int viewId) {
-//		MobileAds.initialize(context, context.getResources().getString(R.string.banner_ad_unit_id));
 		final AdView adView = ((Activity) context).findViewById(viewId);
 		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	public void applyTheme() {
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		context.setTheme(theme.getInt(context.getResources().getString(R.string.settings_theme_app), 1) == 1 ? R.style.AppTheme_Dark : R.style.AppTheme);
+		final String string = context.getResources().getString(R.string.settings_theme_app);
+		int anInt;
+		try {
+			anInt = theme.getInt(string, 1);
+		} catch (final ClassCastException ex) {
+			anInt = Integer.parseInt(theme.getString(string, "1"));
+			theme.edit().putInt(string, anInt).apply();
+		}
+		context.setTheme(anInt == 1 ? R.style.AppTheme_Dark : R.style.AppTheme);
 	}
 
 	public String getMonth(final int id) {

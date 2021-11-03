@@ -69,6 +69,10 @@ public class SettingsActivity extends AppCompatActivity {
 					.forEach(s -> {
 						final String current = getResources().getString(s);
 						final Preference pref = findPreference(current);
+						if (pref == null) {
+							return;
+						}
+
 						if (pref instanceof ListPreference) {
 							final ListPreference list = (ListPreference) pref;
 							pref.setSummary(list.getEntry());
@@ -79,8 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
 							final SharedPreferences.Editor editor = prefs.edit();
 							if (value instanceof Boolean) {
 								editor.putBoolean(current, (Boolean) value);
-							} else {
-								editor.putString(current, value.toString());
+							} else if (value instanceof Integer) {
+								editor.putInt(current, (int) value);
 							}
 							editor.apply();
 							if (pref instanceof ListPreference) {

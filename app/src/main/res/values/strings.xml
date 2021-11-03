@@ -65,7 +65,6 @@
     <string name="report_sent">Report sent!</string>
     <string name="theme_light">Light theme</string>
     <string name="theme_dark">Dark theme</string>
-    <string name="theme_system">System default</string>
     <string name="about_calendar">About calendar</string>
     <string name="about_calendar_text">The Unusual Holiday Calendar is a calendar created by imperialists from Entente during World War One. It was created for the purpose of the German Empire, so that people could celebrate so long and often that they had no time to fight for their homeland on the battlefront. It collects holidays, which were not permitted by usual holidays to theirs\' calendars.</string>
     <string name="no_internet">Your device is not connected to the internet. Until report sending will be available, the internet connectivity must be established.</string>

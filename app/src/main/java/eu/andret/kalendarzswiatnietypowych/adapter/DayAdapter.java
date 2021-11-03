@@ -21,6 +21,7 @@ import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.MyColor;
@@ -83,14 +84,14 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			convertView.setBackgroundColor(color.dark ? MyColor.GRAY_DARK : MyColor.GRAY_LIGHT);
 		} else if (theme.getBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), false)) {
 			random.setSeed(ho.getSeed());
-			final boolean dark = Data.getColors(Integer.parseInt(Data.getPreferences(getContext(), Prefs.THEME).getString(getContext().getResources().getString(R.string.settings_theme_app), "1"))).dark;
+			final boolean dark = Data.getColors(Data.getPreferences(getContext(), Prefs.THEME).getInt(getContext().getResources().getString(R.string.settings_theme_app), 1)).dark;
 			final int c = Color.rgb(random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127));
 			convertView.setBackgroundColor(c);
 		}
 		convertView.setOnClickListener(v -> {
 			final Intent intent = new Intent(getContext(), DayActivity.class);
-			intent.putExtra("day", ho.getDay());
-			intent.putExtra("month", ho.getMonth().getMonth().getValue());
+			intent.putExtra(MainActivity.DAY, ho.getDay());
+			intent.putExtra(MainActivity.MONTH, ho.getMonth().getMonth().getValue());
 			((Activity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
 		});
 

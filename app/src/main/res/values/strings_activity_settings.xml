@@ -7,10 +7,8 @@
     <string-array name="pref_theme_application_list">
         <item>@string/theme_dark</item>
         <item>@string/theme_light</item>
-        <item>@string/theme_system</item>
     </string-array>
     <string-array name="pref_theme_application_values">
-        <item>2</item>
         <item>1</item>
         <item>0</item>
     </string-array>
@@ -20,10 +18,8 @@
     <string-array name="pref_theme_widgets_list">
         <item>@string/theme_dark</item>
         <item>@string/theme_light</item>
-        <item>@string/theme_system</item>
     </string-array>
     <string-array name="pref_theme_widgets_values">
-        <item>2</item>
         <item>1</item>
         <item>0</item>
     </string-array>

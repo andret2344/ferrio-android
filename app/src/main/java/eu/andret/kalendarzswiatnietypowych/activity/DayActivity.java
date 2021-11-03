@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.time.LocalDate;
 import java.util.Locale;
@@ -23,9 +23,10 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.H
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class DayActivity extends AppCompatActivity {
+	private static final Random RANDOM = new Random();
+
 	private Util util;
-	private ViewPager pager;
-	private final Random random = new Random();
+	private ViewPager2 pager;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -40,32 +41,22 @@ public class DayActivity extends AppCompatActivity {
 		getSupportActionBar().setDisplayShowTitleEnabled(true);
 		getSupportActionBar().setDisplayShowCustomEnabled(false);
 
-		final int day = getIntent().getIntExtra("day", -1);
-		final int month = getIntent().getIntExtra("month", -1);
-		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager()));
+		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
+		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
+		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
 		final boolean leap = date.isLeapYear();
 		int id = date.getDayOfYear();
 		if (id > (leap ? 60 : 59)) {
 			id += leap ? 1 : 2;
 		}
-		pager.setCurrentItem(id - 1);
+		pager.setCurrentItem(id - 1, false);
 		getSupportActionBar().setTitle(day + getAddition(day) + " " + util.getMonthGenitive(month));
-		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				final Util.MonthDayPair pair = util.calculateDates(position + 1);
-				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth().getValue()));
-			}
-
-			@Override
-			public void onPageSelected(final int position) {
-				// do nothing
-			}
-
-			@Override
-			public void onPageScrollStateChanged(final int state) {
-				// do nothing
+				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth()));
 			}
 		});
 		util.createAd(R.id.day_adview_bottom);
@@ -92,7 +83,7 @@ public class DayActivity extends AppCompatActivity {
 			pager.setCurrentItem(id, true);
 			return true;
 		} else if (item.getItemId() == R.id.menu_day_random) {
-			pager.setCurrentItem(random.nextInt(367), true);
+			pager.setCurrentItem(RANDOM.nextInt(367), true);
 			return true;
 		} else if (item.getItemId() == R.id.menu_day_share) {
 			final Intent intent = new Intent(Intent.ACTION_SEND);
@@ -118,9 +109,9 @@ public class DayActivity extends AppCompatActivity {
 		if (id > 58) {
 			id -= LocalDate.now().isLeapYear() ? 0 : 1;
 		}
-		final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), id);
+		final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), Math.max(id, 1));
 		final Intent returnIntent = new Intent();
-		returnIntent.putExtra("month", date.getMonthValue());
+		returnIntent.putExtra(MainActivity.MONTH, date.getMonthValue());
 		setResult(RESULT_OK, returnIntent);
 		super.onBackPressed();
 	}

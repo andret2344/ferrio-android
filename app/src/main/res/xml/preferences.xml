@@ -13,18 +13,18 @@
             android:positiveButtonText="@null"
             android:title="@string/pref_title_app_theme" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:disableDependentsState="true"
             android:key="@string/settings_theme_colorized"
             android:summary="@string/colorized_days_desc"
             android:title="@string/colorized_days" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="@string/settings_usual_holidays"
             android:summary="@string/usual_holidays_desc"
             android:title="@string/usual_holidays" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/settings_display_shortcuts"
             android:summary="@string/display_shortcuts_desc"

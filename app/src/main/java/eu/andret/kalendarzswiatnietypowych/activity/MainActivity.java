@@ -32,7 +32,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -55,6 +55,8 @@ import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class MainActivity extends AppCompatActivity {
+	public static final String ID = "id";
+	public static final String WIDGET = "widget";
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String FROM = "from";
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 	private DrawerLayout navigationDrawer;
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
-	private ViewPager pager;
+	private ViewPager2 pager;
 	private ListView list;
 	private PowerManager.WakeLock wakeLock;
 	private LinearLayout preLoaderLayout;
@@ -122,24 +124,14 @@ public class MainActivity extends AppCompatActivity {
 
 		setUpNavigationDrawer();
 		pager = findViewById(R.id.main_pager_months);
-		pager.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager()));
+		pager.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 		pager.setCurrentItem(LocalDate.now().getMonthValue());
 		getSupportActionBar().setTitle(util.getMonth(pager.getCurrentItem()));
 		pager.setOffscreenPageLimit(12);
-		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				getSupportActionBar().setTitle(util.getMonth(position));
-			}
-
-			@Override
-			public void onPageSelected(final int position) {
-				// do nothing
-			}
-
-			@Override
-			public void onPageScrollStateChanged(final int state) {
-				// do nothing
 			}
 		});
 
@@ -220,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 		this.list.setAdapter(adapter);
 		if (searchView == null) {
 			return true;
-		} // TODO
+		}
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(final String query) {
@@ -270,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == getResources().getInteger(R.integer.request_code_change_month)) {
 			if (resultCode == RESULT_OK) {
-				set(data.getIntExtra(MONTH, LocalDate.now().getMonthValue()) - 1);
+				pager.setCurrentItem(data.getIntExtra(MONTH, LocalDate.now().getMonthValue()) - 1);
 			} else {
 				Toast.makeText(this, "unknown error", Toast.LENGTH_SHORT).show();
 			}
@@ -301,10 +293,6 @@ public class MainActivity extends AppCompatActivity {
 		navigationDrawer.setBackgroundColor(color.background);
 		drawerList.setBackgroundColor(color.background);
 		findViewById(R.id.main_relative_main).setBackgroundColor(color.background);
-	}
-
-	private void set(final int id) {
-		pager.setCurrentItem(id, false);
 	}
 
 	public void dismissPreLoader() {

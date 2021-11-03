@@ -11,9 +11,11 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.Optional;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
@@ -28,7 +30,7 @@ public class DayFragment extends Fragment {
 	@Override
 	public void setArguments(final Bundle args) {
 		super.setArguments(args);
-		id = args.getInt("id");
+		id = Optional.ofNullable(args).map(x -> x.getInt(MainActivity.ID)).orElse(0);
 	}
 
 	@NonNull

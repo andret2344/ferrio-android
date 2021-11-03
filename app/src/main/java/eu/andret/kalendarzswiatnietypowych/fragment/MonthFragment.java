@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
@@ -27,7 +28,7 @@ public class MonthFragment extends Fragment {
 	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
 		final View month = inflater.inflate(R.layout.fragment_month, parent, false);
 		final int current = Optional.ofNullable(getArguments())
-				.map(x -> x.getInt("month", 1))
+				.map(x -> x.getInt(MainActivity.MONTH, 1))
 				.orElseThrow(() -> new UnsupportedOperationException("No passed arguments!"));
 
 		final LocalDate before = getBefore(current);

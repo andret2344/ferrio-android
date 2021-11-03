@@ -2,28 +2,32 @@ package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.fragment.DayFragment;
 
-public class DayFragmentAdapter extends FragmentStatePagerAdapter {
-	public DayFragmentAdapter(final FragmentManager fm) {
-		super(fm);
+public class DayFragmentAdapter extends FragmentStateAdapter {
+	public DayFragmentAdapter(@NonNull final FragmentManager fragmentManager, @NonNull final Lifecycle lifecycle) {
+		super(fragmentManager, lifecycle);
 	}
 
+	@NonNull
 	@Override
-	public Fragment getItem(final int id) {
+	public Fragment createFragment(final int position) {
 		final DayFragment dayFragment = new DayFragment();
 		final Bundle bundle = new Bundle();
-		bundle.putInt("id", id);
+		bundle.putInt(MainActivity.ID, position);
 		dayFragment.setArguments(bundle);
 		return dayFragment;
 	}
 
 	@Override
-	public int getCount() {
+	public int getItemCount() {
 		return 367;
 	}
 }

@@ -26,9 +26,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		final int day = now.getDayOfMonth();
 		final int month = now.getMonthValue();
 		final Intent intent = new Intent(context, MainActivity.class);
-		intent.putExtra("from", "widget");
-		intent.putExtra("day", day);
-		intent.putExtra("month", month);
+		intent.putExtra(MainActivity.FROM, MainActivity.WIDGET);
+		intent.putExtra(MainActivity.DAY, day);
+		intent.putExtra(MainActivity.MONTH, month);
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), dark ? R.layout.widget_dark : R.layout.widget_light);
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
 		String output = "";

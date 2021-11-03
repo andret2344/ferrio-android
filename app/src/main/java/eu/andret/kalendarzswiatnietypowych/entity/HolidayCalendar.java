@@ -21,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
@@ -120,7 +121,7 @@ public class HolidayCalendar {
 			}
 
 			public final long getSeed() {
-				return Long.parseLong(String.valueOf(day).concat(String.valueOf(month)));
+				return Long.parseLong(String.format(Locale.US, "%d%d", day, month.getValue()));
 			}
 
 			public String getDate() {
@@ -181,7 +182,7 @@ public class HolidayCalendar {
 		@NonNull
 		public HolidayDay getDay(final int number) {
 			for (final HolidayDay day : days) {
-				if (day.day == number) { // FIXME
+				if (day.day == number) {
 					return day;
 				}
 			}

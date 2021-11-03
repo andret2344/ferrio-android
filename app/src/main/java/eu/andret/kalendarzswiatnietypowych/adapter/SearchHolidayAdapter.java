@@ -20,6 +20,7 @@ import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
@@ -58,7 +59,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		final Data.AppColorSet color = Data.getColors(theme.getInt(getContext().getResources().getString(R.string.settings_theme_app), 1));
 
 		holder.date.setTextColor(color.foreground);
 		holder.border.setBackgroundColor(color.background);
@@ -75,14 +76,14 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 			colorized = theme.getBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), false);
 		} catch (final ClassCastException ex) {
 			colorized = theme.getString(getContext().getResources().getString(R.string.settings_theme_colorized), "false").equals("true");
-			final SharedPreferences.Editor editor = theme.edit();
-			editor.remove(getContext().getResources().getString(R.string.settings_theme_colorized));
-			editor.putBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), colorized);
-			editor.apply();
+			theme.edit()
+					.remove(getContext().getResources().getString(R.string.settings_theme_colorized))
+					.putBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), colorized)
+					.apply();
 		}
 		if (colorized) {
 			random.setSeed(day.getSeed());
-			final boolean dark = Data.getColors(Integer.parseInt(Data.getPreferences(context, Prefs.THEME).getString(getContext().getResources().getString(R.string.settings_theme_app), "1"))).dark;
+			final boolean dark = Data.getColors(Data.getPreferences(context, Prefs.THEME).getInt(getContext().getResources().getString(R.string.settings_theme_app), 1)).dark;
 			c = Color.rgb(random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127));
 			holder.border.setBackgroundColor(c);
 		}
@@ -106,8 +107,8 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 
 		convertView.setOnClickListener(v -> {
 			final Intent i = new Intent(getContext(), DayActivity.class);
-			i.putExtra("day", day.getDay());
-			i.putExtra("month", day.getMonth().getMonth());
+			i.putExtra(MainActivity.DAY, day.getDay());
+			i.putExtra(MainActivity.MONTH, day.getMonth().getMonth());
 			getContext().startActivity(i);
 		});
 

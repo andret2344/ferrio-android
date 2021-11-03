@@ -71,7 +71,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final Data.AppColorSet appColorSet = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		final Data.AppColorSet appColorSet = Data.getColors(theme.getInt(getContext().getResources().getString(R.string.settings_theme_app), 1));
 		holder.holiday.setTextColor(appColorSet.foreground);
 		holder.background.setBackgroundColor(color);
 		convertView.setBackgroundColor(color);
