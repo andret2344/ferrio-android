@@ -41,8 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		final Util util = new Util(this);
-		util.applyTheme();
+		Util.applyTheme(this);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}

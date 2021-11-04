@@ -41,13 +41,11 @@ import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class LanguageActivity extends AppCompatActivity {
 	private Dialog progressDialog;
-	private Util util;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		util = new Util(this);
-		util.applyTheme();
+		Util.applyTheme(this);
 		setContentView(R.layout.activity_language);
 
 		if (getSupportActionBar() != null) {
@@ -59,7 +57,7 @@ public class LanguageActivity extends AppCompatActivity {
 
 		final ListView listView = findViewById(R.id.language_list_languages);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		if (util.isConnection()) {
+		if (Util.isConnection(this)) {
 			try {
 				progressDialog = new Dialog(this);
 				progressDialog.setTitle(getResources().getString(R.string.downloading_data));
@@ -115,8 +113,8 @@ public class LanguageActivity extends AppCompatActivity {
 
 			final byte[] bytes = new byte[length];
 			for (int i = 0; i < length; i++) {
-				if (!util.isConnection()) {
-					util.createAlert(R.string.caution, R.string.no_internet);
+				if (!Util.isConnection(LanguageActivity.this)) {
+					Util.createAlert(LanguageActivity.this, R.string.caution, R.string.no_internet);
 					return Collections.emptyList();
 				}
 				bytes[i] = (byte) in.read();

@@ -33,7 +33,6 @@ import eu.andret.kalendarzswiatnietypowych.utils.Util;
 public class DayActivity extends AppCompatActivity {
 	private static final Random RANDOM = new Random();
 
-	private Util util;
 	private ViewPager2 pager;
 	private HolidayCalendar calendar;
 
@@ -41,8 +40,7 @@ public class DayActivity extends AppCompatActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
-		util = new Util(this);
-		util.applyTheme();
+		Util.applyTheme(this);
 		setContentView(R.layout.activity_day);
 
 		pager = findViewById(R.id.day_pager_days);
@@ -65,12 +63,13 @@ public class DayActivity extends AppCompatActivity {
 			id += leap ? 1 : 2;
 		}
 		pager.setCurrentItem(id - 1, false);
-		getSupportActionBar().setTitle(day + getAddition(day) + " " + util.getMonthGenitive(month));
+		final String[] monthsGenitive = getResources().getStringArray(R.array.months_genitive);
+		getSupportActionBar().setTitle(day + getAddition(day) + " " + monthsGenitive[month - 1]);
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				final Util.MonthDayPair pair = Util.calculateDates(position + 1);
-				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth()));
+				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + monthsGenitive[pair.getMonth().getValue() - 1]);
 			}
 		});
 		MobileAds.initialize(this);
@@ -106,7 +105,8 @@ public class DayActivity extends AppCompatActivity {
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
 			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem());
-			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth().getValue() - 1);
+			final String[] monthsGenitive = getResources().getStringArray(R.array.months_genitive);
+			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + monthsGenitive[pair.getMonth().getValue() - 1];
 			final HolidayDay holidayDay = calendar.getDay(pair.getMonth().getValue(), pair.getDay());
 			if (holidayDay == null) {
 				return true;

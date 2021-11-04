@@ -49,7 +49,7 @@ public class DayFragment extends Fragment {
 		} else {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(color.background);
 		}
-		final ListView listView = (ListView) dayView.findViewById(R.id.fragment_day_list_holidays);
+		final ListView listView = dayView.findViewById(R.id.fragment_day_list_holidays);
 		final List<Holiday> holidays = holidayDay.getHolidaysList(Data.getPreferences(getContext(), Data.Prefs.THEME).getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false));
 		listView.setAdapter(new HolidayAdapter(getActivity(), holidays, c));
 		return dayView;

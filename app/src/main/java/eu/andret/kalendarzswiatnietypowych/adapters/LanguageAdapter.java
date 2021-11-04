@@ -40,15 +40,12 @@ import eu.andret.kalendarzswiatnietypowych.utils.Util;
 import lombok.Value;
 
 public class LanguageAdapter extends ArrayAdapter<Language> {
-	private final Util util;
-
 	private static class ViewHolder {
 		CheckedTextView view;
 	}
 
 	public LanguageAdapter(final Context context, final List<Language> locale) {
 		super(context, R.layout.adapter_language, locale);
-		util = new Util(getContext());
 	}
 
 	@NonNull
@@ -75,7 +72,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 		holder.view.setText(language.getName());
 		final ExecutorService executorService = Executors.newFixedThreadPool(16);
 		holder.view.setOnClickListener(v -> {
-			if (util.isConnection()) {
+			if (Util.isConnection(getContext())) {
 				try {
 					final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 					builder.setCancelable(false);
@@ -100,7 +97,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					Thread.currentThread().interrupt();
 				}
 			} else {
-				util.createAlert(R.string.caution, R.string.no_internet);
+				Util.createAlert(getContext(), R.string.caution, R.string.no_internet);
 			}
 		});
 		return convertView;
@@ -120,8 +117,8 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 
 			final byte[] bytes = new byte[length];
 			for (int i = 0; i < length; i++) {
-				if (!util.isConnection()) {
-					util.createAlert(R.string.caution, R.string.no_internet);
+				if (!Util.isConnection(getContext())) {
+					Util.createAlert(getContext(), R.string.caution, R.string.no_internet);
 					return Collections.emptyList();
 				}
 				bytes[i] = (byte) in.read();

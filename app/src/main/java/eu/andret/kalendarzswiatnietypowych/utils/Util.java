@@ -18,36 +18,23 @@ import java.time.Month;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import lombok.Value;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class Util {
-	private final Context context;
-	private static String[] months;
-	private static String[] monthsGenitive;
-	private final NetworkInfo networkInfo;
-
 	@Value
 	public static class MonthDayPair {
 		Month month;
 		int day;
 	}
 
-	public Util(final Context context) {
-		this.context = context;
-		if (months == null) {
-			months = context.getResources().getStringArray(R.array.months);
-		}
-		if (monthsGenitive == null) {
-			monthsGenitive = context.getResources().getStringArray(R.array.months_genitive);
-		}
+	public static boolean isConnection(final Context context) {
 		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		networkInfo = connectivityManager.getActiveNetworkInfo();
-	}
-
-	public boolean isConnection() {
+		final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 		return networkInfo != null && networkInfo.isConnected();
 	}
 
-	public void createAlert(final int title, final int text) {
+	public static void createAlert(final Context context, final int title, final int text) {
 		final Builder alert = new Builder(context);
 		alert.setTitle(title);
 		alert.setMessage(text);
@@ -55,7 +42,7 @@ public class Util {
 		alert.show();
 	}
 
-	public void createAlertWithImage(final int img, final int title, final int text) {
+	public static void createAlertWithImage(final Context context, final int img, final int title, final int text) {
 		final Builder alert = new Builder(context);
 		alert.setTitle(title);
 		final LinearLayout layout = new LinearLayout(context);
@@ -78,7 +65,7 @@ public class Util {
 		alert.show();
 	}
 
-	public void applyTheme() {
+	public static void applyTheme(final Context context) {
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
 		final String string = context.getResources().getString(R.string.settings_theme_app);
 		int anInt;
@@ -86,21 +73,9 @@ public class Util {
 			anInt = theme.getInt(string, 1);
 		} catch (final ClassCastException ex) {
 			anInt = Integer.parseInt(theme.getString(string, "1"));
-			theme.edit().putInt(string, anInt).apply();
+			theme.edit().remove(string).putInt(string, anInt).apply();
 		}
 		context.setTheme(anInt == 1 ? R.style.AppTheme_Dark : R.style.AppTheme);
-	}
-
-	public String getMonth(final int id) {
-		return months[id];
-	}
-
-	public String getMonthGenitive(final Month month) {
-		return getMonthGenitive(month.getValue());
-	}
-
-	public String getMonthGenitive(final int id) {
-		return monthsGenitive[id - 1];
 	}
 
 	@NonNull
@@ -117,14 +92,14 @@ public class Util {
 			final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 1);
 			return new MonthDayPair(date.getMonth(), date.getDayOfMonth());
 		}
-		if (id < 59) {
+		if (id < 60) {
 			final LocalDate date = LocalDate.ofYearDay(now.getYear(), id);
 			return new MonthDayPair(date.getMonth(), date.getDayOfMonth());
 		}
-		if (id == 59) {
+		if (id == 60) {
 			return new MonthDayPair(Month.FEBRUARY, 29);
 		}
-		if (id == 60) {
+		if (id == 61) {
 			return new MonthDayPair(Month.FEBRUARY, 30);
 		}
 		final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 2);
