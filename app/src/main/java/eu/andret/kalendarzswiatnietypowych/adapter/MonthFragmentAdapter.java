@@ -36,7 +36,7 @@ public class MonthFragmentAdapter extends FragmentStateAdapter {
 		bundle.putInt(MainActivity.MONTH, current);
 		final LocalDate before = getBefore(current);
 		final LocalDate after = getAfter(current, before);
-		final List<HolidayDay> holidays = holidayCalendar.getHolidayDaysInDateRange(before, after, true);
+		final List<HolidayDay> holidays = holidayCalendar.getHolidayDaysInDateRange(before, after);
 		bundle.putParcelableArrayList(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidays));
 		fragment.setArguments(bundle);
 		return fragment;

@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
@@ -45,8 +47,10 @@ public class DayActivity extends AppCompatActivity {
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
+		final SharedPreferences prefs = Data.getPreferences(this, Data.Prefs.LANGUAGE);
+		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
-		calendar = holidaysDBHelper.getAll("en");
+		calendar = holidaysDBHelper.getAll(selectedLanguageCode);
 		holidaysDBHelper.close();
 		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle(), calendar));
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
@@ -60,7 +64,7 @@ public class DayActivity extends AppCompatActivity {
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				final Util.MonthDayPair pair = util.calculateDates(position + 1);
+				final Util.MonthDayPair pair = Util.calculateDates(position + 1);
 				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth()));
 			}
 		});
@@ -94,7 +98,7 @@ public class DayActivity extends AppCompatActivity {
 			final Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
-			final Util.MonthDayPair pair = util.calculateDates(pager.getCurrentItem());
+			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem());
 			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth().getValue() - 1);
 			final StringBuilder holidays = new StringBuilder();
 			final HolidayDay holidayDay = calendar.getDay(pair.getMonth().getValue(), pair.getDay());

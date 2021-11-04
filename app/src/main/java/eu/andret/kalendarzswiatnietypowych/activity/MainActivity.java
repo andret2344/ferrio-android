@@ -50,12 +50,12 @@ import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class MainActivity extends AppCompatActivity {
 	public static final String CALENDAR = "calendar";
-	public static final String ID = "id";
 	public static final String WIDGET = "widget";
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String FROM = "from";
 	public static final String HOLIDAY_DAYS = "holidayDays";
+	public static final String SELECTED_LANGUAGE = "selectedLanguage";
 
 	private Util util;
 	private DrawerLayout navigationDrawer;
@@ -120,8 +120,10 @@ public class MainActivity extends AppCompatActivity {
 
 		setUpNavigationDrawer();
 		pager = findViewById(R.id.main_pager_months);
+		final SharedPreferences prefs = Data.getPreferences(this, Data.Prefs.LANGUAGE);
+		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
-		final HolidayCalendar en = holidaysDBHelper.getAll("en");
+		final HolidayCalendar en = holidaysDBHelper.getAll(selectedLanguageCode);
 		holidaysDBHelper.close();
 		pager.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), en));
 		pager.setCurrentItem(LocalDate.now().getMonthValue());

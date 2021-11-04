@@ -3,6 +3,8 @@ package eu.andret.kalendarzswiatnietypowych.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -38,12 +40,13 @@ public class HolidayCalendar implements Parcelable {
 		return getDay(now.getDayOfMonth(), now.getMonthValue());
 	}
 
+	@NonNull
 	public final HolidayDay getDay(final int month, final int day) {
 		return holidayDays.stream()
 				.filter(holidayDay -> holidayDay.getDay() == day)
 				.filter(holidayDay -> holidayDay.getMonth() == month)
 				.findAny()
-				.orElse(null);
+				.orElse(new HolidayDay(month, day));
 	}
 
 	public final HolidayDay getOrCreateDay(final int month, final int day) {
@@ -56,15 +59,10 @@ public class HolidayCalendar implements Parcelable {
 		return toInsert;
 	}
 
-	public final List<HolidayDay> getHolidayDaysInDateRange(final LocalDate begin, final LocalDate end, final boolean fillEmpties) {
+	public final List<HolidayDay> getHolidayDaysInDateRange(final LocalDate begin, final LocalDate end) {
 		final List<HolidayDay> holidayDays = new ArrayList<>();
 		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.plusDays(1)) {
-			final HolidayDay hd = getDay(date.getMonthValue(), date.getDayOfMonth());
-			if (hd != null) {
-				holidayDays.add(hd);
-			} else if (fillEmpties) {
-				holidayDays.add(new HolidayDay(date.getMonthValue(), date.getDayOfMonth()));
-			}
+			holidayDays.add(getDay(date.getMonthValue(), date.getDayOfMonth()));
 		}
 		return holidayDays;
 	}

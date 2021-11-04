@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,11 @@ import java.util.concurrent.Future;
 import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
+import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 import lombok.Value;
@@ -62,8 +65,13 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
 		final Language language = getItem(position);
+
+		final SharedPreferences prefs = Data.getPreferences(getContext(), Data.Prefs.LANGUAGE);
+		if (prefs.getString(MainActivity.SELECTED_LANGUAGE, "").equals(language.getCode())) {
+			((ListView) parent).setItemChecked(position, true);
+		}
+
 		holder.view.setText(language.getName());
 		final ExecutorService executorService = Executors.newFixedThreadPool(16);
 		holder.view.setOnClickListener(v -> {
@@ -77,6 +85,9 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					final Future<List<HolidayDay>> future = executorService.submit(new Downloader(language));
 					final List<HolidayDay> data = future.get();
 					dialog.dismiss();
+					final SharedPreferences.Editor editor = prefs.edit();
+					editor.putString(MainActivity.SELECTED_LANGUAGE, language.getCode());
+					editor.apply();
 					((ListView) parent).setItemChecked(position, true);
 					final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(getContext());
 					if (!holidaysDBHelper.languageExists(language.getCode())) {
