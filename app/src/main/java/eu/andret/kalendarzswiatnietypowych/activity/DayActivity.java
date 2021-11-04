@@ -17,9 +17,10 @@ import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class DayActivity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class DayActivity extends AppCompatActivity {
 
 	private Util util;
 	private ViewPager2 pager;
+	private HolidayCalendar calendar;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -43,7 +45,10 @@ public class DayActivity extends AppCompatActivity {
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
-		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
+		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
+		calendar = holidaysDBHelper.getAll("en");
+		holidaysDBHelper.close();
+		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle(), calendar));
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
 		final boolean leap = date.isLeapYear();
 		int id = date.getDayOfYear();
@@ -92,7 +97,7 @@ public class DayActivity extends AppCompatActivity {
 			final Util.MonthDayPair pair = util.calculateDates(pager.getCurrentItem());
 			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth().getValue() - 1);
 			final StringBuilder holidays = new StringBuilder();
-			final HolidayDay holidayDay = HolidayCalendar.getInstance(this).getMonth(pair.getMonth()).getDay(pair.getDay());
+			final HolidayDay holidayDay = calendar.getDay(pair.getMonth().getValue(), pair.getDay());
 			for (final Holiday h : holidayDay.getHolidays()) {
 				holidays.append("\n").append(getResources().getString(R.string.pointer)).append(" ").append(h.getText());
 			}

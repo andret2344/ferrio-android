@@ -21,8 +21,8 @@ import java.util.Random;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;
 
@@ -69,7 +69,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		if (day == null) {
 			return convertView;
 		}
-		holder.date.setText(day.getDate());
+//		holder.date.setText(day.getDate());
 		final int c;
 		boolean colorized;
 		try {
@@ -108,7 +108,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		convertView.setOnClickListener(v -> {
 			final Intent i = new Intent(getContext(), DayActivity.class);
 			i.putExtra(MainActivity.DAY, day.getDay());
-			i.putExtra(MainActivity.MONTH, day.getMonth().getMonth());
+			i.putExtra(MainActivity.MONTH, day.getMonth());
 			getContext().startActivity(i);
 		});
 

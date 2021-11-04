@@ -19,8 +19,8 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
@@ -99,7 +99,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 				alert.setPositiveButton(R.string.yes, (dialog, which) -> {
 					if (util.isConnection()) {
 						Toast.makeText(getContext(), R.string.report_sending, Toast.LENGTH_LONG).show();
-						h.report();
+//						h.report();
 						Toast.makeText(getContext(), R.string.report_sent, Toast.LENGTH_SHORT).show();
 					} else {
 						util.createAlert(getContext().getResources().getString(R.string.caution), getContext().getResources().getString(R.string.no_internet));
@@ -111,7 +111,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 			} else {
 				if (util.isConnection()) {
 					Toast.makeText(getContext(), R.string.report_sending, Toast.LENGTH_LONG).show();
-					h.report();
+//					h.report();
 					Toast.makeText(getContext(), R.string.report_sent, Toast.LENGTH_SHORT).show();
 				} else {
 					util.createAlert(getContext().getResources().getString(R.string.caution), getContext().getResources().getString(R.string.no_internet));

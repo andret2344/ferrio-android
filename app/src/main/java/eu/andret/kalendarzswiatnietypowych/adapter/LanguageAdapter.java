@@ -29,9 +29,8 @@ import java.util.concurrent.Future;
 import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
@@ -79,12 +78,12 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					final List<HolidayDay> data = future.get();
 					dialog.dismiss();
 					((ListView) parent).setItemChecked(position, true);
-					final HolidaysDBHelper instance = HolidaysDBHelper.getInstance(getContext());
-					if (!instance.languageExists(language.getCode())) {
-						instance.insertLanguage(language);
+					final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(getContext());
+					if (!holidaysDBHelper.languageExists(language.getCode())) {
+						holidaysDBHelper.insertLanguage(language);
 					}
-					instance.update(data, language);
-					HolidayCalendar.getInstance(getContext()).refresh();
+					holidaysDBHelper.update(data, language);
+					holidaysDBHelper.close();
 				} catch (final ExecutionException | InterruptedException e) {
 					e.printStackTrace();
 					Thread.currentThread().interrupt();
@@ -124,12 +123,16 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 				final int day = object.getInt("day");
 				final int month = object.getInt("month");
 				final List<Holiday> holidays = new ArrayList<>();
-				final HolidayDay curr = HolidayCalendar.getInstance(getContext()).getMonth(month).new HolidayDay(day, holidays);
 				final JSONArray objectData = object.getJSONArray("holidays");
 				for (int k = 0; k < objectData.length(); k++) {
 					final JSONObject currObj = objectData.getJSONObject(k);
-					curr.new Holiday(currObj.getInt("id"), currObj.getString("name"), currObj.getBoolean("usual"), currObj.getString("link"));
+					holidays.add(new Holiday(
+							currObj.getInt("id"),
+							currObj.getString("name"),
+							currObj.getBoolean("usual"),
+							currObj.getString("link")));
 				}
+				final HolidayDay curr = new HolidayDay(month, day, holidays);
 				data.add(curr);
 			}
 			return data;

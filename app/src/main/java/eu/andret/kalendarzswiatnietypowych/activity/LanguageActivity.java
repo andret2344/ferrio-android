@@ -19,7 +19,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -32,7 +31,6 @@ import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.LanguageAdapter;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
@@ -52,9 +50,12 @@ public class LanguageActivity extends AppCompatActivity {
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
+		final Set<Language> languages = holidaysDBHelper.getLanguages();
+		holidaysDBHelper.close();
+
 		final ListView listView = findViewById(R.id.language_list_languages);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		final Set<Language> languages = new HashSet<>(HolidaysDBHelper.getInstance(this).getLanguages());
 		if (util.isConnection()) {
 			try {
 				progressDialog = new Dialog(this);
@@ -83,7 +84,6 @@ public class LanguageActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-		HolidayCalendar.getInstance(this).refresh();
 		NavUtils.navigateUpFromSameTask(this);
 	}
 

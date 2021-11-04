@@ -11,9 +11,8 @@ import android.widget.RemoteViews;
 import java.time.LocalDate;
 
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 
 public class MyWidgetProvider extends AppWidgetProvider {
@@ -32,7 +31,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), dark ? R.layout.widget_dark : R.layout.widget_light);
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
 		String output = "";
-		final HolidayDay ho = HolidayCalendar.getInstance(context).getTodayHolidays();
+		final HolidayDay ho = new HolidayDay(1, 1);//HolidayCalendar.getInstance(context).getTodayHolidays();
 		if (ho.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
 			output += context.getResources().getString(R.string.no_unusual_holidays);
 		} else {

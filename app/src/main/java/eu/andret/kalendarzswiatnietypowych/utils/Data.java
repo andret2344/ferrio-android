@@ -60,7 +60,6 @@ public final class Data {
 		public static final int WHITE = Color.rgb(238, 238, 238);
 		public static final int BLACK = Color.rgb(33, 33, 33);
 		public static final int PINK = Color.rgb(238, 130, 238);
-		// public static final int PINK = Color.rgb(255, 165, 103); //By Brokos
 		public static final int GRAY_LIGHT = Color.rgb(200, 200, 200);
 		public static final int GRAY_DARK = Color.rgb(100, 100, 100);
 	}

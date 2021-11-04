@@ -121,7 +121,7 @@ public class Util {
 	}
 
 	@NonNull
-	public MonthDayPair calculateDates(final int id) {
+	public static MonthDayPair calculateDates(final int id) {
 		final LocalDate now = LocalDate.now();
 		if (now.isLeapYear()) {
 			if (id < 60) {

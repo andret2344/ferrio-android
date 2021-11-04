@@ -14,8 +14,8 @@
     <string name="caution">Caution!</string>
     <string name="settings">Settings</string>
     <string name="search">Search</string>
-    <string name="see_more">more</string>
-    <string name="holidays">Holidays</string>
+    <string name="see_more">%d more</string>
+    <string name="holidays">Holidays: %d</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="deleting">Deleting</string>
     <string name="today">Today</string>
