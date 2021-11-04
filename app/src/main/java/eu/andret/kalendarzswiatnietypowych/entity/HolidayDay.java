@@ -11,13 +11,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Value;
 
 @Value
 @AllArgsConstructor
 public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 	public static final Parcelable.Creator<HolidayDay> CREATOR = new Parcelable.Creator<HolidayDay>() {
+		@NonNull
 		@Override
 		public HolidayDay createFromParcel(final Parcel in) {
 			final int monthRead = in.readInt();
@@ -28,6 +31,7 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 			return new HolidayDay(monthRead, dayRead, holidaysRead);
 		}
 
+		@NonNull
 		@Override
 		public HolidayDay[] newArray(final int size) {
 			return new HolidayDay[size];
@@ -36,6 +40,8 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 
 	int month;
 	int day;
+	@NonNull
+	@Getter(AccessLevel.NONE)
 	List<Holiday> holidays;
 
 	public HolidayDay(final int month, final int day) {
@@ -46,24 +52,17 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 		return Long.parseLong(String.format(Locale.ROOT, "%d%d", day, month));
 	}
 
+	@NonNull
 	public List<Holiday> getHolidaysList(final boolean includeUsual) {
-		final List<Holiday> list = new ArrayList<>();
-		for (final Holiday h : holidays) {
-			if (!h.isUsual() || includeUsual) {
-				list.add(h);
-			}
-		}
-		return list;
+		return holidays.stream()
+				.filter(holiday -> !holiday.isUsual() || includeUsual)
+				.collect(Collectors.toList());
 	}
 
-	public int countHolidays(final boolean includeUsual) {
-		int counter = 0;
-		for (final Holiday h : holidays) {
-			if (!h.isUsual() || includeUsual) {
-				counter++;
-			}
-		}
-		return counter;
+	public long countHolidays(final boolean includeUsual) {
+		return holidays.stream()
+				.filter(holiday -> !holiday.isUsual() || includeUsual)
+				.count();
 	}
 
 	@Override

@@ -107,10 +107,10 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		convertView.setOnClickListener(v -> {
-			final Intent i = new Intent(getContext(), DayActivity.class);
-			i.putExtra(MainActivity.DAY, day.getDay());
-			i.putExtra(MainActivity.MONTH, day.getMonth());
-			getContext().startActivity(i);
+			final Intent intent = new Intent(getContext(), DayActivity.class);
+			intent.putExtra(MainActivity.DAY, day.getDay());
+			intent.putExtra(MainActivity.MONTH, day.getMonth());
+			getContext().startActivity(intent);
 		});
 
 		return convertView;

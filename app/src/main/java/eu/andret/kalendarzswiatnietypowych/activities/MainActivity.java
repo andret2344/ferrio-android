@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.activities;
 
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,7 +46,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import eu.andret.kalendarzswiatnietypowych.MyWidgetProvider;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapters.DrawerAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapters.MonthFragmentAdapter;
@@ -300,8 +298,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void update() {
-		final int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), MyWidgetProvider.class));
-		new MyWidgetProvider().onUpdate(this, AppWidgetManager.getInstance(this), ids);
+		final Intent updateIntent = new Intent();
+		updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		sendBroadcast(updateIntent);
 		viewPager2.invalidate();
 		viewPager2.refreshDrawableState();
 		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);

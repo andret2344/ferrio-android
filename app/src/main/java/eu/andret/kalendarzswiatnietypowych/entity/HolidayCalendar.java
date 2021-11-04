@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -35,11 +36,13 @@ public class HolidayCalendar implements Parcelable {
 
 	List<HolidayDay> holidayDays = new ArrayList<>();
 
+	@NonNull
 	public final HolidayDay getTodayHolidays() {
 		final LocalDate now = LocalDate.now();
-		return getDay(now.getDayOfMonth(), now.getMonthValue());
+		return getOrCreateDay(now.getDayOfMonth(), now.getMonthValue());
 	}
 
+	@Nullable
 	public final HolidayDay getDay(final int month, final int day) {
 		return holidayDays.stream()
 				.filter(holidayDay -> holidayDay.getDay() == day)
@@ -59,6 +62,7 @@ public class HolidayCalendar implements Parcelable {
 		return toInsert;
 	}
 
+	@NonNull
 	public final List<HolidayDay> getHolidayDaysInDateRange(final LocalDate begin, final LocalDate end) {
 		final List<HolidayDay> result = new ArrayList<>();
 		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.plusDays(1)) {

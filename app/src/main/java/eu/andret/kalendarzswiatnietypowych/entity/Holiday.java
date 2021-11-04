@@ -4,12 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import lombok.Value;
 
 @Value
 public class Holiday implements Comparable<Holiday>, Parcelable {
 	public static final Parcelable.Creator<Holiday> CREATOR = new Parcelable.Creator<Holiday>() {
+		@NonNull
 		@Override
 		public Holiday createFromParcel(final Parcel in) {
 			final int metadataIdRead = in.readInt();
@@ -19,6 +21,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 			return new Holiday(metadataIdRead, textRead, usualRead, urlRead);
 		}
 
+		@NonNull
 		@Override
 		public Holiday[] newArray(final int size) {
 			return new Holiday[size];
@@ -26,8 +29,10 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 	};
 
 	int metadataId;
+	@NonNull
 	String text;
 	boolean usual;
+	@Nullable
 	String url;
 
 	@Override

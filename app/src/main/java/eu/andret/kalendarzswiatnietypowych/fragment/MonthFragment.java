@@ -20,6 +20,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 
 public class MonthFragment extends Fragment {
+	@NonNull
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
 		final View month = inflater.inflate(R.layout.fragment_month, parent, false);

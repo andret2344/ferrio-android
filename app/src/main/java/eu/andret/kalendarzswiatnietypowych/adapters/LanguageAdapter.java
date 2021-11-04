@@ -108,8 +108,10 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 
 	@Value
 	public class Downloader implements Callable<List<HolidayDay>> {
+		@NonNull
 		Language language;
 
+		@NonNull
 		@Override
 		public List<HolidayDay> call() throws Exception {
 			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/holiday/" + language.getCode()).openConnection();

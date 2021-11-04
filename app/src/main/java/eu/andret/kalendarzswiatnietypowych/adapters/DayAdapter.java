@@ -123,13 +123,13 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 				holder.holiday.setText(result.toString());
 				holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
 
-				final int number = holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) - (full ? 1 : 0);
+				final long number = holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) - (full ? 1 : 0);
 				if (number > 0) {
 					holder.more.setText(getContext().getResources().getString(R.string.see_more, number));
 				}
 			} else {
 				holder.dateBig.setText(String.valueOf(holidayDay.getDay()));
-				final int number = holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false));
+				final long number = holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false));
 				if (number > 0) {
 					holder.more.setText(getContext().getResources().getString(R.string.holidays, number));
 				}

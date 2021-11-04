@@ -22,7 +22,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		final boolean dark = Data.getPreferences(context, Data.Prefs.THEME).getString(context.getResources().getString(R.string.settings_theme_widgets), "1").equals("1");
+		final boolean dark = Data.getPreferences(context, Data.Prefs.THEME).getInt(context.getResources().getString(R.string.settings_theme_widgets), 1) == 1;
 
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), dark ? R.layout.widget_dark : R.layout.widget_light);
 		remoteViews.setTextViewText(R.id.widget_text_holiday, getContent(context));

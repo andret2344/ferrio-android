@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapters.DayFragmentAdapter;
@@ -106,11 +107,16 @@ public class DayActivity extends AppCompatActivity {
 			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
 			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem());
 			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth().getValue() - 1);
-			final StringBuilder holidays = new StringBuilder();
 			final HolidayDay holidayDay = calendar.getDay(pair.getMonth().getValue(), pair.getDay());
-			for (final Holiday h : holidayDay.getHolidays()) {
-				holidays.append("\n").append(getResources().getString(R.string.pointed_text, h.getText()));
+			if (holidayDay == null) {
+				return true;
 			}
+			final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
+			final String holidays = holidayDay.getHolidaysList(theme.getBoolean(getResources().getString(R.string.settings_usual_holidays), false))
+					.stream()
+					.map(Holiday::getText)
+					.map(text -> getResources().getString(R.string.pointed_text, text))
+					.collect(Collectors.joining("\n"));
 			intent.putExtra(Intent.EXTRA_TEXT, date + ":\n" + holidays + "\n\n" + getResources().getString(R.string.check_it_yourself) + "\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych");
 			startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_via)));
 			return true;
