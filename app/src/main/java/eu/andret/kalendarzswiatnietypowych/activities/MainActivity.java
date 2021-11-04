@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -257,9 +258,12 @@ public class MainActivity extends AppCompatActivity {
 										.stream()
 										.filter(holiday -> holiday.getText().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))
 										.collect(Collectors.toList());
+								if (holidayList.isEmpty()) {
+									return null;
+								}
 								return new HolidayDay(holidayDay.getMonth(), holidayDay.getDay(), holidayList);
 							})
-							.filter(holidayDay -> !holidayDay.getHolidays().isEmpty())
+							.filter(Objects::nonNull)
 							.forEach(list::add);
 				}
 				Collections.sort(list);

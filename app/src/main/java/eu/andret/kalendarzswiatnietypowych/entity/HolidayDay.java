@@ -59,6 +59,10 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 				.collect(Collectors.toList());
 	}
 
+	public void addHoliday(@NonNull final Holiday holiday) {
+		holidays.add(holiday);
+	}
+
 	public long countHolidays(final boolean includeUsual) {
 		return holidays.stream()
 				.filter(holiday -> !holiday.isUsual() || includeUsual)

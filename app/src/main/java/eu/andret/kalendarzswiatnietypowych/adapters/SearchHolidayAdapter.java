@@ -90,19 +90,20 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
-		for (final Holiday h : day.getHolidays()) {
-			if (!h.isUsual() || theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) {
-				final TextView tv = new TextView(getContext());
-				final LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-				p.setMargins(0, 2, 0, 2);
-				tv.setLayoutParams(p);
-				tv.setText(getContext().getResources().getString(R.string.pointed_text, h.getText()));
-				tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
-				holder.holidays.addView(tv);
-				tv.setTextColor(color.foreground);
-				if (h.isUsual()) {
-					tv.setTypeface(null, Typeface.BOLD);
-				}
+		final boolean isUsual = theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false);
+		for (final Holiday holiday : day.getHolidaysList(isUsual)) {
+			final TextView textView = new TextView(getContext());
+			final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+					ViewGroup.LayoutParams.MATCH_PARENT,
+					ViewGroup.LayoutParams.WRAP_CONTENT);
+			layoutParams.setMargins(0, 2, 0, 2);
+			textView.setLayoutParams(layoutParams);
+			textView.setText(getContext().getResources().getString(R.string.pointed_text, holiday.getText()));
+			textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
+			holder.holidays.addView(textView);
+			textView.setTextColor(color.foreground);
+			if (holiday.isUsual()) {
+				textView.setTypeface(null, Typeface.BOLD);
 			}
 		}
 

@@ -97,11 +97,12 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		});
 
 		boolean full = true;
-		if (holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
+		final boolean includeUsual = theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false);
+		if (holidayDay.countHolidays(includeUsual) == 0) {
 			holder.sad.setVisibility(View.VISIBLE);
 			holder.holiday.setText("");
 		} else {
-			final String text = holidayDay.getHolidaysList(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)).get(0).getText();
+			final String text = holidayDay.getHolidaysList(includeUsual).get(0).getText();
 			holder.sad.setVisibility(View.INVISIBLE);
 			final boolean display = theme.getBoolean(getContext().getResources().getString(R.string.settings_display_shortcuts), true);
 			if (display) {
@@ -117,19 +118,24 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 					result.append("...");
 					full = false;
 				}
-				if (holidayDay.getHolidays().stream().filter(x -> x.getText().equals(text)).findAny().map(Holiday::isUsual).orElse(false)) {
+				final boolean isAnyUsual = holidayDay.getHolidaysList(includeUsual).stream()
+						.filter(holiday -> holiday.getText().equals(text))
+						.findAny()
+						.map(Holiday::isUsual)
+						.orElse(false);
+				if (isAnyUsual) {
 					holder.holiday.setTypeface(null, Typeface.BOLD);
 				}
 				holder.holiday.setText(result.toString());
 				holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
 
-				final long number = holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) - (full ? 1 : 0);
+				final long number = holidayDay.countHolidays(includeUsual) - (full ? 1 : 0);
 				if (number > 0) {
 					holder.more.setText(getContext().getResources().getString(R.string.see_more, number));
 				}
 			} else {
 				holder.dateBig.setText(String.valueOf(holidayDay.getDay()));
-				final long number = holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false));
+				final long number = holidayDay.countHolidays(includeUsual);
 				if (number > 0) {
 					holder.more.setText(getContext().getResources().getString(R.string.holidays, number));
 				}
