@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.activity;
+package eu.andret.kalendarzswiatnietypowych.activities;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -44,9 +44,9 @@ import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.MyWidgetProvider;
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapter.DrawerAdapter;
-import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
-import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapters.DrawerAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapters.MonthFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapters.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerImage;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerItem;
 import eu.andret.kalendarzswiatnietypowych.drawer.ViewItem;

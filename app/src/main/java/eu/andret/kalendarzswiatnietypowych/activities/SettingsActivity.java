@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.activity;
+package eu.andret.kalendarzswiatnietypowych.activities;
 
 import android.app.Activity;
 import android.content.Intent;

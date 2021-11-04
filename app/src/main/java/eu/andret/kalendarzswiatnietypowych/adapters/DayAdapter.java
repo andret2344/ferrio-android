@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapter;
+package eu.andret.kalendarzswiatnietypowych.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
-import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activities.DayActivity;
+import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;

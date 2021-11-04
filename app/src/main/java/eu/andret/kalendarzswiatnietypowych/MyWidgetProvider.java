@@ -10,7 +10,7 @@ import android.widget.RemoteViews;
 
 import java.time.LocalDate;
 
-import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;

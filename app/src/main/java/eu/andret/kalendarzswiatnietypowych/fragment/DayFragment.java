@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapters.HolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;

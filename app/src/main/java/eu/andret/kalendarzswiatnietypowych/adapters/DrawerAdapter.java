@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapter;
+package eu.andret.kalendarzswiatnietypowych.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
