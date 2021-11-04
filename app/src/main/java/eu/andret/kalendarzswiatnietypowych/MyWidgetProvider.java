@@ -19,7 +19,6 @@ import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 
 public class MyWidgetProvider extends AppWidgetProvider {
-
 	@Override
 	public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
