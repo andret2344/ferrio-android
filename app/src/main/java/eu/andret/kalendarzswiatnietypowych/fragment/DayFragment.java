@@ -11,10 +11,13 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.List;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapters.HolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;
@@ -31,7 +34,7 @@ public class DayFragment extends Fragment {
 		}
 		final SharedPreferences theme = Data.getPreferences(getActivity(), Data.Prefs.THEME);
 		final Data.AppColorSet color = Data.getColors(theme.getInt(getContext().getResources().getString(R.string.settings_theme_app), 1));
-		final HolidayDay holidayDay = getArguments().getParcelable("holidayDay");
+		final HolidayDay holidayDay = getArguments().getParcelable(MainActivity.HOLIDAY_DAY);
 		if (holidayDay.countHolidays(theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
@@ -47,7 +50,8 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(color.background);
 		}
 		final ListView listView = (ListView) dayView.findViewById(R.id.fragment_day_list_holidays);
-		listView.setAdapter(new HolidayAdapter(getActivity(), holidayDay, c, true));
+		final List<Holiday> holidays = holidayDay.getHolidaysList(Data.getPreferences(getContext(), Data.Prefs.THEME).getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false));
+		listView.setAdapter(new HolidayAdapter(getActivity(), holidays, c));
 		return dayView;
 	}
 }

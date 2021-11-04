@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.utils;
 
-import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,9 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -51,14 +47,6 @@ public class Util {
 		return networkInfo != null && networkInfo.isConnected();
 	}
 
-	public void createAlert(final String title, final String text) {
-		final Builder alert = new Builder(context);
-		alert.setTitle(title);
-		alert.setMessage(text);
-		alert.setPositiveButton(R.string.ok, null);
-		alert.show();
-	}
-
 	public void createAlert(final int title, final int text) {
 		final Builder alert = new Builder(context);
 		alert.setTitle(title);
@@ -88,11 +76,6 @@ public class Util {
 		alert.setView(layout);
 		alert.setPositiveButton(R.string.ok, null);
 		alert.show();
-	}
-
-	public void createAd(final int viewId) {
-		final AdView adView = ((Activity) context).findViewById(viewId);
-		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	public void applyTheme() {

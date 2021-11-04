@@ -8,21 +8,9 @@
         android:id="@+id/adapter_holiday_text_holiday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/adapter_holiday_image_report"
         android:gravity="center_horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
         android:textSize="@dimen/adapter_holiday_main_text" />
-
-    <ImageView
-        android:id="@+id/adapter_holiday_image_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/adapter_holiday_text_holiday"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/about_calendar"
-        android:src="?attr/flag" />
 
 </RelativeLayout>

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.fragment.DayFragment;
@@ -28,7 +29,7 @@ public class DayFragmentAdapter extends FragmentStateAdapter {
 		final Bundle bundle = new Bundle();
 		final Util.MonthDayPair date = Util.calculateDates(position + 1);
 		final HolidayDay holidayDay = holidayCalendar.getDay(date.getMonth().getValue(), date.getDay());
-		bundle.putParcelable("holidayDay", holidayDay);
+		bundle.putParcelable(MainActivity.HOLIDAY_DAY, holidayDay);
 		dayFragment.setArguments(bundle);
 		return dayFragment;
 	}

@@ -91,7 +91,7 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 			final int day = ho.getDay();
 			final int month = ho.getMonth();
 			for (final Holiday h : ho.getHolidays()) {
-				updateMetadata(h.getMetadataId(), day, month, h.isUsual());
+				updateMetadata(dbWritable, dbReadable, h.getMetadataId(), day, month, h.isUsual());
 				final Cursor cursor = dbReadable.rawQuery("SELECT text FROM holiday WHERE language = ? AND metadata = ?", new String[]{language.getCode(), "" + h.getMetadataId()});
 				if (cursor.moveToFirst()) {
 					final ContentValues values = new ContentValues();
@@ -118,9 +118,7 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		dbReadable.close();
 	}
 
-	private void updateMetadata(final int metadataId, final int day, final int month, final boolean usual) {
-		final SQLiteDatabase dbWritable = getWritableDatabase();
-		final SQLiteDatabase dbReadable = getReadableDatabase();
+	private void updateMetadata(final SQLiteDatabase dbWritable, final SQLiteDatabase dbReadable, final int metadataId, final int day, final int month, final boolean usual) {
 		final Cursor cursor = dbReadable.rawQuery("SELECT id FROM metadata WHERE id = ?", new String[]{String.valueOf(metadataId)});
 		if (!cursor.moveToFirst()) {
 			final String mSQL = "INSERT INTO metadata(id, day, month, usual) VALUES (?, ?, ?, ?)";
@@ -138,8 +136,6 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 			dbWritable.update("metadata", values, "id = ?", new String[]{String.valueOf(metadataId)});
 		}
 		cursor.close();
-		dbWritable.close();
-		dbReadable.close();
 	}
 
 	public HolidayCalendar getAll(final String languageCode) {

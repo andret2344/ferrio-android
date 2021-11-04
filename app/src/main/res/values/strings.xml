@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3410450408196791/4823111464</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="app_name">Unusual Holiday Calendar</string>
     <string name="unusual_holiday">Unusual holiday</string>
     <string name="check_it_yourself">Check it yourself!</string>

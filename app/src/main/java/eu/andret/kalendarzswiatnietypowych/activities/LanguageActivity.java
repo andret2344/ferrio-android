@@ -9,6 +9,10 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +50,6 @@ public class LanguageActivity extends AppCompatActivity {
 		util.applyTheme();
 		setContentView(R.layout.activity_language);
 
-		util.createAd(R.id.language_adview_bottom);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
@@ -71,6 +74,10 @@ public class LanguageActivity extends AppCompatActivity {
 			}
 		}
 		listView.setAdapter(new LanguageAdapter(this, new ArrayList<>(languages)));
+
+		MobileAds.initialize(this);
+		final AdView adView = findViewById(R.id.language_adview_bottom);
+		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	@Override

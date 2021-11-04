@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
@@ -35,12 +36,11 @@ public class MonthFragment extends Fragment {
 		final DayAdapter adapter = new DayAdapter(getActivity(), holidayDays, current);
 		grid.setAdapter(adapter);
 		grid.post(() -> {
-			final int x = grid.getMeasuredHeight() / 6 - 1;
+			final int itemHeight = grid.getMeasuredHeight() / 6 - 25;
 			for (int i = 0; i < grid.getChildCount(); i++) {
-				final View v = grid.getChildAt(i);
-				final ViewGroup.LayoutParams lp = v.getLayoutParams();
-				lp.height = x;
-				v.setLayoutParams(lp);
+				final View view = grid.getChildAt(i);
+				final ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+				view.setLayoutParams(new AbsListView.LayoutParams(layoutParams.width, itemHeight));
 			}
 		});
 		month.findViewById(R.id.fragment_month_grid_days).setBackgroundColor(color.background);

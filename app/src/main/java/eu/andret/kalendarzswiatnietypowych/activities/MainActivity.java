@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.view.Gravity;
 import android.view.Menu;
@@ -33,6 +34,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 	public static final String FROM = "from";
 	public static final String HOLIDAY_DAYS = "holidayDays";
 	public static final String SELECTED_LANGUAGE = "selectedLanguage";
+	public static final String HOLIDAY_DAY = "holidayDay";
 
 	private Util util;
 	private DrawerLayout navigationDrawer;
@@ -133,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
 		final SharedPreferences prefs = Data.getPreferences(this, Data.Prefs.LANGUAGE);
 		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
+		if (holidaysDBHelper.getLanguages().isEmpty()) {
+			startActivity(new Intent(this, LanguageActivity.class));
+		}
 		holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayCalendar));
 		holidaysDBHelper.close();
@@ -146,9 +155,12 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
-		new Handler().postDelayed(MainActivity.this::dismissPreLoader, 4000);
-		util.createAd(R.id.main_adview_bottom);
+		new Handler(Looper.getMainLooper()).postDelayed(this::dismissPreLoader, 2500);
 		update();
+
+		MobileAds.initialize(this);
+		final AdView adView = findViewById(R.id.main_adview_bottom);
+		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	@Override
@@ -162,16 +174,16 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void setUpNavigationDrawer() {
-		final TypedArray ta = obtainStyledAttributes(R.styleable.images);
+		final TypedArray typedArray = obtainStyledAttributes(R.styleable.images);
 		final List<ViewItem> data = new ArrayList<>();
 		data.add(new NavigationDrawerImage(ContextCompat.getDrawable(this, R.drawable.ic_launcher)));
-		data.add(new NavigationDrawerItem(R.string.settings, ta.getDrawable(R.styleable.images_settings), v -> startActivityForResult(new Intent(getApplicationContext(), SettingsActivity.class), getApplicationContext().getResources().getInteger(R.integer.request_code_settings))));
+		data.add(new NavigationDrawerItem(R.string.settings, typedArray.getDrawable(R.styleable.images_settings), v -> startActivityForResult(new Intent(getApplicationContext(), SettingsActivity.class), getApplicationContext().getResources().getInteger(R.integer.request_code_settings))));
 
-		data.add(new NavigationDrawerItem(R.string.languages, ta.getDrawable(R.styleable.images_translate), v -> startActivity(new Intent(getApplicationContext(), LanguageActivity.class))));
+		data.add(new NavigationDrawerItem(R.string.languages, typedArray.getDrawable(R.styleable.images_translate), v -> startActivity(new Intent(getApplicationContext(), LanguageActivity.class))));
 
-		data.add(new NavigationDrawerItem(R.string.about_calendar, ta.getDrawable(R.styleable.images_event), v -> util.createAlert(R.string.about_calendar, R.string.about_calendar_text)));
+		data.add(new NavigationDrawerItem(R.string.about_calendar, typedArray.getDrawable(R.styleable.images_event), v -> util.createAlert(R.string.about_calendar, R.string.about_calendar_text)));
 
-		data.add(new NavigationDrawerItem(R.string.about_holidays, ta.getDrawable(R.styleable.images_format_quote), v -> util.createAlertWithImage(R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text)));
+		data.add(new NavigationDrawerItem(R.string.about_holidays, typedArray.getDrawable(R.styleable.images_format_quote), v -> util.createAlertWithImage(R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text)));
 
 		navigationDrawer = findViewById(R.id.main_drawer_main);
 		drawerList = findViewById(R.id.main_list_drawer);
@@ -182,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 		drawerList.setAdapter(new DrawerAdapter(this, data));
-		ta.recycle();
+		typedArray.recycle();
 	}
 
 	@Override

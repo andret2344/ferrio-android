@@ -9,11 +9,14 @@ import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
+import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
@@ -30,17 +33,20 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		intent.putExtra(MainActivity.MONTH, month);
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), dark ? R.layout.widget_dark : R.layout.widget_light);
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		String output = "";
-		final HolidayDay holidayDay = new HolidayDay(1, 1);//HolidayCalendar.getInstance(context).getTodayHolidays();
+		final SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
+		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
+		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(context);
+		final HolidayCalendar holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
+		final HolidayDay holidayDay = holidayCalendar.getTodayHolidays();
+		holidaysDBHelper.close();
+		final String output;
 		if (holidayDay.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
-			output += context.getResources().getString(R.string.no_unusual_holidays);
+			output = context.getResources().getString(R.string.no_unusual_holidays);
 		} else {
-			final StringBuilder outputBuilder = new StringBuilder();
-			for (final Holiday holiday : holidayDay.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false))) {
-				outputBuilder.append("\n\n").append(context.getResources().getString(R.string.pointed_text, holiday.getText()));
-			}
-			output = outputBuilder.toString();
-			output = output.substring(2);
+			output = holidayDay.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)).stream()
+					.map(Holiday::getText)
+					.map(text -> context.getResources().getString(R.string.pointed_text, text))
+					.collect(Collectors.joining("\n\n"));
 		}
 		remoteViews.setTextViewText(R.id.widget_text_holiday, output);
 		final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

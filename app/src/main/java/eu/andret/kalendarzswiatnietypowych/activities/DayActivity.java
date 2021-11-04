@@ -11,6 +11,10 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
@@ -68,7 +72,9 @@ public class DayActivity extends AppCompatActivity {
 				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + util.getMonthGenitive(pair.getMonth()));
 			}
 		});
-		util.createAd(R.id.day_adview_bottom);
+		MobileAds.initialize(this);
+		final AdView adView = findViewById(R.id.day_adview_bottom);
+		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	@Override
