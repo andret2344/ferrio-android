@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -69,7 +70,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		if (day == null) {
 			return convertView;
 		}
-//		holder.date.setText(day.getDate());
+		holder.date.setText(String.format(Locale.ROOT, "%02d.%02d", day.getDay(), day.getMonth()));
 		final int c;
 		boolean colorized;
 		try {
@@ -95,7 +96,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 				final LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 				p.setMargins(0, 2, 0, 2);
 				tv.setLayoutParams(p);
-				tv.setText(getContext().getResources().getString(R.string.pointer) + " " + h.getText());
+				tv.setText(getContext().getResources().getString(R.string.pointed_text, h.getText()));
 				tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 				holder.holidays.addView(tv);
 				tv.setTextColor(color.foreground);

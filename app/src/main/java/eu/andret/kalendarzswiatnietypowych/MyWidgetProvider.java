@@ -31,13 +31,13 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), dark ? R.layout.widget_dark : R.layout.widget_light);
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
 		String output = "";
-		final HolidayDay ho = new HolidayDay(1, 1);//HolidayCalendar.getInstance(context).getTodayHolidays();
-		if (ho.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
+		final HolidayDay holidayDay = new HolidayDay(1, 1);//HolidayCalendar.getInstance(context).getTodayHolidays();
+		if (holidayDay.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
 			output += context.getResources().getString(R.string.no_unusual_holidays);
 		} else {
 			final StringBuilder outputBuilder = new StringBuilder();
-			for (final Holiday s : ho.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false))) {
-				outputBuilder.append("\n\n").append(context.getResources().getString(R.string.pointer)).append(" ").append(s.getText());
+			for (final Holiday holiday : holidayDay.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false))) {
+				outputBuilder.append("\n\n").append(context.getResources().getString(R.string.pointed_text, holiday.getText()));
 			}
 			output = outputBuilder.toString();
 			output = output.substring(2);

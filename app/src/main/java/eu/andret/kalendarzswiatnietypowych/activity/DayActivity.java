@@ -103,7 +103,7 @@ public class DayActivity extends AppCompatActivity {
 			final StringBuilder holidays = new StringBuilder();
 			final HolidayDay holidayDay = calendar.getDay(pair.getMonth().getValue(), pair.getDay());
 			for (final Holiday h : holidayDay.getHolidays()) {
-				holidays.append("\n").append(getResources().getString(R.string.pointer)).append(" ").append(h.getText());
+				holidays.append("\n").append(getResources().getString(R.string.pointed_text, h.getText()));
 			}
 			intent.putExtra(Intent.EXTRA_TEXT, date + ":\n" + holidays + "\n\n" + getResources().getString(R.string.check_it_yourself) + "\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych");
 			startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_via)));
@@ -126,7 +126,7 @@ public class DayActivity extends AppCompatActivity {
 	}
 
 	public String getAddition(final int day) {
-		if (Locale.getDefault().getLanguage().equalsIgnoreCase("en")) {
+		if (Locale.ROOT.getLanguage().equalsIgnoreCase("en")) {
 			if (day % 100 >= 10 && day % 100 <= 20) {
 				return "th";
 			}

@@ -32,13 +32,14 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS metadata");
 		db.execSQL("CREATE TABLE holiday (text TEXT, language VARCHAR(31), metadata INT, url TEXT, CONSTRAINT h_pk PRIMARY KEY (language, metadata))");
 		db.execSQL("CREATE TABLE language (code VARCHAR(31) PRIMARY KEY, name VARCHAR(31))");
-		db.execSQL("CREATE TABLE metadata (id INTEGER PRIMARY KEY, month INT, day INT, type INT default NULL, usual BOOLEAN)");
+		db.execSQL("CREATE TABLE metadata (id INTEGER PRIMARY KEY, month INT, day INT, usual BOOLEAN)");
 	}
 
 	@Override
 	public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-		switch (newVersion) {
-			case 3:
+		switch (oldVersion) {
+			case 1:
+			case 2:
 				onCreate(db);
 				break;
 			default:
@@ -137,6 +138,8 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 			dbWritable.update("metadata", values, "id = ?", new String[]{String.valueOf(metadataId)});
 		}
 		cursor.close();
+		dbWritable.close();
+		dbReadable.close();
 	}
 
 	public HolidayCalendar getAll(final String languageCode) {
@@ -145,7 +148,6 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		}
 		final HolidayCalendar holidayCalendar = new HolidayCalendar();
 		final SQLiteDatabase db = getReadableDatabase();
-		db.beginTransaction();
 		final Cursor cursor = db.rawQuery("SELECT H.text, H.url, M.id, M.day, M.month, M.usual FROM holiday H" +
 				" INNER JOIN metadata M ON H.metadata = M.id WHERE H.language = ? ORDER BY M.month ASC, M.day ASC, M.usual DESC, H.text ASC", new String[]{languageCode});
 		if (cursor != null && cursor.moveToFirst()) {
@@ -162,8 +164,6 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 			} while (!cursor.isAfterLast());
 			cursor.close();
 		}
-		db.setTransactionSuccessful();
-		db.endTransaction();
 		db.close();
 		return holidayCalendar;
 	}

@@ -43,7 +43,7 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 	}
 
 	public final long getSeed() {
-		return Long.parseLong(String.format(Locale.US, "%d%d", day, month));
+		return Long.parseLong(String.format(Locale.ROOT, "%d%d", day, month));
 	}
 
 	public List<Holiday> getHolidaysList(final boolean includeUsual) {
@@ -68,7 +68,10 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 
 	@Override
 	public int compareTo(@NonNull final HolidayDay another) {
-		return day - another.day;
+		if (month == another.month) {
+			return day - another.day;
+		}
+		return month - another.month;
 	}
 
 	@Override

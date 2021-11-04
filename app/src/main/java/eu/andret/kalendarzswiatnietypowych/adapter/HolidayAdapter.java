@@ -61,13 +61,13 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final Holiday h = getItem(position);
-		if (h == null) {
+		final Holiday holiday = getItem(position);
+		if (holiday == null) {
 			return convertView;
 		}
 
-		holder.holiday.setText(getContext().getResources().getString(R.string.pointer) + " " + h.getText());
-		if (h.isUsual()) {
+		holder.holiday.setText(getContext().getResources().getString(R.string.pointed_text, holiday.getText()));
+		if (holiday.isUsual()) {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);

@@ -76,7 +76,7 @@
     <string name="send">Send</string>
     <string name="oops">Oops!</string>
     <string name="something_went_wrong">I\'m so sorry. Something went wrong.</string>
-    <string name="pointer" translatable="false">\u00B7</string>
+    <string name="pointed_text" translatable="false">\u00B7 %s</string>
     <string name="display_shortcuts">Display holidays\' shortcuts</string>
     <string name="display_shortcuts_desc">If checked, you can see holidays\' shortcuts on month view</string>
 

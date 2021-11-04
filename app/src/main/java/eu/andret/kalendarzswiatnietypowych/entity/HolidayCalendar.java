@@ -40,15 +40,15 @@ public class HolidayCalendar implements Parcelable {
 		return getDay(now.getDayOfMonth(), now.getMonthValue());
 	}
 
-	@NonNull
 	public final HolidayDay getDay(final int month, final int day) {
 		return holidayDays.stream()
 				.filter(holidayDay -> holidayDay.getDay() == day)
 				.filter(holidayDay -> holidayDay.getMonth() == month)
 				.findAny()
-				.orElse(new HolidayDay(month, day));
+				.orElse(null);
 	}
 
+	@NonNull
 	public final HolidayDay getOrCreateDay(final int month, final int day) {
 		final HolidayDay holidayDay = getDay(month, day);
 		if (holidayDay != null) {
@@ -60,11 +60,11 @@ public class HolidayCalendar implements Parcelable {
 	}
 
 	public final List<HolidayDay> getHolidayDaysInDateRange(final LocalDate begin, final LocalDate end) {
-		final List<HolidayDay> holidayDays = new ArrayList<>();
+		final List<HolidayDay> result = new ArrayList<>();
 		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.plusDays(1)) {
-			holidayDays.add(getDay(date.getMonthValue(), date.getDayOfMonth()));
+			result.add(getOrCreateDay(date.getMonthValue(), date.getDayOfMonth()));
 		}
-		return holidayDays;
+		return result;
 	}
 
 	@Override

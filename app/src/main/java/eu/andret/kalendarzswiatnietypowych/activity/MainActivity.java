@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,16 +36,23 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.MyWidgetProvider;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.DrawerAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerImage;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerItem;
 import eu.andret.kalendarzswiatnietypowych.drawer.ViewItem;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
@@ -61,10 +70,11 @@ public class MainActivity extends AppCompatActivity {
 	private DrawerLayout navigationDrawer;
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
-	private ViewPager2 pager;
-	private ListView list;
+	private ViewPager2 viewPager2;
+	private ListView searchListView;
 	private PowerManager.WakeLock wakeLock;
 	private LinearLayout preLoaderLayout;
+	private HolidayCalendar holidayCalendar;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -116,20 +126,20 @@ public class MainActivity extends AppCompatActivity {
 			wakeLock.acquire(2 * 60 * 1000L);
 		}
 
-		list = findViewById(R.id.main_list_results);
+		searchListView = findViewById(R.id.main_list_results);
 
 		setUpNavigationDrawer();
-		pager = findViewById(R.id.main_pager_months);
+		viewPager2 = findViewById(R.id.main_pager_months);
 		final SharedPreferences prefs = Data.getPreferences(this, Data.Prefs.LANGUAGE);
 		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
-		final HolidayCalendar en = holidaysDBHelper.getAll(selectedLanguageCode);
+		holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
+		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayCalendar));
 		holidaysDBHelper.close();
-		pager.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), en));
-		pager.setCurrentItem(LocalDate.now().getMonthValue());
-		getSupportActionBar().setTitle(util.getMonth(pager.getCurrentItem()));
-		pager.setOffscreenPageLimit(12);
-		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+		viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
+		getSupportActionBar().setTitle(util.getMonth(viewPager2.getCurrentItem()));
+		viewPager2.setOffscreenPageLimit(12);
+		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				getSupportActionBar().setTitle(util.getMonth(position));
@@ -201,69 +211,62 @@ public class MainActivity extends AppCompatActivity {
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(final Menu menu) {
-//		getMenuInflater().inflate(R.menu.main, menu);
-//		final MenuItem searchItem = menu.findItem(R.id.menu_main_search);
-//		final SearchView searchView = (SearchView) searchItem.getActionView();
-//		final ArrayList<HolidayDay> originalList = new ArrayList<>(HolidayCalendar.getInstance(this).getAllDays());
-//		final ArrayList<HolidayDay> list = new ArrayList<>(originalList);
-//		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
-//		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
-//		this.list.setAdapter(adapter);
-//		if (searchView == null) {
-//			return true;
-//		}
-//		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//			@Override
-//			public boolean onQueryTextSubmit(final String query) {
-//				return true;
-//			}
-//
-//			@Override
-//			public boolean onQueryTextChange(final String newText) {
-//				list.clear();
-//				if (newText == null || newText.equals("")) {
-//					list.addAll(originalList);
-//					MainActivity.this.list.setVisibility(View.INVISIBLE);
-//					pager.setVisibility(View.VISIBLE);
-//				} else {
-//					MainActivity.this.list.setVisibility(View.VISIBLE);
-//					pager.setVisibility(View.INVISIBLE);
-//					for (int i = 0; i < originalList.size(); i++) {
-//						final HolidayDay ho = originalList.get(i);
-//						final List<Holiday> holidaysTmpList = ho.getHolidaysList(theme.getBoolean(getResources().getString(R.string.settings_usual_holidays), false));
-//						for (final Holiday hd : holidaysTmpList) {
-//							if (hd.getText().toLowerCase(Locale.getDefault()).contains(newText.toLowerCase(Locale.getDefault()))) {
-//								final HolidayDay hday = ho.getMonth().new HolidayDay(ho);
-//
-//								hday.getHolidays().clear();
-//								for (final Holiday h : holidaysTmpList) {
-//									if (h.getText().toLowerCase(Locale.getDefault()).contains(newText.toLowerCase(Locale.getDefault()))) {
-//										hday.getHolidays().add(h);
-//									}
-//								}
-//								list.add(hday);
-//								break;
-//							}
-//						}
-//					}
-//				}
-//				Collections.sort(list);
-//				adapter.notifyDataSetChanged();
-//				return false;
-//			}
-//		});
-//
-//		return super.onCreateOptionsMenu(menu);
-//	}
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		final MenuItem searchItem = menu.findItem(R.id.menu_main_search);
+		final SearchView searchView = (SearchView) searchItem.getActionView();
+		final Collection<HolidayDay> originalList = Collections.unmodifiableCollection(holidayCalendar.getHolidayDays());
+		final List<HolidayDay> list = new ArrayList<>(originalList);
+		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
+		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
+		searchListView.setAdapter(adapter);
+		if (searchView == null) {
+			return true;
+		}
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(final String query) {
+				return true;
+			}
+
+			@Override
+			public boolean onQueryTextChange(final String newText) {
+				list.clear();
+				if (newText == null || newText.equals("")) {
+					searchListView.setVisibility(View.INVISIBLE);
+					viewPager2.setVisibility(View.VISIBLE);
+					list.addAll(originalList);
+				} else {
+					searchListView.setVisibility(View.VISIBLE);
+					viewPager2.setVisibility(View.INVISIBLE);
+					originalList.stream()
+							.map(holidayDay -> {
+								final boolean includeUsual = theme.getBoolean(getResources().getString(R.string.settings_usual_holidays), false);
+								final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
+										.stream()
+										.filter(holiday -> holiday.getText().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))
+										.collect(Collectors.toList());
+								return new HolidayDay(holidayDay.getMonth(), holidayDay.getDay(), holidayList);
+							})
+							.filter(holidayDay -> !holidayDay.getHolidays().isEmpty())
+							.forEach(list::add);
+				}
+				Collections.sort(list);
+				adapter.notifyDataSetChanged();
+				return false;
+			}
+		});
+
+		return super.onCreateOptionsMenu(menu);
+	}
 
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == getResources().getInteger(R.integer.request_code_change_month)) {
 			if (resultCode == RESULT_OK) {
-				pager.setCurrentItem(data.getIntExtra(MONTH, LocalDate.now().getMonthValue()) - 1);
+				viewPager2.setCurrentItem(data.getIntExtra(MONTH, LocalDate.now().getMonthValue()) - 1);
 			} else {
 				Toast.makeText(this, "unknown error", Toast.LENGTH_SHORT).show();
 			}
@@ -279,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == R.id.menu_main_today) {
-			pager.setCurrentItem(LocalDate.now().getMonthValue());
+			viewPager2.setCurrentItem(LocalDate.now().getMonthValue());
 		}
 		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
@@ -287,8 +290,8 @@ public class MainActivity extends AppCompatActivity {
 	public void update() {
 		final int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), MyWidgetProvider.class));
 		new MyWidgetProvider().onUpdate(this, AppWidgetManager.getInstance(this), ids);
-		pager.invalidate();
-		pager.refreshDrawableState();
+		viewPager2.invalidate();
+		viewPager2.refreshDrawableState();
 		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
 		final Data.AppColorSet color = Data.getColors(theme.getInt(getResources().getString(R.string.settings_theme_app), 1));
 		navigationDrawer.setBackgroundColor(color.background);
