@@ -1,7 +1,6 @@
 <resources>
     <declare-styleable name="images">
         <attr name="event" format="reference" />
-        <attr name="flag" format="reference" />
         <attr name="format_quote" format="reference" />
         <attr name="info" format="reference" />
         <attr name="search" format="reference" />

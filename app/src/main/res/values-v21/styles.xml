@@ -4,7 +4,6 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="event">@drawable/ic_event_black_36dp</item>
-        <item name="flag">@drawable/baseline_flag_black_36</item>
         <item name="format_quote">@drawable/ic_format_quote_black_36dp</item>
         <item name="info">@drawable/ic_info_black_36dp</item>
         <item name="search">@drawable/ic_search_black_36dp</item>
@@ -17,7 +16,6 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="event">@drawable/ic_event_white_36dp</item>
-        <item name="flag">@drawable/baseline_flag_white_36</item>
         <item name="format_quote">@drawable/ic_format_quote_white_36dp</item>
         <item name="info">@drawable/ic_info_white_36dp</item>
         <item name="search">@drawable/ic_search_white_36dp</item>
