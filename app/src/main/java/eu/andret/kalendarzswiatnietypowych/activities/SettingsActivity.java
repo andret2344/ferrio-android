@@ -2,23 +2,23 @@ package eu.andret.kalendarzswiatnietypowych.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		final int[] prefs = {R.string.settings_theme_app, R.string.settings_theme_widgets, R.string.settings_theme_colorized, R.string.settings_usual_holidays, R.string.settings_display_shortcuts};
+		final int[] prefs = {R.string.settings_key_theme_app, R.string.settings_key_theme_widgets, R.string.settings_key_theme_colorized, R.string.settings_key_usual_holidays, R.string.settings_key_display_shortcuts};
 		final PrefsFragment prefsFragment = new PrefsFragment();
 		final Bundle bundle = new Bundle();
 		bundle.putIntArray("data", prefs);
@@ -54,6 +54,23 @@ public class SettingsActivity extends AppCompatActivity {
 				.beginTransaction()
 				.replace(android.R.id.content, prefsFragment)
 				.commit();
+
+		PreferenceManager.getDefaultSharedPreferences(this)
+				.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
+					final String themeSettingsKey = getString(R.string.settings_key_theme_app);
+					if (key.equals(themeSettingsKey)) {
+						final String themeDarkKey = getString(R.string.settings_value_key_theme_dark);
+						final String themeLightKey = getString(R.string.settings_value_key_theme_light);
+						final String themeValue = PreferenceManager.getDefaultSharedPreferences(this)
+								.getString(themeSettingsKey, themeDarkKey);
+						if (themeDarkKey.equals(themeValue)) {
+							AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+						} else if (themeLightKey.equals(themeValue)) {
+							AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+						}
+						recreate();
+					}
+				});
 	}
 
 	public static class PrefsFragment extends PreferenceFragmentCompat {
@@ -71,30 +88,10 @@ public class SettingsActivity extends AppCompatActivity {
 						if (pref == null) {
 							return;
 						}
-
 						if (pref instanceof ListPreference) {
-							final ListPreference list = (ListPreference) pref;
-							pref.setSummary(list.getEntry());
+							final ListPreference preference = (ListPreference) pref;
+							preference.setSummaryProvider((Preference.SummaryProvider<ListPreference>) ListPreference::getEntry);
 						}
-
-						pref.setOnPreferenceChangeListener((preference, value) -> {
-							final SharedPreferences prefs = Data.getPreferences(getActivity(), Data.Prefs.THEME);
-							final SharedPreferences.Editor editor = prefs.edit();
-							if (value instanceof Boolean) {
-								editor.putBoolean(current, (Boolean) value);
-							} else if (value instanceof Integer) {
-								editor.putInt(current, (int) value);
-							}
-							editor.apply();
-							if (pref instanceof ListPreference) {
-								final ListPreference list = (ListPreference) pref;
-								pref.setSummary(list.getEntries()[list.findIndexOfValue(String.valueOf(value))]);
-								if (current.equals(getActivity().getResources().getString(R.string.settings_theme_app))) {
-									getActivity().recreate();
-								}
-							}
-							return true;
-						});
 					});
 		}
 	}

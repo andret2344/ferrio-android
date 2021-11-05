@@ -1,8 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.utils;
 
+import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
+
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.TypedValue;
@@ -15,6 +19,7 @@ import androidx.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import lombok.Value;
@@ -22,6 +27,8 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Util {
+	private static final Random RANDOM = new Random();
+
 	@Value
 	public static class MonthDayPair {
 		Month month;
@@ -67,7 +74,7 @@ public class Util {
 
 	public static void applyTheme(final Context context) {
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final String string = context.getResources().getString(R.string.settings_theme_app);
+		final String string = context.getResources().getString(R.string.settings_key_theme_app);
 		int anInt;
 		try {
 			anInt = theme.getInt(string, 1);
@@ -104,5 +111,19 @@ public class Util {
 		}
 		final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 2);
 		return new MonthDayPair(date.getMonth(), date.getDayOfMonth());
+	}
+
+	public static int randomizeColor(final boolean dark, final long seed) {
+		RANDOM.setSeed(seed);
+		return Color.rgb(randomize(dark), randomize(dark), randomize(dark));
+	}
+
+	public static int randomize(final boolean dark) {
+		return RANDOM.nextInt(127) + (dark ? 0 : 127);
+	}
+
+	public static boolean isDarkTheme(final Context context) {
+		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+				== UI_MODE_NIGHT_YES;
 	}
 }

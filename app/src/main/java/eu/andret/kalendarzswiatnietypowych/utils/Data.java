@@ -18,16 +18,11 @@ public final class Data {
 		return context.getSharedPreferences(type.getName(), Context.MODE_PRIVATE);
 	}
 
-	public AppColorSet getColors(final int number) {
-		switch (number) {
-			case 0:
-				return new AppColorSet(false, MyColor.WHITE, MyColor.BLACK);
-			case 2:
-				return new AppColorSet(false, MyColor.PINK, MyColor.BLACK);
-			case 1:
-			default:
-				return new AppColorSet(true, MyColor.BLACK, MyColor.WHITE);
+	public AppColorSet getColors(final boolean dark) {
+		if (dark) {
+			return new AppColorSet(true, MyColor.BLACK, MyColor.WHITE);
 		}
+		return new AppColorSet(false, MyColor.WHITE, MyColor.BLACK);
 	}
 
 	public static class AppColorSet {
@@ -44,11 +39,7 @@ public final class Data {
 
 	public enum Prefs {
 		THEME,
-		FAVOURITES,
-		TUTORIAL,
-		LANGUAGE,
-		SURVEY,
-		DEFAULT;
+		LANGUAGE;
 
 		public String getName() {
 			return name().toLowerCase(Locale.ROOT);
@@ -59,8 +50,5 @@ public final class Data {
 	public static class MyColor {
 		public static final int WHITE = Color.rgb(238, 238, 238);
 		public static final int BLACK = Color.rgb(33, 33, 33);
-		public static final int PINK = Color.rgb(238, 130, 238);
-		public static final int GRAY_LIGHT = Color.rgb(200, 200, 200);
-		public static final int GRAY_DARK = Color.rgb(100, 100, 100);
 	}
 }

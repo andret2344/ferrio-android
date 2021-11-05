@@ -22,7 +22,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		final boolean dark = Data.getPreferences(context, Data.Prefs.THEME).getInt(context.getResources().getString(R.string.settings_theme_widgets), 1) == 1;
+		final boolean dark = Data.getPreferences(context, Data.Prefs.THEME).getInt(context.getResources().getString(R.string.settings_key_theme_widgets), 1) == 1;
 
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), dark ? R.layout.widget_dark : R.layout.widget_light);
 		remoteViews.setTextViewText(R.id.widget_text_holiday, getContent(context));
@@ -44,10 +44,10 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		final HolidayCalendar holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
 		final HolidayDay holidayDay = holidayCalendar.getTodayHolidays();
 		holidaysDBHelper.close();
-		if (holidayDay.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
+		if (holidayDay.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)) == 0) {
 			return context.getResources().getString(R.string.no_unusual_holidays);
 		}
-		return holidayDay.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)).stream()
+		return holidayDay.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)).stream()
 				.map(Holiday::getText)
 				.map(text -> context.getResources().getString(R.string.pointed_text, text))
 				.collect(Collectors.joining("\n\n"));

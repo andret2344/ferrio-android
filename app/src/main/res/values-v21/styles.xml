@@ -1,19 +1,19 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Material.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="event">@drawable/ic_event_black_36dp</item>
         <item name="flag">@drawable/baseline_flag_black_36</item>
         <item name="format_quote">@drawable/ic_format_quote_black_36dp</item>
         <item name="info">@drawable/ic_info_black_36dp</item>
-        <item name="menu">@drawable/ic_info_black_36dp</item>
+        <item name="search">@drawable/ic_search_black_36dp</item>
         <item name="settings">@drawable/ic_settings_black_36dp</item>
         <item name="shuffle">@drawable/ic_shuffle_white_24dp</item>
         <item name="translate">@drawable/ic_translate_black_36dp</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="android:Theme.Material">
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.DayNight">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="event">@drawable/ic_event_white_36dp</item>

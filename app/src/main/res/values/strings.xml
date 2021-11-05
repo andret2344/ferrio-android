@@ -4,7 +4,7 @@
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="app_name">Unusual Holiday Calendar</string>
     <string name="unusual_holiday">Unusual holiday</string>
-    <string name="check_it_yourself">Check it yourself!</string>
+    <string name="share_message">%s:\n%s\n\nCheck it!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
     <string name="share_via">Share via</string>
     <string name="today_is">Today is:</string>
     <string name="share">Share</string>

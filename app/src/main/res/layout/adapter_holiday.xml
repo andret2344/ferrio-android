@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingBottom="5dp"
+        style="?attr/textColor"
         android:paddingTop="5dp"
         android:textSize="@dimen/adapter_holiday_main_text" />
 

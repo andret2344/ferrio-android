@@ -28,10 +28,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdRequest;
@@ -93,6 +95,17 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 
 		Util.applyTheme(this);
+
+		final String themeDarkKey = getString(R.string.settings_value_key_theme_dark);
+		final String themeLightKey = getString(R.string.settings_value_key_theme_light);
+		final String themeSettingsKey = getString(R.string.settings_key_theme_app);
+		final String themeValue = PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(themeSettingsKey, themeDarkKey);
+		if (themeDarkKey.equals(themeValue)) {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+		} else if (themeLightKey.equals(themeValue)) {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+		}
 
 		final ViewGroup v = (ViewGroup) getWindow().getDecorView().getRootView();
 		preLoaderLayout = new LinearLayout(this);
@@ -252,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 					viewPager2.setVisibility(View.INVISIBLE);
 					originalList.stream()
 							.map(holidayDay -> {
-								final boolean includeUsual = theme.getBoolean(getResources().getString(R.string.settings_usual_holidays), false);
+								final boolean includeUsual = theme.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false);
 								final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
 										.stream()
 										.filter(holiday -> holiday.getText().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))
@@ -307,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
 		viewPager2.invalidate();
 		viewPager2.refreshDrawableState();
 		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(theme.getInt(getResources().getString(R.string.settings_theme_app), 1));
+		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(this));
 		navigationDrawer.setBackgroundColor(color.background);
 		drawerList.setBackgroundColor(color.background);
 		findViewById(R.id.main_relative_main).setBackgroundColor(color.background);

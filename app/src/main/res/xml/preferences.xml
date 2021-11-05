@@ -8,7 +8,7 @@
             android:dialogTitle="@string/pref_title_app_theme"
             android:entries="@array/pref_theme_application_list"
             android:entryValues="@array/pref_theme_application_values"
-            android:key="app_theme"
+            android:key="@string/settings_key_theme_app"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_title_app_theme" />
@@ -16,17 +16,17 @@
         <SwitchPreference
             android:defaultValue="false"
             android:disableDependentsState="true"
-            android:key="@string/settings_theme_colorized"
+            android:key="@string/settings_key_theme_colorized"
             android:summary="@string/colorized_days_desc"
             android:title="@string/colorized_days" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/settings_usual_holidays"
+            android:key="@string/settings_key_usual_holidays"
             android:summary="@string/usual_holidays_desc"
             android:title="@string/usual_holidays" />
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/settings_display_shortcuts"
+            android:key="@string/settings_key_display_shortcuts"
             android:summary="@string/display_shortcuts_desc"
             android:title="@string/display_shortcuts" />
     </PreferenceCategory>
@@ -38,7 +38,7 @@
             android:dialogTitle="@string/pref_title_widgets_theme"
             android:entries="@array/pref_theme_widgets_list"
             android:entryValues="@array/pref_theme_widgets_values"
-            android:key="@string/settings_theme_widgets"
+            android:key="@string/settings_key_theme_widgets"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_title_widgets_theme" />

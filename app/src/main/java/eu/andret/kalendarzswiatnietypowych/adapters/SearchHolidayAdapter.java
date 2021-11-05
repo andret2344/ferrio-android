@@ -25,7 +25,7 @@ import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.Data.Prefs;
+import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 	private final Context context;
@@ -60,7 +60,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(theme.getInt(getContext().getResources().getString(R.string.settings_theme_app), 1));
+		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(getContext()));
 
 		holder.date.setTextColor(color.foreground);
 		holder.border.setBackgroundColor(color.background);
@@ -74,23 +74,23 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		final int c;
 		boolean colorized;
 		try {
-			colorized = theme.getBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), false);
+			colorized = theme.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false);
 		} catch (final ClassCastException ex) {
-			colorized = theme.getString(getContext().getResources().getString(R.string.settings_theme_colorized), "false").equals("true");
+			colorized = theme.getString(getContext().getResources().getString(R.string.settings_key_theme_colorized), "false").equals("true");
 			theme.edit()
-					.remove(getContext().getResources().getString(R.string.settings_theme_colorized))
-					.putBoolean(getContext().getResources().getString(R.string.settings_theme_colorized), colorized)
+					.remove(getContext().getResources().getString(R.string.settings_key_theme_colorized))
+					.putBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), colorized)
 					.apply();
 		}
 		if (colorized) {
 			random.setSeed(day.getSeed());
-			final boolean dark = Data.getColors(Data.getPreferences(context, Prefs.THEME).getInt(getContext().getResources().getString(R.string.settings_theme_app), 1)).dark;
+			final boolean dark = color.dark;
 			c = Color.rgb(random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127));
 			holder.border.setBackgroundColor(c);
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
-		final boolean isUsual = theme.getBoolean(getContext().getResources().getString(R.string.settings_usual_holidays), false);
+		final boolean isUsual = theme.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
 		for (final Holiday holiday : day.getHolidaysList(isUsual)) {
 			final TextView textView = new TextView(getContext());
 			final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

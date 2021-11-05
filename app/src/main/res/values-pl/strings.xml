@@ -3,7 +3,7 @@
 
     <string name="app_name">Kalendarz świąt nietypowych</string>
     <string name="unusual_holiday">Nietypowe święto</string>
-    <string name="check_it_yourself">Sprawdź sam!</string>
+    <string name="share_message">%s:\n%s\n\nSprawdź!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
     <string name="share_via">Udostępnij przez</string>
     <string name="today_is">Dzisiaj jest:</string>
     <string name="share">Udostępnij</string>

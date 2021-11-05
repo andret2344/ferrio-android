@@ -112,12 +112,12 @@ public class DayActivity extends AppCompatActivity {
 				return true;
 			}
 			final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
-			final String holidays = holidayDay.getHolidaysList(theme.getBoolean(getResources().getString(R.string.settings_usual_holidays), false))
+			final String holidays = holidayDay.getHolidaysList(theme.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false))
 					.stream()
 					.map(Holiday::getText)
 					.map(text -> getResources().getString(R.string.pointed_text, text))
 					.collect(Collectors.joining("\n"));
-			intent.putExtra(Intent.EXTRA_TEXT, date + ":\n" + holidays + "\n\n" + getResources().getString(R.string.check_it_yourself) + "\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych");
+			intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_message, date, holidays));
 			startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_via)));
 			return true;
 		}

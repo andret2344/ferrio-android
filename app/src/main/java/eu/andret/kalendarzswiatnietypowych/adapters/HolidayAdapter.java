@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
 
 public class HolidayAdapter extends ArrayAdapter<Holiday> {
 	private final Context context;
@@ -58,9 +56,6 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 		if (holiday.isUsual()) {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}
-		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final Data.AppColorSet appColorSet = Data.getColors(theme.getInt(getContext().getResources().getString(R.string.settings_theme_app), 1));
-		holder.holiday.setTextColor(appColorSet.foreground);
 		holder.background.setBackgroundColor(color);
 		convertView.setBackgroundColor(color);
 		return convertView;

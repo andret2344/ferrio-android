@@ -9,8 +9,8 @@
         <item>@string/theme_light</item>
     </string-array>
     <string-array name="pref_theme_application_values">
-        <item>1</item>
-        <item>0</item>
+        <item>@string/settings_value_key_theme_dark</item>
+        <item>@string/settings_value_key_theme_light</item>
     </string-array>
 
     <string name="pref_title_widgets_theme">Theme of widgets</string>
@@ -20,8 +20,8 @@
         <item>@string/theme_light</item>
     </string-array>
     <string-array name="pref_theme_widgets_values">
-        <item>1</item>
-        <item>0</item>
+        <item>@string/settings_value_key_theme_dark</item>
+        <item>@string/settings_value_key_theme_light</item>
     </string-array>
 
 </resources>

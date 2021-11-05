@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerImage;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerItem;
 import eu.andret.kalendarzswiatnietypowych.drawer.ViewItem;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
+import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 	public DrawerAdapter(final Context context, final List<ViewItem> values) {
@@ -46,8 +46,7 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		final SharedPreferences theme = Data.getPreferences(getContext(), Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(Integer.parseInt(theme.getString(getContext().getResources().getString(R.string.settings_theme_app), "1")));
+		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(getContext()));
 		holder.name.setTextColor(color.foreground);
 		convertView.setBackgroundColor(color.background);
 		final ViewItem v = getItem(position);
