@@ -45,7 +45,6 @@ public class LanguageActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Util.applyTheme(this);
 		setContentView(R.layout.activity_language);
 
 		if (getSupportActionBar() != null) {

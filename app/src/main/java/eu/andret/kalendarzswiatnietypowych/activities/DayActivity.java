@@ -40,7 +40,6 @@ public class DayActivity extends AppCompatActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
-		Util.applyTheme(this);
 		setContentView(R.layout.activity_day);
 
 		pager = findViewById(R.id.day_pager_days);

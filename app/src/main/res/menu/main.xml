@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/menu_main_search"
-        android:icon="@drawable/ic_search_white_36dp"
+        android:icon="@drawable/ic_search_36dp"
         android:orderInCategory="9"
         android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView"/>
     <item
         android:id="@+id/menu_main_today"
-        android:icon="@drawable/ic_today_white_24dp"
+        android:icon="@drawable/baseline_event_36"
         android:orderInCategory="10"
         android:title="@string/today"
         app:showAsAction="ifRoom|collapseActionView"/>

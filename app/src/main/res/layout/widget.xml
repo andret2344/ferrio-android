@@ -3,8 +3,8 @@
     android:id="@+id/widget_relative_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rounded_widget_light"
-    android:orientation="vertical" >
+    android:background="@drawable/rounded_widget"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/widget_text_today"
@@ -13,7 +13,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/today_is"
-        android:textColor="#000"
+        android:textColor="#FFF"
         android:textSize="20sp" />
 
     <TextView
@@ -24,6 +24,6 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:textColor="#000" />
+        android:textColor="#FFF" />
 
 </RelativeLayout>

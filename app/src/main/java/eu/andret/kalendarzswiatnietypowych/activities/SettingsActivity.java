@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class SettingsActivity extends AppCompatActivity {
 	@Override
@@ -41,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Util.applyTheme(this);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}

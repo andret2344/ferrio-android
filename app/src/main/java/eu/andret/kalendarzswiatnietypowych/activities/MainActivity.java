@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
 		}
 		super.onCreate(savedInstanceState);
 
-		Util.applyTheme(this);
-
 		final String themeDarkKey = getString(R.string.settings_value_key_theme_dark);
 		final String themeLightKey = getString(R.string.settings_value_key_theme_light);
 		final String themeSettingsKey = getString(R.string.settings_key_theme_app);
@@ -308,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == R.id.menu_main_today) {
-			viewPager2.setCurrentItem(LocalDate.now().getMonthValue());
+			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
 		}
 		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}

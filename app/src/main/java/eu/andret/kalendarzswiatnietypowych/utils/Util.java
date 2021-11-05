@@ -4,7 +4,6 @@ import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -70,19 +69,6 @@ public class Util {
 		alert.setView(layout);
 		alert.setPositiveButton(R.string.ok, null);
 		alert.show();
-	}
-
-	public static void applyTheme(final Context context) {
-		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final String string = context.getResources().getString(R.string.settings_key_theme_app);
-		int anInt;
-		try {
-			anInt = theme.getInt(string, 1);
-		} catch (final ClassCastException ex) {
-			anInt = Integer.parseInt(theme.getString(string, "1"));
-			theme.edit().remove(string).putInt(string, anInt).apply();
-		}
-		context.setTheme(anInt == 1 ? R.style.AppTheme_Dark : R.style.AppTheme);
 	}
 
 	@NonNull
