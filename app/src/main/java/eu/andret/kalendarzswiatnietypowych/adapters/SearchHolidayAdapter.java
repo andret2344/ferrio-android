@@ -57,7 +57,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(getContext()));
+		final Data.AppColorSet color = Data.getColors(getContext());
 
 		holder.date.setTextColor(color.foreground);
 		holder.border.setBackgroundColor(color.background);

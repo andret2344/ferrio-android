@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 		preLoaderLayout = new LinearLayout(this);
 		preLoaderLayout.setOrientation(LinearLayout.VERTICAL);
 		preLoaderLayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		preLoaderLayout.setBackgroundColor(Data.MyColor.BLACK);
+		preLoaderLayout.setBackgroundColor(getResources().getColor(R.color.color_black_accent));
 		v.addView(preLoaderLayout);
 
 		final ImageView image = new ImageView(this);
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void update() {
-		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(this));
+		final Data.AppColorSet color = Data.getColors(this);
 		drawerList.setBackgroundColor(color.background);
 	}
 

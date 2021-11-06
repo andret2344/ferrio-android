@@ -17,7 +17,6 @@ import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapters.DayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class MonthFragment extends Fragment {
 	@NonNull
@@ -30,7 +29,7 @@ public class MonthFragment extends Fragment {
 
 		final int current = getArguments().getInt(MainActivity.MONTH, 1);
 		final List<HolidayDay> holidayDays = getArguments().getParcelableArrayList(MainActivity.HOLIDAY_DAYS);
-		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(getContext()));
+		final Data.AppColorSet color = Data.getColors(getContext());
 		final GridView grid = month.findViewById(R.id.fragment_month_grid_days);
 		grid.measure(0, 0);
 		final DayAdapter adapter = new DayAdapter(getActivity(), holidayDays, current);

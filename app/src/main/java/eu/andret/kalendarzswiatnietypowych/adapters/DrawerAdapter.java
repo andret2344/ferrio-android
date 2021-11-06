@@ -19,7 +19,6 @@ import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerImage;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerItem;
 import eu.andret.kalendarzswiatnietypowych.drawer.ViewItem;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 	public DrawerAdapter(final Context context, final List<ViewItem> values) {
@@ -46,7 +45,7 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(getContext()));
+		final Data.AppColorSet color = Data.getColors(getContext());
 		holder.name.setTextColor(color.foreground);
 		convertView.setBackgroundColor(color.background);
 		final ViewItem v = getItem(position);

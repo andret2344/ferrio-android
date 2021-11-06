@@ -6,10 +6,10 @@ package eu.andret.kalendarzswiatnietypowych.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 
 import java.util.Locale;
 
+import eu.andret.kalendarzswiatnietypowych.R;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -18,11 +18,13 @@ public final class Data {
 		return context.getSharedPreferences(type.getName(), Context.MODE_PRIVATE);
 	}
 
-	public AppColorSet getColors(final boolean dark) {
-		if (dark) {
-			return new AppColorSet(true, MyColor.BLACK, MyColor.WHITE);
+	public AppColorSet getColors(final Context context) {
+		final int colorBlack = context.getResources().getColor(R.color.color_black_accent);
+		final int colorWhite = context.getResources().getColor(R.color.color_white_accent);
+		if (Util.isDarkTheme(context)) {
+			return new AppColorSet(true, colorBlack, colorWhite);
 		}
-		return new AppColorSet(false, MyColor.WHITE, MyColor.BLACK);
+		return new AppColorSet(false, colorWhite, colorBlack);
 	}
 
 	public static class AppColorSet {
@@ -44,11 +46,5 @@ public final class Data {
 		public String getName() {
 			return name().toLowerCase(Locale.ROOT);
 		}
-	}
-
-	@UtilityClass
-	public static class MyColor {
-		public static final int WHITE = Color.rgb(238, 238, 238);
-		public static final int BLACK = Color.rgb(33, 33, 33);
 	}
 }
