@@ -28,7 +28,6 @@ public final class Data {
 		return new AppColorSet(false, colorWhite, colorBlack);
 	}
 
-
 	@Value
 	public static class AppColorSet {
 		boolean darkTheme;

@@ -97,7 +97,10 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					Thread.currentThread().interrupt();
 				}
 			} else {
-				Util.createAlert(getContext(), R.string.caution, R.string.no_internet);
+				final SharedPreferences.Editor editor = prefs.edit();
+				editor.putString(MainActivity.SELECTED_LANGUAGE, language.getCode());
+				editor.apply();
+				((ListView) parent).setItemChecked(position, true);
 			}
 		});
 		return convertView;

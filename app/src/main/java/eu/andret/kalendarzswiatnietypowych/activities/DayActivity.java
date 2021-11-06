@@ -87,7 +87,8 @@ public class DayActivity extends AppCompatActivity {
 		if (item.getItemId() == android.R.id.home) {
 			onBackPressed();
 			return true;
-		} else if (item.getItemId() == R.id.menu_day_today) {
+		}
+		if (item.getItemId() == R.id.menu_day_today) {
 			final LocalDate date = LocalDate.now();
 			final boolean leap = date.isLeapYear();
 			int id = date.getDayOfYear();
@@ -96,10 +97,12 @@ public class DayActivity extends AppCompatActivity {
 			}
 			pager.setCurrentItem(id, true);
 			return true;
-		} else if (item.getItemId() == R.id.menu_day_random) {
+		}
+		if (item.getItemId() == R.id.menu_day_random) {
 			pager.setCurrentItem(RANDOM.nextInt(367), true);
 			return true;
-		} else if (item.getItemId() == R.id.menu_day_share) {
+		}
+		if (item.getItemId() == R.id.menu_day_share) {
 			final Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
