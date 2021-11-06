@@ -1,4 +1,5 @@
 <resources>
+
     <declare-styleable name="images">
         <attr name="event" format="reference" />
         <attr name="format_quote" format="reference" />
@@ -10,5 +11,4 @@
         <attr name="translate" format="reference" />
     </declare-styleable>
 
-    <attr name="textColor" format="color" />
 </resources>

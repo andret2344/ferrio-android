@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
 		}
 		super.onCreate(savedInstanceState);
 
-		final String themeDarkKey = getString(R.string.settings_value_key_theme_dark);
-		final String themeLightKey = getString(R.string.settings_value_key_theme_light);
+		final String themeDarkKey = getString(R.string.settings_key_theme_dark);
+		final String themeLightKey = getString(R.string.settings_key_theme_light);
 		final String themeSettingsKey = getString(R.string.settings_key_theme_app);
 		final String themeValue = PreferenceManager.getDefaultSharedPreferences(this)
 				.getString(themeSettingsKey, themeDarkKey);

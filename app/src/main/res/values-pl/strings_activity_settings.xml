@@ -1,8 +1,23 @@
 <resources>
 
-    <string name="pref_category_app">Aplikacja</string>
-    <string name="pref_category_widget">Widgety</string>
-    <string name="pref_title_app_theme">Motyw aplikacji</string>
-    <string name="pref_title_widgets_theme">Motyw widgetu</string>
+    <!-- Categories -->
+    <string name="preference_category_application">Aplikacja</string>
+    <string name="preference_category_widgets">Widgety</string>
+
+    <!-- Titles -->
+    <string name="preference_title_theme_app">Motyw aplikacji</string>
+    <string name="preference_title_theme_widget">Motyw widgetu</string>
+    <string name="preference_title_colorized_days">Kolorowe dni</string>
+    <string name="preference_title_include_usual">Dołącz święta typowe</string>
+    <string name="preference_title_holidays_shortcuts">Wyświetlaj skróty świąt</string>
+
+    <!-- Descriptions -->
+    <string name="preference_description_colorized_days">Jeśli zaznaczone, każdy dzień ma swój własny kolor na podstawie swojej daty.</string>
+    <string name="preference_description_include_usual">Jeśli zaznaczony, widoczne są równie święta typowe, np. Nowy Rok.</string>
+    <string name="preference_description_holidays_shortcuts">Jeśli zaznaczony, wyświetla skróty świąt w widoku miesiąca</string>
+
+    <!-- Values -->
+    <string name="preference_value_theme_light">Motyw jasny</string>
+    <string name="preference_value_theme_dark">Motyw ciemny</string>
 
 </resources>

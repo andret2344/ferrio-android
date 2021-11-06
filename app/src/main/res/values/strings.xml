@@ -4,7 +4,7 @@
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="app_name">Unusual Holiday Calendar</string>
     <string name="unusual_holiday">Unusual holiday</string>
-    <string name="share_message">%s:\n%s\n\nCheck it!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
+    <string name="share_message">%1$s:\n%2$s\n\nCheck it!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
     <string name="share_via">Share via</string>
     <string name="today_is">Today is:</string>
     <string name="share">Share</string>
@@ -16,13 +16,7 @@
     <string name="search">Search</string>
     <string name="see_more">%d more</string>
     <string name="holidays">Holidays: %d</string>
-    <string name="are_you_sure">Are you sure?</string>
-    <string name="deleting">Deleting</string>
     <string name="today">Today</string>
-    <string name="colorized_days">Colorized days</string>
-    <string name="colorized_days_desc">If selected, every day has its own color based on each date.</string>
-    <string name="usual_holidays">Include usual holidays</string>
-    <string name="usual_holidays_desc">If selected, regular holidays are also viewable, e.g. New Year\'s Eve.</string>
 
     <string-array name="months">
         <item>January</item>
@@ -57,17 +51,9 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="menu_item_random">Random</string>
     <string name="no_unusual_holidays">No unusual holidays.</string>
-    <string name="report_tutorial_info">This is the way of reporting wrongly translated holidays, 
-        or typos or any other problems with text of holidays.
-        Do you really want to proceed with reporting?</string>
-    <string name="do_not_show_again">Don\'t show again</string>
-    <string name="report_sending">Sending&#8230;</string>
-    <string name="report_sent">Report sent!</string>
-    <string name="theme_light">Light theme</string>
-    <string name="theme_dark">Dark theme</string>
     <string name="about_calendar">About calendar</string>
     <string name="about_calendar_text">The Unusual Holiday Calendar is a calendar created by imperialists from Entente during World War One. It was created for the purpose of the German Empire, so that people could celebrate so long and often that they had no time to fight for their homeland on the battlefront. It collects holidays, which were not permitted by usual holidays to theirs\' calendars.</string>
-    <string name="no_internet">Your device is not connected to the internet. Until report sending will be available, the internet connectivity must be established.</string>
+    <string name="no_internet">Your device is not connected to the internet.</string>
     <string name="about_holidays">About holidays</string>
     <string name="about_holidays_text">All holidays - even those most unusual - are an opportunity to look in a different way at people, and appreciate phenomena we usually ignore.</string>
     <string name="title_activity_language">Select language</string>
@@ -75,9 +61,6 @@
     <string name="downloading_data">Downloading data&#8230;</string>
     <string name="send">Send</string>
     <string name="oops">Oops!</string>
-    <string name="something_went_wrong">I\'m so sorry. Something went wrong.</string>
     <string name="pointed_text" translatable="false">\u00B7 %s</string>
-    <string name="display_shortcuts">Display holidays\' shortcuts</string>
-    <string name="display_shortcuts_desc">If checked, you can see holidays\' shortcuts on month view</string>
 
 </resources>

@@ -57,8 +57,8 @@ public class SettingsActivity extends AppCompatActivity {
 				.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
 					final String themeSettingsKey = getString(R.string.settings_key_theme_app);
 					if (key.equals(themeSettingsKey)) {
-						final String themeDarkKey = getString(R.string.settings_value_key_theme_dark);
-						final String themeLightKey = getString(R.string.settings_value_key_theme_light);
+						final String themeDarkKey = getString(R.string.settings_key_theme_dark);
+						final String themeLightKey = getString(R.string.settings_key_theme_light);
 						final String themeValue = PreferenceManager.getDefaultSharedPreferences(this)
 								.getString(themeSettingsKey, themeDarkKey);
 						if (themeDarkKey.equals(themeValue)) {

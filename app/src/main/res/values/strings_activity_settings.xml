@@ -1,27 +1,43 @@
 <resources>
 
-    <string name="pref_category_app">Application</string>
-    <string name="pref_category_widget">Widgets</string>
-    <string name="pref_title_app_theme">Theme of application</string>
+    <!-- Categories -->
+    <string name="preference_category_application">Application</string>
+    <string name="preference_category_widgets">Widgets</string>
 
-    <string-array name="pref_theme_application_list">
-        <item>@string/theme_dark</item>
-        <item>@string/theme_light</item>
+    <!-- Titles -->
+    <string name="preference_title_theme_app">Theme of application</string>
+    <string name="preference_title_theme_widget">Theme of widgets</string>
+    <string name="preference_title_colorized_days">Colorized days</string>
+    <string name="preference_title_include_usual">Include usual holidays</string>
+    <string name="preference_title_holidays_shortcuts">Display holidays\' shortcuts</string>
+
+    <!-- Descriptions -->
+    <string name="preference_description_colorized_days">If selected, every day has its own color.</string>
+    <string name="preference_description_include_usual">If selected, regular holidays are also viewable, e.g. New Year\'s Eve.</string>
+    <string name="preference_description_holidays_shortcuts">If checked, you can see holidays\' shortcuts on month view</string>
+
+    <!-- Values -->
+    <string name="preference_value_theme_light">Light theme</string>
+    <string name="preference_value_theme_dark">Dark theme</string>
+
+
+    <!-- Lists -->
+    <string-array name="preference_list_values_theme_application">
+        <item>@string/preference_value_theme_dark</item>
+        <item>@string/preference_value_theme_light</item>
     </string-array>
-    <string-array name="pref_theme_application_values">
-        <item>@string/settings_value_key_theme_dark</item>
-        <item>@string/settings_value_key_theme_light</item>
+    <string-array name="preference_list_keys_theme_application">
+        <item>@string/settings_key_theme_dark</item>
+        <item>@string/settings_key_theme_light</item>
     </string-array>
 
-    <string name="pref_title_widgets_theme">Theme of widgets</string>
-
-    <string-array name="pref_theme_widgets_list">
-        <item>@string/theme_dark</item>
-        <item>@string/theme_light</item>
+    <string-array name="preference_list_values_theme_widgets">
+        <item>@string/preference_value_theme_dark</item>
+        <item>@string/preference_value_theme_light</item>
     </string-array>
-    <string-array name="pref_theme_widgets_values">
-        <item>@string/settings_value_key_theme_dark</item>
-        <item>@string/settings_value_key_theme_light</item>
+    <string-array name="preference_list_keys_theme_widgets">
+        <item>@string/settings_key_theme_dark</item>
+        <item>@string/settings_key_theme_light</item>
     </string-array>
 
 </resources>

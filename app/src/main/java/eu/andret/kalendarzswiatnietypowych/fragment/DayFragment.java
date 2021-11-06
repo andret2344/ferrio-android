@@ -52,7 +52,7 @@ public class DayFragment extends Fragment {
 		}
 		dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
 		final ListView listView = dayView.findViewById(R.id.fragment_day_list_holidays);
-		listView.setAdapter(new HolidayAdapter(getContext(), holidays, backgroundColor));
+		listView.setAdapter(new HolidayAdapter(getContext(), holidays));
 		return dayView;
 	}
 }
