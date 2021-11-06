@@ -293,12 +293,6 @@ public class MainActivity extends AppCompatActivity {
 			} else {
 				Toast.makeText(this, "unknown error", Toast.LENGTH_SHORT).show();
 			}
-		} else if (requestCode == getResources().getInteger(R.integer.request_code_settings)) {
-			if (resultCode == RESULT_OK) {
-				update();
-			} else {
-				Toast.makeText(this, "unknown error", Toast.LENGTH_SHORT).show();
-			}
 		}
 	}
 
