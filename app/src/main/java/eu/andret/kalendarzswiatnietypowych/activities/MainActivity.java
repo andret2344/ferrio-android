@@ -185,13 +185,17 @@ public class MainActivity extends AppCompatActivity {
 		final TypedArray typedArray = obtainStyledAttributes(R.styleable.images);
 		final List<ViewItem> data = new ArrayList<>();
 		data.add(new NavigationDrawerImage(ContextCompat.getDrawable(this, R.drawable.ic_launcher)));
-		data.add(new NavigationDrawerItem(R.string.settings, typedArray.getDrawable(R.styleable.images_settings), v -> startActivityForResult(new Intent(getApplicationContext(), SettingsActivity.class), getApplicationContext().getResources().getInteger(R.integer.request_code_settings))));
+		data.add(new NavigationDrawerItem(R.string.settings, typedArray.getDrawable(R.styleable.images_settings),
+				v -> startActivity(new Intent(this, SettingsActivity.class))));
 
-		data.add(new NavigationDrawerItem(R.string.languages, typedArray.getDrawable(R.styleable.images_translate), v -> startActivity(new Intent(getApplicationContext(), LanguageActivity.class))));
+		data.add(new NavigationDrawerItem(R.string.languages, typedArray.getDrawable(R.styleable.images_translate),
+				v -> startActivity(new Intent(this, LanguageActivity.class))));
 
-		data.add(new NavigationDrawerItem(R.string.about_calendar, typedArray.getDrawable(R.styleable.images_event), v -> Util.createAlert(this, R.string.about_calendar, R.string.about_calendar_text)));
+		data.add(new NavigationDrawerItem(R.string.about_calendar, typedArray.getDrawable(R.styleable.images_event),
+				v -> Util.createAlert(this, R.string.about_calendar, R.string.about_calendar_text)));
 
-		data.add(new NavigationDrawerItem(R.string.about_holidays, typedArray.getDrawable(R.styleable.images_format_quote), v -> Util.createAlertWithImage(this, R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text)));
+		data.add(new NavigationDrawerItem(R.string.about_holidays, typedArray.getDrawable(R.styleable.images_format_quote),
+				v -> Util.createAlertWithImage(this, R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text)));
 
 		navigationDrawer = findViewById(R.id.main_drawer_main);
 		drawerList = findViewById(R.id.main_list_drawer);
