@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activities;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -312,16 +311,8 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void update() {
-		final Intent updateIntent = new Intent();
-		updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		sendBroadcast(updateIntent);
-		viewPager2.invalidate();
-		viewPager2.refreshDrawableState();
-		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
 		final Data.AppColorSet color = Data.getColors(Util.isDarkTheme(this));
-		navigationDrawer.setBackgroundColor(color.background);
 		drawerList.setBackgroundColor(color.background);
-		findViewById(R.id.main_relative_main).setBackgroundColor(color.background);
 	}
 
 	public void dismissPreLoader() {
