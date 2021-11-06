@@ -43,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		final int[] prefs = {R.string.settings_key_theme_app, R.string.settings_key_theme_widgets, R.string.settings_key_theme_colorized, R.string.settings_key_usual_holidays, R.string.settings_key_display_shortcuts};
+		final int[] prefs = {R.string.settings_key_theme_app, R.string.settings_key_theme_colorized, R.string.settings_key_usual_holidays, R.string.settings_key_display_shortcuts};
 		final PrefsFragment prefsFragment = new PrefsFragment();
 		final Bundle bundle = new Bundle();
 		bundle.putIntArray("data", prefs);

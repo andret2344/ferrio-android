@@ -2,11 +2,9 @@
 
     <!-- Categories -->
     <string name="preference_category_application">Aplikacja</string>
-    <string name="preference_category_widgets">Widgety</string>
 
     <!-- Titles -->
     <string name="preference_title_theme_app">Motyw aplikacji</string>
-    <string name="preference_title_theme_widget">Motyw widgetu</string>
     <string name="preference_title_colorized_days">Kolorowe dni</string>
     <string name="preference_title_include_usual">Dołącz święta typowe</string>
     <string name="preference_title_holidays_shortcuts">Wyświetlaj skróty świąt</string>

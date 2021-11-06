@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings_key_theme_widgets" translatable="false">widgets_theme</string>
     <string name="settings_key_theme_app" translatable="false">app_theme</string>
     <string name="settings_key_theme_colorized" translatable="false">colorized</string>
     <string name="settings_key_usual_holidays" translatable="false">usual_holidays</string>

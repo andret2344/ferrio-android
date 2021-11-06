@@ -2,11 +2,9 @@
 
     <!-- Categories -->
     <string name="preference_category_application">Application</string>
-    <string name="preference_category_widgets">Widgets</string>
 
     <!-- Titles -->
     <string name="preference_title_theme_app">Theme of application</string>
-    <string name="preference_title_theme_widget">Theme of widgets</string>
     <string name="preference_title_colorized_days">Colorized days</string>
     <string name="preference_title_include_usual">Include usual holidays</string>
     <string name="preference_title_holidays_shortcuts">Display holidays\' shortcuts</string>
@@ -27,15 +25,6 @@
         <item>@string/preference_value_theme_light</item>
     </string-array>
     <string-array name="preference_list_keys_theme_application">
-        <item>@string/settings_key_theme_dark</item>
-        <item>@string/settings_key_theme_light</item>
-    </string-array>
-
-    <string-array name="preference_list_values_theme_widgets">
-        <item>@string/preference_value_theme_dark</item>
-        <item>@string/preference_value_theme_light</item>
-    </string-array>
-    <string-array name="preference_list_keys_theme_widgets">
         <item>@string/settings_key_theme_dark</item>
         <item>@string/settings_key_theme_light</item>
     </string-array>
