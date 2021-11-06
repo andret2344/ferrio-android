@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
 
 	public void update() {
 		final Data.AppColorSet color = Data.getColors(this);
-		drawerList.setBackgroundColor(color.background);
+		drawerList.setBackgroundColor(color.getBackgroundColor());
 	}
 
 	public void dismissPreLoader() {

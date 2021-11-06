@@ -42,7 +42,7 @@ public class MonthFragment extends Fragment {
 				view.setLayoutParams(new AbsListView.LayoutParams(layoutParams.width, itemHeight));
 			}
 		});
-		month.findViewById(R.id.fragment_month_grid_days).setBackgroundColor(color.background);
+		month.findViewById(R.id.fragment_month_grid_days).setBackgroundColor(color.getBackgroundColor());
 		return month;
 	}
 }

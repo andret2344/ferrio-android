@@ -63,10 +63,10 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		final SharedPreferences theme = Data.getPreferences(getContext(), Data.Prefs.THEME);
 		final Data.AppColorSet color = Data.getColors(getContext());
 
-		holder.dateSmall.setTextColor(color.foreground);
-		holder.holiday.setTextColor(color.foreground);
-		holder.more.setTextColor(color.foreground);
-		convertView.setBackgroundColor(color.background);
+		holder.dateSmall.setTextColor(color.getForegroundColor());
+		holder.holiday.setTextColor(color.getForegroundColor());
+		holder.more.setTextColor(color.getForegroundColor());
+		convertView.setBackgroundColor(color.getBackgroundColor());
 
 		final HolidayDay holidayDay = getItem(position);
 		if (holidayDay == null) {
@@ -75,13 +75,13 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 
 		final LocalDate now = LocalDate.now();
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
-			convertView.setBackgroundColor(color.dark ? Color.rgb(55, 0, 0) : Color.rgb(200, 255, 255));
+			convertView.setBackgroundColor(color.isDarkTheme() ? Color.rgb(55, 0, 0) : Color.rgb(200, 255, 255));
 		}
 
 		if (holidayDay.getMonth() != month) {
-			convertView.setBackgroundColor(getContext().getResources().getColor(color.dark ? R.color.color_dark_gray : R.color.color_light_gray));
+			convertView.setBackgroundColor(getContext().getResources().getColor(color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
 		} else if (theme.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false)) {
-			convertView.setBackgroundColor(Util.randomizeColor(color.dark, holidayDay.getSeed()));
+			convertView.setBackgroundColor(Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed()));
 		}
 		convertView.setOnClickListener(v -> {
 			final Intent intent = new Intent(getContext(), DayActivity.class);

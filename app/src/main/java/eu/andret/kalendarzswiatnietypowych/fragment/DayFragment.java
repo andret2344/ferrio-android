@@ -46,9 +46,9 @@ public class DayFragment extends Fragment {
 		}
 		final int backgroundColor;
 		if (theme.getBoolean(resources.getString(R.string.settings_key_theme_colorized), false)) {
-			backgroundColor = Util.randomizeColor(color.dark, holidayDay.getSeed());
+			backgroundColor = Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed());
 		} else {
-			backgroundColor = color.background;
+			backgroundColor = color.getBackgroundColor();
 		}
 		dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
 		final ListView listView = dayView.findViewById(R.id.fragment_day_list_holidays);

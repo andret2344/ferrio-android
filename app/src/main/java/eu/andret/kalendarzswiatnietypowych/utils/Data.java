@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import lombok.Value;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -27,16 +28,12 @@ public final class Data {
 		return new AppColorSet(false, colorWhite, colorBlack);
 	}
 
-	public static class AppColorSet {
-		public final int background;
-		public final int foreground;
-		public final boolean dark;
 
-		private AppColorSet(final boolean dark, final int background, final int foreground) {
-			this.background = background;
-			this.foreground = foreground;
-			this.dark = dark;
-		}
+	@Value
+	public static class AppColorSet {
+		boolean darkTheme;
+		int backgroundColor;
+		int foregroundColor;
 	}
 
 	public enum Prefs {

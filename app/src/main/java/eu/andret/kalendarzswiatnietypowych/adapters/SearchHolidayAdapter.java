@@ -59,9 +59,9 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
 		final Data.AppColorSet color = Data.getColors(getContext());
 
-		holder.date.setTextColor(color.foreground);
-		holder.border.setBackgroundColor(color.background);
-		convertView.setBackgroundColor(color.foreground);
+		holder.date.setTextColor(color.getForegroundColor());
+		holder.border.setBackgroundColor(color.getBackgroundColor());
+		convertView.setBackgroundColor(color.getForegroundColor());
 
 		final HolidayDay day = getItem(position);
 		if (day == null) {
@@ -79,7 +79,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 					.apply();
 		}
 		if (colorized) {
-			holder.border.setBackgroundColor(Util.randomize(color.dark));
+			holder.border.setBackgroundColor(Util.randomize(color.isDarkTheme()));
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
@@ -94,7 +94,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 			textView.setText(getContext().getResources().getString(R.string.pointed_text, holiday.getText()));
 			textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 			holder.holidays.addView(textView);
-			textView.setTextColor(color.foreground);
+			textView.setTextColor(color.getForegroundColor());
 			if (holiday.isUsual()) {
 				textView.setTypeface(null, Typeface.BOLD);
 			}
