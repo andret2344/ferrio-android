@@ -3,7 +3,6 @@ package eu.andret.kalendarzswiatnietypowych.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activities.DayActivity;
@@ -29,7 +27,6 @@ import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 	private final Context context;
-	private final Random random = new Random();
 
 	private static class ViewHolder {
 		private TextView date;
@@ -71,7 +68,6 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 			return convertView;
 		}
 		holder.date.setText(String.format(Locale.ROOT, "%02d.%02d", day.getDay(), day.getMonth()));
-		final int c;
 		boolean colorized;
 		try {
 			colorized = theme.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false);
@@ -83,10 +79,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 					.apply();
 		}
 		if (colorized) {
-			random.setSeed(day.getSeed());
-			final boolean dark = color.dark;
-			c = Color.rgb(random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127), random.nextInt(127) + (dark ? 0 : 127));
-			holder.border.setBackgroundColor(c);
+			holder.border.setBackgroundColor(Util.randomize(color.dark));
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
