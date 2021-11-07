@@ -19,7 +19,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3410450408196791~3872850665" />
+            android:value="@string/banner_ad_unit_id" />
 
         <activity
             android:name=".activities.MainActivity"
