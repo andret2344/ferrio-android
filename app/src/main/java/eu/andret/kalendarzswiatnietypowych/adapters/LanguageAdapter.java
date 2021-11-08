@@ -64,8 +64,8 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 		}
 		final Language language = getItem(position);
 
-		final SharedPreferences prefs = Data.getPreferences(getContext(), Data.Prefs.LANGUAGE);
-		if (prefs.getString(MainActivity.SELECTED_LANGUAGE, "").equals(language.getCode())) {
+		final SharedPreferences preferences = Data.getPreferences(getContext(), Data.PreferenceType.LANGUAGE);
+		if (preferences.getString(MainActivity.SELECTED_LANGUAGE, "").equals(language.getCode())) {
 			((ListView) parent).setItemChecked(position, true);
 		}
 
@@ -82,7 +82,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					final Future<List<HolidayDay>> future = executorService.submit(new Downloader(language));
 					final List<HolidayDay> data = future.get();
 					dialog.dismiss();
-					final SharedPreferences.Editor editor = prefs.edit();
+					final SharedPreferences.Editor editor = preferences.edit();
 					editor.putString(MainActivity.SELECTED_LANGUAGE, language.getCode());
 					editor.apply();
 					((ListView) parent).setItemChecked(position, true);
@@ -97,7 +97,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					Thread.currentThread().interrupt();
 				}
 			} else {
-				final SharedPreferences.Editor editor = prefs.edit();
+				final SharedPreferences.Editor editor = preferences.edit();
 				editor.putString(MainActivity.SELECTED_LANGUAGE, language.getCode());
 				editor.apply();
 				((ListView) parent).setItemChecked(position, true);

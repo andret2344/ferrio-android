@@ -10,8 +10,8 @@
     <string name="preference_title_holidays_shortcuts">Wyświetlaj skróty świąt</string>
 
     <!-- Descriptions -->
-    <string name="preference_description_colorized_days">Jeśli zaznaczone, każdy dzień ma swój własny kolor na podstawie swojej daty.</string>
-    <string name="preference_description_include_usual">Jeśli zaznaczony, widoczne są równie święta typowe, np. Nowy Rok.</string>
+    <string name="preference_description_colorized_days">Jeśli zaznaczone, każdy dzień ma swój własny kolor.</string>
+    <string name="preference_description_include_usual">Jeśli zaznaczony, widoczne są również święta typowe, np. Nowy Rok.</string>
     <string name="preference_description_holidays_shortcuts">Jeśli zaznaczony, wyświetla skróty świąt w widoku miesiąca</string>
 
     <!-- Values -->

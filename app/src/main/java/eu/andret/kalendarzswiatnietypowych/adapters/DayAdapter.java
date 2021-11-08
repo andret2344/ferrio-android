@@ -60,7 +60,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final SharedPreferences theme = Data.getPreferences(getContext(), Data.Prefs.THEME);
+		final SharedPreferences theme = Data.getPreferences(getContext(), Data.PreferenceType.THEME);
 		final Data.AppColorSet color = Data.getColors(getContext());
 
 		holder.dateSmall.setTextColor(color.getForegroundColor());

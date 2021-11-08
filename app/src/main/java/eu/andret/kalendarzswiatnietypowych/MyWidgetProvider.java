@@ -41,9 +41,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
 	}
 
 	private String getContent(final Context context) {
-		final SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		final SharedPreferences prefs = Data.getPreferences(context, Data.Prefs.LANGUAGE);
-		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
+		final SharedPreferences theme = Data.getPreferences(context, Data.PreferenceType.THEME);
+		final SharedPreferences preferences = Data.getPreferences(context, Data.PreferenceType.LANGUAGE);
+		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(context);
 		final HolidayCalendar holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
 		final HolidayDay holidayDay = holidayCalendar.getTodayHolidays();

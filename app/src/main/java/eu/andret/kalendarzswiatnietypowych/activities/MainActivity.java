@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
 		final String themeDarkKey = getString(R.string.settings_key_theme_dark);
 		final String themeLightKey = getString(R.string.settings_key_theme_light);
 		final String themeSettingsKey = getString(R.string.settings_key_theme_app);
-		final String themeValue = PreferenceManager.getDefaultSharedPreferences(this)
+		final String themeStoredKey = PreferenceManager.getDefaultSharedPreferences(this)
 				.getString(themeSettingsKey, themeDarkKey);
-		if (themeDarkKey.equals(themeValue)) {
+		if (themeStoredKey.equals(themeDarkKey)) {
 			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-		} else if (themeLightKey.equals(themeValue)) {
+		} else if (themeStoredKey.equals(themeLightKey)) {
 			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 		}
 
@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
 
 		setUpNavigationDrawer();
 		viewPager2 = findViewById(R.id.main_pager_months);
-		final SharedPreferences prefs = Data.getPreferences(this, Data.Prefs.LANGUAGE);
-		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
+		final SharedPreferences preferences = Data.getPreferences(this, Data.PreferenceType.LANGUAGE);
+		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
 		if (holidaysDBHelper.getLanguages().isEmpty()) {
 			startActivity(new Intent(this, LanguageActivity.class));
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 		final SearchView searchView = (SearchView) searchItem.getActionView();
 		final Collection<HolidayDay> originalList = Collections.unmodifiableCollection(holidayCalendar.getHolidayDays());
 		final List<HolidayDay> list = new ArrayList<>(originalList);
-		final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
+		final SharedPreferences theme = Data.getPreferences(this, Data.PreferenceType.THEME);
 		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
 		searchListView.setAdapter(adapter);
 		if (searchView == null) {

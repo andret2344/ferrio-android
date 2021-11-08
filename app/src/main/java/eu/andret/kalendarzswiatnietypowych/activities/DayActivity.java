@@ -49,8 +49,8 @@ public class DayActivity extends AppCompatActivity {
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
-		final SharedPreferences prefs = Data.getPreferences(this, Data.Prefs.LANGUAGE);
-		final String selectedLanguageCode = prefs.getString(MainActivity.SELECTED_LANGUAGE, "en");
+		final SharedPreferences preferences = Data.getPreferences(this, Data.PreferenceType.LANGUAGE);
+		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
 		calendar = holidaysDBHelper.getAll(selectedLanguageCode);
 		holidaysDBHelper.close();
@@ -113,7 +113,7 @@ public class DayActivity extends AppCompatActivity {
 			if (holidayDay == null) {
 				return true;
 			}
-			final SharedPreferences theme = Data.getPreferences(this, Data.Prefs.THEME);
+			final SharedPreferences theme = Data.getPreferences(this, Data.PreferenceType.THEME);
 			final String holidays = holidayDay.getHolidaysList(theme.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false))
 					.stream()
 					.map(Holiday::getText)

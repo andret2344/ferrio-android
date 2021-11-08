@@ -34,7 +34,7 @@ public class DayFragment extends Fragment {
 		if (holidayDay == null) {
 			return dayView;
 		}
-		final SharedPreferences theme = Data.getPreferences(getContext(), Data.Prefs.THEME);
+		final SharedPreferences theme = Data.getPreferences(getContext(), Data.PreferenceType.THEME);
 		final Resources resources = getContext().getResources();
 		final Data.AppColorSet color = Data.getColors(getContext());
 		final boolean includeUsual = theme.getBoolean(resources.getString(R.string.settings_key_usual_holidays), false);

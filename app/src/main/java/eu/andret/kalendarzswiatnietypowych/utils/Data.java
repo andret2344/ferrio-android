@@ -15,7 +15,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class Data {
-	public SharedPreferences getPreferences(final Context context, final Prefs type) {
+	public SharedPreferences getPreferences(final Context context, final PreferenceType type) {
 		return context.getSharedPreferences(type.getName(), Context.MODE_PRIVATE);
 	}
 
@@ -35,7 +35,7 @@ public final class Data {
 		int foregroundColor;
 	}
 
-	public enum Prefs {
+	public enum PreferenceType {
 		THEME,
 		LANGUAGE;
 
