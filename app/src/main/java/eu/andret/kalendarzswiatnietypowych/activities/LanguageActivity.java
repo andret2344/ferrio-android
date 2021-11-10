@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -47,9 +48,9 @@ public class LanguageActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_language);
 
-		if (getSupportActionBar() != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+		Optional.of(this)
+				.map(AppCompatActivity::getSupportActionBar)
+				.ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
 		final Set<Language> languages = holidaysDBHelper.getLanguages();
 		holidaysDBHelper.close();

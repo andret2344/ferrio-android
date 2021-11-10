@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -133,12 +134,13 @@ public class MainActivity extends AppCompatActivity {
 		preLoaderLayout.addView(progress);
 
 		setContentView(R.layout.activity_main);
-		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		if (pm != null) {
-			wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-			wakeLock.acquire(2 * 60 * 1000L);
-		}
-
+		Optional.of(getSystemService(Context.POWER_SERVICE))
+				.map(PowerManager.class::cast)
+				.map(powerManager -> powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName()))
+				.ifPresent(lock -> {
+					wakeLock = lock;
+					wakeLock.acquire(2 * 60 * 1000L);
+				});
 		searchListView = findViewById(R.id.main_list_results);
 
 		setUpNavigationDrawer();
