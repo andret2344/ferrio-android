@@ -1,90 +1,85 @@
 package eu.andret.kalendarzswiatnietypowych.activities;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.HttpURLConnection;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapters.LanguageAdapter;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar;
+import eu.andret.kalendarzswiatnietypowych.entity.Language;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
-import eu.andret.kalendarzswiatnietypowych.utils.LanguagePacket;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
 public class LanguageActivity extends AppCompatActivity {
-	private final List<LanguagePacket> languages = new ArrayList<>();
-	private ListView listView;
-	private ProgressDialog progressDialog;
-	private int max;
-	private final Downloader downloader = new LanguageActivity.Downloader(this);
+	private Dialog progressDialog;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Util util = new Util(this);
-		util.applyTheme();
 		setContentView(R.layout.activity_language);
-		progressDialog = new ProgressDialog(this);
-		util.createAd(R.id.language_adview_bottom);
-		if (getSupportActionBar() != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-		listView = findViewById(R.id.language_list_languages);
+
+		Optional.of(this)
+				.map(AppCompatActivity::getSupportActionBar)
+				.ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
+		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
+		final Set<Language> languages = holidaysDBHelper.getLanguages();
+		holidaysDBHelper.close();
+
+		final ListView listView = findViewById(R.id.language_list_languages);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		List<LanguagePacket> existing = HolidaysDBHelper.getInstance(this).getExistingLanguages();
-		if (util.isConnection()) {
-			long t = HolidaysDBHelper.getInstance(this).getLastUpdate();
-			if (t == -1) {
-				downloader.execute();
-			} else {
-				downloader.execute(t);
+		if (Util.isConnection(this)) {
+			try {
+				progressDialog = new Dialog(this);
+				progressDialog.setTitle(getResources().getString(R.string.downloading_data));
+				progressDialog.setCancelable(false);
+				progressDialog.show();
+				final ExecutorService executorService = Executors.newSingleThreadExecutor();
+				final Future<List<Language>> future = executorService.submit(new Downloader());
+				languages.addAll(future.get());
+				progressDialog.dismiss();
+			} catch (final InterruptedException | ExecutionException e) {
+				Thread.currentThread().interrupt();
 			}
-		} else {
-			for (LanguagePacket lp : existing) {
-				lp.setDate(new Date(HolidaysDBHelper.getInstance(LanguageActivity.this).getLastUpdateDate(lp).getTime() * 1000));
-			}
-			listView.setAdapter(new LanguageAdapter(this, existing));
 		}
-		listView.setOnItemLongClickListener((arg0, arg1, arg2, arg3) -> true);
-		listView.setItemsCanFocus(false);
-		int id = getIntent().getIntExtra("lang", -1);
-		int pos = getIntent().getIntExtra("pos", -1);
-		if (id != -1) {
-			LanguageAdapter a = (LanguageAdapter) listView.getAdapter();
-//			for (LanguagePacket lp : existing) {
-//
-//			}
-			// a.new Downloader(a.getHolder(), id, pos, listView);
-		}
+		listView.setAdapter(new LanguageAdapter(this, new ArrayList<>(languages)));
+
+		MobileAds.initialize(this);
+		final AdView adView = findViewById(R.id.language_adview_bottom);
+		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			onBackPressed();
 			return true;
@@ -94,120 +89,48 @@ public class LanguageActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (progressDialog == null || !progressDialog.isShowing()) {
-			boolean found = false;
-			for (int i = 0; i < listView.getChildCount(); i++) {
-				LanguageAdapter.ViewHolder holder = (LanguageAdapter.ViewHolder) listView.getChildAt(i).getTag();
-				if (holder.selected.isChecked() && holder.selected.getVisibility() == View.VISIBLE) {
-					found = true;
-					break;
-				}
-			}
-			if (found) {
-				HolidayCalendar.getInstance(this).refresh();
-				NavUtils.navigateUpFromSameTask(this);
-			} else {
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setTitle(R.string.caution);
-				alert.setMessage(R.string.nothing_chosen);
-				alert.setPositiveButton(R.string.no, null);
-				alert.setNegativeButton(R.string.yes, (dialog, which) -> {
-					HolidayCalendar.getInstance(LanguageActivity.this).refresh();
-					NavUtils.navigateUpFromSameTask(LanguageActivity.this);
-				});
-				alert.show();
-			}
-		}
-	}
-
-	public int getMax() {
-		return max;
+		NavUtils.navigateUpFromSameTask(this);
 	}
 
 	@Override
 	protected void onPause() {
-		LanguageAdapter.cancelAllTasks();
 		progressDialog.cancel();
-		downloader.cancel(true);
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		LanguageAdapter.cancelAllTasks();
 		progressDialog.cancel();
-		downloader.cancel(true);
 		super.onDestroy();
 	}
 
-	private static class Downloader extends AsyncTask<Long, Void, String> {
-		private final ThreadLocal<LanguageActivity> activity = new ThreadLocal<>();
-
-		Downloader(LanguageActivity activity) {
-			this.activity.set(activity);
-		}
-
+	private class Downloader implements Callable<List<Language>> {
 		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			activity.get().progressDialog.setMessage(activity.get().getResources().getString(R.string.downloading_data));
-			activity.get().progressDialog.setCancelable(false);
-			activity.get().progressDialog.show();
-		}
+		public List<Language> call() throws IOException, JSONException {
+			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/language/").openConnection();
+			final InputStream in = con.getInputStream();
+			final int length = con.getHeaderFieldInt("Content-Length", -1);
 
-		@Override
-		protected String doInBackground(Long... params) {
-			try {
-				HttpURLConnection con = (HttpURLConnection) new URL("https://andret.eu/uhc/api/lang.php").openConnection();
-				con.setDoOutput(true);
-				PrintStream ps = new PrintStream(con.getOutputStream());
-				if (params.length == 1) {
-					ps.print("date=" + params[0]);
+			final byte[] bytes = new byte[length];
+			for (int i = 0; i < length; i++) {
+				if (!Util.isConnection(LanguageActivity.this)) {
+					Util.createAlert(LanguageActivity.this, R.string.caution, R.string.no_internet);
+					return Collections.emptyList();
 				}
-				BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				String result = reader.readLine();
-				reader.close();
-				ps.close();
-				if (result == null || result.equals("")) {
-					return "{\"result\":false}";
-				}
-				return result;
-			} catch (IOException ex) {
-				Log.getStackTraceString(ex);
-				return "{\"result\":false}";
+				bytes[i] = (byte) in.read();
 			}
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			try {
-				JSONObject jsonObject = new JSONObject(result);
-				boolean update = Boolean.parseBoolean(String.valueOf(jsonObject.get("result")));
-				if (update) {
-					activity.get().max = Integer.parseInt(jsonObject.getString("max"));
-					List<Integer> existing = HolidaysDBHelper.getInstance(activity.get()).getExistingLanguagesIds();
-					JSONArray jsonArray = jsonObject.getJSONArray("languages");
-					for (int i = 0; i < jsonArray.length(); i++) {
-						JSONObject currObj = jsonArray.getJSONObject(i);
-						Locale loc = new Locale(currObj.getString("name"));
-						LanguagePacket lp;
-						if (existing.contains(currObj.getInt("id")) && !currObj.isNull("updated")) {
-							boolean updated = currObj.getString("updated").equals("1") || currObj.getInt("updated") == 1;
-							lp = new LanguagePacket(currObj.getInt("id"), loc, currObj.getInt("translated"), existing.contains(currObj.getInt("id")), updated);
-							lp.setDate(new Date(HolidaysDBHelper.getInstance(activity.get()).getLastUpdateDate(lp).getTime() * 1000));
-						} else {
-							lp = new LanguagePacket(currObj.getInt("id"), loc, currObj.getInt("translated"), existing.contains(currObj.getInt("id")), false);
-						}
-						activity.get().languages.add(lp);
-					}
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
+			in.close();
+			final String result = new String(bytes, StandardCharsets.UTF_8);
+			if (result.isEmpty()) {
+				return Collections.emptyList();
 			}
-			activity.get().progressDialog.cancel();
-			Collections.sort(activity.get().languages);
-			activity.get().listView.setAdapter(new LanguageAdapter(activity.get(), activity.get().languages));
+			final JSONArray jsonArray = new JSONArray(result);
+			final List<Language> languages = new ArrayList<>();
+			for (int i = 0; i < jsonArray.length(); i++) {
+				final JSONObject languageObject = jsonArray.getJSONObject(i);
+				languages.add(new Language(languageObject.getString("language"), languageObject.getString("uniLanguage")));
+			}
+			return languages;
 		}
 	}
 }

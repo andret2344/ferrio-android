@@ -3,7 +3,7 @@
     android:id="@+id/adapter_day_relative_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center" >
+    android:gravity="center">
 
     <TextView
         android:id="@+id/adapter_day_text_number_small"
@@ -24,7 +24,7 @@
         android:id="@+id/adapter_day_image_sad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/about_app"
+        android:contentDescription="@string/about_calendar"
         android:scaleType="centerInside"
         android:src="@drawable/ic_sad_face"
         android:visibility="invisible" />

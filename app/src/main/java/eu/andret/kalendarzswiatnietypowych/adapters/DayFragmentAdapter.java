@@ -2,41 +2,40 @@ package eu.andret.kalendarzswiatnietypowych.adapters;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.fragment.DayFragment;
+import eu.andret.kalendarzswiatnietypowych.utils.Util;
 
-public class DayFragmentAdapter extends FragmentStatePagerAdapter {
-	private final int count;
-	private final int month;
-	private final int day;
+public class DayFragmentAdapter extends FragmentStateAdapter {
+	private final HolidayCalendar holidayCalendar;
 
-	public DayFragmentAdapter(FragmentManager fm) {
-		this(fm, -1, -1);
+	public DayFragmentAdapter(@NonNull final FragmentManager fragmentManager, @NonNull final Lifecycle lifecycle, final HolidayCalendar holidayCalendar) {
+		super(fragmentManager, lifecycle);
+		this.holidayCalendar = holidayCalendar;
 	}
 
-	private DayFragmentAdapter(FragmentManager fm, int month, int day) {
-		super(fm);
-		this.month = month;
-		this.day = day;
-		count = month == -1 || day == -1 ? 367 : 1;
+	@NonNull
+	@Override
+	public Fragment createFragment(final int position) {
+		final DayFragment dayFragment = new DayFragment();
+		final Bundle bundle = new Bundle();
+		final Util.MonthDayPair date = Util.calculateDates(position + 1);
+		final HolidayDay holidayDay = holidayCalendar.getDay(date.getMonth().getValue(), date.getDay());
+		bundle.putParcelable(MainActivity.HOLIDAY_DAY, holidayDay);
+		dayFragment.setArguments(bundle);
+		return dayFragment;
 	}
 
 	@Override
-	public Fragment getItem(int id) {
-		DayFragment fragment = new DayFragment();
-		Bundle args = new Bundle();
-		args.putInt("id", id);
-		args.putInt("day", day);
-		args.putInt("month", month);
-		fragment.setArguments(args);
-		return fragment;
-	}
-
-	@Override
-	public int getCount() {
-		return count;
+	public int getItemCount() {
+		return 367;
 	}
 }

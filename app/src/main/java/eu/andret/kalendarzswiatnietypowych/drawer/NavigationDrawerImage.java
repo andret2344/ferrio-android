@@ -1,4 +1,4 @@
-/**
+/*
  * Author: Andret
  * Copying and modifying allowed only keeping git link
  */
@@ -13,13 +13,13 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class NavigationDrawerImage extends ViewItem {
-	private Drawable image;
+	Drawable image;
 
-	public NavigationDrawerImage(Drawable image) {
+	public NavigationDrawerImage(final Drawable image) {
 		this(image, null);
 	}
 
-	public NavigationDrawerImage(Drawable image, View.OnClickListener listener) {
+	public NavigationDrawerImage(final Drawable image, final View.OnClickListener listener) {
 		super(listener);
 		this.image = image;
 	}

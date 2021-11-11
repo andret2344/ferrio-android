@@ -1,15 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_day_relative_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/fragment_day_image_sad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/about_app"
+        android:contentDescription="@string/about_calendar"
         android:scaleType="centerInside"
         android:src="@drawable/ic_sad_face"
         android:visibility="invisible" />
@@ -19,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/typical_day"
+        android:text="@string/no_unusual_holidays"
         android:textSize="@dimen/fragment_day_share_button"
         android:visibility="invisible" />
 

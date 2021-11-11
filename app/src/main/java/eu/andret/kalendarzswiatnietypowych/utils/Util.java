@@ -1,14 +1,11 @@
 package eu.andret.kalendarzswiatnietypowych.utils;
 
-import android.app.Activity;
+import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
+
 import android.app.AlertDialog.Builder;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.TypedValue;
@@ -17,111 +14,102 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.app.NotificationCompat;
+import androidx.annotation.NonNull;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import lombok.Value;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class Util {
-	private final Context context;
-	private static String[] months;
-	private static String[] monthsGenitive;
-	private final NetworkInfo networkInfo;
+	private static final Random RANDOM = new Random();
 
-	public Util(Context context) {
-		this.context = context;
-		if (months == null) {
-			months = context.getResources().getStringArray(R.array.months);
-		}
-		if (monthsGenitive == null) {
-			monthsGenitive = context.getResources().getStringArray(R.array.months_genitive);
-		}
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		networkInfo = connectivityManager.getActiveNetworkInfo();
+	@Value
+	public static class MonthDayPair {
+		Month month;
+		int day;
 	}
 
-	public void createNotification(String title, String text, int ico, Intent intent, boolean cancelOnClick) {
-		NotificationCompat.Builder notification = new NotificationCompat.Builder(context, "UHC");
-		notification.setSmallIcon(ico);
-		notification.setContentTitle(title);
-		notification.setContentText(text);
-
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-		stackBuilder.addNextIntent(intent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-		notification.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification n = notification.build();
-		if (cancelOnClick) {
-			n.flags |= Notification.FLAG_AUTO_CANCEL;
-		} else {
-			n.flags |= Notification.FLAG_NO_CLEAR;
-		}
-		mNotificationManager.notify(1, n);
-	}
-
-	public boolean isConnection() {
+	public static boolean isConnection(final Context context) {
+		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 		return networkInfo != null && networkInfo.isConnected();
 	}
 
-	public void createAlert(String title, String text) {
-		Builder alert = new Builder(context);
+	public static void createAlert(final Context context, final int title, final int text) {
+		final Builder alert = new Builder(context);
 		alert.setTitle(title);
 		alert.setMessage(text);
 		alert.setPositiveButton(R.string.ok, null);
 		alert.show();
 	}
 
-	public void createAlert(int title, int text) {
-		Builder alert = new Builder(context);
+	public static void createAlertWithImage(final Context context, final int img, final int title, final int text) {
+		final Builder alert = new Builder(context);
 		alert.setTitle(title);
-		alert.setMessage(text);
-		alert.setPositiveButton(R.string.ok, null);
-		alert.show();
-	}
-
-	public void createAlertWithImage(int img, int title, int text) {
-		Builder alert = new Builder(context);
-		alert.setTitle(title);
-		LinearLayout layout = new LinearLayout(context);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final LinearLayout layout = new LinearLayout(context);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params.setMargins(0, 30, 0, 0);
 		layout.setLayoutParams(params);
 		layout.setOrientation(LinearLayout.VERTICAL);
-		ImageView image = new ImageView(context);
+		final ImageView image = new ImageView(context);
 		image.setImageResource(img);
 		layout.addView(image);
-		TextView tv = new TextView(context);
+		final TextView tv = new TextView(context);
 		tv.setText(text);
 		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.drawer_list_name_text));
 		layout.addView(tv);
-		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		llp.setMargins(30, 20, 30, 20); // llp.setMargins(left, top, right, bottom);
+		final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		llp.setMargins(30, 20, 30, 20);
 		tv.setLayoutParams(llp);
 		alert.setView(layout);
 		alert.setPositiveButton(R.string.ok, null);
 		alert.show();
 	}
 
-	public void createAd(int viewId) {
-		MobileAds.initialize(context, context.getResources().getString(R.string.banner_ad_unit_id));
-		AdView adView = ((Activity) context).findViewById(viewId);
-		adView.loadAd(new AdRequest.Builder().build());
+	@NonNull
+	public static MonthDayPair calculateDates(final int id) {
+		final LocalDate now = LocalDate.now();
+		if (now.isLeapYear()) {
+			if (id < 60) {
+				final LocalDate date = LocalDate.ofYearDay(now.getYear(), id);
+				return new MonthDayPair(date.getMonth(), date.getDayOfMonth());
+			}
+			if (id == 60) {
+				return new MonthDayPair(Month.FEBRUARY, 30);
+			}
+			final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 1);
+			return new MonthDayPair(date.getMonth(), date.getDayOfMonth());
+		}
+		if (id < 60) {
+			final LocalDate date = LocalDate.ofYearDay(now.getYear(), id);
+			return new MonthDayPair(date.getMonth(), date.getDayOfMonth());
+		}
+		if (id == 60) {
+			return new MonthDayPair(Month.FEBRUARY, 29);
+		}
+		if (id == 61) {
+			return new MonthDayPair(Month.FEBRUARY, 30);
+		}
+		final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 2);
+		return new MonthDayPair(date.getMonth(), date.getDayOfMonth());
 	}
 
-	public void applyTheme() {
-		SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		context.setTheme(theme.getString(context.getResources().getString(R.string.settings_theme_app), "1").equals("1") ? R.style.AppTheme_Dark : R.style.AppTheme);
+	public static int randomizeColor(final boolean dark, final long seed) {
+		RANDOM.setSeed(seed);
+		return Color.rgb(randomize(dark), randomize(dark), randomize(dark));
 	}
 
-	public String getMonth(int id) {
-		return months[id];
+	public static int randomize(final boolean dark) {
+		return RANDOM.nextInt(127) + (dark ? 0 : 127);
 	}
 
-	public String getMonthGenitive(int id) {
-		return monthsGenitive[id];
+	public static boolean isDarkTheme(final Context context) {
+		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+				== UI_MODE_NIGHT_YES;
 	}
 }

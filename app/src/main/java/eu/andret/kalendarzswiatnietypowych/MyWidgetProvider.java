@@ -1,53 +1,59 @@
 package eu.andret.kalendarzswiatnietypowych;
 
-import java.util.Calendar;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.RemoteViews;
+
+import java.time.LocalDate;
+import java.util.stream.Collectors;
+
 import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidayCalendar.HolidayMonth.HolidayDay.Holiday;
+import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 
 public class MyWidgetProvider extends AppWidgetProvider {
-	
 	@Override
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+	public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		boolean dark = Data.getPreferences(context, Data.Prefs.THEME).getString(context.getResources().getString(R.string.settings_theme_widgets), "1").equals("1");
-		Calendar c = Calendar.getInstance();
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		int month = c.get(Calendar.MONTH);
-		Intent intent = new Intent(context, MainActivity.class);
-		intent.putExtra("from", "widget");
-		intent.putExtra("day", day);
-		intent.putExtra("month", month);
-		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), dark ? R.layout.widget_dark : R.layout.widget_light);
-		SharedPreferences theme = Data.getPreferences(context, Data.Prefs.THEME);
-		String output = "";
-		HolidayDay ho = HolidayCalendar.getInstance(context).getTodayHolidays();
-		if (ho == null || ho.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false)) == 0) {
-			output += context.getResources().getString(R.string.typical_day);
-		} else {
-			StringBuilder outputBuilder = new StringBuilder();
-			for (Holiday s : ho.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_usual_holidays), false))) {
-				outputBuilder.append("\n\n").append(context.getResources().getString(R.string.pointer)).append(" ").append(s.getText());
-			}
-			output = outputBuilder.toString();
-			output = output.substring(2);
-		}
-		remoteViews.setTextViewText(R.id.widget_text_holiday, output);
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_black);
+		Log.d("UHC-Widget-onUpdate", getContent(context));
+		remoteViews.setTextViewText(R.id.widget_text_holiday, getContent(context));
+
+		final LocalDate now = LocalDate.now();
+		final Intent intent = new Intent(context, MainActivity.class);
+		intent.putExtra(MainActivity.FROM, MainActivity.WIDGET);
+		intent.putExtra(MainActivity.DAY, now.getDayOfMonth());
+		intent.putExtra(MainActivity.MONTH, now.getMonthValue());
+		final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.widget_relative_main, pendingIntent);
-		for (int i : appWidgetIds) {
-			intent.putExtra("widgetID", i);
-			appWidgetManager.updateAppWidget(i, remoteViews);
+
+		final AppWidgetManager manager = AppWidgetManager.getInstance(context);
+		manager.updateAppWidget(appWidgetIds, remoteViews);
+	}
+
+	private String getContent(final Context context) {
+		final SharedPreferences theme = Data.getPreferences(context, Data.PreferenceType.THEME);
+		final SharedPreferences preferences = Data.getPreferences(context, Data.PreferenceType.LANGUAGE);
+		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
+		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(context);
+		final HolidayCalendar holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
+		final HolidayDay holidayDay = holidayCalendar.getTodayHolidays();
+		holidaysDBHelper.close();
+		if (holidayDay.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)) == 0) {
+			return context.getResources().getString(R.string.no_unusual_holidays);
 		}
+		return holidayDay.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)).stream()
+				.map(Holiday::getText)
+				.map(text -> context.getResources().getString(R.string.pointed_text, text))
+				.collect(Collectors.joining("\n\n"));
 	}
 }

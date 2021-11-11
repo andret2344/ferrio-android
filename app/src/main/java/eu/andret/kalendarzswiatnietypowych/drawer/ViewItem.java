@@ -12,7 +12,7 @@ import lombok.Data;
 public abstract class ViewItem {
 	protected View.OnClickListener listener;
 
-	public ViewItem(View.OnClickListener listener) {
+	protected ViewItem(final View.OnClickListener listener) {
 		this.listener = listener;
 	}
 }
