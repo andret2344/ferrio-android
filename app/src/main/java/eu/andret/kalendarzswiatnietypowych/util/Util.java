@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.utils;
+package eu.andret.kalendarzswiatnietypowych.util;
 
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 

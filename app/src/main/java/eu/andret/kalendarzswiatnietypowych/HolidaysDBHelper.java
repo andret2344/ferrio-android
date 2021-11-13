@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.utils;
+package eu.andret.kalendarzswiatnietypowych;
 
 import android.content.ContentValues;
 import android.content.Context;

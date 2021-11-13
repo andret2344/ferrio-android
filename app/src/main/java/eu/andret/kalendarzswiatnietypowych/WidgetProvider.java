@@ -12,14 +12,13 @@ import android.widget.RemoteViews;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
-import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
+import eu.andret.kalendarzswiatnietypowych.util.Data;
 
-public class MyWidgetProvider extends AppWidgetProvider {
+public class WidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);

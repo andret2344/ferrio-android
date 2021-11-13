@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.os.Bundle;
 
@@ -8,11 +8,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.fragment.DayFragment;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayFragmentAdapter extends FragmentStateAdapter {
 	private final HolidayCalendar holidayCalendar;

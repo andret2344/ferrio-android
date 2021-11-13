@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;

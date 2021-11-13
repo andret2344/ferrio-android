@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.os.Bundle;
 
@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;

@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,7 +18,7 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerImage;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerItem;
 import eu.andret.kalendarzswiatnietypowych.drawer.ViewItem;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
+import eu.andret.kalendarzswiatnietypowych.util.Data;
 
 public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 	public DrawerAdapter(final Context context, final List<ViewItem> values) {
