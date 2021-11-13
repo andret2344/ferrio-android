@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
 		setUpNavigationDrawer();
 		viewPager2 = findViewById(R.id.main_pager_months);
-		final SharedPreferences preferences = Data.getPreferences(this, Data.PreferenceType.LANGUAGE);
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
 		if (holidaysDBHelper.getLanguages().isEmpty()) {
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
 		final SearchView searchView = (SearchView) searchItem.getActionView();
 		final Collection<HolidayDay> originalList = Collections.unmodifiableCollection(holidayCalendar.getHolidayDays());
 		final List<HolidayDay> list = new ArrayList<>(originalList);
-		final SharedPreferences theme = Data.getPreferences(this, Data.PreferenceType.THEME);
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
 		searchListView.setAdapter(adapter);
 		if (searchView == null) {
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
 					viewPager2.setVisibility(View.INVISIBLE);
 					originalList.stream()
 							.map(holidayDay -> {
-								final boolean includeUsual = theme.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false);
+								final boolean includeUsual = preferences.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false);
 								final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
 										.stream()
 										.filter(holiday -> holiday.getText().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))
@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void update() {
-		final Data.AppColorSet color = Data.getColors(this);
+		final Data.ColorSet color = Data.getColors(this);
 		drawerList.setBackgroundColor(color.getBackgroundColor());
 	}
 

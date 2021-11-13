@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdRequest;
@@ -27,7 +28,6 @@ import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayActivity extends AppCompatActivity {
@@ -49,7 +49,7 @@ public class DayActivity extends AppCompatActivity {
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
-		final SharedPreferences preferences = Data.getPreferences(this, Data.PreferenceType.LANGUAGE);
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
 		calendar = holidaysDBHelper.getAll(selectedLanguageCode);
@@ -113,8 +113,8 @@ public class DayActivity extends AppCompatActivity {
 			if (holidayDay == null) {
 				return true;
 			}
-			final SharedPreferences theme = Data.getPreferences(this, Data.PreferenceType.THEME);
-			final String holidays = holidayDay.getHolidaysList(theme.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false))
+			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+			final String holidays = holidayDay.getHolidaysList(preferences.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false))
 					.stream()
 					.map(Holiday::getText)
 					.map(text -> getResources().getString(R.string.pointed_text, text))

@@ -45,7 +45,7 @@ public class DrawerAdapter extends ArrayAdapter<ViewItem> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		final Data.AppColorSet color = Data.getColors(getContext());
+		final Data.ColorSet color = Data.getColors(getContext());
 		holder.name.setTextColor(color.getForegroundColor());
 		convertView.setBackgroundColor(color.getBackgroundColor());
 		final ViewItem v = getItem(position);

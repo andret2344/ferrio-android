@@ -28,7 +28,7 @@ public class DayFragmentAdapter extends FragmentStateAdapter {
 		final DayFragment dayFragment = new DayFragment();
 		final Bundle bundle = new Bundle();
 		final Util.MonthDayPair date = Util.calculateDates(position + 1);
-		final HolidayDay holidayDay = holidayCalendar.getDay(date.getMonth().getValue(), date.getDay());
+		final HolidayDay holidayDay = holidayCalendar.getOrCreateDay(date.getMonth().getValue(), date.getDay());
 		bundle.putParcelable(MainActivity.HOLIDAY_DAY, holidayDay);
 		dayFragment.setArguments(bundle);
 		return dayFragment;

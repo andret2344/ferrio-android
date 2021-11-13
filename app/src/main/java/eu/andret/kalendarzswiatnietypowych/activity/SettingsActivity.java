@@ -59,8 +59,7 @@ public class SettingsActivity extends AppCompatActivity {
 					if (key.equals(themeSettingsKey)) {
 						final String themeDarkKey = getString(R.string.settings_key_theme_dark);
 						final String themeLightKey = getString(R.string.settings_key_theme_light);
-						final String themeStoredKey = PreferenceManager.getDefaultSharedPreferences(this)
-								.getString(themeSettingsKey, themeDarkKey);
+						final String themeStoredKey = sharedPreferences.getString(themeSettingsKey, themeDarkKey);
 						if (themeStoredKey.equals(themeDarkKey)) {
 							AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 						} else if (themeStoredKey.equals(themeLightKey)) {

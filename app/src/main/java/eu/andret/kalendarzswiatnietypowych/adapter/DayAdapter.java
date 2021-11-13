@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,8 +60,8 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final SharedPreferences theme = Data.getPreferences(getContext(), Data.PreferenceType.THEME);
-		final Data.AppColorSet color = Data.getColors(getContext());
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+		final Data.ColorSet color = Data.getColors(getContext());
 
 		holder.dateSmall.setTextColor(color.getForegroundColor());
 		holder.holiday.setTextColor(color.getForegroundColor());
@@ -79,7 +80,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 
 		if (holidayDay.getMonth() != month) {
 			convertView.setBackgroundColor(getContext().getResources().getColor(color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
-		} else if (theme.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false)) {
+		} else if (preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false)) {
 			convertView.setBackgroundColor(Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed()));
 		}
 		convertView.setOnClickListener(v -> {
@@ -90,14 +91,15 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		});
 
 		boolean full = true;
-		final boolean includeUsual = theme.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
+		final boolean includeUsual = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
+		holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
 		if (holidayDay.countHolidays(includeUsual) == 0) {
 			holder.sad.setVisibility(View.VISIBLE);
 			holder.holiday.setText("");
 		} else {
 			final String text = holidayDay.getHolidaysList(includeUsual).get(0).getText();
 			holder.sad.setVisibility(View.INVISIBLE);
-			final boolean display = theme.getBoolean(getContext().getResources().getString(R.string.settings_key_display_shortcuts), true);
+			final boolean display = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_display_shortcuts), true);
 			if (display) {
 				final String[] arr = text.split(" ");
 				StringBuilder result = new StringBuilder();
@@ -120,7 +122,6 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 					holder.holiday.setTypeface(null, Typeface.BOLD);
 				}
 				holder.holiday.setText(result.toString());
-				holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
 
 				final long number = holidayDay.countHolidays(includeUsual) - (full ? 1 : 0);
 				if (number > 0) {

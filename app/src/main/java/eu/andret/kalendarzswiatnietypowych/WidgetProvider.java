@@ -6,8 +6,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.RemoteViews;
+
+import androidx.preference.PreferenceManager;
 
 import java.time.LocalDate;
 import java.util.stream.Collectors;
@@ -16,7 +17,6 @@ import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 
 public class WidgetProvider extends AppWidgetProvider {
 	@Override
@@ -24,7 +24,6 @@ public class WidgetProvider extends AppWidgetProvider {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_black);
-		Log.d("UHC-Widget-onUpdate", getContent(context));
 		remoteViews.setTextViewText(R.id.widget_text_holiday, getContent(context));
 
 		final LocalDate now = LocalDate.now();
@@ -40,17 +39,16 @@ public class WidgetProvider extends AppWidgetProvider {
 	}
 
 	private String getContent(final Context context) {
-		final SharedPreferences theme = Data.getPreferences(context, Data.PreferenceType.THEME);
-		final SharedPreferences preferences = Data.getPreferences(context, Data.PreferenceType.LANGUAGE);
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(context);
 		final HolidayCalendar holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
 		final HolidayDay holidayDay = holidayCalendar.getTodayHolidays();
 		holidaysDBHelper.close();
-		if (holidayDay.countHolidays(theme.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)) == 0) {
+		if (holidayDay.countHolidays(preferences.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)) == 0) {
 			return context.getResources().getString(R.string.no_unusual_holidays);
 		}
-		return holidayDay.getHolidaysList(theme.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)).stream()
+		return holidayDay.getHolidaysList(preferences.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)).stream()
 				.map(Holiday::getText)
 				.map(text -> context.getResources().getString(R.string.pointed_text, text))
 				.collect(Collectors.joining("\n\n"));

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import java.util.List;
 import java.util.Locale;
@@ -56,8 +57,8 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final SharedPreferences theme = Data.getPreferences(context, Data.PreferenceType.THEME);
-		final Data.AppColorSet color = Data.getColors(getContext());
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+		final Data.ColorSet color = Data.getColors(getContext());
 
 		holder.date.setTextColor(color.getForegroundColor());
 		holder.border.setBackgroundColor(color.getBackgroundColor());
@@ -70,10 +71,10 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		holder.date.setText(String.format(Locale.ROOT, "%02d.%02d", day.getDay(), day.getMonth()));
 		boolean colorized;
 		try {
-			colorized = theme.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false);
+			colorized = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false);
 		} catch (final ClassCastException ex) {
-			colorized = theme.getString(getContext().getResources().getString(R.string.settings_key_theme_colorized), "false").equals("true");
-			theme.edit()
+			colorized = preferences.getString(getContext().getResources().getString(R.string.settings_key_theme_colorized), "false").equals("true");
+			preferences.edit()
 					.remove(getContext().getResources().getString(R.string.settings_key_theme_colorized))
 					.putBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), colorized)
 					.apply();
@@ -83,7 +84,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
-		final boolean isUsual = theme.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
+		final boolean isUsual = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
 		for (final Holiday holiday : day.getHolidaysList(isUsual)) {
 			final TextView textView = new TextView(getContext());
 			final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

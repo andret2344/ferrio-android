@@ -11,6 +11,7 @@ import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +33,6 @@ import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 import java9.util.function.Supplier;
@@ -69,7 +69,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 		progressDialog.setTitle(getContext().getString(R.string.downloading_data));
 		progressDialog.setCancelable(false);
 
-		final SharedPreferences preferences = Data.getPreferences(getContext(), Data.PreferenceType.LANGUAGE);
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 		if (preferences.getString(MainActivity.SELECTED_LANGUAGE, "").equals(language.getCode())) {
 			((ListView) parent).setItemChecked(position, true);
 		}
