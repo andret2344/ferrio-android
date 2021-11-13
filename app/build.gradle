@@ -6,8 +6,8 @@ android {
         applicationId "eu.andret.kalendarzswiatnietypowych"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 44
-        versionName "2.2.0"
+        versionCode 45
+        versionName "2.2.1"
         multiDexEnabled true
     }
     buildTypes {
