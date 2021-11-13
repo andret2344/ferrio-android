@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.preference.PreferenceManager;
@@ -25,7 +24,6 @@ public class WidgetProvider extends AppWidgetProvider {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_black);
-		Log.d("UHC-Widget-onUpdate", getContent(context));
 		remoteViews.setTextViewText(R.id.widget_text_holiday, getContent(context));
 
 		final LocalDate now = LocalDate.now();
