@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,11 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -37,11 +34,14 @@ import eu.andret.kalendarzswiatnietypowych.entity.Language;
 import eu.andret.kalendarzswiatnietypowych.utils.Data;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
+import java9.util.concurrent.CompletableFuture;
+import java9.util.function.Supplier;
+import lombok.SneakyThrows;
 import lombok.Value;
 
 public class LanguageAdapter extends ArrayAdapter<Language> {
 	private static class ViewHolder {
-		CheckedTextView view;
+		CheckedTextView checkedTextView;
 	}
 
 	public LanguageAdapter(final Context context, final List<Language> locale) {
@@ -57,64 +57,62 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 			assert inflater != null;
 			convertView = inflater.inflate(R.layout.adapter_language, parent, false);
 			holder = new ViewHolder();
-			holder.view = convertView.findViewById(R.id.adapter_language_checked_text);
+			holder.checkedTextView = convertView.findViewById(R.id.adapter_language_checked_text);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		final Language language = getItem(position);
 
+		final Dialog progressDialog = new Dialog(getContext());
+		progressDialog.setContentView(R.layout.layout_loading_dialog);
+		progressDialog.setTitle(getContext().getString(R.string.downloading_data));
+		progressDialog.setCancelable(false);
+
 		final SharedPreferences preferences = Data.getPreferences(getContext(), Data.PreferenceType.LANGUAGE);
 		if (preferences.getString(MainActivity.SELECTED_LANGUAGE, "").equals(language.getCode())) {
 			((ListView) parent).setItemChecked(position, true);
 		}
 
-		holder.view.setText(language.getName());
-		final ExecutorService executorService = Executors.newFixedThreadPool(16);
-		holder.view.setOnClickListener(v -> {
-			if (Util.isConnection(getContext())) {
-				try {
-					final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-					builder.setCancelable(false);
-					builder.setView(R.layout.layout_loading_dialog);
-					final AlertDialog dialog = builder.create();
-					dialog.show();
-					final Future<List<HolidayDay>> future = executorService.submit(new Downloader(language));
-					final List<HolidayDay> data = future.get();
-					dialog.dismiss();
-					final SharedPreferences.Editor editor = preferences.edit();
-					editor.putString(MainActivity.SELECTED_LANGUAGE, language.getCode());
-					editor.apply();
-					((ListView) parent).setItemChecked(position, true);
-					final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(getContext());
-					if (!holidaysDBHelper.languageExists(language.getCode())) {
-						holidaysDBHelper.insertLanguage(language);
-					}
-					holidaysDBHelper.update(data, language);
-					holidaysDBHelper.close();
-				} catch (final ExecutionException | InterruptedException e) {
-					e.printStackTrace();
-					Thread.currentThread().interrupt();
-				}
-			} else {
-				final SharedPreferences.Editor editor = preferences.edit();
-				editor.putString(MainActivity.SELECTED_LANGUAGE, language.getCode());
-				editor.apply();
-				((ListView) parent).setItemChecked(position, true);
+		holder.checkedTextView.setText(language.getName());
+		final ExecutorService executorService = Executors.newSingleThreadExecutor();
+		holder.checkedTextView.setOnClickListener(checkedTextView -> {
+			((ListView) parent).setItemChecked(position, true);
+			preferences.edit()
+					.putString(MainActivity.SELECTED_LANGUAGE, language.getCode())
+					.apply();
+			final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(getContext());
+			if (holidaysDBHelper.languageExists(language.getCode())) {
+				return;
 			}
+			if (!Util.isConnection(getContext())) {
+				return;
+			}
+			progressDialog.show();
+			CompletableFuture.supplyAsync(new Downloader(language), executorService)
+					.thenAccept(holidayDays -> {
+						holidaysDBHelper.insertLanguage(language);
+						holidaysDBHelper.update(holidayDays, language);
+						holidaysDBHelper.close();
+						progressDialog.dismiss();
+					});
 		});
 		return convertView;
 	}
 
 	@Value
-	public class Downloader implements Callable<List<HolidayDay>> {
+	public class Downloader implements Supplier<List<HolidayDay>> {
 		@NonNull
 		Language language;
 
+		@SneakyThrows
 		@NonNull
 		@Override
-		public List<HolidayDay> call() throws Exception {
-			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/holiday/" + language.getCode()).openConnection();
+		public List<HolidayDay> get() {
+			final HttpsURLConnection con = (HttpsURLConnection)
+					new URL("https://api.unusualcalendar.net/holiday/" + language.getCode())
+							.openConnection();
+
 			final InputStream in = con.getInputStream();
 			final int length = con.getHeaderFieldInt("Content-Length", -1);
 
@@ -145,8 +143,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 							currObj.getBoolean("usual"),
 							currObj.getString("link")));
 				}
-				final HolidayDay curr = new HolidayDay(month, day, holidays);
-				data.add(curr);
+				data.add(new HolidayDay(month, day, holidays));
 			}
 			return data;
 		}

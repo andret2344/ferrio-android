@@ -9,10 +9,9 @@ import android.database.sqlite.SQLiteStatement;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
@@ -61,13 +60,13 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 	}
 
 	@NonNull
-	public Set<Language> getLanguages() {
+	public List<Language> getLanguages() {
 		final SQLiteDatabase db = getReadableDatabase();
 		final Cursor cursor = db.rawQuery("SELECT code, name FROM language", null);
 		if (cursor == null) {
-			return Collections.emptySet();
+			return Collections.emptyList();
 		}
-		final Set<Language> languages = new TreeSet<>();
+		final List<Language> languages = new ArrayList<>();
 		while (cursor.moveToNext()) {
 			final String code = cursor.getString(0);
 			final String name = cursor.getString(1);

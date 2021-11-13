@@ -39,7 +39,7 @@ public class HolidayCalendar implements Parcelable {
 	@NonNull
 	public final HolidayDay getTodayHolidays() {
 		final LocalDate now = LocalDate.now();
-		return getOrCreateDay(now.getDayOfMonth(), now.getMonthValue());
+		return getOrCreateDay(now.getMonthValue(), now.getDayOfMonth());
 	}
 
 	@Nullable
