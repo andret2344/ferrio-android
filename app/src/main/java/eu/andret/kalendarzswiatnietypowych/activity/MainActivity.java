@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.activities;
+package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -50,19 +50,19 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import eu.andret.kalendarzswiatnietypowych.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapters.DrawerAdapter;
-import eu.andret.kalendarzswiatnietypowych.adapters.MonthFragmentAdapter;
-import eu.andret.kalendarzswiatnietypowych.adapters.SearchHolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.DrawerAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerImage;
 import eu.andret.kalendarzswiatnietypowych.drawer.NavigationDrawerItem;
 import eu.andret.kalendarzswiatnietypowych.drawer.ViewItem;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
+import eu.andret.kalendarzswiatnietypowych.util.Data;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class MainActivity extends AppCompatActivity {
 	public static final String CALENDAR = "calendar";

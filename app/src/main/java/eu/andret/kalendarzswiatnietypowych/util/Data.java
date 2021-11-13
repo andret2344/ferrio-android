@@ -2,7 +2,7 @@
  * Author: Andret
  * Copying and modifying allowed only keeping git link
  */
-package eu.andret.kalendarzswiatnietypowych.utils;
+package eu.andret.kalendarzswiatnietypowych.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

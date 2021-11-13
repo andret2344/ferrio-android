@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
-import eu.andret.kalendarzswiatnietypowych.adapters.DayAdapter;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
+import eu.andret.kalendarzswiatnietypowych.util.Data;
 
 public class MonthFragment extends Fragment {
 	@NonNull

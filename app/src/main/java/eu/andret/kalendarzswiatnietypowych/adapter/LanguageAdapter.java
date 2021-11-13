@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -26,14 +26,14 @@ import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import eu.andret.kalendarzswiatnietypowych.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
+import eu.andret.kalendarzswiatnietypowych.util.Data;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 import java9.util.function.Supplier;
 import lombok.SneakyThrows;

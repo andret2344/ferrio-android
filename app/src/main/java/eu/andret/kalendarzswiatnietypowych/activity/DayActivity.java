@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.activities;
+package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,14 +21,14 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import eu.andret.kalendarzswiatnietypowych.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapters.DayFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
+import eu.andret.kalendarzswiatnietypowych.util.Data;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayActivity extends AppCompatActivity {
 	private static final Random RANDOM = new Random();

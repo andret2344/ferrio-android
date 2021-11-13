@@ -22,7 +22,7 @@
             android:value="@string/admob_app_id" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="fullSensor"
             android:exported="true">
             <intent-filter>
@@ -35,12 +35,12 @@
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
-            android:name=".activities.DayActivity"
+            android:name=".activity.DayActivity"
             android:screenOrientation="fullSensor" />
 
         <receiver
             android:exported="true"
-            android:name="eu.andret.kalendarzswiatnietypowych.MyWidgetProvider">
+            android:name="eu.andret.kalendarzswiatnietypowych.WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="eu.andret.kalendarzswiatnietypowych.CLICK_MY_BUTTON" />
@@ -52,19 +52,19 @@
         </receiver>
 
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/settings"
             android:screenOrientation="fullSensor">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.andret.kalendarzswiatnietypowych.activities.MainActivity" />
+                android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.LanguageActivity"
+            android:name=".activity.LanguageActivity"
             android:label="@string/title_activity_language">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.andret.kalendarzswiatnietypowych.activities.MainActivity" />
+                android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
         </activity>
     </application>
 

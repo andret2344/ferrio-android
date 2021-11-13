@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.adapters;
+package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,12 +18,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activities.DayActivity;
-import eu.andret.kalendarzswiatnietypowych.activities.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.utils.Data;
-import eu.andret.kalendarzswiatnietypowych.utils.Util;
+import eu.andret.kalendarzswiatnietypowych.util.Data;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayAdapter extends ArrayAdapter<HolidayDay> {
 	private final int month;
