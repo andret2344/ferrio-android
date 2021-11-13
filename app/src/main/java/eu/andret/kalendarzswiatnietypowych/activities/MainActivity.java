@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -84,16 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
-		final String stringFrom = getIntent().getStringExtra(FROM);
-		if (stringFrom != null && stringFrom.equals(MainActivity.WIDGET)) {
-			final Intent intent = new Intent(this, DayActivity.class);
-			intent.putExtra(FROM, MainActivity.CALENDAR);
-			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
-			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
-			startActivityForResult(intent, getResources().getInteger(R.integer.request_code_change_month));
-		}
-		super.onCreate(savedInstanceState);
-
 		final String themeDarkKey = getString(R.string.settings_key_theme_dark);
 		final String themeLightKey = getString(R.string.settings_key_theme_light);
 		final String themeSettingsKey = getString(R.string.settings_key_theme_app);
@@ -103,6 +94,19 @@ public class MainActivity extends AppCompatActivity {
 			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 		} else if (themeStoredKey.equals(themeLightKey)) {
 			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+		}
+
+		MobileAds.initialize(this);
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		final String stringFrom = getIntent().getStringExtra(FROM);
+		if (stringFrom != null && stringFrom.equals(MainActivity.WIDGET)) {
+			final Intent intent = new Intent(MainActivity.this, DayActivity.class);
+			intent.putExtra(FROM, MainActivity.CALENDAR);
+			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
+			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
+			startActivityForResult(intent, getResources().getInteger(R.integer.request_code_change_month));
 		}
 
 		final ViewGroup v = (ViewGroup) getWindow().getDecorView().getRootView();
@@ -133,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
 		progress.setLayoutParams(progressParams);
 		preLoaderLayout.addView(progress);
 
-		setContentView(R.layout.activity_main);
 		Optional.of(getSystemService(Context.POWER_SERVICE))
 				.map(PowerManager.class::cast)
 				.map(powerManager -> powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName()))
@@ -168,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
 		new Handler(Looper.getMainLooper()).postDelayed(this::dismissPreLoader, 2500);
 		update();
 
-		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 	}
@@ -232,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
-	public void onConfigurationChanged(final Configuration newConfig) {
+	public void onConfigurationChanged(@NonNull final Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		drawerToggle.onConfigurationChanged(newConfig);
 	}

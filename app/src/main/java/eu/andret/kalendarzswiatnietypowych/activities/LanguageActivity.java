@@ -11,13 +11,10 @@ import androidx.core.app.NavUtils;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -26,11 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -39,6 +33,9 @@ import eu.andret.kalendarzswiatnietypowych.adapters.LanguageAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
 import eu.andret.kalendarzswiatnietypowych.utils.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.utils.Util;
+import java9.util.concurrent.CompletableFuture;
+import java9.util.function.Supplier;
+import lombok.SneakyThrows;
 
 public class LanguageActivity extends AppCompatActivity {
 	private Dialog progressDialog;
@@ -47,6 +44,11 @@ public class LanguageActivity extends AppCompatActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_language);
+
+		progressDialog = new Dialog(this);
+		progressDialog.setContentView(R.layout.layout_loading_dialog);
+		progressDialog.setTitle(getString(R.string.downloading_data));
+		progressDialog.setCancelable(false);
 
 		Optional.of(this)
 				.map(AppCompatActivity::getSupportActionBar)
@@ -57,23 +59,16 @@ public class LanguageActivity extends AppCompatActivity {
 
 		final ListView listView = findViewById(R.id.language_list_languages);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+		final ExecutorService executorService = Executors.newSingleThreadExecutor();
 		if (Util.isConnection(this)) {
-			try {
-				progressDialog = new Dialog(this);
-				progressDialog.setTitle(getResources().getString(R.string.downloading_data));
-				progressDialog.setCancelable(false);
-				progressDialog.show();
-				final ExecutorService executorService = Executors.newSingleThreadExecutor();
-				final Future<List<Language>> future = executorService.submit(new Downloader());
-				languages.addAll(future.get());
-				progressDialog.dismiss();
-			} catch (final InterruptedException | ExecutionException e) {
-				Thread.currentThread().interrupt();
-			}
+			CompletableFuture.supplyAsync(new Downloader(), executorService)
+					.thenAccept(languageList -> {
+						languages.addAll(languageList);
+						progressDialog.dismiss();
+					});
 		}
 		listView.setAdapter(new LanguageAdapter(this, new ArrayList<>(languages)));
 
-		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.language_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 	}
@@ -104,9 +99,10 @@ public class LanguageActivity extends AppCompatActivity {
 		super.onDestroy();
 	}
 
-	private class Downloader implements Callable<List<Language>> {
+	private class Downloader implements Supplier<List<Language>> {
+		@SneakyThrows
 		@Override
-		public List<Language> call() throws IOException, JSONException {
+		public List<Language> get() {
 			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/language/").openConnection();
 			final InputStream in = con.getInputStream();
 			final int length = con.getHeaderFieldInt("Content-Length", -1);
