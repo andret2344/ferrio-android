@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import java.util.List;
 
@@ -34,10 +35,10 @@ public class DayFragment extends Fragment {
 		if (holidayDay == null) {
 			return dayView;
 		}
-		final SharedPreferences theme = Data.getPreferences(getContext(), Data.PreferenceType.THEME);
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 		final Resources resources = getContext().getResources();
-		final Data.AppColorSet color = Data.getColors(getContext());
-		final boolean includeUsual = theme.getBoolean(resources.getString(R.string.settings_key_usual_holidays), false);
+		final Data.ColorSet color = Data.getColors(getContext());
+		final boolean includeUsual = preferences.getBoolean(resources.getString(R.string.settings_key_usual_holidays), false);
 		final List<Holiday> holidays = holidayDay.getHolidaysList(includeUsual);
 		if (holidays.isEmpty()) {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
@@ -45,7 +46,7 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_text_empty).setBackgroundColor(Color.GRAY);
 		}
 		final int backgroundColor;
-		if (theme.getBoolean(resources.getString(R.string.settings_key_theme_colorized), false)) {
+		if (preferences.getBoolean(resources.getString(R.string.settings_key_theme_colorized), false)) {
 			backgroundColor = Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed());
 		} else {
 			backgroundColor = color.getBackgroundColor();
