@@ -15,11 +15,10 @@ import com.google.android.gms.ads.AdView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -103,32 +102,19 @@ public class LanguageActivity extends AppCompatActivity {
 		super.onDestroy();
 	}
 
-	private class Downloader implements Supplier<List<Language>> {
+	private static class Downloader implements Supplier<List<Language>> {
 		@SneakyThrows
 		@Override
 		public List<Language> get() {
 			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/language/").openConnection();
-			final InputStream in = con.getInputStream();
-			final int length = con.getHeaderFieldInt("Content-Length", -1);
-
-			final byte[] bytes = new byte[length];
-			for (int i = 0; i < length; i++) {
-				if (!Util.isConnection(LanguageActivity.this)) {
-					Util.createAlert(LanguageActivity.this, R.string.caution, R.string.no_internet);
-					return Collections.emptyList();
-				}
-				bytes[i] = (byte) in.read();
-			}
-			in.close();
-			final String result = new String(bytes, StandardCharsets.UTF_8);
-			if (result.isEmpty()) {
-				return Collections.emptyList();
-			}
-			final JSONArray jsonArray = new JSONArray(result);
+			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			final JSONArray jsonArray = new JSONArray(bufferedReader.readLine());
 			final List<Language> languages = new ArrayList<>();
 			for (int i = 0; i < jsonArray.length(); i++) {
 				final JSONObject languageObject = jsonArray.getJSONObject(i);
-				languages.add(new Language(languageObject.getString("language"), languageObject.getString("uniLanguage")));
+				languages.add(new Language(
+						languageObject.getString("language"),
+						languageObject.getString("uniLanguage")));
 			}
 			return languages;
 		}
