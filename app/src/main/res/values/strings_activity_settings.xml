@@ -10,7 +10,7 @@
     <string name="preference_title_holidays_shortcuts">Display holidays\' shortcuts</string>
 
     <!-- Descriptions -->
-    <string name="preference_description_colorized_days">Set unique colors to every day</string>
+    <string name="preference_description_colorized_days">Set unique color for every day</string>
     <string name="preference_description_include_usual">Display regular holidays, i.e. New Year\'s Eve, along with others</string>
     <string name="preference_description_holidays_shortcuts">Show holidays\' shortcuts on month view.</string>
 

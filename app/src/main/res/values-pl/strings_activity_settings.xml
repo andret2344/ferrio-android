@@ -10,7 +10,7 @@
     <string name="preference_title_holidays_shortcuts">Wyświetlaj skróty świąt</string>
 
     <!-- Descriptions -->
-    <string name="preference_description_colorized_days">Ustaw unikalny kolor każdemu dniu</string>
+    <string name="preference_description_colorized_days">Ustaw unikalny kolor dla każdego dnia</string>
     <string name="preference_description_include_usual">Wyświetlaj święta typowe, np. Nowy Rok, razem z pozostałymi</string>
     <string name="preference_description_holidays_shortcuts">Pokazuj skróty świąt w widoku miesiąca</string>
 
