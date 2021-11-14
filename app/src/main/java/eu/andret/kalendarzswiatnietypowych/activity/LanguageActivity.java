@@ -108,7 +108,12 @@ public class LanguageActivity extends AppCompatActivity {
 		public List<Language> get() {
 			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/language/").openConnection();
 			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			final JSONArray jsonArray = new JSONArray(bufferedReader.readLine());
+			final StringBuilder result = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				result.append(line);
+			}
+			final JSONArray jsonArray = new JSONArray(result.toString());
 			final List<Language> languages = new ArrayList<>();
 			for (int i = 0; i < jsonArray.length(); i++) {
 				final JSONObject languageObject = jsonArray.getJSONObject(i);

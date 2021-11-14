@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
-		new Handler(Looper.getMainLooper()).postDelayed(this::dismissPreLoader, 2500);
+		new Handler(Looper.getMainLooper()).postDelayed(this::dismissPreLoader, 1500);
 		update();
 
 		final AdView adView = findViewById(R.id.main_adview_bottom);

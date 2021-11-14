@@ -112,7 +112,12 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 					new URL("https://api.unusualcalendar.net/holiday/" + language.getCode())
 							.openConnection();
 			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			final JSONArray jsonArray = new JSONArray(bufferedReader.readLine());
+			final StringBuilder result = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				result.append(line);
+			}
+			final JSONArray jsonArray = new JSONArray(result.toString());
 			final List<HolidayDay> data = new ArrayList<>();
 			final int jsonLength = jsonArray.length();
 			for (int j = 0; j < jsonLength; j++) {
