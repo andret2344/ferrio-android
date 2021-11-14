@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,9 +35,8 @@ public class DayFragment extends Fragment {
 			return dayView;
 		}
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-		final Resources resources = getContext().getResources();
 		final Data.ColorSet color = Data.getColors(getContext());
-		final boolean includeUsual = preferences.getBoolean(resources.getString(R.string.settings_key_usual_holidays), false);
+		final boolean includeUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
 		final List<Holiday> holidays = holidayDay.getHolidaysList(includeUsual);
 		if (holidays.isEmpty()) {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
@@ -46,7 +44,7 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_text_empty).setBackgroundColor(Color.GRAY);
 		}
 		final int backgroundColor;
-		if (preferences.getBoolean(resources.getString(R.string.settings_key_theme_colorized), false)) {
+		if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
 			backgroundColor = Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed());
 		} else {
 			backgroundColor = color.getBackgroundColor();

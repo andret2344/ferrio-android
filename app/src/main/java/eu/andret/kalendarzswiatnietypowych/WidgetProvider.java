@@ -45,12 +45,12 @@ public class WidgetProvider extends AppWidgetProvider {
 		final HolidayCalendar holidayCalendar = holidaysDBHelper.getAll(selectedLanguageCode);
 		final HolidayDay holidayDay = holidayCalendar.getTodayHolidays();
 		holidaysDBHelper.close();
-		if (holidayDay.countHolidays(preferences.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)) == 0) {
-			return context.getResources().getString(R.string.no_unusual_holidays);
+		if (holidayDay.countHolidays(preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false)) == 0) {
+			return context.getString(R.string.no_unusual_holidays);
 		}
-		return holidayDay.getHolidaysList(preferences.getBoolean(context.getResources().getString(R.string.settings_key_usual_holidays), false)).stream()
+		return holidayDay.getHolidaysList(preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false)).stream()
 				.map(Holiday::getText)
-				.map(text -> context.getResources().getString(R.string.pointed_text, text))
+				.map(text -> context.getString(R.string.pointed_text, text))
 				.collect(Collectors.joining("\n\n"));
 	}
 }

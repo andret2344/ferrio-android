@@ -83,8 +83,8 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		if (holidayDay.getMonth() != month) {
-			convertView.setBackgroundColor(getContext().getResources().getColor(color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
-		} else if (preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false)) {
+			convertView.setBackgroundColor(getContext().getColor(color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
+		} else if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
 			convertView.setBackgroundColor(Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed()));
 		}
 		convertView.setOnClickListener(v -> {
@@ -94,12 +94,12 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			((MainActivity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
 		});
 
-		final boolean includeUsual = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
-		final boolean displayShortcuts = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_display_shortcuts), true);
+		final boolean includeUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
+		final boolean displayShortcuts = preferences.getBoolean(getContext().getString(R.string.settings_key_display_shortcuts), true);
 		final long holidaysCount = holidayDay.countHolidays(includeUsual);
 		if (!displayShortcuts) {
 			holder.dateBig.setText(String.valueOf(holidayDay.getDay()));
-			holder.more.setText(getContext().getResources().getString(R.string.holidays, holidaysCount));
+			holder.more.setText(getContext().getString(R.string.holidays, holidaysCount));
 			return convertView;
 		}
 		holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
@@ -124,11 +124,11 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			holidaysCountIndicator--;
 			holder.holiday.setText(result);
 		} else {
-			holder.holiday.setText(getContext().getResources().getString(R.string.ellipsis_text, result));
+			holder.holiday.setText(getContext().getString(R.string.ellipsis_text, result));
 		}
 
 		if (holidaysCountIndicator > 0) {
-			holder.more.setText(getContext().getResources().getString(R.string.see_more, holidaysCountIndicator));
+			holder.more.setText(getContext().getString(R.string.see_more, holidaysCountIndicator));
 		}
 		return convertView;
 	}

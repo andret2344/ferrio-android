@@ -80,7 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
 					.map(Arrays::stream)
 					.orElse(IntStream.empty())
 					.forEach(s -> {
-						final String current = getResources().getString(s);
+						final String current = getString(s);
 						final Preference pref = findPreference(current);
 						if (pref == null) {
 							return;

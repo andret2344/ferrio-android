@@ -13,8 +13,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Data {
 	public ColorSet getColors(final Context context) {
-		final int colorBlack = context.getResources().getColor(R.color.color_black_accent);
-		final int colorWhite = context.getResources().getColor(R.color.color_white_accent);
+		final int colorBlack = context.getColor(R.color.color_black_accent);
+		final int colorWhite = context.getColor(R.color.color_white_accent);
 		if (Util.isDarkTheme(context)) {
 			return new ColorSet(true, colorBlack, colorWhite);
 		}

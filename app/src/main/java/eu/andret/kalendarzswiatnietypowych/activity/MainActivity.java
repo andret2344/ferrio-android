@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 		preLoaderLayout = new LinearLayout(this);
 		preLoaderLayout.setOrientation(LinearLayout.VERTICAL);
 		preLoaderLayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		preLoaderLayout.setBackgroundColor(getResources().getColor(R.color.color_black_accent));
+		preLoaderLayout.setBackgroundColor(getColor(R.color.color_black_accent));
 		v.addView(preLoaderLayout);
 
 		final ImageView image = new ImageView(this);
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
 					viewPager2.setVisibility(View.INVISIBLE);
 					originalList.stream()
 							.map(holidayDay -> {
-								final boolean includeUsual = preferences.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false);
+								final boolean includeUsual = preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false);
 								final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
 										.stream()
 										.filter(holiday -> holiday.getText().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))

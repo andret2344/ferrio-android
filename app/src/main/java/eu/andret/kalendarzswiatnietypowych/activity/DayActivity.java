@@ -105,7 +105,7 @@ public class DayActivity extends AppCompatActivity {
 		if (item.getItemId() == R.id.menu_day_share) {
 			final Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
+			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.unusual_holiday));
 			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem() + 1);
 			final String[] monthsGenitive = getResources().getStringArray(R.array.months_genitive);
 			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + monthsGenitive[pair.getMonth().getValue() - 1];
@@ -114,13 +114,13 @@ public class DayActivity extends AppCompatActivity {
 				return true;
 			}
 			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-			final String holidays = holidayDay.getHolidaysList(preferences.getBoolean(getResources().getString(R.string.settings_key_usual_holidays), false))
+			final String holidays = holidayDay.getHolidaysList(preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false))
 					.stream()
 					.map(Holiday::getText)
-					.map(text -> getResources().getString(R.string.pointed_text, text))
+					.map(text -> getString(R.string.pointed_text, text))
 					.collect(Collectors.joining("\n"));
-			intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_message, date, holidays));
-			startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_via)));
+			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message, date, holidays));
+			startActivity(Intent.createChooser(intent, getString(R.string.share_via)));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

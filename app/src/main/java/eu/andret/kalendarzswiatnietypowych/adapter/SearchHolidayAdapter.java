@@ -69,22 +69,12 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 			return convertView;
 		}
 		holder.date.setText(String.format(Locale.ROOT, "%02d.%02d", day.getDay(), day.getMonth()));
-		boolean colorized;
-		try {
-			colorized = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), false);
-		} catch (final ClassCastException ex) {
-			colorized = preferences.getString(getContext().getResources().getString(R.string.settings_key_theme_colorized), "false").equals("true");
-			preferences.edit()
-					.remove(getContext().getResources().getString(R.string.settings_key_theme_colorized))
-					.putBoolean(getContext().getResources().getString(R.string.settings_key_theme_colorized), colorized)
-					.apply();
-		}
-		if (colorized) {
+		if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
 			holder.border.setBackgroundColor(Util.randomize(color.isDarkTheme()));
 		}
 		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 		holder.holidays.removeAllViews();
-		final boolean isUsual = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
+		final boolean isUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
 		for (final Holiday holiday : day.getHolidaysList(isUsual)) {
 			final TextView textView = new TextView(getContext());
 			final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -92,7 +82,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 					ViewGroup.LayoutParams.WRAP_CONTENT);
 			layoutParams.setMargins(0, 2, 0, 2);
 			textView.setLayoutParams(layoutParams);
-			textView.setText(getContext().getResources().getString(R.string.pointed_text, holiday.getText()));
+			textView.setText(getContext().getString(R.string.pointed_text, holiday.getText()));
 			textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text));
 			holder.holidays.addView(textView);
 			textView.setTextColor(color.getForegroundColor());
