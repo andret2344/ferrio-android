@@ -106,7 +106,7 @@ public class DayActivity extends AppCompatActivity {
 			final Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.unusual_holiday));
-			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem());
+			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem() + 1);
 			final String[] monthsGenitive = getResources().getStringArray(R.array.months_genitive);
 			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + monthsGenitive[pair.getMonth().getValue() - 1];
 			final HolidayDay holidayDay = calendar.getDay(pair.getMonth().getValue(), pair.getDay());

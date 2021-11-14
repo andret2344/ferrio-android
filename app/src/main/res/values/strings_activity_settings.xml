@@ -10,9 +10,9 @@
     <string name="preference_title_holidays_shortcuts">Display holidays\' shortcuts</string>
 
     <!-- Descriptions -->
-    <string name="preference_description_colorized_days">If selected, every day has its own color.</string>
-    <string name="preference_description_include_usual">If selected, regular holidays are also viewable, e.g. New Year\'s Eve.</string>
-    <string name="preference_description_holidays_shortcuts">If checked, you can see holidays\' shortcuts on month view</string>
+    <string name="preference_description_colorized_days">Set unique colors to every day</string>
+    <string name="preference_description_include_usual">Display regular holidays, i.e. New Year\'s Eve, along with others</string>
+    <string name="preference_description_holidays_shortcuts">Show holidays\' shortcuts on month view.</string>
 
     <!-- Values -->
     <string name="preference_value_theme_light">Light theme</string>

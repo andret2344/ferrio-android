@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
@@ -27,6 +29,8 @@ import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayAdapter extends ArrayAdapter<HolidayDay> {
+	private static final int WORDS = 4;
+
 	private final int month;
 
 	private static class ViewHolder {
@@ -90,50 +94,44 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			((MainActivity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
 		});
 
-		boolean full = true;
 		final boolean includeUsual = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_usual_holidays), false);
-		holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
-		if (holidayDay.countHolidays(includeUsual) == 0) {
+		final boolean displayShortcuts = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_display_shortcuts), true);
+		final long holidaysCount = holidayDay.countHolidays(includeUsual);
+		if (!displayShortcuts) {
+			holder.dateBig.setText(String.valueOf(holidayDay.getDay()));
+			holder.more.setText(getContext().getResources().getString(R.string.holidays, holidaysCount));
+			return convertView;
+		}
+		if (holidaysCount == 0) {
+			holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
 			holder.sad.setVisibility(View.VISIBLE);
 			holder.holiday.setText("");
+			return convertView;
+		}
+		final String text = holidayDay.getHolidaysList(includeUsual).get(0).getText();
+		holder.sad.setVisibility(View.INVISIBLE);
+		final String[] arr = text.split(" ");
+		final String result;
+		boolean full = true;
+		if (arr.length <= WORDS) {
+			result = text;
 		} else {
-			final String text = holidayDay.getHolidaysList(includeUsual).get(0).getText();
-			holder.sad.setVisibility(View.INVISIBLE);
-			final boolean display = preferences.getBoolean(getContext().getResources().getString(R.string.settings_key_display_shortcuts), true);
-			if (display) {
-				final String[] arr = text.split(" ");
-				StringBuilder result = new StringBuilder();
-				final int words = 4;
-				if (arr.length <= words) {
-					result = new StringBuilder(text);
-				} else {
-					for (int i = 0; i < words; i++) {
-						result.append(" ").append(arr[i]);
-					}
-					result.append("...");
-					full = false;
-				}
-				final boolean isAnyUsual = holidayDay.getHolidaysList(includeUsual).stream()
-						.filter(holiday -> holiday.getText().equals(text))
-						.findAny()
-						.map(Holiday::isUsual)
-						.orElse(false);
-				if (isAnyUsual) {
-					holder.holiday.setTypeface(null, Typeface.BOLD);
-				}
-				holder.holiday.setText(result.toString());
+			result = Arrays.stream(arr).limit(WORDS).collect(Collectors.joining()) + "...";
+			full = false;
+		}
+		final boolean isAnyUsual = holidayDay.getHolidaysList(includeUsual).stream()
+				.filter(holiday -> holiday.getText().equals(text))
+				.findAny()
+				.map(Holiday::isUsual)
+				.orElse(false);
+		if (isAnyUsual) {
+			holder.holiday.setTypeface(null, Typeface.BOLD);
+		}
+		holder.holiday.setText(result);
 
-				final long number = holidayDay.countHolidays(includeUsual) - (full ? 1 : 0);
-				if (number > 0) {
-					holder.more.setText(getContext().getResources().getString(R.string.see_more, number));
-				}
-			} else {
-				holder.dateBig.setText(String.valueOf(holidayDay.getDay()));
-				final long number = holidayDay.countHolidays(includeUsual);
-				if (number > 0) {
-					holder.more.setText(getContext().getResources().getString(R.string.holidays, number));
-				}
-			}
+		final long number = holidayDay.countHolidays(includeUsual) - (full ? 1 : 0);
+		if (number > 0) {
+			holder.more.setText(getContext().getResources().getString(R.string.see_more, number));
 		}
 		return convertView;
 	}
