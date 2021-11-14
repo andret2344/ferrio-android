@@ -16,8 +16,6 @@ import androidx.preference.PreferenceManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,13 +109,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 			final HttpsURLConnection con = (HttpsURLConnection)
 					new URL("https://api.unusualcalendar.net/holiday/" + language.getCode())
 							.openConnection();
-			final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			final StringBuilder result = new StringBuilder();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				result.append(line);
-			}
-			final JSONArray jsonArray = new JSONArray(result.toString());
+			final JSONArray jsonArray = new JSONArray(Util.readAllFromInputStream(con.getInputStream()));
 			final List<HolidayDay> data = new ArrayList<>();
 			final int jsonLength = jsonArray.length();
 			for (int j = 0; j < jsonLength; j++) {
