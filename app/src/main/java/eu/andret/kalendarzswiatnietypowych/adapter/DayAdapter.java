@@ -102,8 +102,8 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			holder.more.setText(getContext().getResources().getString(R.string.holidays, holidaysCount));
 			return convertView;
 		}
+		holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
 		if (holidaysCount == 0) {
-			holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
 			holder.sad.setVisibility(View.VISIBLE);
 			holder.holiday.setText("");
 			return convertView;
