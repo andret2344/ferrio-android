@@ -108,32 +108,27 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			holder.holiday.setText("");
 			return convertView;
 		}
-		final String text = holidayDay.getHolidaysList(includeUsual).get(0).getText();
 		holder.sad.setVisibility(View.INVISIBLE);
-		final String[] words = text.split(" ");
+		final Holiday displayedHoliday = holidayDay.getHolidaysList(includeUsual).get(0);
+		final String[] words = displayedHoliday.getText().split(" ");
 		final String result = Arrays.stream(words)
 				.limit(MAX_WORDS_COUNT)
 				.collect(Collectors.joining(" "));
 		final boolean full = words.length <= MAX_WORDS_COUNT;
-		final boolean isAnyUsual = holidayDay.getHolidaysList(includeUsual).stream()
-				.filter(holiday -> holiday.getText().equals(text))
-				.findAny()
-				.map(Holiday::isUsual)
-				.orElse(false);
-		if (isAnyUsual) {
+		final boolean isDisplayedUsual = displayedHoliday.isUsual();
+		if (isDisplayedUsual) {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}
-		final long number;
+		long holidaysCountIndicator = holidaysCount;
 		if (full) {
-			number = holidayDay.countHolidays(includeUsual) - 1;
+			holidaysCountIndicator--;
 			holder.holiday.setText(result);
 		} else {
-			number = holidayDay.countHolidays(includeUsual);
 			holder.holiday.setText(getContext().getResources().getString(R.string.ellipsis_text, result));
 		}
 
-		if (number > 0) {
-			holder.more.setText(getContext().getResources().getString(R.string.see_more, number));
+		if (holidaysCountIndicator > 0) {
+			holder.more.setText(getContext().getResources().getString(R.string.see_more, holidaysCountIndicator));
 		}
 		return convertView;
 	}
