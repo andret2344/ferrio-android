@@ -20,8 +20,10 @@ assembleDebug:
   artifacts:
     paths:
       - app/build/outputs/apk/debug
+  when: manual
 
 junit:
   stage: test
   script:
     - ./gradlew :app:cleanTestDebugUnitTest :app:testDebugUnitTest
+  when: manual
