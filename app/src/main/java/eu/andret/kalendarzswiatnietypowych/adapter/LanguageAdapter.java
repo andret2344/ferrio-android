@@ -16,11 +16,8 @@ import androidx.preference.PreferenceManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -101,7 +98,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 	}
 
 	@Value
-	public class Downloader implements Supplier<List<HolidayDay>> {
+	public static class Downloader implements Supplier<List<HolidayDay>> {
 		@NonNull
 		Language language;
 
@@ -112,21 +109,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 			final HttpsURLConnection con = (HttpsURLConnection)
 					new URL("https://api.unusualcalendar.net/holiday/" + language.getCode())
 							.openConnection();
-
-			final InputStream in = con.getInputStream();
-			final int length = con.getHeaderFieldInt("Content-Length", -1);
-
-			final byte[] bytes = new byte[length];
-			for (int i = 0; i < length; i++) {
-				if (!Util.isConnection(getContext())) {
-					Util.createAlert(getContext(), R.string.caution, R.string.no_internet);
-					return Collections.emptyList();
-				}
-				bytes[i] = (byte) in.read();
-			}
-			in.close();
-			final String json = new String(bytes, StandardCharsets.UTF_8);
-			final JSONArray jsonArray = new JSONArray(json);
+			final JSONArray jsonArray = new JSONArray(Util.readAllFromInputStream(con.getInputStream()));
 			final List<HolidayDay> data = new ArrayList<>();
 			final int jsonLength = jsonArray.length();
 			for (int j = 0; j < jsonLength; j++) {

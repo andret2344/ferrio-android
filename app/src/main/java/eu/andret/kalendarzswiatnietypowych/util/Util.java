@@ -16,6 +16,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Random;
@@ -111,5 +115,14 @@ public class Util {
 	public static boolean isDarkTheme(final Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
 				== UI_MODE_NIGHT_YES;
+	}
+
+	public static String readAllFromInputStream(final InputStream inputStream) throws IOException {
+		final ByteArrayOutputStream result = new ByteArrayOutputStream();
+		final byte[] buffer = new byte[1024];
+		for (int length; (length = inputStream.read(buffer)) != -1; ) {
+			result.write(buffer, 0, length);
+		}
+		return result.toString(StandardCharsets.UTF_8.name());
 	}
 }
