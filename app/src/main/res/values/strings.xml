@@ -63,5 +63,6 @@
     <string name="send">Send</string>
     <string name="oops">Oops!</string>
     <string name="pointed_text" translatable="false">\u00B7 %s</string>
+    <string name="ellipsis_text" translatable="false">%s\u2026</string>
 
 </resources>

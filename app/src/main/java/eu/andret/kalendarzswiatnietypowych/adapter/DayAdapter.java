@@ -29,7 +29,7 @@ import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayAdapter extends ArrayAdapter<HolidayDay> {
-	private static final int WORDS = 4;
+	private static final int MAX_WORDS_COUNT = 4;
 
 	private final int month;
 
@@ -110,15 +110,11 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 		final String text = holidayDay.getHolidaysList(includeUsual).get(0).getText();
 		holder.sad.setVisibility(View.INVISIBLE);
-		final String[] arr = text.split(" ");
-		final String result;
-		boolean full = true;
-		if (arr.length <= WORDS) {
-			result = text;
-		} else {
-			result = Arrays.stream(arr).limit(WORDS).collect(Collectors.joining()) + "...";
-			full = false;
-		}
+		final String[] words = text.split(" ");
+		final String result = Arrays.stream(words)
+				.limit(MAX_WORDS_COUNT)
+				.collect(Collectors.joining(" "));
+		final boolean full = words.length <= MAX_WORDS_COUNT;
 		final boolean isAnyUsual = holidayDay.getHolidaysList(includeUsual).stream()
 				.filter(holiday -> holiday.getText().equals(text))
 				.findAny()
@@ -127,9 +123,15 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		if (isAnyUsual) {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}
-		holder.holiday.setText(result);
+		final long number;
+		if (full) {
+			number = holidayDay.countHolidays(includeUsual) - 1;
+			holder.holiday.setText(result);
+		} else {
+			number = holidayDay.countHolidays(includeUsual);
+			holder.holiday.setText(getContext().getResources().getString(R.string.ellipsis_text, result));
+		}
 
-		final long number = holidayDay.countHolidays(includeUsual) - (full ? 1 : 0);
 		if (number > 0) {
 			holder.more.setText(getContext().getResources().getString(R.string.see_more, number));
 		}
