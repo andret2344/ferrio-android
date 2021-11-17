@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
@@ -44,9 +45,6 @@ public class LanguageActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_language);
 
 		progressDialog = new Dialog(this);
-		progressDialog.setContentView(R.layout.layout_loading_dialog);
-		progressDialog.setTitle(getString(R.string.downloading_data));
-		progressDialog.setCancelable(false);
 
 		Optional.of(this)
 				.map(AppCompatActivity::getSupportActionBar)
@@ -61,17 +59,28 @@ public class LanguageActivity extends AppCompatActivity {
 		final ListView listView = findViewById(R.id.language_list_languages);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		final ExecutorService executorService = Executors.newSingleThreadExecutor();
-		if (!Util.isConnection(this)) {
+		if (Util.isConnection(this)) {
+			progressDialog.setContentView(R.layout.layout_loading_dialog);
+			progressDialog.setTitle(getString(R.string.downloading_data));
+			progressDialog.setCancelable(false);
+			progressDialog.show();
+			CompletableFuture.supplyAsync(new Downloader(), executorService).thenAccept(languages -> {
+				final Set<Language> languageSet = new TreeSet<>(databaseLanguages);
+				languageSet.addAll(languages);
+				runOnUiThread(() -> listView.setAdapter(new LanguageAdapter(this, new ArrayList<>(languageSet))));
+				progressDialog.dismiss();
+			});
+			return;
+		}
+		if (!databaseLanguages.isEmpty()) {
 			listView.setAdapter(new LanguageAdapter(this, databaseLanguages));
 			return;
 		}
-		progressDialog.show();
-		CompletableFuture.supplyAsync(new Downloader(), executorService).thenAccept(languages -> {
-			final Set<Language> languageSet = new TreeSet<>(databaseLanguages);
-			languageSet.addAll(languages);
-			runOnUiThread(() -> listView.setAdapter(new LanguageAdapter(this, new ArrayList<>(languageSet))));
-			progressDialog.dismiss();
-		});
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.caution);
+		builder.setMessage("No internet connection.");
+		builder.setPositiveButton(R.string.ok, (dialog, which) -> finishAffinity());
+		builder.show();
 	}
 
 	@Override

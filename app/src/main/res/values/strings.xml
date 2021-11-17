@@ -17,7 +17,6 @@
     <string name="search">Search</string>
     <string name="see_more">%d more</string>
     <string name="holidays">Holidays: %d</string>
-    <string name="today">Today</string>
 
     <string-array name="months">
         <item>January</item>
@@ -50,7 +49,10 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="menu_item_today">Today</string>
     <string name="menu_item_random">Random</string>
+    <string name="menu_item_share">Share</string>
+    <string name="no_internet_connection">No internet connection.</string>
     <string name="no_unusual_holidays">No unusual holidays.</string>
     <string name="about_calendar">About calendar</string>
     <string name="about_calendar_text">The Unusual Holiday Calendar is a calendar created by imperialists from Entente during World War One. It was created for the purpose of the German Empire, so that people could celebrate so long and often that they had no time to fight for their homeland on the battlefront. It collects holidays, which were not permitted by usual holidays to theirs\' calendars.</string>
@@ -64,5 +66,8 @@
     <string name="oops">Oops!</string>
     <string name="pointed_text" translatable="false">\u00B7 %s</string>
     <string name="ellipsis_text" translatable="false">%s\u2026</string>
+    <string name="content_description_ad">Ad</string>
+    <string name="content_description_image_sad_face">Sad face</string>
+    <string name="content_description_image_drawer_item">Menu element icon</string>
 
 </resources>
