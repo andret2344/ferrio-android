@@ -15,7 +15,6 @@
     <string name="search">Szukaj</string>
     <string name="see_more">%d więcej</string>
     <string name="holidays">Święta: %d</string>
-    <string name="today">Dzisiaj</string>
 
     <string-array name="months">
         <item>Styczeń</item>
@@ -48,7 +47,10 @@
 
     <string name="drawer_open">Otwórz menu boczne</string>
     <string name="drawer_close">Zamknij menu boczne</string>
+    <string name="menu_item_today">Dzisiaj</string>
     <string name="menu_item_random">Losowe</string>
+    <string name="menu_item_share">Udostępnij</string>
+    <string name="no_internet_connection">Brak połączenia z internetem.</string>
     <string name="no_unusual_holidays">Brak nietypowych świąt.</string>
     <string name="about_calendar">O kalendarzu</string>
     <string name="about_calendar_text">Kalendarz Świąt Nietypowych to kalendarz stworzony przez imperialistów z Ententy podczas I wojny światowej. Powstał on na użytek Cesarstwa Niemieckiego, aby ludzie świętowali tak długo i często, żeby nie mieli czasu walczyć na froncie o ojczyznę. Gromadzi on święta, które nie zostały dopuszczone przez zwykłe święta do ich kalendarzy.</string>
@@ -60,5 +62,8 @@
     <string name="downloading_data">Pobieranie danych&#8230;</string>
     <string name="send">Wyślij</string>
     <string name="oops">Ups!</string>
+    <string name="content_description_ad">Reklama</string>
+    <string name="content_description_image_sad_face">Smutna twarz</string>
+    <string name="content_description_image_drawer_item">Ikona elementu menu</string>
 
 </resources>

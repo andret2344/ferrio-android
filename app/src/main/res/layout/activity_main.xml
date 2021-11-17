@@ -24,7 +24,6 @@
                     android:id="@+id/main_pager_months"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@string/about_calendar"
                     android:background="#000000" />
 
                 <ListView
@@ -51,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:contentDescription="@string/content_description_ad"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
 

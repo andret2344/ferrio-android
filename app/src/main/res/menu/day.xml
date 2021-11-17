@@ -6,7 +6,7 @@
         android:id="@+id/menu_day_today"
         android:icon="@drawable/baseline_event_36"
         android:orderInCategory="10"
-        android:title="@string/today"
+        android:title="@string/menu_item_today"
         app:showAsAction="collapseActionView|ifRoom" />
     <item
         android:id="@+id/menu_day_random"
@@ -18,7 +18,7 @@
         android:id="@+id/menu_day_share"
         android:icon="@drawable/baseline_share_36"
         android:orderInCategory="8"
-        android:title="@string/menu_item_random"
+        android:title="@string/menu_item_share"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -14,7 +14,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="15dp"
         android:layout_gravity="center|center"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/content_description_image_drawer_item" />
 
     <TextView
         android:id="@+id/drawer_item_text_name"
