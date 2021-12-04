@@ -75,7 +75,7 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 			final String code = cursor.getString(0);
 			final String name = cursor.getString(1);
 			final String url = cursor.getString(2);
-			languages.add(new Language(name, code, url));
+			languages.add(new Language(name, code, url == null ? "/holiday/" + code : url));
 		}
 		cursor.close();
 		return languages;
@@ -86,7 +86,8 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		final ContentValues values = new ContentValues();
 		values.put("code", language.getCode());
 		values.put("name", language.getName());
-		db.insert("language", null, values);
+		values.put("url", language.getUrl());
+		db.insertWithOnConflict("language", null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		db.close();
 	}
 
