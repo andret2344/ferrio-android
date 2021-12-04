@@ -9,6 +9,8 @@ public class Language implements Comparable<Language> {
 	String name;
 	@NonNull
 	String code;
+	@NonNull
+	String url;
 
 	@Override
 	public int compareTo(final Language language) {

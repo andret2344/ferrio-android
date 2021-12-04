@@ -19,7 +19,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.Language;
 
 public class HolidaysDBHelper extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 
 	public HolidaysDBHelper(final Context context) {
 		super(context, "localHolidays", null, DATABASE_VERSION);
@@ -32,7 +32,7 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS language");
 		db.execSQL("DROP TABLE IF EXISTS metadata");
 		db.execSQL("CREATE TABLE holiday (text TEXT, language VARCHAR(31), metadata INT, url TEXT, CONSTRAINT h_pk PRIMARY KEY (language, metadata))");
-		db.execSQL("CREATE TABLE language (code VARCHAR(31) PRIMARY KEY, name VARCHAR(31))");
+		db.execSQL("CREATE TABLE language (code VARCHAR(31) PRIMARY KEY, name VARCHAR(31), release_id INT, url TEXT)");
 		db.execSQL("CREATE TABLE metadata (id INTEGER PRIMARY KEY, month INT, day INT, usual BOOLEAN)");
 	}
 
@@ -42,6 +42,10 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 			case 1:
 			case 2:
 				onCreate(db);
+				break;
+			case 3:
+				db.execSQL("ALTER TABLE language ADD COLUMN release_id INT");
+				db.execSQL("ALTER TABLE language ADD COLUMN url TEXT");
 				break;
 			default:
 				throw new IllegalArgumentException();
@@ -62,7 +66,7 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 	@NonNull
 	public List<Language> getLanguages() {
 		final SQLiteDatabase db = getReadableDatabase();
-		final Cursor cursor = db.rawQuery("SELECT code, name FROM language", null);
+		final Cursor cursor = db.rawQuery("SELECT code, name, url FROM language", null);
 		if (cursor == null) {
 			return Collections.emptyList();
 		}
@@ -70,7 +74,8 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		while (cursor.moveToNext()) {
 			final String code = cursor.getString(0);
 			final String name = cursor.getString(1);
-			languages.add(new Language(name, code));
+			final String url = cursor.getString(2);
+			languages.add(new Language(name, code, url == null ? "/holiday/" + code : url));
 		}
 		cursor.close();
 		return languages;
@@ -81,7 +86,8 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		final ContentValues values = new ContentValues();
 		values.put("code", language.getCode());
 		values.put("name", language.getName());
-		db.insert("language", null, values);
+		values.put("url", language.getUrl());
+		db.insertWithOnConflict("language", null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		db.close();
 	}
 
