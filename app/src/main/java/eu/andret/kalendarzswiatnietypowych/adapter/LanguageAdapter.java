@@ -107,7 +107,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 		@Override
 		public List<HolidayDay> get() {
 			final HttpsURLConnection con = (HttpsURLConnection)
-					new URL("https://api.unusualcalendar.net/holiday/" + language.getCode())
+					new URL("https://api.unusualcalendar.net" + language.getUrl())
 							.openConnection();
 			final JSONArray jsonArray = new JSONArray(Util.readAllFromInputStream(con.getInputStream()));
 			final List<HolidayDay> data = new ArrayList<>();

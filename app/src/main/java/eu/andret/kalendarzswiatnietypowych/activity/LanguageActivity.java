@@ -119,8 +119,9 @@ public class LanguageActivity extends AppCompatActivity {
 			for (int i = 0; i < jsonArray.length(); i++) {
 				final JSONObject languageObject = jsonArray.getJSONObject(i);
 				languages.add(new Language(
-						languageObject.getString("language"),
-						languageObject.getString("uniLanguage")));
+						languageObject.getString("name"),
+						languageObject.getString("code"),
+						languageObject.getString("url")));
 			}
 			return languages;
 		}

@@ -6,8 +6,8 @@ android {
         applicationId "eu.andret.kalendarzswiatnietypowych"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 53
-        versionName "2.2.3-rc.2"
+        versionCode 54
+        versionName "2.2.4-rc.1"
         multiDexEnabled true
     }
     buildTypes {
@@ -35,21 +35,21 @@ dependencies {
     //noinspection AnnotationProcessorOnCompilePath
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
 
-    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '20.4.0'
-    implementation group: 'com.google.android.material', name: 'material', version: '1.5.0-alpha05'
+    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '20.5.0'
+    implementation group: 'com.google.android.material', name: 'material', version: '1.6.0-alpha01'
 
     implementation group: 'com.android.support', name: 'multidex', version: '2.0.1'
 
     implementation group: 'net.sourceforge.streamsupport', name: 'android-retrofuture', version: '1.7.4'
 
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.3.1'
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.4.0'
     implementation group: 'androidx.preference', name: 'preference', version: '1.1.1'
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: '1.0.0'
     implementation group: 'androidx.navigation', name: 'navigation-fragment', version: '2.3.5'
     implementation group: 'androidx.navigation', name: 'navigation-ui', version: '2.3.5'
 
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
-    annotationProcessor group: 'org.jetbrains', name: 'annotations', version: '21.0.1'
+    annotationProcessor group: 'org.jetbrains', name: 'annotations', version: '23.0.0'
     coreLibraryDesugaring group: 'com.android.tools', name: 'desugar_jdk_libs', version: '1.1.5'
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
