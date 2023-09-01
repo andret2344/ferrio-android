@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import java.time.LocalDate;
@@ -83,7 +84,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		if (holidayDay.getMonth() != month) {
-			convertView.setBackgroundColor(getContext().getColor(color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
+			convertView.setBackgroundColor(ContextCompat.getColor(getContext(), color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
 		} else if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
 			convertView.setBackgroundColor(Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed()));
 		}

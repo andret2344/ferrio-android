@@ -96,8 +96,8 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 		final SQLiteDatabase dbWritable = getWritableDatabase();
 		final SQLiteDatabase dbReadable = getReadableDatabase();
 		dbWritable.beginTransaction();
-		list.stream().forEach(holidayDay ->
-				holidayDay.getHolidaysList(true).stream().forEach(holiday -> {
+		list.forEach(holidayDay ->
+				holidayDay.getHolidaysList(true).forEach(holiday -> {
 					updateMetadata(dbWritable, dbReadable, holiday.getMetadataId(), holidayDay.getDay(), holidayDay.getMonth(), holiday.isUsual());
 					final String[] whereArgs = {language.getCode(), String.valueOf(holiday.getMetadataId())};
 					final Cursor cursor = dbReadable.rawQuery("SELECT text FROM holiday WHERE language = ? AND metadata = ?", whereArgs);

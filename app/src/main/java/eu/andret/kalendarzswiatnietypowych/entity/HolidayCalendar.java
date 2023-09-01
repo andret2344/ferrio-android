@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HolidayCalendar implements Parcelable {
-	public static final Parcelable.Creator<HolidayCalendar> CREATOR = new Parcelable.Creator<HolidayCalendar>() {
+	public static final Parcelable.Creator<HolidayCalendar> CREATOR = new Parcelable.Creator<>() {
 		@Override
 		public HolidayCalendar createFromParcel(final Parcel in) {
 			final List<HolidayDay> holidaysDaysRead = Arrays.stream(in.readParcelableArray(HolidayDay.class.getClassLoader()))

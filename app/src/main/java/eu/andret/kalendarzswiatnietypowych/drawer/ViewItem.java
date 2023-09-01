@@ -6,6 +6,8 @@ package eu.andret.kalendarzswiatnietypowych.drawer;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 public abstract class ViewItem {
@@ -36,6 +38,7 @@ public abstract class ViewItem {
 		return Objects.hash(listener);
 	}
 
+	@NonNull
 	@Override
 	public String toString() {
 		return "ViewItem{" +

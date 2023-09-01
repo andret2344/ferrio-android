@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 		preLoaderLayout = new LinearLayout(this);
 		preLoaderLayout.setOrientation(LinearLayout.VERTICAL);
 		preLoaderLayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		preLoaderLayout.setBackgroundColor(getColor(R.color.color_black_accent));
+		preLoaderLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.color_black_accent));
 		v.addView(preLoaderLayout);
 
 		final ImageView image = new ImageView(this);

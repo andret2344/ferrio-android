@@ -7,6 +7,8 @@ package eu.andret.kalendarzswiatnietypowych.drawer;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 public class NavigationDrawerImage extends ViewItem {
@@ -45,6 +47,7 @@ public class NavigationDrawerImage extends ViewItem {
 		return Objects.hash(super.hashCode(), image);
 	}
 
+	@NonNull
 	@Override
 	public String toString() {
 		return "NavigationDrawerImage{" +

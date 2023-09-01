@@ -7,6 +7,7 @@ package eu.andret.kalendarzswiatnietypowych.util;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
 
@@ -14,8 +15,8 @@ import eu.andret.kalendarzswiatnietypowych.R;
 
 public final class Data {
 	public static ColorSet getColors(final Context context) {
-		final int colorBlack = context.getColor(R.color.color_black_accent);
-		final int colorWhite = context.getColor(R.color.color_white_accent);
+		final int colorBlack = ContextCompat.getColor(context, R.color.color_black_accent);
+		final int colorWhite = ContextCompat.getColor(context, R.color.color_white_accent);
 		if (Util.isDarkTheme(context)) {
 			return new ColorSet(true, colorBlack, colorWhite);
 		}

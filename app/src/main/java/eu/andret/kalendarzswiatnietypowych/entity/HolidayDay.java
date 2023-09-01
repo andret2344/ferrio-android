@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
-	public static final Parcelable.Creator<HolidayDay> CREATOR = new Parcelable.Creator<HolidayDay>() {
+	public static final Parcelable.Creator<HolidayDay> CREATOR = new Parcelable.Creator<>() {
 		@NonNull
 		@Override
 		public HolidayDay createFromParcel(final Parcel in) {
