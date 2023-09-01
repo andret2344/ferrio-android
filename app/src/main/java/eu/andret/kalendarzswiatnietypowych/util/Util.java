@@ -19,23 +19,34 @@ import androidx.annotation.NonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import lombok.Value;
-import lombok.experimental.UtilityClass;
 
-@UtilityClass
-public class Util {
+public final class Util {
 	private static final Random RANDOM = new Random();
 
-	@Value
 	public static class MonthDayPair {
-		Month month;
-		int day;
+		private final Month month;
+		private final int day;
+
+		public MonthDayPair(final Month month, final int day) {
+			this.month = month;
+			this.day = day;
+		}
+
+		public Month getMonth() {
+			return month;
+		}
+
+		public int getDay() {
+			return day;
+		}
+	}
+
+	private Util() {
 	}
 
 	public static boolean isConnection(final Context context) {
@@ -123,6 +134,6 @@ public class Util {
 		for (int length; (length = inputStream.read(buffer)) != -1; ) {
 			result.write(buffer, 0, length);
 		}
-		return result.toString(StandardCharsets.UTF_8.name());
+		return result.toString();
 	}
 }

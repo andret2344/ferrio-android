@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -74,6 +75,21 @@ public class DayActivity extends AppCompatActivity {
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.day_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
+
+		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+			@Override
+			public void handleOnBackPressed() {
+				int id = pager.getCurrentItem();
+				if (id > 58) {
+					id -= LocalDate.now().isLeapYear() ? 0 : 1;
+				}
+				final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), Math.max(id, 1));
+				final Intent returnIntent = new Intent();
+				returnIntent.putExtra(MainActivity.MONTH, date.getMonthValue());
+				setResult(RESULT_OK, returnIntent);
+				finish();
+			}
+		});
 	}
 
 	@Override
@@ -85,7 +101,7 @@ public class DayActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			onBackPressed();
+			getOnBackPressedDispatcher().onBackPressed();
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_day_today) {
@@ -124,19 +140,6 @@ public class DayActivity extends AppCompatActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onBackPressed() {
-		int id = pager.getCurrentItem();
-		if (id > 58) {
-			id -= LocalDate.now().isLeapYear() ? 0 : 1;
-		}
-		final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), Math.max(id, 1));
-		final Intent returnIntent = new Intent();
-		returnIntent.putExtra(MainActivity.MONTH, date.getMonthValue());
-		setResult(RESULT_OK, returnIntent);
-		super.onBackPressed();
 	}
 
 	public String getAddition(final int day) {

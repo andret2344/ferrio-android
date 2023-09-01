@@ -13,9 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.Value;
-
-@Value
 public class HolidayCalendar implements Parcelable {
 	public static final Parcelable.Creator<HolidayCalendar> CREATOR = new Parcelable.Creator<HolidayCalendar>() {
 		@Override
@@ -34,7 +31,11 @@ public class HolidayCalendar implements Parcelable {
 		}
 	};
 
-	List<HolidayDay> holidayDays = new ArrayList<>();
+	private final List<HolidayDay> holidayDays = new ArrayList<>();
+
+	public List<HolidayDay> getHolidayDays() {
+		return holidayDays;
+	}
 
 	@NonNull
 	public final HolidayDay getTodayHolidays() {

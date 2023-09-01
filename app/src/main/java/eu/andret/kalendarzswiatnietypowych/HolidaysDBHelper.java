@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
@@ -75,7 +76,7 @@ public class HolidaysDBHelper extends SQLiteOpenHelper {
 			final String code = cursor.getString(0);
 			final String name = cursor.getString(1);
 			final String url = cursor.getString(2);
-			languages.add(new Language(name, code, url == null ? "/holiday/" + code : url));
+			languages.add(new Language(name, code, Optional.ofNullable(url).orElseGet(() -> "/holiday/" + code)));
 		}
 		cursor.close();
 		return languages;

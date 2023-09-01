@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
@@ -14,10 +15,13 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,7 +38,6 @@ import eu.andret.kalendarzswiatnietypowych.entity.Language;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 import java9.util.function.Supplier;
-import lombok.SneakyThrows;
 
 public class LanguageActivity extends AppCompatActivity {
 	private Dialog progressDialog;
@@ -43,6 +46,13 @@ public class LanguageActivity extends AppCompatActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_language);
+
+		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+			@Override
+			public void handleOnBackPressed() {
+				NavUtils.navigateUpFromSameTask(LanguageActivity.this);
+			}
+		});
 
 		progressDialog = new Dialog(this);
 
@@ -86,15 +96,10 @@ public class LanguageActivity extends AppCompatActivity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			onBackPressed();
+			getOnBackPressedDispatcher().onBackPressed();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onBackPressed() {
-		NavUtils.navigateUpFromSameTask(this);
 	}
 
 	@Override
@@ -110,20 +115,24 @@ public class LanguageActivity extends AppCompatActivity {
 	}
 
 	private static class Downloader implements Supplier<List<Language>> {
-		@SneakyThrows
 		@Override
 		public List<Language> get() {
-			final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/language/").openConnection();
-			final JSONArray jsonArray = new JSONArray(Util.readAllFromInputStream(con.getInputStream()));
-			final List<Language> languages = new ArrayList<>();
-			for (int i = 0; i < jsonArray.length(); i++) {
-				final JSONObject languageObject = jsonArray.getJSONObject(i);
-				languages.add(new Language(
-						languageObject.getString("name"),
-						languageObject.getString("code"),
-						languageObject.getString("url")));
+			try {
+				final HttpsURLConnection con = (HttpsURLConnection) new URL("https://api.unusualcalendar.net/language/").openConnection();
+				final JSONArray jsonArray = new JSONArray(Util.readAllFromInputStream(con.getInputStream()));
+				final List<Language> languages = new ArrayList<>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					final JSONObject languageObject = jsonArray.getJSONObject(i);
+					languages.add(new Language(
+							languageObject.getString("name"),
+							languageObject.getString("code"),
+							languageObject.getString("url")));
+				}
+				return languages;
+			} catch (final JSONException | IOException ex) {
+				ex.printStackTrace();
 			}
-			return languages;
+			return Collections.emptyList();
 		}
 	}
 }

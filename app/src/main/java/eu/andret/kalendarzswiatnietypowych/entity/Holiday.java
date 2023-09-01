@@ -6,11 +6,10 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lombok.Value;
+import java.util.Objects;
 
-@Value
 public class Holiday implements Comparable<Holiday>, Parcelable {
-	public static final Parcelable.Creator<Holiday> CREATOR = new Parcelable.Creator<Holiday>() {
+	public static final Parcelable.Creator<Holiday> CREATOR = new Parcelable.Creator<>() {
 		@NonNull
 		@Override
 		public Holiday createFromParcel(final Parcel in) {
@@ -28,12 +27,65 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		}
 	};
 
-	int metadataId;
+	private final int metadataId;
 	@NonNull
-	String text;
-	boolean usual;
+	private final String text;
+	private final boolean usual;
 	@Nullable
-	String url;
+	private final String url;
+
+	public Holiday(final int metadataId, @NonNull final String text, final boolean usual, @Nullable final String url) {
+		this.metadataId = metadataId;
+		this.text = text;
+		this.usual = usual;
+		this.url = url;
+	}
+
+	public int getMetadataId() {
+		return metadataId;
+	}
+
+	@NonNull
+	public String getText() {
+		return text;
+	}
+
+	public boolean isUsual() {
+		return usual;
+	}
+
+	@Nullable
+	public String getUrl() {
+		return url;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final Holiday holiday = (Holiday) o;
+		return metadataId == holiday.metadataId && usual == holiday.usual && text.equals(holiday.text) && Objects.equals(url, holiday.url);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(metadataId, text, usual, url);
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return "Holiday{" +
+				"metadataId=" + metadataId +
+				", text='" + text + '\'' +
+				", usual=" + usual +
+				", url='" + url + '\'' +
+				'}';
+	}
 
 	@Override
 	public int compareTo(@NonNull final Holiday o) {

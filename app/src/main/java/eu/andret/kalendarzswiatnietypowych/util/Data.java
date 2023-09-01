@@ -6,13 +6,14 @@ package eu.andret.kalendarzswiatnietypowych.util;
 
 import android.content.Context;
 
-import eu.andret.kalendarzswiatnietypowych.R;
-import lombok.Value;
-import lombok.experimental.UtilityClass;
+import androidx.annotation.NonNull;
 
-@UtilityClass
+import java.util.Objects;
+
+import eu.andret.kalendarzswiatnietypowych.R;
+
 public final class Data {
-	public ColorSet getColors(final Context context) {
+	public static ColorSet getColors(final Context context) {
 		final int colorBlack = context.getColor(R.color.color_black_accent);
 		final int colorWhite = context.getColor(R.color.color_white_accent);
 		if (Util.isDarkTheme(context)) {
@@ -21,10 +22,57 @@ public final class Data {
 		return new ColorSet(false, colorWhite, colorBlack);
 	}
 
-	@Value
+	private Data() {
+	}
+
 	public static class ColorSet {
-		boolean darkTheme;
-		int backgroundColor;
-		int foregroundColor;
+		private final boolean darkTheme;
+		private final int backgroundColor;
+		private final int foregroundColor;
+
+		public ColorSet(final boolean darkTheme, final int backgroundColor, final int foregroundColor) {
+			this.darkTheme = darkTheme;
+			this.backgroundColor = backgroundColor;
+			this.foregroundColor = foregroundColor;
+		}
+
+		public boolean isDarkTheme() {
+			return darkTheme;
+		}
+
+		public int getBackgroundColor() {
+			return backgroundColor;
+		}
+
+		public int getForegroundColor() {
+			return foregroundColor;
+		}
+
+		@Override
+		public boolean equals(final Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			final ColorSet colorSet = (ColorSet) o;
+			return darkTheme == colorSet.darkTheme && backgroundColor == colorSet.backgroundColor && foregroundColor == colorSet.foregroundColor;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(darkTheme, backgroundColor, foregroundColor);
+		}
+
+		@NonNull
+		@Override
+		public String toString() {
+			return "ColorSet{" +
+					"darkTheme=" + darkTheme +
+					", backgroundColor=" + backgroundColor +
+					", foregroundColor=" + foregroundColor +
+					'}';
+		}
 	}
 }

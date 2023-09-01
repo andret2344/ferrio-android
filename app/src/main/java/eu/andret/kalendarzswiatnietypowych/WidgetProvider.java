@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
@@ -43,7 +44,7 @@ public class WidgetProvider extends AppWidgetProvider {
 	@NonNull
 	@SuppressLint("UnspecifiedImmutableFlag")
 	private PendingIntent getPendingIntent(@NonNull final Context context, @NonNull final Intent intent) {
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
 			return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		}
 		return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
