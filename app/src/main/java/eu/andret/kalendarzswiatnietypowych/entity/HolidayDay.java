@@ -9,15 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Value;
-
-@Value
-@AllArgsConstructor
 public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 	public static final Parcelable.Creator<HolidayDay> CREATOR = new Parcelable.Creator<HolidayDay>() {
 		@NonNull
@@ -38,11 +32,16 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 		}
 	};
 
-	int month;
-	int day;
+	private final int month;
+	private final int day;
 	@NonNull
-	@Getter(AccessLevel.NONE)
-	List<Holiday> holidays;
+	private final List<Holiday> holidays;
+
+	public HolidayDay(final int month, final int day, @NonNull final List<Holiday> holidays) {
+		this.month = month;
+		this.day = day;
+		this.holidays = holidays;
+	}
 
 	public HolidayDay(final int month, final int day) {
 		this(month, day, new ArrayList<>());
@@ -50,6 +49,14 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 
 	public final long getSeed() {
 		return Long.parseLong(String.format(Locale.ROOT, "%d%d", day, month));
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public int getDay() {
+		return day;
 	}
 
 	@NonNull
@@ -67,6 +74,33 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 		return holidays.stream()
 				.filter(holiday -> !holiday.isUsual() || includeUsual)
 				.count();
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final HolidayDay that = (HolidayDay) o;
+		return month == that.month && day == that.day && holidays.equals(that.holidays);
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return "HolidayDay{" +
+				"month=" + month +
+				", day=" + day +
+				", holidays=" + holidays +
+				'}';
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(month, day, holidays);
 	}
 
 	@Override

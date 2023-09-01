@@ -14,10 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,8 +36,6 @@ import eu.andret.kalendarzswiatnietypowych.entity.Language;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 import java9.util.function.Supplier;
-import lombok.SneakyThrows;
-import lombok.Value;
 
 public class LanguageAdapter extends ArrayAdapter<Language> {
 	private static class ViewHolder {
@@ -78,57 +79,65 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 			preferences.edit()
 					.putString(MainActivity.SELECTED_LANGUAGE, language.getCode())
 					.apply();
-			final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(getContext());
-			if (holidaysDBHelper.languageExists(language.getCode())) {
-				return;
+			try (final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(getContext())) {
+				if (holidaysDBHelper.languageExists(language.getCode())) {
+					return;
+				}
+				if (!Util.isConnection(getContext())) {
+					return;
+				}
+				progressDialog.show();
+				CompletableFuture.supplyAsync(new Downloader(language), executorService)
+						.thenAccept(holidayDays -> {
+							holidaysDBHelper.insertLanguage(language);
+							holidaysDBHelper.update(holidayDays, language);
+							holidaysDBHelper.close();
+							progressDialog.dismiss();
+						});
 			}
-			if (!Util.isConnection(getContext())) {
-				return;
-			}
-			progressDialog.show();
-			CompletableFuture.supplyAsync(new Downloader(language), executorService)
-					.thenAccept(holidayDays -> {
-						holidaysDBHelper.insertLanguage(language);
-						holidaysDBHelper.update(holidayDays, language);
-						holidaysDBHelper.close();
-						progressDialog.dismiss();
-					});
 		});
 		return convertView;
 	}
 
-	@Value
 	public static class Downloader implements Supplier<List<HolidayDay>> {
 		@NonNull
-		Language language;
+		private final Language language;
 
-		@SneakyThrows
+		public Downloader(@NonNull final Language language) {
+			this.language = language;
+		}
+
 		@NonNull
 		@Override
 		public List<HolidayDay> get() {
-			final HttpsURLConnection con = (HttpsURLConnection)
-					new URL("https://api.unusualcalendar.net" + language.getUrl())
-							.openConnection();
-			final JSONArray jsonArray = new JSONArray(Util.readAllFromInputStream(con.getInputStream()));
-			final List<HolidayDay> data = new ArrayList<>();
-			final int jsonLength = jsonArray.length();
-			for (int j = 0; j < jsonLength; j++) {
-				final JSONObject object = jsonArray.getJSONObject(j);
-				final int day = object.getInt("day");
-				final int month = object.getInt("month");
-				final List<Holiday> holidays = new ArrayList<>();
-				final JSONArray objectData = object.getJSONArray("holidays");
-				for (int k = 0; k < objectData.length(); k++) {
-					final JSONObject currObj = objectData.getJSONObject(k);
-					holidays.add(new Holiday(
-							currObj.getInt("id"),
-							currObj.getString("name"),
-							currObj.getBoolean("usual"),
-							currObj.getString("link")));
+			try {
+				final HttpsURLConnection con = (HttpsURLConnection)
+						new URL("https://api.unusualcalendar.net" + language.getUrl())
+								.openConnection();
+				final JSONArray jsonArray = new JSONArray(Util.readAllFromInputStream(con.getInputStream()));
+				final List<HolidayDay> data = new ArrayList<>();
+				final int jsonLength = jsonArray.length();
+				for (int j = 0; j < jsonLength; j++) {
+					final JSONObject object = jsonArray.getJSONObject(j);
+					final int day = object.getInt("day");
+					final int month = object.getInt("month");
+					final List<Holiday> holidays = new ArrayList<>();
+					final JSONArray objectData = object.getJSONArray("holidays");
+					for (int k = 0; k < objectData.length(); k++) {
+						final JSONObject currObj = objectData.getJSONObject(k);
+						holidays.add(new Holiday(
+								currObj.getInt("id"),
+								currObj.getString("name"),
+								currObj.getBoolean("usual"),
+								currObj.getString("link")));
+					}
+					data.add(new HolidayDay(month, day, holidays));
 				}
-				data.add(new HolidayDay(month, day, holidays));
+				return data;
+			} catch (final JSONException | IOException ex) {
+				ex.printStackTrace();
 			}
-			return data;
+			return Collections.emptyList();
 		}
 	}
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
@@ -21,22 +22,6 @@ import java.util.stream.IntStream;
 import eu.andret.kalendarzswiatnietypowych.R;
 
 public class SettingsActivity extends AppCompatActivity {
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onBackPressed() {
-		final Intent returnIntent = new Intent();
-		setResult(Activity.RESULT_OK, returnIntent);
-		NavUtils.navigateUpFromSameTask(this);
-	}
-
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,6 +53,23 @@ public class SettingsActivity extends AppCompatActivity {
 						recreate();
 					}
 				});
+		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+			@Override
+			public void handleOnBackPressed() {
+				final Intent returnIntent = new Intent();
+				setResult(Activity.RESULT_OK, returnIntent);
+				NavUtils.navigateUpFromSameTask(SettingsActivity.this);
+			}
+		});
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			getOnBackPressedDispatcher().onBackPressed();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public static class PrefsFragment extends PreferenceFragmentCompat {
