@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -101,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		final String stringFrom = getIntent().getStringExtra(FROM);
-		if (stringFrom != null && stringFrom.equals(MainActivity.WIDGET)) {
-			final Intent intent = new Intent(MainActivity.this, DayActivity.class);
-			intent.putExtra(FROM, MainActivity.CALENDAR);
+		if (stringFrom != null && stringFrom.equals(WIDGET)) {
+			final Intent intent = new Intent(this, DayActivity.class);
+			intent.putExtra(FROM, CALENDAR);
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
 			startActivityForResult(intent, getResources().getInteger(R.integer.request_code_change_month));
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 		setUpNavigationDrawer();
 		viewPager2 = findViewById(R.id.main_pager_months);
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
+		final String selectedLanguageCode = preferences.getString(SELECTED_LANGUAGE, "en");
 		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
 		if (holidaysDBHelper.getLanguages().isEmpty()) {
 			startActivity(new Intent(this, LanguageActivity.class));
@@ -173,16 +174,17 @@ public class MainActivity extends AppCompatActivity {
 
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
-			navigationDrawer.closeDrawer(GravityCompat.START);
-		} else {
-			wakeLock.release();
-			super.onBackPressed();
-		}
+		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+			@Override
+			public void handleOnBackPressed() {
+				if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
+					navigationDrawer.closeDrawer(GravityCompat.START);
+				} else {
+					wakeLock.release();
+					getOnBackPressedDispatcher().onBackPressed();
+				}
+			}
+		});
 	}
 
 	public void setUpNavigationDrawer() {

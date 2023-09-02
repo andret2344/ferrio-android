@@ -16,6 +16,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -41,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
 		PreferenceManager.getDefaultSharedPreferences(this)
 				.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
 					final String themeSettingsKey = getString(R.string.settings_key_theme_app);
-					if (key.equals(themeSettingsKey)) {
+					if (Objects.equals(key, themeSettingsKey)) {
 						final String themeDarkKey = getString(R.string.settings_key_theme_dark);
 						final String themeLightKey = getString(R.string.settings_key_theme_light);
 						final String themeStoredKey = sharedPreferences.getString(themeSettingsKey, themeDarkKey);
