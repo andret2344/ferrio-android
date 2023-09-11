@@ -129,7 +129,7 @@ public class LanguageAdapter extends ArrayAdapter<Language> {
 								currObj.getInt("id"),
 								currObj.getString("name"),
 								currObj.getBoolean("usual"),
-								currObj.getString("link")));
+								currObj.getString("url")));
 					}
 					data.add(new HolidayDay(month, day, holidays));
 				}

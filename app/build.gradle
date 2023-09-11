@@ -6,8 +6,8 @@ android {
         applicationId "eu.andret.kalendarzswiatnietypowych"
         minSdk 19
         targetSdk 34
-        versionCode 58
-        versionName "2.2.4-rc.3"
+        versionCode 59
+        versionName "2.2.4-rc.4"
         multiDexEnabled true
     }
     buildTypes {
@@ -43,8 +43,8 @@ dependencies {
     implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.6.1'
     implementation group: 'androidx.preference', name: 'preference', version: '1.2.1'
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: '1.0.0'
-    implementation group: 'androidx.navigation', name: 'navigation-fragment', version: '2.7.1'
-    implementation group: 'androidx.navigation', name: 'navigation-ui', version: '2.7.1'
+    implementation group: 'androidx.navigation', name: 'navigation-fragment', version: '2.7.2'
+    implementation group: 'androidx.navigation', name: 'navigation-ui', version: '2.7.2'
 
     annotationProcessor group: 'org.jetbrains', name: 'annotations', version: '24.0.1'
     coreLibraryDesugaring group: 'com.android.tools', name: 'desugar_jdk_libs', version: '2.0.3'
