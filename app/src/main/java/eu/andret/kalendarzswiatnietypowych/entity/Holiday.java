@@ -4,59 +4,49 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class Holiday implements Comparable<Holiday>, Parcelable {
-	public static final Parcelable.Creator<Holiday> CREATOR = new Parcelable.Creator<>() {
-		@NonNull
-		@Override
-		public Holiday createFromParcel(final Parcel in) {
-			final int metadataIdRead = in.readInt();
-			final String textRead = in.readString();
-			final boolean usualRead = Boolean.parseBoolean(in.readString());
-			final String urlRead = in.readString();
-			return new Holiday(metadataIdRead, textRead, usualRead, urlRead);
-		}
-
-		@NonNull
-		@Override
-		public Holiday[] newArray(final int size) {
-			return new Holiday[size];
-		}
-	};
-
-	private final int metadataId;
-	@NonNull
-	private final String text;
+	private final int id;
+	private final String name;
+	private final String description;
 	private final boolean usual;
-	@Nullable
 	private final String url;
 
-	public Holiday(final int metadataId, @NonNull final String text, final boolean usual, @Nullable final String url) {
-		this.metadataId = metadataId;
-		this.text = text;
+	public Holiday(final int id, final String name, final String description, final boolean usual, final String url) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
 		this.usual = usual;
 		this.url = url;
 	}
 
-	public int getMetadataId() {
-		return metadataId;
+	public Holiday(final FloatingHoliday floatingHoliday) {
+		this(floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(), floatingHoliday.isUsual(), floatingHoliday.getUrl());
+	}
+
+	protected Holiday(final Parcel in) {
+		id = in.readInt();
+		name = in.readString();
+		description = in.readString();
+		usual = in.readByte() != 0;
+		url = in.readString();
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	@NonNull
-	public String getText() {
-		return text;
+	public String getName() {
+		return name;
 	}
 
 	public boolean isUsual() {
 		return usual;
-	}
-
-	@Nullable
-	public String getUrl() {
-		return url;
 	}
 
 	@Override
@@ -68,20 +58,25 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 			return false;
 		}
 		final Holiday holiday = (Holiday) o;
-		return metadataId == holiday.metadataId && usual == holiday.usual && text.equals(holiday.text) && Objects.equals(url, holiday.url);
+		return id == holiday.id
+				&& usual == holiday.usual
+				&& Objects.equals(name, holiday.name)
+				&& Objects.equals(description, holiday.description)
+				&& Objects.equals(url, holiday.url);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(metadataId, text, usual, url);
+		return Objects.hash(id, name, description, usual, url);
 	}
 
-	@NonNull
+	@NotNull
 	@Override
 	public String toString() {
 		return "Holiday{" +
-				"metadataId=" + metadataId +
-				", text='" + text + '\'' +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
 				", usual=" + usual +
 				", url='" + url + '\'' +
 				'}';
@@ -92,7 +87,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		if (usual != o.usual) {
 			return usual ? -1 : 1;
 		}
-		return text.compareTo(o.text);
+		return name.compareTo(o.name);
 	}
 
 	@Override
@@ -101,10 +96,23 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 	}
 
 	@Override
-	public void writeToParcel(final Parcel parcel, final int i) {
-		parcel.writeInt(metadataId);
-		parcel.writeString(text);
-		parcel.writeString(String.valueOf(usual));
+	public void writeToParcel(@NonNull final Parcel parcel, final int i) {
+		parcel.writeInt(id);
+		parcel.writeString(name);
+		parcel.writeString(description);
+		parcel.writeByte((byte) (usual ? 1 : 0));
 		parcel.writeString(url);
 	}
+
+	public static final Creator<Holiday> CREATOR = new Creator<Holiday>() {
+		@Override
+		public Holiday createFromParcel(final Parcel in) {
+			return new Holiday(in);
+		}
+
+		@Override
+		public Holiday[] newArray(final int size) {
+			return new Holiday[size];
+		}
+	};
 }

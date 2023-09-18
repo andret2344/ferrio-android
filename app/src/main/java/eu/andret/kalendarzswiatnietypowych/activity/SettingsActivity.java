@@ -7,20 +7,12 @@ import android.view.MenuItem;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
-import androidx.fragment.app.Fragment;
-import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.IntStream;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class SettingsActivity extends AppCompatActivity {
 	@Override
@@ -29,31 +21,11 @@ public class SettingsActivity extends AppCompatActivity {
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		final int[] prefs = {R.string.settings_key_theme_app, R.string.settings_key_theme_colorized, R.string.settings_key_usual_holidays, R.string.settings_key_display_shortcuts};
-		final PrefsFragment prefsFragment = new PrefsFragment();
-		final Bundle bundle = new Bundle();
-		bundle.putIntArray("data", prefs);
-		prefsFragment.setArguments(bundle);
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(android.R.id.content, prefsFragment)
+				.replace(android.R.id.content, new PrefsFragment())
 				.commit();
 
-		PreferenceManager.getDefaultSharedPreferences(this)
-				.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
-					final String themeSettingsKey = getString(R.string.settings_key_theme_app);
-					if (Objects.equals(key, themeSettingsKey)) {
-						final String themeDarkKey = getString(R.string.settings_key_theme_dark);
-						final String themeLightKey = getString(R.string.settings_key_theme_light);
-						final String themeStoredKey = sharedPreferences.getString(themeSettingsKey, themeDarkKey);
-						if (themeStoredKey.equals(themeDarkKey)) {
-							AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-						} else if (themeStoredKey.equals(themeLightKey)) {
-							AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-						}
-						recreate();
-					}
-				});
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
 			@Override
 			public void handleOnBackPressed() {
@@ -77,22 +49,11 @@ public class SettingsActivity extends AppCompatActivity {
 		@Override
 		public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
 			setPreferencesFromResource(R.xml.preferences, rootKey);
-			Optional.of(this)
-					.map(Fragment::getArguments)
-					.map(bundle -> bundle.getIntArray("data"))
-					.map(Arrays::stream)
-					.orElse(IntStream.empty())
-					.forEach(s -> {
-						final String current = getString(s);
-						final Preference pref = findPreference(current);
-						if (pref == null) {
-							return;
-						}
-						if (pref instanceof ListPreference) {
-							final ListPreference preference = (ListPreference) pref;
-							preference.setSummaryProvider((Preference.SummaryProvider<ListPreference>) ListPreference::getEntry);
-						}
-					});
+			final Preference aboutHolidaysPreference = findPreference(getContext().getString(R.string.settings_key_about_holidays));
+			aboutHolidaysPreference.setOnPreferenceClickListener(preference -> {
+				Util.createAlertWithImage(getContext(), R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
+				return false;
+			});
 		}
 	}
 }

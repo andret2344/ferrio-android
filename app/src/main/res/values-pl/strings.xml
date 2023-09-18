@@ -1,69 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Kalendarz świąt nietypowych</string>
-    <string name="unusual_holiday">Nietypowe święto</string>
-    <string name="share_message">%1$s:\n%2$s\n\nSprawdź!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
-    <string name="share_via">Udostępnij przez</string>
-    <string name="today_is">Dzisiaj jest:</string>
-    <string name="share">Udostępnij</string>
-    <string name="yes">Tak</string>
-    <string name="no">Nie</string>
-    <string name="ok">OK</string>
-    <string name="caution">Uwaga!</string>
-    <string name="settings">Ustawienia</string>
-    <string name="search">Szukaj</string>
-    <string name="see_more">%d więcej</string>
-    <string name="holidays">Święta: %d</string>
-
-    <string-array name="months">
-        <item>Styczeń</item>
-        <item>Luty</item>
-        <item>Marzec</item>
-        <item>Kwiecień</item>
-        <item>Maj</item>
-        <item>Czerwiec</item>
-        <item>Lipiec</item>
-        <item>Sierpień</item>
-        <item>Wrzesień</item>
-        <item>Październik</item>
-        <item>Listopad</item>
-        <item>Grudzień</item>
-    </string-array>
-    <string-array name="months_genitive">
-        <item>Stycznia</item>
-        <item>Lutego</item>
-        <item>Marca</item>
-        <item>Kwietnia</item>
-        <item>Maja</item>
-        <item>Czerwca</item>
-        <item>Lipca</item>
-        <item>Sierpnia</item>
-        <item>Września</item>
-        <item>Października</item>
-        <item>Listopada</item>
-        <item>Grudnia</item>
-    </string-array>
-
-    <string name="drawer_open">Otwórz menu boczne</string>
-    <string name="drawer_close">Zamknij menu boczne</string>
-    <string name="menu_item_today">Dzisiaj</string>
-    <string name="menu_item_random">Losowe</string>
-    <string name="menu_item_share">Udostępnij</string>
-    <string name="no_internet_connection">Brak połączenia z internetem.</string>
-    <string name="no_unusual_holidays">Brak nietypowych świąt.</string>
-    <string name="about_calendar">O kalendarzu</string>
-    <string name="about_calendar_text">Kalendarz Świąt Nietypowych to kalendarz stworzony przez imperialistów z Ententy podczas I wojny światowej. Powstał on na użytek Cesarstwa Niemieckiego, aby ludzie świętowali tak długo i często, żeby nie mieli czasu walczyć na froncie o ojczyznę. Gromadzi on święta, które nie zostały dopuszczone przez zwykłe święta do ich kalendarzy.</string>
-    <string name="no_internet">Urządzenie nie jest połączone z internetem.</string>
-    <string name="about_holidays">O świętach</string>
-    <string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
-    <string name="languages">Języki</string>
-    <string name="title_activity_language">Wybierz język</string>
-    <string name="downloading_data">Pobieranie danych&#8230;</string>
-    <string name="send">Wyślij</string>
-    <string name="oops">Ups!</string>
-    <string name="content_description_ad">Reklama</string>
-    <string name="content_description_image_sad_face">Smutna twarz</string>
-    <string name="content_description_image_drawer_item">Ikona elementu menu</string>
+	<string name="app_name">Kalendarz świąt nietypowych</string>
+	<string name="unusual_holiday">Nietypowe święto</string>
+	<string name="share_message">%1$s:\n%2$s\n\nSprawdź!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
+	<string name="share_via">Udostępnij przez</string>
+	<string name="today_is">Dzisiaj jest:</string>
+	<string name="share">Udostępnij</string>
+	<string name="yes">Tak</string>
+	<string name="no">Nie</string>
+	<string name="ok">OK</string>
+	<string name="caution">Uwaga!</string>
+	<string name="settings">Ustawienia</string>
+	<string name="search">Szukaj</string>
+	<string name="see_more">%d więcej</string>
+	<string name="holidays">Święta: %d</string>
+	<string name="menu_item_today">Dzisiaj</string>
+	<string name="menu_item_random">Losowe</string>
+	<string name="menu_item_share">Udostępnij</string>
+	<string name="no_internet_connection">Brak połączenia z internetem.</string>
+	<string name="no_unusual_holidays">Brak nietypowych świąt.</string>
+	<string name="no_internet">Urządzenie nie jest połączone z internetem.</string>
+	<string name="about_holidays">O świętach</string>
+	<string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
+	<string name="send">Wyślij</string>
+	<string name="oops">Ups!</string>
+	<string name="content_description_ad">Reklama</string>
+	<string name="content_description_image_sad_face">Smutna twarz</string>
 
 </resources>

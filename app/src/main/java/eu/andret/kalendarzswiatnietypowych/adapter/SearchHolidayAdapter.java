@@ -82,7 +82,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 					ViewGroup.LayoutParams.WRAP_CONTENT);
 			layoutParams.setMargins(0, 2, 0, 2);
 			textView.setLayoutParams(layoutParams);
-			textView.setText(getContext().getString(R.string.pointed_text, holiday.getText()));
+			textView.setText(getContext().getString(R.string.pointed_text, holiday.getName()));
 			textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
 			holder.holidays.addView(textView);
 			textView.setTextColor(color.getForegroundColor());

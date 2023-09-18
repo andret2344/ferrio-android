@@ -18,24 +18,27 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import eu.andret.kalendarzswiatnietypowych.HolidaysDBHelper;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayActivity extends AppCompatActivity {
 	private static final Random RANDOM = new Random();
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
+			.withLocale(Locale.getDefault());
 
 	private ViewPager2 pager;
-	private HolidayCalendar calendar;
+	private List<HolidayDay> holidayDays;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -50,12 +53,9 @@ public class DayActivity extends AppCompatActivity {
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		final String selectedLanguageCode = preferences.getString(MainActivity.SELECTED_LANGUAGE, "en");
-		final HolidaysDBHelper holidaysDBHelper = new HolidaysDBHelper(this);
-		calendar = holidaysDBHelper.getAll(selectedLanguageCode);
-		holidaysDBHelper.close();
-		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle(), calendar));
+
+		holidayDays = getIntent().getParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS);
+		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
 		final boolean leap = date.isLeapYear();
 		int id = date.getDayOfYear();
@@ -63,13 +63,13 @@ public class DayActivity extends AppCompatActivity {
 			id += leap ? 1 : 2;
 		}
 		pager.setCurrentItem(id - 1, false);
-		final String[] monthsGenitive = getResources().getStringArray(R.array.months_genitive);
-		getSupportActionBar().setTitle(day + getAddition(day) + " " + monthsGenitive[month - 1]);
+		getSupportActionBar().setTitle(date.format(formatter));
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				final Util.MonthDayPair pair = Util.calculateDates(position + 1);
-				Objects.requireNonNull(getSupportActionBar()).setTitle(pair.getDay() + getAddition(pair.getDay()) + " " + monthsGenitive[pair.getMonth().getValue() - 1]);
+				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.getMonth(), pair.getDay());
+				Objects.requireNonNull(getSupportActionBar()).setTitle(localDate.format(formatter));
 			}
 		});
 		MobileAds.initialize(this);
@@ -123,41 +123,22 @@ public class DayActivity extends AppCompatActivity {
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.unusual_holiday));
 			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem() + 1);
-			final String[] monthsGenitive = getResources().getStringArray(R.array.months_genitive);
-			final String date = pair.getDay() + getAddition(pair.getDay()) + " " + monthsGenitive[pair.getMonth().getValue() - 1];
-			final HolidayDay holidayDay = calendar.getDay(pair.getMonth().getValue(), pair.getDay());
-			if (holidayDay == null) {
-				return true;
-			}
+			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.getMonth(), pair.getDay());
 			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-			final String holidays = holidayDay.getHolidaysList(preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false))
-					.stream()
-					.map(Holiday::getText)
-					.map(text -> getString(R.string.pointed_text, text))
-					.collect(Collectors.joining("\n"));
-			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message, date, holidays));
-			startActivity(Intent.createChooser(intent, getString(R.string.share_via)));
+			final boolean usualHolidays = preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false);
+			holidayDays.stream().filter(h -> h.getMonth() == pair.getMonth().getValue() && h.getDay() == pair.getDay())
+					.findAny()
+					.ifPresent(day -> {
+						final String holidays = day.getHolidaysList(usualHolidays)
+								.stream()
+								.map(Holiday::getName)
+								.map(text -> getString(R.string.pointed_text, text))
+								.collect(Collectors.joining("\n"));
+						intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message, localDate, holidays));
+						startActivity(Intent.createChooser(intent, getString(R.string.share_via)));
+					});
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	public String getAddition(final int day) {
-		if (Locale.ROOT.getLanguage().equalsIgnoreCase("en")) {
-			if (day % 100 >= 10 && day % 100 <= 20) {
-				return "th";
-			}
-			switch (day % 10) {
-				case 1:
-					return "st";
-				case 2:
-					return "nd";
-				case 3:
-					return "rd";
-				default:
-					return "th";
-			}
-		}
-		return "";
 	}
 }

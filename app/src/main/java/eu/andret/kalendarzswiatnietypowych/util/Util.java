@@ -1,13 +1,9 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
-import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
-
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.TypedValue;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
@@ -16,9 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Random;
@@ -47,20 +40,6 @@ public final class Util {
 	}
 
 	private Util() {
-	}
-
-	public static boolean isConnection(final Context context) {
-		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-		return networkInfo != null && networkInfo.isConnected();
-	}
-
-	public static void createAlert(final Context context, final int title, final int text) {
-		final Builder alert = new Builder(context);
-		alert.setTitle(title);
-		alert.setMessage(text);
-		alert.setPositiveButton(R.string.ok, null);
-		alert.show();
 	}
 
 	public static void createAlertWithImage(final Context context, final int img, final int title, final int text) {
@@ -125,15 +104,6 @@ public final class Util {
 
 	public static boolean isDarkTheme(final Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-				== UI_MODE_NIGHT_YES;
-	}
-
-	public static String readAllFromInputStream(final InputStream inputStream) throws IOException {
-		final ByteArrayOutputStream result = new ByteArrayOutputStream();
-		final byte[] buffer = new byte[1024];
-		for (int length; (length = inputStream.read(buffer)) != -1; ) {
-			result.write(buffer, 0, length);
-		}
-		return result.toString();
+				== Configuration.UI_MODE_NIGHT_YES;
 	}
 }

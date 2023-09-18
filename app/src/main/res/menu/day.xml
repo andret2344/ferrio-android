@@ -4,19 +4,19 @@
 
     <item
         android:id="@+id/menu_day_today"
-        android:icon="@drawable/baseline_event_36"
+        android:icon="@drawable/baseline_today_24"
         android:orderInCategory="10"
         android:title="@string/menu_item_today"
         app:showAsAction="collapseActionView|ifRoom" />
     <item
         android:id="@+id/menu_day_random"
-        android:icon="@drawable/baseline_shuffle_36"
+        android:icon="@drawable/baseline_shuffle_24"
         android:orderInCategory="9"
         android:title="@string/menu_item_random"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_day_share"
-        android:icon="@drawable/baseline_share_36"
+        android:icon="@drawable/baseline_share_24"
         android:orderInCategory="8"
         android:title="@string/menu_item_share"
         app:showAsAction="ifRoom" />

@@ -1,14 +1,12 @@
 <resources>
 
-    <declare-styleable name="images">
-        <attr name="event" format="reference" />
-        <attr name="format_quote" format="reference" />
-        <attr name="info" format="reference" />
-        <attr name="search" format="reference" />
-        <attr name="settings" format="reference" />
-        <attr name="share" format="reference" />
-        <attr name="shuffle" format="reference" />
-        <attr name="translate" format="reference" />
-    </declare-styleable>
+	<declare-styleable name="images">
+		<attr name="event" format="reference" />
+		<attr name="info" format="reference" />
+		<attr name="search" format="reference" />
+		<attr name="settings" format="reference" />
+		<attr name="share" format="reference" />
+		<attr name="shuffle" format="reference" />
+	</declare-styleable>
 
 </resources>

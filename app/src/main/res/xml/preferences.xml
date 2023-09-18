@@ -1,34 +1,31 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:key="app"
-        android:title="@string/preference_category_application">
-        <ListPreference
-            android:defaultValue="1"
-            android:dialogTitle="@string/preference_title_theme_app"
-            android:entries="@array/preference_list_values_theme_application"
-            android:entryValues="@array/preference_list_keys_theme_application"
-            android:key="@string/settings_key_theme_app"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:title="@string/preference_title_theme_app" />
+	<PreferenceCategory
+		android:key="app"
+		android:title="@string/preference_category_application">
+		<SwitchPreference
+			android:defaultValue="false"
+			android:disableDependentsState="true"
+			android:key="@string/settings_key_theme_colorized"
+			android:summary="@string/preference_description_colorized_days"
+			android:title="@string/preference_title_colorized_days" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:disableDependentsState="true"
-            android:key="@string/settings_key_theme_colorized"
-            android:summary="@string/preference_description_colorized_days"
-            android:title="@string/preference_title_colorized_days" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/settings_key_usual_holidays"
-            android:summary="@string/preference_description_include_usual"
-            android:title="@string/preference_title_include_usual" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/settings_key_display_shortcuts"
-            android:summary="@string/preference_description_holidays_shortcuts"
-            android:title="@string/preference_title_holidays_shortcuts" />
-    </PreferenceCategory>
+		<SwitchPreference
+			android:defaultValue="false"
+			android:key="@string/settings_key_usual_holidays"
+			android:summary="@string/preference_description_include_usual"
+			android:title="@string/preference_title_include_usual" />
+
+		<SwitchPreference
+			android:defaultValue="true"
+			android:key="@string/settings_key_display_shortcuts"
+			android:summary="@string/preference_description_holidays_shortcuts"
+			android:title="@string/preference_title_holidays_shortcuts" />
+
+		<Preference
+			android:key="@string/settings_key_about_holidays"
+			android:title="@string/about_holidays"
+			android:icon="@drawable/baseline_info_24" />
+	</PreferenceCategory>
 
 </PreferenceScreen>

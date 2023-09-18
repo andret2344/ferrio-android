@@ -15,28 +15,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayCalendar;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 
 public class MonthFragmentAdapter extends FragmentStateAdapter {
-	private final HolidayCalendar holidayCalendar;
+	private final List<HolidayDay> holidayDays;
 
-	public MonthFragmentAdapter(@NonNull final FragmentManager fragmentManager, @NonNull final Lifecycle lifecycle, @NonNull final HolidayCalendar holidayCalendar) {
+	public MonthFragmentAdapter(@NonNull final FragmentManager fragmentManager, @NonNull final Lifecycle lifecycle, @NonNull final List<HolidayDay> holidayDays) {
 		super(fragmentManager, lifecycle);
-		this.holidayCalendar = holidayCalendar;
+		this.holidayDays = holidayDays;
 	}
 
 	@NonNull
 	@Override
 	public Fragment createFragment(final int position) {
-		final MonthFragment fragment = new MonthFragment();
+		final MonthFragment fragment = new MonthFragment(holidayDays);
 		final Bundle bundle = new Bundle();
 		final int current = position + 1;
 		bundle.putInt(MainActivity.MONTH, current);
 		final LocalDate before = getBefore(current);
 		final LocalDate after = getAfter(current, before);
-		final List<HolidayDay> holidays = holidayCalendar.getHolidayDaysInDateRange(before, after);
+		final List<HolidayDay> holidays = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after);
 		bundle.putParcelableArrayList(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidays));
 		fragment.setArguments(bundle);
 		return fragment;
