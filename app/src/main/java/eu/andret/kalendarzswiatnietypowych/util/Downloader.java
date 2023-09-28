@@ -41,7 +41,6 @@ public final class Downloader {
 		public UnusualCalendar get() {
 			try {
 				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s", getLanguageCode());
-				Log.d("UHC-Downloader", "Request: " + href);
 				final HttpsURLConnection con = (HttpsURLConnection) new URL(href).openConnection();
 				return gson.fromJson(new InputStreamReader(con.getInputStream()), UnusualCalendar.class);
 			} catch (final IOException ex) {

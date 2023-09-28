@@ -9,6 +9,7 @@ android {
         versionCode 62
         versionName "2.3.0-rc.2"
         multiDexEnabled true
+        signingConfig signingConfigs.debug
     }
     buildTypes {
         release {
@@ -29,8 +30,8 @@ android {
     }
     namespace 'eu.andret.kalendarzswiatnietypowych'
     dependenciesInfo {
-        includeInApk false
-        includeInBundle false
+        includeInApk true
+        includeInBundle true
     }
 }
 

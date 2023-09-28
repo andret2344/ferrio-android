@@ -99,6 +99,7 @@ public class UnusualCalendar implements Parcelable {
 		return Objects.hash(fixed, floating);
 	}
 
+	@NonNull
 	@Override
 	public String toString() {
 		return "UnusualCalendar{" +
