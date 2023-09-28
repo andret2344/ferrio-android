@@ -3,16 +3,24 @@ package eu.andret.kalendarzswiatnietypowych.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public final class Util {
 	private static final Random RANDOM = new Random();
+	private static final List<Integer> networkCapabilities = List.of(
+			NetworkCapabilities.TRANSPORT_WIFI,
+			NetworkCapabilities.TRANSPORT_CELLULAR,
+			NetworkCapabilities.TRANSPORT_ETHERNET);
 
 	private Util() {
 	}
@@ -58,5 +66,13 @@ public final class Util {
 	static boolean isDarkTheme(final Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
 				== Configuration.UI_MODE_NIGHT_YES;
+	}
+
+	public static boolean isNetworkAvailable(final Context context) {
+		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		return Optional.ofNullable(connectivityManager.getActiveNetwork())
+				.map(connectivityManager::getNetworkCapabilities)
+				.filter(capabilities -> networkCapabilities.stream().anyMatch(capabilities::hasTransport))
+				.isPresent();
 	}
 }
