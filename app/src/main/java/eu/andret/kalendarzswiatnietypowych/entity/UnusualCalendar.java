@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UnusualCalendar implements Parcelable {
 	private final List<HolidayDay> fixed;
@@ -19,7 +20,6 @@ public class UnusualCalendar implements Parcelable {
 		fixed = in.createTypedArrayList(HolidayDay.CREATOR);
 		floating = in.createTypedArrayList(FloatingHoliday.CREATOR);
 	}
-
 
 	public List<HolidayDay> getFixed() {
 		return fixed;
@@ -80,5 +80,30 @@ public class UnusualCalendar implements Parcelable {
 		final HolidayDay toInsert = new HolidayDay(month, day);
 		holidayDays.add(toInsert);
 		return toInsert;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final UnusualCalendar that = (UnusualCalendar) o;
+		return Objects.equals(fixed, that.fixed) && Objects.equals(floating, that.floating);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fixed, floating);
+	}
+
+	@Override
+	public String toString() {
+		return "UnusualCalendar{" +
+				"fixed=" + fixed +
+				", floating=" + floating +
+				'}';
 	}
 }

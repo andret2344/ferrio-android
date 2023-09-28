@@ -9,6 +9,7 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -185,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 	private void call() {
 		CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
 				.thenAccept(unusualCalendar -> {
+					Log.d("UHC-MainActivity", unusualCalendar.toString());
 					holidayDays.addAll(unusualCalendar.getFixed());
 					unusualCalendar.getFloating()
 							.forEach(floatingHoliday -> {
