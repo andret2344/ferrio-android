@@ -10,6 +10,8 @@ import android.view.MenuItem;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.util.Pair;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -18,6 +20,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -43,6 +46,7 @@ public class DayActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 		Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
 		setContentView(R.layout.activity_day);
 
@@ -67,8 +71,8 @@ public class DayActivity extends AppCompatActivity {
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				final Util.MonthDayPair pair = Util.calculateDates(position + 1);
-				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.getMonth(), pair.getDay());
+				final Pair<Month, Integer> pair = Util.calculateDates(position + 1);
+				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
 				Objects.requireNonNull(getSupportActionBar()).setTitle(localDate.format(formatter));
 			}
 		});
@@ -122,11 +126,11 @@ public class DayActivity extends AppCompatActivity {
 			final Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.unusual_holiday));
-			final Util.MonthDayPair pair = Util.calculateDates(pager.getCurrentItem() + 1);
-			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.getMonth(), pair.getDay());
+			final Pair<Month, Integer> pair = Util.calculateDates(pager.getCurrentItem() + 1);
+			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
 			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 			final boolean usualHolidays = preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false);
-			holidayDays.stream().filter(h -> h.getMonth() == pair.getMonth().getValue() && h.getDay() == pair.getDay())
+			holidayDays.stream().filter(h -> h.getMonth() == pair.first.getValue() && h.getDay() == pair.second)
 					.findAny()
 					.ifPresent(day -> {
 						final String holidays = day.getHolidaysList(usualHolidays)

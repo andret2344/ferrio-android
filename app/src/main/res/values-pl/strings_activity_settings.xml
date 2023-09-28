@@ -13,8 +13,4 @@
 	<string name="preference_description_include_usual">Wyświetlaj święta typowe, np. Nowy Rok, razem z pozostałymi</string>
 	<string name="preference_description_holidays_shortcuts">Pokazuj skróty świąt w widoku miesiąca</string>
 
-	<!-- Values -->
-	<string name="preference_value_theme_light">Motyw jasny</string>
-	<string name="preference_value_theme_dark">Motyw ciemny</string>
-
 </resources>

@@ -70,11 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-
-		MobileAds.initialize(this);
-
 		super.onCreate(savedInstanceState);
+		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+		MobileAds.initialize(this);
 		setContentView(R.layout.activity_main);
 		final String stringFrom = getIntent().getStringExtra(FROM);
 		final int currentMonthValue = LocalDate.now().getMonthValue();

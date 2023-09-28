@@ -90,7 +90,7 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		if (holidayDay.getMonth() != month) {
 			convertView.setBackgroundColor(ContextCompat.getColor(getContext(), color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
 		} else if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
-			convertView.setBackgroundColor(Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed()));
+			convertView.setBackgroundColor(Util.randomizeColor(getContext(), holidayDay.getSeed()));
 		}
 		convertView.setOnClickListener(v -> {
 			final Intent intent = new Intent(getContext(), DayActivity.class);

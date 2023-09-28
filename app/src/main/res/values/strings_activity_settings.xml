@@ -13,8 +13,4 @@
 	<string name="preference_description_include_usual">Display regular holidays, i.e. New Year\'s Eve, along with others</string>
 	<string name="preference_description_holidays_shortcuts">Show holidays\' shortcuts on month view.</string>
 
-	<!-- Values -->
-	<string name="preference_value_theme_light">Light theme</string>
-	<string name="preference_value_theme_dark">Dark theme</string>
-
 </resources>

@@ -45,7 +45,7 @@ public class DayFragment extends Fragment {
 		}
 		final int backgroundColor;
 		if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
-			backgroundColor = Util.randomizeColor(color.isDarkTheme(), holidayDay.getSeed());
+			backgroundColor = Util.randomizeColor(getContext(), holidayDay.getSeed());
 		} else {
 			backgroundColor = color.getBackgroundColor();
 		}

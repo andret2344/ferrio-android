@@ -70,7 +70,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		holder.holidays.removeAllViews();
 
 		if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
-			convertView.setBackgroundColor(Util.randomizeColor(color.isDarkTheme(), day.getSeed()));
+			convertView.setBackgroundColor(Util.randomizeColor(getContext(), day.getSeed()));
 		} else {
 			convertView.setBackgroundColor(color.getBackgroundColor());
 		}
