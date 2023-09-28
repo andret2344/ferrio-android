@@ -19,6 +19,12 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.Data;
 
 public class MonthFragment extends Fragment {
+	private final List<HolidayDay> holidayDays;
+
+	public MonthFragment(final List<HolidayDay> holidayDays) {
+		this.holidayDays = holidayDays;
+	}
+
 	@NonNull
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
@@ -28,11 +34,11 @@ public class MonthFragment extends Fragment {
 		}
 
 		final int current = getArguments().getInt(MainActivity.MONTH, 1);
-		final List<HolidayDay> holidayDays = getArguments().getParcelableArrayList(MainActivity.HOLIDAY_DAYS);
+		final List<HolidayDay> days = getArguments().getParcelableArrayList(MainActivity.HOLIDAY_DAYS);
 		final Data.ColorSet color = Data.getColors(getContext());
 		final GridView grid = month.findViewById(R.id.fragment_month_grid_days);
 		grid.measure(0, 0);
-		final DayAdapter adapter = new DayAdapter(getActivity(), holidayDays, current);
+		final DayAdapter adapter = new DayAdapter(getActivity(), holidayDays, days, current);
 		grid.setAdapter(adapter);
 		grid.post(() -> {
 			final int itemHeight = grid.getMeasuredHeight() / 6 - 25;

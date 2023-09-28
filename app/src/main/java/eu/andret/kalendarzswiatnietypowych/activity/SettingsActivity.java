@@ -1,24 +1,23 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
-import androidx.fragment.app.Fragment;
-import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.IntStream;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 
@@ -26,34 +25,15 @@ public class SettingsActivity extends AppCompatActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		final int[] prefs = {R.string.settings_key_theme_app, R.string.settings_key_theme_colorized, R.string.settings_key_usual_holidays, R.string.settings_key_display_shortcuts};
-		final PrefsFragment prefsFragment = new PrefsFragment();
-		final Bundle bundle = new Bundle();
-		bundle.putIntArray("data", prefs);
-		prefsFragment.setArguments(bundle);
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(android.R.id.content, prefsFragment)
+				.replace(android.R.id.content, new PrefsFragment())
 				.commit();
 
-		PreferenceManager.getDefaultSharedPreferences(this)
-				.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
-					final String themeSettingsKey = getString(R.string.settings_key_theme_app);
-					if (Objects.equals(key, themeSettingsKey)) {
-						final String themeDarkKey = getString(R.string.settings_key_theme_dark);
-						final String themeLightKey = getString(R.string.settings_key_theme_light);
-						final String themeStoredKey = sharedPreferences.getString(themeSettingsKey, themeDarkKey);
-						if (themeStoredKey.equals(themeDarkKey)) {
-							AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-						} else if (themeStoredKey.equals(themeLightKey)) {
-							AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-						}
-						recreate();
-					}
-				});
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
 			@Override
 			public void handleOnBackPressed() {
@@ -77,22 +57,40 @@ public class SettingsActivity extends AppCompatActivity {
 		@Override
 		public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
 			setPreferencesFromResource(R.xml.preferences, rootKey);
-			Optional.of(this)
-					.map(Fragment::getArguments)
-					.map(bundle -> bundle.getIntArray("data"))
-					.map(Arrays::stream)
-					.orElse(IntStream.empty())
-					.forEach(s -> {
-						final String current = getString(s);
-						final Preference pref = findPreference(current);
-						if (pref == null) {
-							return;
-						}
-						if (pref instanceof ListPreference) {
-							final ListPreference preference = (ListPreference) pref;
-							preference.setSummaryProvider((Preference.SummaryProvider<ListPreference>) ListPreference::getEntry);
-						}
-					});
+			if (getContext() == null) {
+				return;
+			}
+			final Preference aboutHolidaysPreference = findPreference(getContext().getString(R.string.settings_key_about_holidays));
+			if (aboutHolidaysPreference == null) {
+				return;
+			}
+			aboutHolidaysPreference.setOnPreferenceClickListener(preference -> {
+				createAlertWithImage(getContext(), R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
+				return false;
+			});
+		}
+
+		public void createAlertWithImage(final Context context, final int img, final int title, final int text) {
+			final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+			alert.setTitle(title);
+			final LinearLayout layout = new LinearLayout(context);
+			final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			params.setMargins(0, 30, 0, 0);
+			layout.setLayoutParams(params);
+			layout.setOrientation(LinearLayout.VERTICAL);
+			final ImageView image = new ImageView(context);
+			image.setImageResource(img);
+			layout.addView(image);
+			final TextView tv = new TextView(context);
+			tv.setText(text);
+			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.drawer_list_name_text));
+			layout.addView(tv);
+			final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			llp.setMargins(30, 20, 30, 20);
+			tv.setLayoutParams(llp);
+			alert.setView(layout);
+			alert.setPositiveButton(R.string.ok, null);
+			alert.show();
 		}
 	}
 }

@@ -13,25 +13,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
-	public static final Parcelable.Creator<HolidayDay> CREATOR = new Parcelable.Creator<>() {
-		@NonNull
-		@Override
-		public HolidayDay createFromParcel(final Parcel in) {
-			final int monthRead = in.readInt();
-			final int dayRead = in.readInt();
-			final List<Holiday> holidaysRead = Arrays.stream(in.readParcelableArray(Holiday.class.getClassLoader()))
-					.map(Holiday.class::cast)
-					.collect(Collectors.toList());
-			return new HolidayDay(monthRead, dayRead, holidaysRead);
-		}
-
-		@NonNull
-		@Override
-		public HolidayDay[] newArray(final int size) {
-			return new HolidayDay[size];
-		}
-	};
-
 	private final int month;
 	private final int day;
 	@NonNull
@@ -41,6 +22,14 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 		this.month = month;
 		this.day = day;
 		this.holidays = holidays;
+	}
+
+	protected HolidayDay(final Parcel in) {
+		month = in.readInt();
+		day = in.readInt();
+		holidays = Arrays.stream(in.readParcelableArray(Holiday.class.getClassLoader()))
+				.map(Holiday.class::cast)
+				.collect(Collectors.toList());
 	}
 
 	public HolidayDay(final int month, final int day) {
@@ -122,4 +111,18 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 		parcel.writeInt(day);
 		parcel.writeParcelableArray(holidays.toArray(new Holiday[0]), flags);
 	}
+
+	public static final Parcelable.Creator<HolidayDay> CREATOR = new Parcelable.Creator<>() {
+		@NonNull
+		@Override
+		public HolidayDay createFromParcel(final Parcel in) {
+			return new HolidayDay(in);
+		}
+
+		@NonNull
+		@Override
+		public HolidayDay[] newArray(final int size) {
+			return new HolidayDay[size];
+		}
+	};
 }

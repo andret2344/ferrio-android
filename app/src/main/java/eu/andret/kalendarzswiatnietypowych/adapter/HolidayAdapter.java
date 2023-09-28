@@ -47,7 +47,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 			return convertView;
 		}
 
-		holder.holiday.setText(getContext().getString(R.string.pointed_text, holiday.getText()));
+		holder.holiday.setText(getContext().getString(R.string.pointed_text, holiday.getName()));
 		if (holiday.isUsual()) {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}

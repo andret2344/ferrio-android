@@ -1,31 +1,16 @@
 <resources>
 
-    <!-- Categories -->
-    <string name="preference_category_application">Application</string>
+	<!-- Categories -->
+	<string name="preference_category_application">Application</string>
 
-    <!-- Titles -->
-    <string name="preference_title_theme_app">Theme of application</string>
-    <string name="preference_title_colorized_days">Colorized days</string>
-    <string name="preference_title_include_usual">Include usual holidays</string>
-    <string name="preference_title_holidays_shortcuts">Display holidays\' shortcuts</string>
+	<!-- Titles -->
+	<string name="preference_title_colorized_days">Colorized days</string>
+	<string name="preference_title_include_usual">Include usual holidays</string>
+	<string name="preference_title_holidays_shortcuts">Display holidays\' shortcuts</string>
 
-    <!-- Descriptions -->
-    <string name="preference_description_colorized_days">Set unique color for every day</string>
-    <string name="preference_description_include_usual">Display regular holidays, i.e. New Year\'s Eve, along with others</string>
-    <string name="preference_description_holidays_shortcuts">Show holidays\' shortcuts on month view.</string>
-
-    <!-- Values -->
-    <string name="preference_value_theme_light">Light theme</string>
-    <string name="preference_value_theme_dark">Dark theme</string>
-
-    <!-- Lists -->
-    <string-array name="preference_list_values_theme_application">
-        <item>@string/preference_value_theme_dark</item>
-        <item>@string/preference_value_theme_light</item>
-    </string-array>
-    <string-array name="preference_list_keys_theme_application">
-        <item>@string/settings_key_theme_dark</item>
-        <item>@string/settings_key_theme_light</item>
-    </string-array>
+	<!-- Descriptions -->
+	<string name="preference_description_colorized_days">Set unique color for every day</string>
+	<string name="preference_description_include_usual">Display regular holidays, i.e. New Year\'s Eve, along with others</string>
+	<string name="preference_description_holidays_shortcuts">Show holidays\' shortcuts on month view.</string>
 
 </resources>

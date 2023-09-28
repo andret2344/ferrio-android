@@ -1,21 +1,16 @@
 <resources>
 
-    <!-- Categories -->
-    <string name="preference_category_application">Aplikacja</string>
+	<!-- Categories -->
+	<string name="preference_category_application">Aplikacja</string>
 
-    <!-- Titles -->
-    <string name="preference_title_theme_app">Motyw aplikacji</string>
-    <string name="preference_title_colorized_days">Kolorowe dni</string>
-    <string name="preference_title_include_usual">Dołącz święta typowe</string>
-    <string name="preference_title_holidays_shortcuts">Wyświetlaj skróty świąt</string>
+	<!-- Titles -->
+	<string name="preference_title_colorized_days">Kolorowe dni</string>
+	<string name="preference_title_include_usual">Dołącz święta typowe</string>
+	<string name="preference_title_holidays_shortcuts">Wyświetlaj skróty świąt</string>
 
-    <!-- Descriptions -->
-    <string name="preference_description_colorized_days">Ustaw unikalny kolor dla każdego dnia</string>
-    <string name="preference_description_include_usual">Wyświetlaj święta typowe, np. Nowy Rok, razem z pozostałymi</string>
-    <string name="preference_description_holidays_shortcuts">Pokazuj skróty świąt w widoku miesiąca</string>
-
-    <!-- Values -->
-    <string name="preference_value_theme_light">Motyw jasny</string>
-    <string name="preference_value_theme_dark">Motyw ciemny</string>
+	<!-- Descriptions -->
+	<string name="preference_description_colorized_days">Ustaw unikalny kolor dla każdego dnia</string>
+	<string name="preference_description_include_usual">Wyświetlaj święta typowe, np. Nowy Rok, razem z pozostałymi</string>
+	<string name="preference_description_holidays_shortcuts">Pokazuj skróty świąt w widoku miesiąca</string>
 
 </resources>

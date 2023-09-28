@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings_key_theme_app" translatable="false">app_theme</string>
-    <string name="settings_key_theme_colorized" translatable="false">colorized</string>
-    <string name="settings_key_usual_holidays" translatable="false">usual_holidays</string>
-    <string name="settings_key_display_shortcuts" translatable="false">display_shortcuts</string>
-
-    <string name="settings_key_theme_dark" translatable="false">THEME_DARK</string>
-    <string name="settings_key_theme_light" translatable="false">THEME_LIGHT</string>
+	<string name="settings_key_theme_colorized" translatable="false">colorized</string>
+	<string name="settings_key_usual_holidays" translatable="false">usual_holidays</string>
+	<string name="settings_key_display_shortcuts" translatable="false">display_shortcuts</string>
+	<string name="settings_key_about_holidays" translatable="false">about_holidays</string>
 
 </resources>

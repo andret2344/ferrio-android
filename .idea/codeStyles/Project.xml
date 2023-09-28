@@ -2,7 +2,7 @@
   <code_scheme name="Project" version="173">
     <XML>
       <option name="XML_ATTRIBUTE_WRAP" value="4" />
-      <option name="XML_ALIGN_ATTRIBUTES" value="true" />
+      <option name="XML_KEEP_LINE_BREAKS_IN_TEXT" value="false" />
     </XML>
     <codeStyleSettings language="JAVA">
       <option name="IF_BRACE_FORCE" value="3" />

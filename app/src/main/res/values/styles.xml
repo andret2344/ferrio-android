@@ -1,16 +1,14 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="event">@drawable/baseline_event_36</item>
-        <item name="format_quote">@drawable/ic_format_quote_36dp</item>
-        <item name="info">@drawable/ic_info_36dp</item>
-        <item name="search">@drawable/ic_search_36dp</item>
-        <item name="settings">@drawable/ic_settings_36dp</item>
-        <item name="share">@drawable/baseline_share_36</item>
-        <item name="shuffle">@drawable/baseline_shuffle_36</item>
-        <item name="translate">@drawable/ic_translate_36dp</item>
-    </style>
+	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
+		<item name="android:windowActionBar">false</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="event">@drawable/baseline_today_24</item>
+		<item name="info">@drawable/baseline_info_24</item>
+		<item name="search">@drawable/baseline_search_24</item>
+		<item name="settings">@drawable/baseline_settings_24</item>
+		<item name="share">@drawable/baseline_share_24</item>
+		<item name="shuffle">@drawable/baseline_shuffle_24</item>
+	</style>
 
 </resources>

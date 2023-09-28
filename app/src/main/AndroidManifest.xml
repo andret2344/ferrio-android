@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  xmlns:tools="http://schemas.android.com/tools">
+	xmlns:tools="http://schemas.android.com/tools">
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<application
@@ -22,6 +23,7 @@
 
 		<activity
 			android:name=".activity.MainActivity"
+			android:configChanges="uiMode"
 			android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -32,7 +34,9 @@
 		<activity
 			android:name="com.google.android.gms.ads.AdActivity"
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-		<activity android:name=".activity.DayActivity" />
+		<activity
+			android:name=".activity.DayActivity"
+			android:configChanges="uiMode" />
 
 		<receiver
 			android:name="eu.andret.kalendarzswiatnietypowych.WidgetProvider"
@@ -40,6 +44,7 @@
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 				<action android:name="eu.andret.kalendarzswiatnietypowych.CLICK_MY_BUTTON" />
+				<action android:name="ACTION_AUTO_UPDATE_WIDGET" />
 			</intent-filter>
 
 			<meta-data
@@ -49,14 +54,8 @@
 
 		<activity
 			android:name=".activity.SettingsActivity"
+			android:configChanges="uiMode"
 			android:label="@string/settings">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
-		</activity>
-		<activity
-			android:name=".activity.LanguageActivity"
-			android:label="@string/title_activity_language">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
