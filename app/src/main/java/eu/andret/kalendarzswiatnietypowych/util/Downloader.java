@@ -1,5 +1,8 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -7,6 +10,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,8 +21,18 @@ import java9.util.function.Supplier;
 
 public final class Downloader {
 	private static final Gson gson = new Gson();
+	private static final List<String> LANGUAGE_CODES = List.of("pl");
 
 	private Downloader() {
+	}
+
+	@NonNull
+	private static String getLanguageCode() {
+		final String language = Locale.getDefault().getLanguage();
+		if (LANGUAGE_CODES.contains(language)) {
+			return language;
+		}
+		return "en";
 	}
 
 	public static class UnusualCalendarDownloader implements Supplier<UnusualCalendar> {
@@ -26,7 +40,7 @@ public final class Downloader {
 		@Override
 		public UnusualCalendar get() {
 			try {
-				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s", Locale.getDefault().getLanguage());
+				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s", getLanguageCode());
 				final HttpsURLConnection con = (HttpsURLConnection) new URL(href).openConnection();
 				return gson.fromJson(new InputStreamReader(con.getInputStream()), UnusualCalendar.class);
 			} catch (final IOException ex) {
@@ -49,7 +63,8 @@ public final class Downloader {
 		@Override
 		public HolidayDay get() {
 			try {
-				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s/day/%d/%d", Locale.getDefault().getLanguage(), month, day);
+				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s/day/%d/%d", getLanguageCode(), month, day);
+				Log.d("UHC-Downloader", "Request: " + href);
 				final HttpsURLConnection con = (HttpsURLConnection) new URL(href).openConnection();
 				return gson.fromJson(new InputStreamReader(con.getInputStream()), HolidayDay.class);
 			} catch (final IOException ex) {

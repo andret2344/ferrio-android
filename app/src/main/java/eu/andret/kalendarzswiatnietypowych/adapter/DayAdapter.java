@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +101,6 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 
 		final boolean includeUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
 		final boolean displayShortcuts = preferences.getBoolean(getContext().getString(R.string.settings_key_display_shortcuts), true);
-		Log.d("UHC-DayAdapter", holidayDay.toString());
 		final long holidaysCount = holidayDay.countHolidays(includeUsual);
 		if (holidaysCount == 0) {
 			holder.sad.setVisibility(View.VISIBLE);

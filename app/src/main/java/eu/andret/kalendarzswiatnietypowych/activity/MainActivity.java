@@ -1,9 +1,15 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,10 +26,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -52,6 +60,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 import eu.andret.kalendarzswiatnietypowych.util.Downloader;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,11 +71,17 @@ public class MainActivity extends AppCompatActivity {
 	public static final String FROM = "from";
 	public static final String HOLIDAY_DAYS = "holidayDays";
 	public static final String HOLIDAY_DAY = "holidayDay";
+	private static final List<Integer> TRANSPORTS = List.of(
+			NetworkCapabilities.TRANSPORT_CELLULAR,
+			NetworkCapabilities.TRANSPORT_WIFI,
+			NetworkCapabilities.TRANSPORT_ETHERNET);
 
 	private ViewPager2 viewPager2;
 	private ListView searchListView;
 	private LinearLayout preLoaderLayout;
+	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
+	private MutableLiveData<Boolean> internet;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -74,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 		MobileAds.initialize(this);
 		setContentView(R.layout.activity_main);
+		configureObservers();
 		final String stringFrom = getIntent().getStringExtra(FROM);
 		final int currentMonthValue = LocalDate.now().getMonthValue();
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
@@ -121,14 +137,64 @@ public class MainActivity extends AppCompatActivity {
 		progress.setLayoutParams(progressParams);
 		preLoaderLayout.addView(progress);
 
+		searchListView = findViewById(R.id.main_list_results);
+
+		viewPager2 = findViewById(R.id.main_pager_months);
+
+		final AdView adView = findViewById(R.id.main_adview_bottom);
+		adView.loadAd(new AdRequest.Builder().build());
+
+		if (!Boolean.FALSE.equals(internet.getValue())) {
+			call();
+			return;
+		}
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(R.string.no_internet_connection);
+		alert.setCancelable(false);
+		alert.setMessage(R.string.no_internet);
+		alertDialog = alert.show();
+	}
+
+	private void configureObservers() {
+		internet = new MutableLiveData<>(Util.isNetworkAvailable(this));
+		internet.observe(this, isConnected -> {
+			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
+				call();
+				alertDialog.dismiss();
+			}
+		});
+		final ConnectivityManager connectivityManager =
+				(ConnectivityManager) getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+		TRANSPORTS.stream()
+				.map(new NetworkRequest.Builder()::addTransportType)
+				.map(NetworkRequest.Builder::build)
+				.forEach(x -> connectivityManager.registerNetworkCallback(x, new ConnectivityManager.NetworkCallback() {
+					@Override
+					public void onAvailable(@NonNull final Network network) {
+						super.onAvailable(network);
+						internet.postValue(true);
+					}
+
+					@Override
+					public void onLost(@NonNull final Network network) {
+						super.onLost(network);
+						internet.postValue(false);
+					}
+				}));
+	}
+
+	private void call() {
 		CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
 				.thenAccept(unusualCalendar -> {
+					Log.d("UHC-MainActivity", unusualCalendar.toString());
 					holidayDays.addAll(unusualCalendar.getFixed());
 					unusualCalendar.getFloating()
 							.forEach(floatingHoliday -> {
+								Log.d("UHC-Script", "Evaluating " + floatingHoliday.getId());
 								try (final Context context = Context.enter()) {
 									context.setOptimizationLevel(-1);
 									final Scriptable scope = context.initStandardObjects();
+									Log.d("UHC-Script", floatingHoliday.getScript());
 									final Object result = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
 									if (result != null) {
 										final String[] split = result.toString().split("\\.");
@@ -140,23 +206,17 @@ public class MainActivity extends AppCompatActivity {
 				})
 				.thenRun(this::dismissPreLoader)
 				.join();
-
-		searchListView = findViewById(R.id.main_list_results);
-
-		viewPager2 = findViewById(R.id.main_pager_months);
+		final int currentMonthValue = LocalDate.now().getMonthValue();
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
 		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		getSupportActionBar().setTitle(getMonthName(currentMonthValue));
+		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
 		viewPager2.setOffscreenPageLimit(12);
 		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				getSupportActionBar().setTitle(getMonthName(position + 1));
+				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
 			}
 		});
-
-		final AdView adView = findViewById(R.id.main_adview_bottom);
-		adView.loadAd(new AdRequest.Builder().build());
 	}
 
 	@NotNull
