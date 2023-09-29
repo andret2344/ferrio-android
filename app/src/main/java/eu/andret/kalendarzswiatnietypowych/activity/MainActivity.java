@@ -9,7 +9,6 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -186,28 +185,18 @@ public class MainActivity extends AppCompatActivity {
 	private void call() {
 		CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
 				.thenAccept(unusualCalendar -> {
-					Log.d("UHC-MainActivity", unusualCalendar.toString());
 					holidayDays.addAll(unusualCalendar.getFixed());
 					unusualCalendar.getFloating()
 							.forEach(floatingHoliday -> {
-								Log.d("UHC-Script", "Evaluating 1");
 								try (final Context context = Context.enter()) {
-									Log.d("UHC-Script", "Evaluating 2");
 									context.setOptimizationLevel(-1);
-									Log.d("UHC-Script", "Evaluating 3");
 									final Scriptable scope = context.initStandardObjects();
-									Log.d("UHC-Script", "Evaluating 4");
 									final Object result = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
-									Log.d("UHC-Script", "Evaluating 5");
 									if (result != null) {
-										Log.d("UHC-Script", "Evaluating 6");
 										final String[] split = result.toString().split("\\.");
-										Log.d("UHC-Script", "Evaluating 7");
 										UnusualCalendar.getOrCreateDay(holidayDays, Integer.parseInt(split[1]), Integer.parseInt(split[0]))
 												.addHoliday(new Holiday(floatingHoliday));
-										Log.d("UHC-Script", "Evaluating 8");
 									}
-									Log.d("UHC-Script", "Evaluating 9");
 								}
 							});
 				})
