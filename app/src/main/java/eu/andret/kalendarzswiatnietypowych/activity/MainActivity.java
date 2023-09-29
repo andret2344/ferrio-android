@@ -9,27 +9,16 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -77,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
 	private ViewPager2 viewPager2;
 	private ListView searchListView;
-	private LinearLayout preLoaderLayout;
 	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
@@ -86,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-		MobileAds.initialize(this);
 		setContentView(R.layout.activity_main);
 		configureObservers();
 		final String stringFrom = getIntent().getStringExtra(FROM);
@@ -108,38 +95,10 @@ public class MainActivity extends AppCompatActivity {
 					}).launch(intent);
 		}
 
-		final ViewGroup v = (ViewGroup) getWindow().getDecorView().getRootView();
-		preLoaderLayout = new LinearLayout(this);
-		preLoaderLayout.setOrientation(LinearLayout.VERTICAL);
-		preLoaderLayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		preLoaderLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.color_black_accent));
-		v.addView(preLoaderLayout);
-
-		final ImageView image = new ImageView(this);
-		final LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
-		imageParams.gravity = Gravity.CENTER;
-		image.setLayoutParams(imageParams);
-		image.setImageResource(R.drawable.ic_app_logo);
-		preLoaderLayout.addView(image);
-
-		final TextView text = new TextView(this);
-		final LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
-		textParams.gravity = Gravity.CENTER;
-		text.setGravity(Gravity.CENTER);
-		text.setText(R.string.app_name);
-		text.setLayoutParams(textParams);
-		text.setTextSize(getResources().getDimension(R.dimen.drawer_list_name_text));
-
-		final ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleLarge);
-		final LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
-		progressParams.gravity = Gravity.CENTER;
-		progress.setLayoutParams(progressParams);
-		preLoaderLayout.addView(progress);
-
 		searchListView = findViewById(R.id.main_list_results);
-
 		viewPager2 = findViewById(R.id.main_pager_months);
 
+		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
@@ -200,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
 								}
 							});
 				})
-				.thenRun(this::dismissPreLoader)
 				.join();
 		final int currentMonthValue = LocalDate.now().getMonthValue();
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
@@ -282,29 +240,5 @@ public class MainActivity extends AppCompatActivity {
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	public void dismissPreLoader() {
-		final AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
-		fadeOut.setStartOffset(1500);
-		fadeOut.setDuration(500);
-		fadeOut.setFillAfter(false);
-		fadeOut.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(final Animation animation) {
-				// do nothing
-			}
-
-			@Override
-			public void onAnimationRepeat(final Animation animation) {
-				// do nothing
-			}
-
-			@Override
-			public void onAnimationEnd(final Animation animation) {
-				preLoaderLayout.setVisibility(View.INVISIBLE);
-			}
-		});
-		preLoaderLayout.startAnimation(fadeOut);
 	}
 }
