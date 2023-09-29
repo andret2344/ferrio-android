@@ -24,3 +24,5 @@
 -keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.FloatingHoliday {
  !transient <fields>;
 }
+
+-keep class org.mozilla.javascript.** { *; }

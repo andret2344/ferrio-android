@@ -9,7 +9,6 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -186,15 +185,12 @@ public class MainActivity extends AppCompatActivity {
 	private void call() {
 		CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
 				.thenAccept(unusualCalendar -> {
-					Log.d("UHC-MainActivity", unusualCalendar.toString());
 					holidayDays.addAll(unusualCalendar.getFixed());
 					unusualCalendar.getFloating()
 							.forEach(floatingHoliday -> {
-								Log.d("UHC-Script", "Evaluating " + floatingHoliday.getId());
 								try (final Context context = Context.enter()) {
 									context.setOptimizationLevel(-1);
 									final Scriptable scope = context.initStandardObjects();
-									Log.d("UHC-Script", floatingHoliday.getScript());
 									final Object result = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
 									if (result != null) {
 										final String[] split = result.toString().split("\\.");
