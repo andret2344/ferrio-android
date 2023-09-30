@@ -43,7 +43,6 @@
 			android:exported="true">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-				<action android:name="eu.andret.kalendarzswiatnietypowych.CLICK_MY_BUTTON" />
 				<action android:name="ACTION_AUTO_UPDATE_WIDGET" />
 			</intent-filter>
 
