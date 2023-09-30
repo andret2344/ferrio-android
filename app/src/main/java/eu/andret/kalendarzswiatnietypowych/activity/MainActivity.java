@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 		final SearchView searchView = (SearchView) searchItem.getActionView();
 		final List<HolidayDay> list = new ArrayList<>(holidayDays);
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
+		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, holidayDays, list);
 		searchListView.setAdapter(adapter);
 		if (searchView == null) {
 			return true;
@@ -203,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
 				if (newText == null || newText.equals("")) {
 					searchListView.setVisibility(View.INVISIBLE);
 					viewPager2.setVisibility(View.VISIBLE);
-					list.addAll(holidayDays);
 				} else {
 					searchListView.setVisibility(View.VISIBLE);
 					viewPager2.setVisibility(View.INVISIBLE);

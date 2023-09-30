@@ -1,7 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -41,7 +39,6 @@ public final class Downloader {
 		public UnusualCalendar get() {
 			try {
 				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s", getLanguageCode());
-				Log.d("UHC-Downloader", "Request: " + href);
 				final HttpsURLConnection con = (HttpsURLConnection) new URL(href).openConnection();
 				return gson.fromJson(new InputStreamReader(con.getInputStream()), UnusualCalendar.class);
 			} catch (final IOException ex) {
@@ -65,7 +62,6 @@ public final class Downloader {
 		public HolidayDay get() {
 			try {
 				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s/day/%d/%d", getLanguageCode(), month, day);
-				Log.d("UHC-Downloader", "Request: " + href);
 				final HttpsURLConnection con = (HttpsURLConnection) new URL(href).openConnection();
 				return gson.fromJson(new InputStreamReader(con.getInputStream()), HolidayDay.class);
 			} catch (final IOException ex) {

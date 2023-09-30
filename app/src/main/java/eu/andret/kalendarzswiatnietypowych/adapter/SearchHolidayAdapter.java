@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,15 +29,17 @@ import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 	private final Context context;
+	private final List<HolidayDay> holidayDays;
 
 	private static class ViewHolder {
 		private TextView date;
 		private LinearLayout holidays;
 	}
 
-	public SearchHolidayAdapter(final Context context, final List<HolidayDay> values) {
+	public SearchHolidayAdapter(final Context context, final List<HolidayDay> holidayDays, final List<HolidayDay> values) {
 		super(context, R.layout.adapter_search, values);
 		this.context = context;
+		this.holidayDays = holidayDays;
 	}
 
 	@NonNull
@@ -93,6 +96,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 
 		convertView.setOnClickListener(v -> {
 			final Intent intent = new Intent(getContext(), DayActivity.class);
+			intent.putParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidayDays));
 			intent.putExtra(MainActivity.DAY, day.getDay());
 			intent.putExtra(MainActivity.MONTH, day.getMonth());
 			getContext().startActivity(intent);
