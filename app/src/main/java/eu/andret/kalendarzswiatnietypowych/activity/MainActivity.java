@@ -29,6 +29,7 @@ import com.google.android.gms.ads.MobileAds;
 
 import org.jetbrains.annotations.NotNull;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Scriptable;
 
 import java.time.LocalDate;
@@ -156,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
 										UnusualCalendar.getOrCreateDay(holidayDays, Integer.parseInt(split[1]), Integer.parseInt(split[0]))
 												.addHoliday(new Holiday(floatingHoliday));
 									}
+								} catch (final EcmaError ex) {
+									// do nothing, ignore the holiday
 								}
 							});
 				})
