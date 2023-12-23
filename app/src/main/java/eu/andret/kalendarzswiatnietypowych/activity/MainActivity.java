@@ -10,11 +10,11 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,6 +70,18 @@ public class MainActivity extends AppCompatActivity {
 	private MutableLiveData<Boolean> internet;
 	private SharedViewModel sharedViewModel;
 
+	public final ActivityResultLauncher<Intent> startActivityResultLauncher = registerForActivityResult(
+			new ActivityResultContracts.StartActivityForResult(),
+			result -> {
+				final int currentMonthValue = LocalDate.now().getMonthValue();
+				if (result.getResultCode() == Activity.RESULT_OK) {
+					final Intent data = result.getData();
+					if (data != null) {
+						viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
+					}
+				}
+			});
+
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,16 +95,7 @@ public class MainActivity extends AppCompatActivity {
 			intent.putExtra(FROM, CALENDAR);
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
-			registerForActivityResult(
-					new ActivityResultContracts.StartActivityForResult(),
-					result -> {
-						if (result.getResultCode() == Activity.RESULT_OK) {
-							final Intent data = result.getData();
-							if (data != null) {
-								viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
-							}
-						}
-					}).launch(intent);
+			startActivityResultLauncher.launch(intent);
 		}
 
 		searchListView = findViewById(R.id.main_list_results);
@@ -127,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 				alert.setCancelable(false);
 				alert.setMessage(R.string.no_internet);
 				alertDialog = alert.show();
+				viewPager2.setVisibility(View.INVISIBLE);
 			}
 		});
 	}
@@ -137,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
 				call();
 				alertDialog.dismiss();
+				viewPager2.setVisibility(View.VISIBLE);
 			}
 		});
 		final ConnectivityManager connectivityManager =
@@ -236,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
 							.forEach(list::add);
 				}
 				Collections.sort(list);
-				Log.d("UHC-Search", String.valueOf(list.size()));
 				adapter.notifyDataSetChanged();
 				return false;
 			}
