@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.Month;
 import java.util.List;
@@ -51,8 +52,10 @@ public class DayFragment extends Fragment {
 					}
 					final int backgroundColor = getBackgroundColor(preferences, color, day);
 					dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
-					final ListView listView = dayView.findViewById(R.id.fragment_day_list_holidays);
-					listView.setAdapter(new HolidayAdapter(getContext(), holidays));
+					final RecyclerView recyclerView = dayView.findViewById(R.id.fragment_day_list_holidays);
+					recyclerView.setAdapter(new HolidayAdapter(getContext(), holidays));
+					final LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+					recyclerView.setLayoutManager(manager);
 				}));
 
 		return dayView;
