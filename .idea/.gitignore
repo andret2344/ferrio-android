@@ -10,3 +10,6 @@
 /navEditor.xml
 /render.experimental.xml
 /workspace.xml
+/appInsightsSettings.xml
+/migrations.xml
+/uhc-android.iml

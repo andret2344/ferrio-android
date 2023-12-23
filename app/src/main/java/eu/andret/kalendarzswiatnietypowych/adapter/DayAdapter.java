@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +33,6 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 	private static final int MAX_WORDS_COUNT = 4;
 
 	private final int month;
-	private final List<HolidayDay> holidayDays;
 
 	private static class ViewHolder {
 		private TextView dateSmall;
@@ -44,9 +42,8 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		private ImageView sad;
 	}
 
-	public DayAdapter(final Context context, final List<HolidayDay> holidayDays, final List<HolidayDay> days, final int month) {
+	public DayAdapter(final Context context, final int month, final List<HolidayDay> days) {
 		super(context, R.layout.adapter_day, days);
-		this.holidayDays = holidayDays;
 		this.month = month;
 	}
 
@@ -95,7 +92,6 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 			final Intent intent = new Intent(getContext(), DayActivity.class);
 			intent.putExtra(MainActivity.DAY, holidayDay.getDay());
 			intent.putExtra(MainActivity.MONTH, holidayDay.getMonth());
-			intent.putParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidayDays));
 			((MainActivity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
 		});
 

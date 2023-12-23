@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -96,7 +95,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 
 		convertView.setOnClickListener(v -> {
 			final Intent intent = new Intent(getContext(), DayActivity.class);
-			intent.putParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidayDays));
+//			intent.putParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidayDays));
 			intent.putExtra(MainActivity.DAY, day.getDay());
 			intent.putExtra(MainActivity.MONTH, day.getMonth());
 			getContext().startActivity(intent);
