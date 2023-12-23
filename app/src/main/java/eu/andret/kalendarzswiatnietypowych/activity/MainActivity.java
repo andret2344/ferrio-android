@@ -10,10 +10,10 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -23,6 +23,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdRequest;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 			NetworkCapabilities.TRANSPORT_ETHERNET);
 
 	private ViewPager2 viewPager2;
-	private ListView searchListView;
+	private RecyclerView searchListView;
 	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
@@ -103,15 +104,31 @@ public class MainActivity extends AppCompatActivity {
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
-		if (!Boolean.FALSE.equals(internet.getValue())) {
+		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
+		viewPager2.setCurrentItem(currentMonthValue - 1, false);
+		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
+		viewPager2.setOffscreenPageLimit(12);
+		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+			@Override
+			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
+			}
+		});
+
+		if (Boolean.TRUE.equals(internet.getValue())) {
 			call();
-			return;
 		}
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(R.string.no_internet_connection);
-		alert.setCancelable(false);
-		alert.setMessage(R.string.no_internet);
-		alertDialog = alert.show();
+		sharedViewModel.getAllHolidayDays().observe(this, days -> {
+			holidayDays.addAll(days);
+
+			if (days.isEmpty()) {
+				final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+				alert.setTitle(R.string.no_internet_connection);
+				alert.setCancelable(false);
+				alert.setMessage(R.string.no_internet);
+				alertDialog = alert.show();
+			}
+		});
 	}
 
 	private void configureObservers() {
@@ -168,17 +185,6 @@ public class MainActivity extends AppCompatActivity {
 //							});
 				})
 				.join();
-		final int currentMonthValue = LocalDate.now().getMonthValue();
-		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
-		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
-		viewPager2.setOffscreenPageLimit(12);
-		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-			@Override
-			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
-			}
-		});
 	}
 
 	@NotNull
@@ -194,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 		final SearchView searchView = (SearchView) searchItem.getActionView();
 		final List<HolidayDay> list = new ArrayList<>(holidayDays);
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, holidayDays, list);
+		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
 		searchListView.setAdapter(adapter);
 		if (searchView == null) {
 			return true;
@@ -230,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
 							.forEach(list::add);
 				}
 				Collections.sort(list);
+				Log.d("UHC-Search", String.valueOf(list.size()));
 				adapter.notifyDataSetChanged();
 				return false;
 			}

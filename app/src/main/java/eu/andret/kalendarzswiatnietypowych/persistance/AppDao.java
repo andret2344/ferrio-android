@@ -24,6 +24,9 @@ public interface AppDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertHolidayDays(List<HolidayDay> holidayDays);
 
+	@Query("SELECT * FROM holiday_day")
+	LiveData<List<HolidayDay>> getAllHolidayDays();
+
 	@Query("SELECT * FROM holiday_day WHERE month == :monthFrom AND day >= :dayFrom OR month > :monthFrom AND month < :monthTo OR month == :monthTo AND day <= :dayTo")
 	LiveData<List<HolidayDay>> getHolidayDays(int monthFrom, int dayFrom, int monthTo, int dayTo);
 

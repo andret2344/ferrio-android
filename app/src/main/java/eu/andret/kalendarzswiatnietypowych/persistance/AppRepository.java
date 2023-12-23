@@ -30,6 +30,10 @@ public class AppRepository {
 		return holidayDao.getHolidayDay(month, day);
 	}
 
+	public LiveData<List<HolidayDay>> getAllHolidayDays() {
+		return holidayDao.getAllHolidayDays();
+	}
+
 	public void insertHolidays(final List<Holiday> holidays) {
 		AppDatabase.DATABASE_WRITE_EXECUTOR.execute(() -> holidayDao.insertHolidays(holidays));
 	}

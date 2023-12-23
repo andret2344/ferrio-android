@@ -33,6 +33,10 @@ public class SharedViewModel extends ViewModel {
 		return repository.getHolidayDays(monthFrom, dayFrom, monthTo, dayTo);
 	}
 
+	public LiveData<List<HolidayDay>> getAllHolidayDays() {
+		return repository.getAllHolidayDays();
+	}
+
 	public void insertHolidays(final List<Holiday> holidays) {
 		repository.insertHolidays(holidays);
 	}
