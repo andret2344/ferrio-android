@@ -1,26 +1,29 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdRequest;
@@ -28,9 +31,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import org.jetbrains.annotations.NotNull;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.EcmaError;
-import org.mozilla.javascript.Scriptable;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -47,29 +47,35 @@ import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
+import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Downloader;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 
 public class MainActivity extends AppCompatActivity {
-	public static final String CALENDAR = "calendar";
 	public static final String WIDGET = "widget";
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String FROM = "from";
-	public static final String HOLIDAY_DAYS = "holidayDays";
-	public static final String HOLIDAY_DAY = "holidayDay";
-	private static final List<Integer> TRANSPORTS = List.of(
-			NetworkCapabilities.TRANSPORT_CELLULAR,
-			NetworkCapabilities.TRANSPORT_WIFI,
-			NetworkCapabilities.TRANSPORT_ETHERNET);
 
 	private ViewPager2 viewPager2;
-	private ListView searchListView;
+	private RecyclerView searchListView;
 	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
+	private SharedViewModel sharedViewModel;
+
+	public final ActivityResultLauncher<Intent> startActivityResultLauncher = registerForActivityResult(
+			new ActivityResultContracts.StartActivityForResult(),
+			result -> {
+				final int currentMonthValue = LocalDate.now().getMonthValue();
+				if (result.getResultCode() == Activity.RESULT_OK) {
+					final Intent data = result.getData();
+					if (data != null) {
+						viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
+					}
+				}
+			});
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -81,37 +87,50 @@ public class MainActivity extends AppCompatActivity {
 		final int currentMonthValue = LocalDate.now().getMonthValue();
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
 			final Intent intent = new Intent(this, DayActivity.class);
-			intent.putExtra(FROM, CALENDAR);
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
-			registerForActivityResult(
-					new ActivityResultContracts.StartActivityForResult(),
-					result -> {
-						if (result.getResultCode() == Activity.RESULT_OK) {
-							final Intent data = result.getData();
-							if (data != null) {
-								viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
-							}
-						}
-					}).launch(intent);
+			startActivityResultLauncher.launch(intent);
 		}
 
 		searchListView = findViewById(R.id.main_list_results);
 		viewPager2 = findViewById(R.id.main_pager_months);
+		sharedViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
+				.get(SharedViewModel.class);
 
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
-		if (!Boolean.FALSE.equals(internet.getValue())) {
+		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
+		viewPager2.setCurrentItem(currentMonthValue - 1, false);
+		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
+		viewPager2.setOffscreenPageLimit(12);
+		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+			@Override
+			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
+			}
+		});
+
+		if (Boolean.TRUE.equals(internet.getValue())) {
 			call();
-			return;
 		}
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(R.string.no_internet_connection);
-		alert.setCancelable(false);
-		alert.setMessage(R.string.no_internet);
-		alertDialog = alert.show();
+		sharedViewModel.getAllHolidayDays().observeForever(days -> {
+			holidayDays.addAll(days);
+			if (days.isEmpty()) {
+				final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+				alert.setTitle(R.string.no_internet_connection);
+				alert.setCancelable(false);
+				alert.setMessage(R.string.no_internet);
+				alertDialog = alert.show();
+				viewPager2.setVisibility(View.INVISIBLE);
+			} else {
+				if (alertDialog != null) {
+					alertDialog.dismiss();
+				}
+				viewPager2.setVisibility(View.VISIBLE);
+			}
+		});
 	}
 
 	private void configureObservers() {
@@ -120,11 +139,12 @@ public class MainActivity extends AppCompatActivity {
 			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
 				call();
 				alertDialog.dismiss();
+				viewPager2.setVisibility(View.VISIBLE);
 			}
 		});
 		final ConnectivityManager connectivityManager =
-				(ConnectivityManager) getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
-		TRANSPORTS.stream()
+				(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		Util.NETWORK_CAPABILITIES.stream()
 				.map(new NetworkRequest.Builder()::addTransportType)
 				.map(NetworkRequest.Builder::build)
 				.forEach(x -> connectivityManager.registerNetworkCallback(x, new ConnectivityManager.NetworkCallback() {
@@ -143,37 +163,17 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void call() {
+		sharedViewModel.deleteAll();
 		CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
 				.thenAccept(unusualCalendar -> {
-					holidayDays.addAll(unusualCalendar.getFixed());
-					unusualCalendar.getFloating()
-							.forEach(floatingHoliday -> {
-								try (final Context context = Context.enter()) {
-									context.setOptimizationLevel(-1);
-									final Scriptable scope = context.initStandardObjects();
-									final Object result = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
-									if (result != null) {
-										final String[] split = result.toString().split("\\.");
-										UnusualCalendar.getOrCreateDay(holidayDays, Integer.parseInt(split[1]), Integer.parseInt(split[0]))
-												.addHoliday(new Holiday(floatingHoliday));
-									}
-								} catch (final EcmaError ex) {
-									// do nothing, ignore the holiday
-								}
-							});
+					unusualCalendar.getFixed()
+							.stream()
+							.map(HolidayDay::getHolidays)
+							.forEach(sharedViewModel::insertHolidays);
+					sharedViewModel.insertHolidayDays(unusualCalendar.getFixed());
+					sharedViewModel.insertFloatingHoliday(unusualCalendar.getFloating());
 				})
 				.join();
-		final int currentMonthValue = LocalDate.now().getMonthValue();
-		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
-		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
-		viewPager2.setOffscreenPageLimit(12);
-		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-			@Override
-			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
-			}
-		});
 	}
 
 	@NotNull
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 		final SearchView searchView = (SearchView) searchItem.getActionView();
 		final List<HolidayDay> list = new ArrayList<>(holidayDays);
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, holidayDays, list);
+		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
 		searchListView.setAdapter(adapter);
 		if (searchView == null) {
 			return true;
@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 
 			@Override
+			@SuppressLint("NotifyDataSetChanged")
 			public boolean onQueryTextChange(final String newText) {
 				list.clear();
 				if (newText == null || newText.equals("")) {

@@ -6,8 +6,8 @@ android {
         applicationId "eu.andret.kalendarzswiatnietypowych"
         minSdk 26
         targetSdk 34
-        versionCode 68
-        versionName "2.3.0-rc.8"
+        versionCode 69
+        versionName "2.4.0-rc.1"
         multiDexEnabled true
         signingConfig signingConfigs.debug
     }
@@ -37,8 +37,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '22.4.0'
-    implementation group: 'com.google.android.material', name: 'material', version: '1.11.0-alpha03'
+    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '22.6.0'
+    implementation group: 'com.google.android.material', name: 'material', version: '1.12.0-alpha02'
 
     implementation group: 'com.android.support', name: 'multidex', version: '2.0.1'
 
@@ -49,13 +49,16 @@ dependencies {
     implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.6.1'
     implementation group: 'androidx.preference', name: 'preference', version: '1.2.1'
     implementation group: 'androidx.viewpager2', name: 'viewpager2', version: '1.0.0'
-    implementation group: 'androidx.navigation', name: 'navigation-fragment', version: '2.7.4'
-    implementation group: 'androidx.navigation', name: 'navigation-ui', version: '2.7.4'
+    implementation group: 'androidx.navigation', name: 'navigation-fragment', version: '2.7.6'
+    implementation group: 'androidx.navigation', name: 'navigation-ui', version: '2.7.6'
 
-    annotationProcessor group: 'org.jetbrains', name: 'annotations', version: '24.0.1'
-    coreLibraryDesugaring group: 'com.android.tools', name: 'desugar_jdk_libs', version: '2.0.3'
+    annotationProcessor group: 'org.jetbrains', name: 'annotations', version: '24.1.0'
+    coreLibraryDesugaring group: 'com.android.tools', name: 'desugar_jdk_libs', version: '2.0.4'
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
     androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: '1.1.5'
     androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-core', version: '3.5.1'
+
+    implementation group: "androidx.room", name: "room-runtime", version: "2.6.1"
+    annotationProcessor group: "androidx.room", name: "room-compiler", version: "2.6.1"
 }

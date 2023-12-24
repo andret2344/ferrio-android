@@ -8,16 +8,15 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,87 +29,89 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
-public class DayAdapter extends ArrayAdapter<HolidayDay> {
+public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 	private static final int MAX_WORDS_COUNT = 4;
 
+	private final Context context;
 	private final int month;
 	private final List<HolidayDay> holidayDays;
 
-	private static class ViewHolder {
-		private TextView dateSmall;
-		private TextView dateBig;
-		private TextView holiday;
-		private TextView more;
-		private ImageView sad;
+	public static class ViewHolder extends RecyclerView.ViewHolder {
+		private final TextView smallDateTextView;
+		private final TextView bigDateTextView;
+		private final TextView holidayTextView;
+		private final TextView moreTextView;
+		private final ImageView sadImageView;
+
+		public ViewHolder(final View view) {
+			super(view);
+			smallDateTextView = view.findViewById(R.id.adapter_day_text_number_small);
+			bigDateTextView = view.findViewById(R.id.adapter_day_text_number_big);
+			holidayTextView = view.findViewById(R.id.adapter_day_text_holiday);
+			moreTextView = view.findViewById(R.id.adapter_day_text_more);
+			sadImageView = view.findViewById(R.id.adapter_day_image_sad);
+		}
 	}
 
-	public DayAdapter(final Context context, final List<HolidayDay> holidayDays, final List<HolidayDay> days, final int month) {
-		super(context, R.layout.adapter_day, days);
-		this.holidayDays = holidayDays;
+	public DayAdapter(final Context context, final int month, final List<HolidayDay> holidayDays) {
+		this.context = context;
 		this.month = month;
+		this.holidayDays = holidayDays;
 	}
 
 	@NonNull
 	@Override
-	public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
-		final ViewHolder holder;
-		if (convertView == null) {
-			assert getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) != null;
-			convertView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.adapter_day, parent, false);
-			holder = new ViewHolder();
-			holder.dateSmall = convertView.findViewById(R.id.adapter_day_text_number_small);
-			holder.dateBig = convertView.findViewById(R.id.adapter_day_text_number_big);
-			holder.holiday = convertView.findViewById(R.id.adapter_day_text_holiday);
-			holder.more = convertView.findViewById(R.id.adapter_day_text_more);
-			holder.sad = convertView.findViewById(R.id.adapter_day_image_sad);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
+		final View view = LayoutInflater.from(viewGroup.getContext())
+				.inflate(R.layout.adapter_day, viewGroup, false);
+		view.getLayoutParams().height = viewGroup.getMeasuredHeight() / 6;
+		return new ViewHolder(view);
+	}
 
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-		final Data.ColorSet color = Data.getColors(getContext());
+	@Override
+	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		final Data.ColorSet color = Data.getColors(context);
 
-		holder.dateSmall.setTextColor(color.getForegroundColor());
-		holder.holiday.setTextColor(color.getForegroundColor());
-		holder.more.setTextColor(color.getForegroundColor());
-		convertView.setBackgroundColor(color.getBackgroundColor());
+		viewHolder.smallDateTextView.setTextColor(color.getForegroundColor());
+		viewHolder.holidayTextView.setTextColor(color.getForegroundColor());
+		viewHolder.moreTextView.setTextColor(color.getForegroundColor());
+		viewHolder.itemView.setBackgroundColor(color.getBackgroundColor());
 
-		final HolidayDay holidayDay = getItem(position);
+		final HolidayDay holidayDay = holidayDays.get(position);
 		if (holidayDay == null) {
-			return convertView;
+			return;
 		}
 
 		final LocalDate now = LocalDate.now();
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
-			convertView.setBackgroundColor(color.isDarkTheme() ? Color.rgb(55, 0, 0) : Color.rgb(200, 255, 255));
+			viewHolder.itemView.setBackgroundColor(color.isDarkTheme() ? Color.rgb(55, 0, 0) : Color.rgb(200, 255, 255));
 		}
 
 		if (holidayDay.getMonth() != month) {
-			convertView.setBackgroundColor(ContextCompat.getColor(getContext(), color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
-		} else if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
-			convertView.setBackgroundColor(Util.randomizeColor(getContext(), holidayDay.getSeed()));
+			viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
+		} else if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
+			viewHolder.itemView.setBackgroundColor(Util.randomizeColor(context, holidayDay.getSeed()));
 		}
-		convertView.setOnClickListener(v -> {
-			final Intent intent = new Intent(getContext(), DayActivity.class);
+		viewHolder.itemView.setOnClickListener(v -> {
+			final Intent intent = new Intent(context, DayActivity.class);
 			intent.putExtra(MainActivity.DAY, holidayDay.getDay());
 			intent.putExtra(MainActivity.MONTH, holidayDay.getMonth());
-			intent.putParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidayDays));
-			((MainActivity) getContext()).startActivityForResult(intent, getContext().getResources().getInteger(R.integer.request_code_change_month));
+			((MainActivity) context).startActivityResultLauncher.launch(intent);
 		});
 
-		final boolean includeUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
-		final boolean displayShortcuts = preferences.getBoolean(getContext().getString(R.string.settings_key_display_shortcuts), true);
+		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
+		final boolean displayShortcuts = preferences.getBoolean(context.getString(R.string.settings_key_display_shortcuts), true);
 		final long holidaysCount = holidayDay.countHolidays(includeUsual);
 		if (holidaysCount == 0) {
-			holder.sad.setVisibility(View.VISIBLE);
-			return convertView;
+			viewHolder.sadImageView.setVisibility(View.VISIBLE);
+			return;
 		}
 		if (!displayShortcuts) {
-			holder.dateBig.setText(String.valueOf(holidayDay.getDay()));
-			return convertView;
+			viewHolder.bigDateTextView.setText(String.valueOf(holidayDay.getDay()));
+			return;
 		}
-		holder.dateSmall.setText(String.valueOf(holidayDay.getDay()));
+		viewHolder.smallDateTextView.setText(String.valueOf(holidayDay.getDay()));
 
 		final Holiday displayedHoliday = holidayDay.getHolidaysList(includeUsual).get(0);
 		final String[] words = displayedHoliday.getName().split(" ");
@@ -120,19 +121,23 @@ public class DayAdapter extends ArrayAdapter<HolidayDay> {
 		final boolean full = words.length <= MAX_WORDS_COUNT;
 		final boolean isDisplayedUsual = displayedHoliday.isUsual();
 		if (isDisplayedUsual) {
-			holder.holiday.setTypeface(null, Typeface.BOLD);
+			viewHolder.holidayTextView.setTypeface(null, Typeface.BOLD);
 		}
 		long holidaysCountIndicator = holidaysCount;
 		if (full) {
 			holidaysCountIndicator--;
-			holder.holiday.setText(result);
+			viewHolder.holidayTextView.setText(result);
 		} else {
-			holder.holiday.setText(getContext().getString(R.string.ellipsis_text, result));
+			viewHolder.holidayTextView.setText(context.getString(R.string.ellipsis_text, result));
 		}
 
 		if (holidaysCountIndicator > 0) {
-			holder.more.setText(getContext().getString(R.string.see_more, holidaysCountIndicator));
+			viewHolder.moreTextView.setText(context.getString(R.string.see_more, holidaysCountIndicator));
 		}
-		return convertView;
+	}
+
+	@Override
+	public int getItemCount() {
+		return holidayDays.size();
 	}
 }

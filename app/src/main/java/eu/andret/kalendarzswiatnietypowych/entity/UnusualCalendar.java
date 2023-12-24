@@ -1,10 +1,8 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -12,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class UnusualCalendar implements Parcelable {
+@Entity(tableName = "unusual_calendar")
+public class UnusualCalendar {
 	private final List<HolidayDay> fixed;
 	private final List<FloatingHoliday> floating;
 
-	protected UnusualCalendar(final Parcel in) {
-		fixed = in.createTypedArrayList(HolidayDay.CREATOR);
-		floating = in.createTypedArrayList(FloatingHoliday.CREATOR);
+	public UnusualCalendar(final List<HolidayDay> fixed, final List<FloatingHoliday> floating) {
+		this.fixed = fixed;
+		this.floating = floating;
 	}
 
 	public List<HolidayDay> getFixed() {
@@ -29,29 +28,6 @@ public class UnusualCalendar implements Parcelable {
 		return floating;
 	}
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(final Parcel parcel, final int flags) {
-		parcel.writeParcelableArray(fixed.toArray(new HolidayDay[0]), flags);
-		parcel.writeParcelableArray(floating.toArray(new FloatingHoliday[0]), flags);
-	}
-
-	public static final Creator<UnusualCalendar> CREATOR = new Creator<>() {
-		@Override
-		public UnusualCalendar createFromParcel(final Parcel in) {
-			return new UnusualCalendar(in);
-		}
-
-		@Override
-		public UnusualCalendar[] newArray(final int size) {
-			return new UnusualCalendar[size];
-		}
-	};
-
 	@NonNull
 	public static List<HolidayDay> getHolidayDaysInDateRange(final List<HolidayDay> holidayDays, final LocalDate begin, final LocalDate end) {
 		final List<HolidayDay> result = new ArrayList<>();
@@ -60,7 +36,6 @@ public class UnusualCalendar implements Parcelable {
 		}
 		return result;
 	}
-
 
 	@Nullable
 	public static HolidayDay getDay(final List<HolidayDay> holidayDays, final int month, final int day) {

@@ -4,25 +4,36 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.GridView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
+import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Data;
+import eu.andret.kalendarzswiatnietypowych.util.SpanningGridLayoutManager;
 
 public class MonthFragment extends Fragment {
-	private final List<HolidayDay> holidayDays;
+	private SharedViewModel sharedViewModel;
 
-	public MonthFragment(final List<HolidayDay> holidayDays) {
-		this.holidayDays = holidayDays;
+	@Override
+	public void onCreate(@Nullable final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		sharedViewModel = new ViewModelProvider(requireActivity(), ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
+				.get(SharedViewModel.class);
 	}
 
 	@NonNull
@@ -34,21 +45,28 @@ public class MonthFragment extends Fragment {
 		}
 
 		final int current = getArguments().getInt(MainActivity.MONTH, 1);
-		final List<HolidayDay> days = getArguments().getParcelableArrayList(MainActivity.HOLIDAY_DAYS);
 		final Data.ColorSet color = Data.getColors(getContext());
-		final GridView grid = month.findViewById(R.id.fragment_month_grid_days);
-		grid.measure(0, 0);
-		final DayAdapter adapter = new DayAdapter(getActivity(), holidayDays, days, current);
-		grid.setAdapter(adapter);
-		grid.post(() -> {
-			final int itemHeight = grid.getMeasuredHeight() / 6 - 25;
-			for (int i = 0; i < grid.getChildCount(); i++) {
-				final View view = grid.getChildAt(i);
-				final ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-				view.setLayoutParams(new AbsListView.LayoutParams(layoutParams.width, itemHeight));
-			}
-		});
+
 		month.findViewById(R.id.fragment_month_grid_days).setBackgroundColor(color.getForegroundColor());
+
+		final LocalDate before = getBefore(current);
+		final LocalDate after = before.plusDays(42);
+
+		sharedViewModel.getHolidayDays(before, after)
+				.observe(getViewLifecycleOwner(), holidayDays -> {
+					final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
+					recyclerView.setLayoutManager(new SpanningGridLayoutManager(getContext(), 7, LinearLayoutManager.VERTICAL, false));
+					final List<HolidayDay> days = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after);
+					recyclerView.setAdapter(new DayAdapter(getContext(), current, days));
+				});
 		return month;
+	}
+
+	private LocalDate getBefore(final int month) {
+		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, 1);
+		if (date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+			return date;
+		}
+		return date.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
 	}
 }
