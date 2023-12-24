@@ -1,16 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/fragment_month_relative_main"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/fragment_month_grid_days"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/fragment_month_grid_days"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="#FFFFFF"
-		android:adjustViewBounds="true"
-		android:horizontalSpacing="1dp"
-		android:stretchMode="columnWidth"
-		android:verticalSpacing="1dp" />
-
-</RelativeLayout>
+	android:layout_height="match_parent"
+	android:background="#FFFFFF" />
