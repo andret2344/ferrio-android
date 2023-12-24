@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.entity.FloatingHoliday;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -27,9 +26,6 @@ public interface AppDao {
 	@Query("SELECT * FROM holiday_day")
 	LiveData<List<HolidayDay>> getAllHolidayDays();
 
-	@Query("SELECT * FROM holiday_day WHERE month == :monthFrom AND day >= :dayFrom OR month BETWEEN CASE WHEN :monthFrom = 12 THEN 0 ELSE :monthFrom END AND CASE WHEN :monthTo = 1 THEN 12 ELSE :monthTo END OR month == :monthTo AND day <= :dayTo")
-	LiveData<List<HolidayDay>> getHolidayDays(int monthFrom, int dayFrom, int monthTo, int dayTo);
-
-	@Query("SELECT * FROM holiday_day WHERE month == :month AND day == :day")
-	LiveData<Optional<HolidayDay>> getHolidayDay(int month, int day);
+	@Query("SELECT * FROM floating_holiday")
+	LiveData<List<FloatingHoliday>> getAllFloatingHolidays();
 }

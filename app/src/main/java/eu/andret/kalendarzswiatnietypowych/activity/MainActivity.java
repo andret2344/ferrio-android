@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.Menu;
@@ -53,15 +52,10 @@ import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 
 public class MainActivity extends AppCompatActivity {
-	public static final String CALENDAR = "calendar";
 	public static final String WIDGET = "widget";
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String FROM = "from";
-	private static final List<Integer> TRANSPORTS = List.of(
-			NetworkCapabilities.TRANSPORT_CELLULAR,
-			NetworkCapabilities.TRANSPORT_WIFI,
-			NetworkCapabilities.TRANSPORT_ETHERNET);
 
 	private ViewPager2 viewPager2;
 	private RecyclerView searchListView;
@@ -92,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
 		final int currentMonthValue = LocalDate.now().getMonthValue();
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
 			final Intent intent = new Intent(this, DayActivity.class);
-			intent.putExtra(FROM, CALENDAR);
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
 			startActivityResultLauncher.launch(intent);
@@ -121,9 +114,8 @@ public class MainActivity extends AppCompatActivity {
 		if (Boolean.TRUE.equals(internet.getValue())) {
 			call();
 		}
-		sharedViewModel.getAllHolidayDays().observe(this, days -> {
+		sharedViewModel.getAllHolidayDays().observeForever(days -> {
 			holidayDays.addAll(days);
-
 			if (days.isEmpty()) {
 				final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setTitle(R.string.no_internet_connection);
@@ -131,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
 				alert.setMessage(R.string.no_internet);
 				alertDialog = alert.show();
 				viewPager2.setVisibility(View.INVISIBLE);
+			} else {
+				alertDialog.dismiss();
+				viewPager2.setVisibility(View.VISIBLE);
 			}
 		});
 	}
@@ -146,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 		});
 		final ConnectivityManager connectivityManager =
 				(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		TRANSPORTS.stream()
+		Util.NETWORK_CAPABILITIES.stream()
 				.map(new NetworkRequest.Builder()::addTransportType)
 				.map(NetworkRequest.Builder::build)
 				.forEach(x -> connectivityManager.registerNetworkCallback(x, new ConnectivityManager.NetworkCallback() {
@@ -165,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void call() {
+		sharedViewModel.deleteAll();
 		CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
 				.thenAccept(unusualCalendar -> {
 					unusualCalendar.getFixed()
@@ -173,21 +169,6 @@ public class MainActivity extends AppCompatActivity {
 							.forEach(sharedViewModel::insertHolidays);
 					sharedViewModel.insertHolidayDays(unusualCalendar.getFixed());
 					sharedViewModel.insertFloatingHoliday(unusualCalendar.getFloating());
-//					unusualCalendar.getFloating()
-//							.forEach(floatingHoliday -> {
-//								try (final Context context = Context.enter()) {
-//									context.setOptimizationLevel(-1);
-//									final Scriptable scope = context.initStandardObjects();
-//									final Object result = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
-//									if (result != null) {
-//										final String[] split = result.toString().split("\\.");
-//										UnusualCalendar.getOrCreateDay(holidayDays, Integer.parseInt(split[1]), Integer.parseInt(split[0]))
-//												.addHoliday(new Holiday(floatingHoliday));
-//									}
-//								} catch (final EcmaError ex) {
-//									// do nothing, ignore the holiday
-//								}
-//							});
 				})
 				.join();
 	}

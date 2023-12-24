@@ -1,10 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.persistance;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +31,8 @@ public class SharedViewModel extends ViewModel {
 		return repository.getHolidayDay(month, day);
 	}
 
-	public LiveData<List<HolidayDay>> getHolidayDays(final int monthFrom, final int dayFrom, final int monthTo, final int dayTo) {
-		return repository.getHolidayDays(monthFrom, dayFrom, monthTo, dayTo);
+	public LiveData<List<HolidayDay>> getHolidayDays(@NonNull final LocalDate from, @NonNull final LocalDate to) {
+		return repository.getHolidayDays(from.getMonthValue(), from.getDayOfMonth(), to.getMonthValue(), to.getDayOfMonth());
 	}
 
 	public LiveData<List<HolidayDay>> getAllHolidayDays() {
@@ -47,5 +49,9 @@ public class SharedViewModel extends ViewModel {
 
 	public void insertHolidayDays(final List<HolidayDay> holidayDays) {
 		repository.insertHolidayDays(holidayDays);
+	}
+
+	public void deleteAll() {
+		repository.deleteAll();
 	}
 }

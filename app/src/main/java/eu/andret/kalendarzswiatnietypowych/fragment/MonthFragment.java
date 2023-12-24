@@ -52,7 +52,7 @@ public class MonthFragment extends Fragment {
 		final LocalDate before = getBefore(current);
 		final LocalDate after = before.plusDays(42);
 
-		sharedViewModel.getHolidayDays(before.getMonthValue(), before.getDayOfMonth(), after.getMonthValue(), after.getDayOfMonth())
+		sharedViewModel.getHolidayDays(before, after)
 				.observe(getViewLifecycleOwner(), holidayDays -> {
 					final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
 					recyclerView.setLayoutManager(new SpanningGridLayoutManager(getContext(), 7, LinearLayoutManager.VERTICAL, false));

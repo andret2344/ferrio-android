@@ -17,7 +17,7 @@ import java.util.Random;
 
 public final class Util {
 	private static final Random RANDOM = new Random();
-	private static final List<Integer> networkCapabilities = List.of(
+	public static final List<Integer> NETWORK_CAPABILITIES = List.of(
 			NetworkCapabilities.TRANSPORT_WIFI,
 			NetworkCapabilities.TRANSPORT_CELLULAR,
 			NetworkCapabilities.TRANSPORT_ETHERNET);
@@ -72,7 +72,7 @@ public final class Util {
 		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		return Optional.ofNullable(connectivityManager.getActiveNetwork())
 				.map(connectivityManager::getNetworkCapabilities)
-				.filter(capabilities -> networkCapabilities.stream().anyMatch(capabilities::hasTransport))
+				.filter(capabilities -> NETWORK_CAPABILITIES.stream().anyMatch(capabilities::hasTransport))
 				.isPresent();
 	}
 }
