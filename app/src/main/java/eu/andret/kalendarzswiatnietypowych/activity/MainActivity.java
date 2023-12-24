@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -200,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 
 			@Override
+			@SuppressLint("NotifyDataSetChanged")
 			public boolean onQueryTextChange(final String newText) {
 				list.clear();
 				if (newText == null || newText.equals("")) {
