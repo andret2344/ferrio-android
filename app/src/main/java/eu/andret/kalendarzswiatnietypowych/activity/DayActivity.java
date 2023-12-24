@@ -36,7 +36,9 @@ import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayActivity extends AppCompatActivity {
+	public static final String POSITION = "position";
 	private static final Random RANDOM = new Random();
+
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
 			.withLocale(Locale.getDefault());
 

@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.persistance;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -89,7 +88,6 @@ public class AppRepository {
 
 	private void mergeHolidays() {
 		if (fixedHolidaysCache != null && floatingHolidaysCache != null) {
-			Log.d("UHC-AppRepository", "fixed: " + fixedHolidaysCache.size() + ", floating: " + floatingHolidaysCache.size());
 			floatingHolidaysCache.forEach(floatingHoliday -> {
 				try (final Context context = Context.enter()) {
 					context.setOptimizationLevel(-1);
@@ -105,8 +103,6 @@ public class AppRepository {
 				}
 			});
 			mergedHolidays.setValue(fixedHolidaysCache);
-		} else {
-			Log.d("UHC-AppRepository", "fixed: null, floating: null");
 		}
 	}
 }

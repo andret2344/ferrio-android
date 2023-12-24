@@ -124,7 +124,9 @@ public class MainActivity extends AppCompatActivity {
 				alertDialog = alert.show();
 				viewPager2.setVisibility(View.INVISIBLE);
 			} else {
-				alertDialog.dismiss();
+				if (alertDialog != null) {
+					alertDialog.dismiss();
+				}
 				viewPager2.setVisibility(View.VISIBLE);
 			}
 		});

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.fragment.DayFragment;
 
 public class DayFragmentAdapter extends FragmentStateAdapter {
@@ -20,7 +21,7 @@ public class DayFragmentAdapter extends FragmentStateAdapter {
 	public Fragment createFragment(final int position) {
 		final DayFragment dayFragment = new DayFragment();
 		final Bundle bundle = new Bundle();
-		bundle.putInt("position", position);
+		bundle.putInt(DayActivity.POSITION, position);
 		dayFragment.setArguments(bundle);
 		return dayFragment;
 	}

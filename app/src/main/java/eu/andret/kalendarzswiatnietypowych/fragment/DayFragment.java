@@ -19,6 +19,7 @@ import java.time.Month;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
@@ -34,7 +35,7 @@ public class DayFragment extends Fragment {
 		if (getArguments() == null || getContext() == null) {
 			return dayView;
 		}
-		final int position = getArguments().getInt("position");
+		final int position = getArguments().getInt(DayActivity.POSITION);
 		final Pair<Month, Integer> date = Util.calculateDates(position + 1);
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 		final Data.ColorSet color = Data.getColors(getContext());
