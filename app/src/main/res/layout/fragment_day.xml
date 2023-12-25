@@ -19,7 +19,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:text="@string/no_unusual_holidays"
-		android:textSize="@dimen/fragment_day_share_button"
+		android:textSize="@dimen/fragment_day_empty"
 		android:background="@color/color_light_gray"
 		android:visibility="invisible" />
 

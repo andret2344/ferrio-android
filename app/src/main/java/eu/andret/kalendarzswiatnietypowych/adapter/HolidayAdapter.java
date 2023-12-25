@@ -1,10 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
 public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHolder> {
@@ -21,10 +24,14 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView holidayTextView;
+		private final TextView countryTextView;
+		private final ImageView moreImageView;
 
 		public ViewHolder(final View view) {
 			super(view);
 			holidayTextView = view.findViewById(R.id.adapter_holiday_text_holiday);
+			countryTextView = view.findViewById(R.id.adapter_holiday_text_country);
+			moreImageView = view.findViewById(R.id.adapter_holiday_image_more);
 		}
 	}
 
@@ -48,7 +55,18 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 			return;
 		}
 
-		viewHolder.holidayTextView.setText(context.getString(R.string.pointed_text, holiday.getName()));
+		if (holiday.getDescription().isBlank()) {
+			viewHolder.moreImageView.setVisibility(View.INVISIBLE);
+		} else {
+			viewHolder.moreImageView.setOnClickListener(view -> {
+				final Intent intent = new Intent(context, HolidayActivity.class);
+				intent.putExtra("holiday", holiday.getId());
+				context.startActivity(intent);
+			});
+		}
+
+		viewHolder.holidayTextView.setText(holiday.getName());
+		viewHolder.countryTextView.setText(holiday.getCountry());
 		if (holiday.isUsual()) {
 			viewHolder.holidayTextView.setTypeface(null, Typeface.BOLD);
 		}

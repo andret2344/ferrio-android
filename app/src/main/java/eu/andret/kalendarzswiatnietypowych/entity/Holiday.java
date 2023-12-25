@@ -1,10 +1,9 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -15,18 +14,21 @@ public class Holiday implements Comparable<Holiday> {
 	private final String name;
 	private final String description;
 	private final boolean usual;
+	private final String country;
 	private final String url;
 
-	public Holiday(final int id, final String name, final String description, final boolean usual, final String url) {
+	public Holiday(final int id, final String name, final String description, final boolean usual, final String country, final String url) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.country = country;
 		this.usual = usual;
 		this.url = url;
 	}
 
-	public Holiday(final FloatingHoliday floatingHoliday) {
-		this(floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(), floatingHoliday.isUsual(), floatingHoliday.getUrl());
+	public Holiday(@NonNull final FloatingHoliday floatingHoliday) {
+		this(-floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(),
+				floatingHoliday.isUsual(), floatingHoliday.getCountry(), floatingHoliday.getUrl());
 	}
 
 	public int getId() {
@@ -40,6 +42,11 @@ public class Holiday implements Comparable<Holiday> {
 
 	public String getDescription() {
 		return description;
+	}
+
+	@Nullable
+	public String getCountry() {
+		return country;
 	}
 
 	public boolean isUsual() {
@@ -63,15 +70,16 @@ public class Holiday implements Comparable<Holiday> {
 				&& usual == holiday.usual
 				&& Objects.equals(name, holiday.name)
 				&& Objects.equals(description, holiday.description)
+				&& Objects.equals(country, holiday.country)
 				&& Objects.equals(url, holiday.url);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, usual, url);
+		return Objects.hash(id, name, description, usual, country, url);
 	}
 
-	@NotNull
+	@NonNull
 	@Override
 	public String toString() {
 		return "Holiday{" +
@@ -79,6 +87,7 @@ public class Holiday implements Comparable<Holiday> {
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", usual=" + usual +
+				", country='" + country + '\'' +
 				", url='" + url + '\'' +
 				'}';
 	}

@@ -83,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
 			layout.addView(image);
 			final TextView tv = new TextView(context);
 			tv.setText(text);
-			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.drawer_list_name_text));
+			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.adapter_search_main));
 			layout.addView(tv);
 			final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 			llp.setMargins(30, 20, 30, 20);

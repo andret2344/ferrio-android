@@ -106,15 +106,16 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
 		final boolean displayShortcuts = preferences.getBoolean(context.getString(R.string.settings_key_display_shortcuts), true);
 		final long holidaysCount = holidayDay.countHolidays(includeUsual);
+		viewHolder.smallDateTextView.setText(String.valueOf(holidayDay.getDay()));
 		if (holidaysCount == 0) {
 			viewHolder.sadImageView.setVisibility(View.VISIBLE);
 			return;
 		}
 		if (!displayShortcuts) {
+			viewHolder.smallDateTextView.setVisibility(View.INVISIBLE);
 			viewHolder.bigDateTextView.setText(String.valueOf(holidayDay.getDay()));
 			return;
 		}
-		viewHolder.smallDateTextView.setText(String.valueOf(holidayDay.getDay()));
 
 		final Holiday displayedHoliday = holidayDay.getHolidaysList(includeUsual).get(0);
 		final String[] words = displayedHoliday.getName().split(" ");

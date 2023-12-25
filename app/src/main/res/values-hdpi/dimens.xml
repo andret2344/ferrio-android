@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- High DPI 480x800 -->
-    <dimen name="fragment_day_date_text">35sp</dimen>
-    <dimen name="adapter_holiday_main_text">25sp</dimen>
-    <dimen name="adapter_month_holiday_main_text">15sp</dimen>
-    <dimen name="fragment_day_share_button">35sp</dimen>
-    <dimen name="adapter_day_calendar_date_text">12sp</dimen>
-    <dimen name="adapter_day_calendar_holiday_text">8sp</dimen>
-    <dimen name="adapter_day_calendar_more_text">12sp</dimen>
-    <dimen name="drawer_list_name_text">16sp</dimen>
-    <dimen name="fragment_month_month_text">35sp</dimen>
+	<!-- High DPI ~240dpi -->
+	<dimen name="activity_holiday_name">18sp</dimen>
+	<dimen name="adapter_day_holiday">8sp</dimen>
+	<dimen name="adapter_day_more">10sp</dimen>
+	<dimen name="adapter_day_small_date">10sp</dimen>
+	<dimen name="adapter_holiday_main">16sp</dimen>
+	<dimen name="adapter_search_main">15sp</dimen>
+	<dimen name="fragment_day_empty">25sp</dimen>
 
 </resources>

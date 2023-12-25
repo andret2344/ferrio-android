@@ -22,7 +22,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_horizontal"
-				android:textSize="@dimen/adapter_day_calendar_date_text" />
+				android:textSize="@dimen/adapter_day_small_date" />
 
 			<TextView
 				android:id="@+id/adapter_day_text_number_big"
@@ -30,7 +30,7 @@
 				android:layout_height="match_parent"
 				android:layout_gravity="center"
 				android:gravity="center"
-				android:textSize="@dimen/adapter_holiday_main_text" />
+				android:textSize="@dimen/adapter_holiday_main" />
 
 			<ImageView
 				android:id="@+id/adapter_day_image_sad"
@@ -48,7 +48,7 @@
 				android:layout_alignParentBottom="true"
 				android:layout_marginBottom="2dp"
 				android:gravity="center_horizontal"
-				android:textSize="@dimen/adapter_day_calendar_more_text" />
+				android:textSize="@dimen/adapter_day_more" />
 
 			<TextView
 				android:id="@+id/adapter_day_text_holiday"
@@ -58,7 +58,7 @@
 				android:layout_centerVertical="true"
 				android:layout_marginBottom="15dp"
 				android:gravity="center|center"
-				android:textSize="@dimen/adapter_day_calendar_holiday_text" />
+				android:textSize="@dimen/adapter_day_holiday" />
 		</RelativeLayout>
 
 	</androidx.cardview.widget.CardView>

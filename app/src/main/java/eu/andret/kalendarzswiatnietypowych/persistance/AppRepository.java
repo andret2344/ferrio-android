@@ -11,6 +11,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Scriptable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,6 +54,15 @@ public class AppRepository {
 
 	public LiveData<List<HolidayDay>> getAllHolidayDays() {
 		return mergedHolidays;
+	}
+
+	public LiveData<Holiday> getHoliday(final int id) {
+		return Transformations.map(mergedHolidays, originalList -> originalList.stream()
+				.map(HolidayDay::getHolidays)
+				.flatMap(Collection::stream)
+				.filter(holiday -> holiday.getId() == id)
+				.findAny()
+				.orElse(null));
 	}
 
 	public void insertHolidays(final List<Holiday> holidays) {

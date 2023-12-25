@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -13,14 +14,17 @@ public class FloatingHoliday {
 	private final boolean usual;
 	private final String name;
 	private final String description;
+	private final String country;
 	private final String url;
 	private final String script;
 
-	public FloatingHoliday(final int id, final boolean usual, final String name, final String description, final String url, final String script) {
+	public FloatingHoliday(final int id, final boolean usual, final String name, final String description,
+						   final String country, final String url, final String script) {
 		this.id = id;
 		this.usual = usual;
 		this.name = name;
 		this.description = description;
+		this.country = country;
 		this.url = url;
 		this.script = script;
 	}
@@ -39,6 +43,11 @@ public class FloatingHoliday {
 
 	public String getDescription() {
 		return description;
+	}
+
+	@Nullable
+	public String getCountry() {
+		return country;
 	}
 
 	public String getUrl() {
@@ -62,13 +71,14 @@ public class FloatingHoliday {
 				&& usual == that.usual
 				&& Objects.equals(name, that.name)
 				&& Objects.equals(description, that.description)
+				&& Objects.equals(country, that.country)
 				&& Objects.equals(url, that.url)
 				&& Objects.equals(script, that.script);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, usual, name, description, url, script);
+		return Objects.hash(id, usual, name, description, country, url, script);
 	}
 
 	@NonNull
@@ -79,6 +89,7 @@ public class FloatingHoliday {
 				", usual=" + usual +
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
+				", country='" + country + '\'' +
 				", url='" + url + '\'' +
 				", script='" + script + '\'' +
 				'}';
