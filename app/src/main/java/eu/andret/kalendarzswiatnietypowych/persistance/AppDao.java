@@ -14,18 +14,27 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 
 @Dao
 public interface AppDao {
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	void insertHolidays(List<Holiday> holidays);
-
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	void insertFloatingHolidays(List<FloatingHoliday> floatingHolidays);
-
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	void insertHolidayDays(List<HolidayDay> holidayDays);
-
 	@Query("SELECT * FROM holiday_day")
 	LiveData<List<HolidayDay>> getAllHolidayDays();
 
 	@Query("SELECT * FROM floating_holiday")
 	LiveData<List<FloatingHoliday>> getAllFloatingHolidays();
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertHolidayDay(HolidayDay day);
+
+	@Query("DELETE FROM holiday_day")
+	void deleteAllHolidayDays();
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertHoliday(Holiday holiday);
+
+	@Query("DELETE FROM holiday")
+	void deleteAllHolidays();
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insertFloatingHoliday(FloatingHoliday floatingHoliday);
+
+	@Query("DELETE FROM floating_holiday")
+	void deleteAllFloatingHolidays();
 }

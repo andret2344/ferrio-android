@@ -6,26 +6,38 @@
 		<SwitchPreference
 			android:defaultValue="false"
 			android:disableDependentsState="true"
+			android:icon="@drawable/baseline_palette_24"
 			android:key="@string/settings_key_theme_colorized"
 			android:summary="@string/preference_description_colorized_days"
 			android:title="@string/preference_title_colorized_days" />
 
 		<SwitchPreference
 			android:defaultValue="false"
+			android:icon="@drawable/baseline_add_circle_24"
 			android:key="@string/settings_key_usual_holidays"
 			android:summary="@string/preference_description_include_usual"
 			android:title="@string/preference_title_include_usual" />
 
 		<SwitchPreference
 			android:defaultValue="true"
+			android:icon="@drawable/baseline_feed_24"
 			android:key="@string/settings_key_display_shortcuts"
 			android:summary="@string/preference_description_holidays_shortcuts"
 			android:title="@string/preference_title_holidays_shortcuts" />
 
+		<ListPreference
+			android:defaultValue="system"
+			android:entries="@array/preference_theme_entries"
+			android:entryValues="@array/preference_theme_values"
+			android:icon="@drawable/baseline_brightness_medium_24"
+			android:key="@string/settings_key_app_theme"
+			android:summary="%s"
+			android:title="@string/app_theme" />
+
 		<Preference
+			android:icon="@drawable/baseline_info_24"
 			android:key="@string/settings_key_about_holidays"
-			android:title="@string/about_holidays"
-			android:icon="@drawable/baseline_info_24" />
+			android:title="@string/about_holidays" />
 	</PreferenceCategory>
 
 </PreferenceScreen>

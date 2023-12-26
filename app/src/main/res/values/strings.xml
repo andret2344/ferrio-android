@@ -33,5 +33,6 @@
 	<string name="content_description_ad">Ad</string>
 	<string name="content_description_image_sad_face">Sad face</string>
 	<string name="content_description_more">more</string>
+	<string name="app_theme">App theme</string>
 
 </resources>

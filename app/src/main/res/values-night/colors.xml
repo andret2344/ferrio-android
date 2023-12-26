@@ -7,7 +7,7 @@
 	<color name="foreground_secondary">#FFF5F5F5</color>
 	<color name="background_accent">#646464</color>
 	<color name="foreground_accent">#C8C8C8</color>
-	<color name="dynamic_selection">#373737</color>
+	<color name="dynamic_selection">#370000</color>
 	<color name="dynamic_action_bar">#FF8A00</color>
 
 </resources>

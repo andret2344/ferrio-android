@@ -7,32 +7,23 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import java.util.Optional;
-
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
 
-public class HolidayActivity extends AppCompatActivity {
+public class HolidayActivity extends UHCActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+		setupTheme();
 		setContentView(R.layout.activity_holiday);
 
-		Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setDisplayShowTitleEnabled(true);
-			actionBar.setDisplayShowCustomEnabled(false);
-		});
+		retrieveSupportActionBar().ifPresent(actionBar ->
+				actionBar.setDisplayHomeAsUpEnabled(true));
 
 		final Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -48,10 +39,7 @@ public class HolidayActivity extends AppCompatActivity {
 		final TextView descTextView = findViewById(R.id.activity_holiday_description);
 		final int holidayId = getIntent().getIntExtra("holiday", 0);
 
-		final SharedViewModel sharedViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
-				.get(SharedViewModel.class);
-
-		sharedViewModel.getHoliday(holidayId).observeForever(holiday -> {
+		sharedViewModel.getHoliday(holidayId).observe(this, holiday -> {
 			nameTextView.setText(holiday.getName());
 			descTextView.setText(holiday.getDescription());
 		});

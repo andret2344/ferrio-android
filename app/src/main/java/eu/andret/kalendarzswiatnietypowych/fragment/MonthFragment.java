@@ -9,12 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -23,7 +23,6 @@ import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
-import eu.andret.kalendarzswiatnietypowych.util.SpanningGridLayoutManager;
 
 public class MonthFragment extends Fragment {
 	private SharedViewModel sharedViewModel;
@@ -48,13 +47,15 @@ public class MonthFragment extends Fragment {
 		final LocalDate before = getBefore(current);
 		final LocalDate after = before.plusDays(42);
 
-		sharedViewModel.getHolidayDays(before, after)
-				.observe(getViewLifecycleOwner(), holidayDays -> {
-					final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
-					recyclerView.setLayoutManager(new SpanningGridLayoutManager(getContext(), 7, LinearLayoutManager.VERTICAL, false));
-					final List<HolidayDay> days = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after);
-					recyclerView.setAdapter(new DayAdapter(getContext(), current, days));
-				});
+		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
+		final List<HolidayDay> days = new ArrayList<>();
+		final DayAdapter adapter = new DayAdapter(getContext(), current, days);
+		recyclerView.setAdapter(adapter);
+		sharedViewModel.getHolidayDays(before, after).observe(getViewLifecycleOwner(), holidayDays -> {
+			days.clear();
+			days.addAll(UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after));
+			adapter.notifyDataSetChanged();
+		});
 		return month;
 	}
 

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
@@ -17,12 +16,8 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -47,12 +42,11 @@ import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Downloader;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends UHCActivity {
 	public static final String WIDGET = "widget";
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
@@ -63,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
 	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
-	private SharedViewModel sharedViewModel;
 
 	public final ActivityResultLauncher<Intent> startActivityResultLauncher = registerForActivityResult(
 			new ActivityResultContracts.StartActivityForResult(),
@@ -80,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+		setupTheme();
 		setContentView(R.layout.activity_main);
 		configureObservers();
 		final String stringFrom = getIntent().getStringExtra(FROM);
@@ -94,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
 		searchListView = findViewById(R.id.main_list_results);
 		viewPager2 = findViewById(R.id.main_pager_months);
-		sharedViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
-				.get(SharedViewModel.class);
 
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
@@ -112,23 +103,14 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
-		if (Boolean.TRUE.equals(internet.getValue())) {
-			call();
-		}
-		sharedViewModel.getAllHolidayDays().observeForever(days -> {
-			holidayDays.addAll(days);
-			if (days.isEmpty()) {
-				final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setTitle(R.string.no_internet_connection);
-				alert.setCancelable(false);
-				alert.setMessage(R.string.no_internet);
-				alertDialog = alert.show();
-				viewPager2.setVisibility(View.INVISIBLE);
+		sharedViewModel.getAllHolidayDays().observe(this, days -> {
+			if (days != null && !days.isEmpty()) {
+				holidayDays.addAll(days);
+			} else if (Boolean.TRUE.equals(internet.getValue())) {
+				CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
+						.thenAccept(sharedViewModel::updateData);
 			} else {
-				if (alertDialog != null) {
-					alertDialog.dismiss();
-				}
-				viewPager2.setVisibility(View.VISIBLE);
+				showNoInternetAlert();
 			}
 		});
 	}
@@ -137,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
 		internet = new MutableLiveData<>(Util.isNetworkAvailable(this));
 		internet.observe(this, isConnected -> {
 			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
-				call();
+				CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
+						.thenAccept(sharedViewModel::updateData);
 				alertDialog.dismiss();
 				viewPager2.setVisibility(View.VISIBLE);
 			}
@@ -162,18 +145,13 @@ public class MainActivity extends AppCompatActivity {
 				}));
 	}
 
-	private void call() {
-		sharedViewModel.deleteAll();
-		CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
-				.thenAccept(unusualCalendar -> {
-					unusualCalendar.getFixed()
-							.stream()
-							.map(HolidayDay::getHolidays)
-							.forEach(sharedViewModel::insertHolidays);
-					sharedViewModel.insertHolidayDays(unusualCalendar.getFixed());
-					sharedViewModel.insertFloatingHoliday(unusualCalendar.getFloating());
-				})
-				.join();
+	private void showNoInternetAlert() {
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(R.string.no_internet_connection);
+		alert.setCancelable(false);
+		alert.setMessage(R.string.no_internet);
+		alertDialog = alert.show();
+		viewPager2.setVisibility(View.INVISIBLE);
 	}
 
 	@NotNull
@@ -188,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
 		final MenuItem searchItem = menu.findItem(R.id.menu_main_search);
 		final SearchView searchView = (SearchView) searchItem.getActionView();
 		final List<HolidayDay> list = new ArrayList<>(holidayDays);
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
 		searchListView.setAdapter(adapter);
 		if (searchView == null) {
@@ -212,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 					viewPager2.setVisibility(View.INVISIBLE);
 					holidayDays.stream()
 							.map(holidayDay -> {
-								final boolean includeUsual = preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false);
+								final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
 								final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
 										.stream()
 										.filter(holiday -> holiday.getName().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))

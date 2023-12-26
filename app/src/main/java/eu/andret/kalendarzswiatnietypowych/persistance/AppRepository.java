@@ -2,6 +2,7 @@ package eu.andret.kalendarzswiatnietypowych.persistance;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Transformations;
@@ -24,13 +25,12 @@ import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 public class AppRepository {
 	private final AppDao holidayDao;
 	private final MediatorLiveData<List<HolidayDay>> mergedHolidays = new MediatorLiveData<>();
-	private final AppDatabase database;
 
 	private List<HolidayDay> fixedHolidaysCache;
 	private List<FloatingHoliday> floatingHolidaysCache;
 
 	public AppRepository(final Application application) {
-		database = Room.databaseBuilder(application, AppDatabase.class, "uhc")
+		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "uhc")
 				.enableMultiInstanceInvalidation()
 				.allowMainThreadQueries()
 				.build();
@@ -65,20 +65,17 @@ public class AppRepository {
 				.orElse(null));
 	}
 
-	public void insertHolidays(final List<Holiday> holidays) {
-		AppDatabase.DATABASE_WRITE_EXECUTOR.execute(() -> holidayDao.insertHolidays(holidays));
-	}
-
-	public void insertFloatingHoliday(final List<FloatingHoliday> floatingHolidays) {
-		AppDatabase.DATABASE_WRITE_EXECUTOR.execute(() -> holidayDao.insertFloatingHolidays(floatingHolidays));
-	}
-
-	public void insertHolidayDays(final List<HolidayDay> holidayDays) {
-		AppDatabase.DATABASE_WRITE_EXECUTOR.execute(() -> holidayDao.insertHolidayDays(holidayDays));
-	}
-
-	public void deleteAll() {
-		database.clearAllTables();
+	public void updateCalendarData(@NonNull final UnusualCalendar calendar) {
+		holidayDao.deleteAllHolidays();
+		holidayDao.deleteAllHolidayDays();
+		holidayDao.deleteAllFloatingHolidays();
+		calendar.getFixed()
+				.stream()
+				.map(HolidayDay::getHolidays)
+				.flatMap(Collection::stream)
+				.forEach(holidayDao::insertHoliday);
+		calendar.getFixed().forEach(holidayDao::insertHolidayDay);
+		calendar.getFloating().forEach(holidayDao::insertFloatingHoliday);
 	}
 
 	private void loadHolidays() {

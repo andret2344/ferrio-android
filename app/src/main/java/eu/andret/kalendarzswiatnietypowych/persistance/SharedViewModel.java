@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.UHCApplication;
-import eu.andret.kalendarzswiatnietypowych.entity.FloatingHoliday;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
+import java9.util.concurrent.CompletableFuture;
 
 public class SharedViewModel extends ViewModel {
 	public static final ViewModelInitializer<SharedViewModel> INITIALIZER = new ViewModelInitializer<>(SharedViewModel.class, creationExtras -> {
@@ -43,19 +44,7 @@ public class SharedViewModel extends ViewModel {
 		return repository.getHoliday(id);
 	}
 
-	public void insertHolidays(final List<Holiday> holidays) {
-		repository.insertHolidays(holidays);
-	}
-
-	public void insertFloatingHoliday(final List<FloatingHoliday> floatingHolidays) {
-		repository.insertFloatingHoliday(floatingHolidays);
-	}
-
-	public void insertHolidayDays(final List<HolidayDay> holidayDays) {
-		repository.insertHolidayDays(holidayDays);
-	}
-
-	public void deleteAll() {
-		repository.deleteAll();
+	public void updateData(final UnusualCalendar calendar) {
+		CompletableFuture.runAsync(() -> repository.updateCalendarData(calendar));
 	}
 }
