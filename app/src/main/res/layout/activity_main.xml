@@ -9,7 +9,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_above="@id/main_bottom_layout_container"
-		android:background="#000000"
+		android:background="@color/foreground_secondary"
 		android:saveEnabled="false" />
 
 	<androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,7 @@
 		android:layout_height="match_parent"
 		ads:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 		android:layout_above="@id/main_bottom_layout_container"
-		android:background="#000000"
+		android:background="@color/foreground_secondary"
 		android:visibility="invisible" />
 
 	<LinearLayout

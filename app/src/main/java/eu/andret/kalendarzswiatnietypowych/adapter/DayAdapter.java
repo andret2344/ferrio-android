@@ -3,7 +3,6 @@ package eu.andret.kalendarzswiatnietypowych.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,6 @@ import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
@@ -74,25 +72,13 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		final Data.ColorSet color = Data.getColors(context);
-
-		viewHolder.smallDateTextView.setTextColor(color.getForegroundColor());
-		viewHolder.holidayTextView.setTextColor(color.getForegroundColor());
-		viewHolder.moreTextView.setTextColor(color.getForegroundColor());
-		viewHolder.cardView.setCardBackgroundColor(color.getBackgroundColor());
-
 		final HolidayDay holidayDay = holidayDays.get(position);
-		if (holidayDay == null) {
-			return;
-		}
-
 		final LocalDate now = LocalDate.now();
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
-			viewHolder.cardView.setCardBackgroundColor(color.isDarkTheme() ? Color.rgb(55, 0, 0) : Color.rgb(200, 255, 255));
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dynamic_selection));
 		}
-
 		if (holidayDay.getMonth() != month) {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, color.isDarkTheme() ? R.color.color_dark_gray : R.color.color_light_gray));
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_accent));
 		} else if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
 			viewHolder.cardView.setCardBackgroundColor(Util.randomizeColor(context, holidayDay.getSeed()));
 		}

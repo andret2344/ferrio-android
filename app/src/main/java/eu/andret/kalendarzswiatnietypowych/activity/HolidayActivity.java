@@ -1,7 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -15,7 +13,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import java.util.Objects;
+import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
@@ -25,12 +23,13 @@ public class HolidayActivity extends AppCompatActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-		Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
 		setContentView(R.layout.activity_holiday);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayShowCustomEnabled(false);
+		Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setDisplayShowTitleEnabled(true);
+			actionBar.setDisplayShowCustomEnabled(false);
+		});
 
 		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
 			@Override

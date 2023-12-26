@@ -63,7 +63,7 @@ public final class Util {
 		return RANDOM.nextInt(127) + (dark ? 0 : 127);
 	}
 
-	static boolean isDarkTheme(final Context context) {
+	private static boolean isDarkTheme(final Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
 				== Configuration.UI_MODE_NIGHT_YES;
 	}

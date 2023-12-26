@@ -21,7 +21,6 @@ import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class SearchHolidayAdapter extends RecyclerView.Adapter<SearchHolidayAdapter.ViewHolder> {
@@ -55,23 +54,14 @@ public class SearchHolidayAdapter extends RecyclerView.Adapter<SearchHolidayAdap
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final HolidayDay day = holidayDays.get(position);
-		if (day == null) {
-			return;
-		}
-
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		final Data.ColorSet color = Data.getColors(context);
 
-		viewHolder.dateTextView.setTextColor(color.getForegroundColor());
 		viewHolder.dateTextView.setText(String.format(Locale.ROOT, "%02d.%02d", day.getDay(), day.getMonth()));
 
 		if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
 			viewHolder.itemView.setBackgroundColor(Util.randomizeColor(context, day.getSeed()));
-		} else {
-			viewHolder.itemView.setBackgroundColor(color.getBackgroundColor());
 		}
 		final boolean isUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
-		viewHolder.holidaysTextView.setTextColor(color.getForegroundColor());
 		final String holidays = day.getHolidaysList(isUsual)
 				.stream()
 				.map(Holiday::getName)

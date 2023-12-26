@@ -23,7 +23,6 @@ import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.SpanningGridLayoutManager;
 
 public class MonthFragment extends Fragment {
@@ -45,9 +44,6 @@ public class MonthFragment extends Fragment {
 		}
 
 		final int current = getArguments().getInt(MainActivity.MONTH, 1);
-		final Data.ColorSet color = Data.getColors(getContext());
-
-		month.findViewById(R.id.fragment_month_grid_days).setBackgroundColor(color.getForegroundColor());
 
 		final LocalDate before = getBefore(current);
 		final LocalDate after = before.plusDays(42);

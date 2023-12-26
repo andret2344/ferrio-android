@@ -2,8 +2,6 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -49,13 +48,14 @@ public class DayActivity extends AppCompatActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-		Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
 		setContentView(R.layout.activity_day);
 
 		pager = findViewById(R.id.day_pager_days);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayShowCustomEnabled(false);
+		Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setDisplayShowTitleEnabled(true);
+			actionBar.setDisplayShowCustomEnabled(false);
+		});
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);

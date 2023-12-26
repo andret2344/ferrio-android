@@ -4,7 +4,6 @@
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 	<uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
 	<application
@@ -17,10 +16,6 @@
 		android:theme="@style/AppTheme"
 		tools:ignore="GoogleAppIndexingWarning"
 		tools:targetApi="s">
-		<activity
-			android:name=".activity.HolidayActivity"
-			android:configChanges="uiMode" />
-
 		<meta-data
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version" />
@@ -43,7 +38,20 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 		<activity
 			android:name=".activity.DayActivity"
+			android:theme="@style/DayActionBarTheme"
 			android:configChanges="uiMode" />
+		<activity
+			android:name=".activity.HolidayActivity"
+			android:theme="@style/DayActionBarTheme"
+			android:configChanges="uiMode" />
+		<activity
+			android:name=".activity.SettingsActivity"
+			android:configChanges="uiMode"
+			android:label="@string/settings">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
+		</activity>
 
 		<receiver
 			android:name=".WidgetProvider"
@@ -57,15 +65,5 @@
 				android:name="android.appwidget.provider"
 				android:resource="@xml/widget_provider" />
 		</receiver>
-
-		<activity
-			android:name=".activity.SettingsActivity"
-			android:configChanges="uiMode"
-			android:label="@string/settings">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
-		</activity>
 	</application>
-
 </manifest>

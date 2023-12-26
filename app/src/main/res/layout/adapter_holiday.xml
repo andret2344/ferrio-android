@@ -14,7 +14,7 @@
 		android:padding="5dp"
 		android:gravity="center_vertical"
 		android:text="@string/bullet_point"
-		android:textColor="@color/black"
+		android:textColor="@color/foreground_primary"
 		android:textSize="@dimen/adapter_holiday_main" />
 
 	<TextView
@@ -25,7 +25,7 @@
 		android:layout_height="wrap_content"
 		android:paddingBottom="5dp"
 		android:paddingTop="5dp"
-		android:textColor="@color/black"
+		android:textColor="@color/foreground_secondary"
 		android:gravity="center_vertical"
 		android:textSize="@dimen/adapter_holiday_main" />
 
@@ -36,6 +36,7 @@
 		android:layout_height="wrap_content"
 		android:padding="5dp"
 		android:gravity="center_vertical|center_horizontal"
+		android:textColor="@color/foreground_accent"
 		android:layout_alignTop="@id/adapter_holiday_text_holiday"
 		android:layout_alignBottom="@id/adapter_holiday_text_holiday"
 		android:textSize="@dimen/adapter_holiday_main" />
