@@ -28,13 +28,13 @@ public final class Util {
 	@NonNull
 	public static Pair<Month, Integer> calculateDates(final int id) {
 		final LocalDate now = LocalDate.now();
+		if (id == 61) {
+			return new Pair<>(Month.FEBRUARY, 30);
+		}
 		if (now.isLeapYear()) {
-			if (id < 60) {
+			if (id < 61) {
 				final LocalDate date = LocalDate.ofYearDay(now.getYear(), id);
 				return new Pair<>(date.getMonth(), date.getDayOfMonth());
-			}
-			if (id == 60) {
-				return new Pair<>(Month.FEBRUARY, 30);
 			}
 			final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 1);
 			return new Pair<>(date.getMonth(), date.getDayOfMonth());
@@ -45,9 +45,6 @@ public final class Util {
 		}
 		if (id == 60) {
 			return new Pair<>(Month.FEBRUARY, 29);
-		}
-		if (id == 61) {
-			return new Pair<>(Month.FEBRUARY, 30);
 		}
 		final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 2);
 		return new Pair<>(date.getMonth(), date.getDayOfMonth());

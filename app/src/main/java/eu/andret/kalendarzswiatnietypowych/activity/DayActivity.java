@@ -72,8 +72,9 @@ public class DayActivity extends AppCompatActivity {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				final Pair<Month, Integer> pair = Util.calculateDates(position + 1);
-				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
-				Objects.requireNonNull(getSupportActionBar()).setTitle(localDate.format(formatter));
+				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
+				final String format = localDate.format(formatter).replace("19", String.valueOf(pair.second));
+				Objects.requireNonNull(getSupportActionBar()).setTitle(format);
 			}
 		});
 		MobileAds.initialize(this);
