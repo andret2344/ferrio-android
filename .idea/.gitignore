@@ -1,12 +1,15 @@
 /modules
-/shelf
+/shelf/
 /sonarlint/
-/Android-2.0.iml
+
+/appInsightsSettings.xml
 /assetWizardSettings.xml
 /deploymentTargetDropDown.xml
 /gradle.xml
 /jarRepositories.xml
+/migrations.xml
 /misc.xml
 /navEditor.xml
 /render.experimental.xml
+/uhc-android.iml
 /workspace.xml
