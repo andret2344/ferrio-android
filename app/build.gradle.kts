@@ -58,8 +58,4 @@ dependencies {
     annotationProcessor(group = "androidx.room", name = "room-compiler", version = "2.6.1")
     annotationProcessor(group = "org.jetbrains", name = "annotations", version = "24.1.0")
     coreLibraryDesugaring(group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4")
-
-    testImplementation(group = "junit", name = "junit", version = "4.13.2")
-    androidTestImplementation(group = "androidx.test.ext", name = "junit", version = "1.1.5")
-    androidTestImplementation(group = "androidx.test.espresso", name = "espresso-core", version = "3.5.1")
 }
