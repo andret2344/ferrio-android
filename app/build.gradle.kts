@@ -8,8 +8,8 @@ android {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 26
         targetSdk = 34
-        versionCode = 69
-        versionName = "2.4.0-rc.1"
+        versionCode = 71
+        versionName = "3.0.0-rc.1"
         multiDexEnabled = true
         signingConfig = signingConfigs.getByName("debug")
     }
@@ -19,10 +19,16 @@ android {
             isMinifyEnabled = true
             isDebuggable = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
         debug {
             isDebuggable = true
             isShrinkResources = false
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     compileOptions {
@@ -50,12 +56,9 @@ dependencies {
     implementation(group = "androidx.appcompat", name = "appcompat", version = "1.6.1")
     implementation(group = "androidx.preference", name = "preference", version = "1.2.1")
     implementation(group = "androidx.viewpager2", name = "viewpager2", version = "1.0.0")
-    implementation(group = "androidx.navigation", name = "navigation-fragment", version = "2.7.7")
-    implementation(group = "androidx.navigation", name = "navigation-ui", version = "2.7.7")
     implementation(group = "androidx.cardview", name = "cardview", version = "1.0.0")
     implementation(group = "androidx.room", name = "room-runtime", version = "2.6.1")
 
-    annotationProcessor(group = "androidx.room", name = "room-compiler", version = "2.6.1")
     annotationProcessor(group = "org.jetbrains", name = "annotations", version = "24.1.0")
     coreLibraryDesugaring(group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4")
 }
