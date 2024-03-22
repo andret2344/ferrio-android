@@ -6,11 +6,11 @@
 	android:orientation="vertical">
 
 	<androidx.viewpager2.widget.ViewPager2
-		android:saveEnabled="false"
 		android:id="@+id/day_pager_days"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_above="@id/day_adview_bottom" />
+		android:layout_above="@+id/day_adview_bottom"
+		android:saveEnabled="false" />
 
 	<com.google.android.gms.ads.AdView
 		android:id="@+id/day_adview_bottom"

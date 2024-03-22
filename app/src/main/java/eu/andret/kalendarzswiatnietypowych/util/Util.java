@@ -51,7 +51,7 @@ public final class Util {
 		return new Pair<>(date.getMonth(), date.getDayOfMonth());
 	}
 
-	public static int randomizeColor(final Context context, final long seed) {
+	public static int randomizeColor(@NonNull final Context context, final long seed) {
 		RANDOM.setSeed(seed);
 		final boolean dark = isDarkTheme(context);
 		return Color.rgb(randomize(dark), randomize(dark), randomize(dark));
@@ -61,12 +61,12 @@ public final class Util {
 		return RANDOM.nextInt(127) + (dark ? 0 : 127);
 	}
 
-	private static boolean isDarkTheme(final Context context) {
+	private static boolean isDarkTheme(@NonNull final Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
 				== Configuration.UI_MODE_NIGHT_YES;
 	}
 
-	public static boolean isNetworkAvailable(final Context context) {
+	public static boolean isNetworkAvailable(@NonNull final Context context) {
 		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		return Optional.ofNullable(connectivityManager.getActiveNetwork())
 				.map(connectivityManager::getNetworkCapabilities)

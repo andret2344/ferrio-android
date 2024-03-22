@@ -74,14 +74,19 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		final HolidayDay holidayDay = holidayDays.get(position);
 		final LocalDate now = LocalDate.now();
-		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dynamic_selection));
-		}
+
 		if (holidayDay.getMonth() != month) {
 			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_accent));
 		} else if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
 			viewHolder.cardView.setCardBackgroundColor(Util.randomizeColor(context, holidayDay.getSeed()));
+		} else {
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_secondary));
 		}
+
+		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dynamic_selection));
+		}
+
 		viewHolder.cardView.setOnClickListener(v -> {
 			final Intent intent = new Intent(context, DayActivity.class);
 			intent.putExtra(MainActivity.DAY, holidayDay.getDay());
@@ -105,9 +110,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
 		final Holiday displayedHoliday = holidayDay.getHolidaysList(includeUsual).get(0);
 		final String[] words = displayedHoliday.getName().split(" ");
-		final String result = Arrays.stream(words)
-				.limit(MAX_WORDS_COUNT)
-				.collect(Collectors.joining(" "));
+		final String result = Arrays.stream(words).limit(MAX_WORDS_COUNT).collect(Collectors.joining(" "));
 		final boolean full = words.length <= MAX_WORDS_COUNT;
 		final boolean isDisplayedUsual = displayedHoliday.isUsual();
 		if (isDisplayedUsual) {

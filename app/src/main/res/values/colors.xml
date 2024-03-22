@@ -3,7 +3,7 @@
 
 	<color name="background_primary">#FFFFFF</color>
 	<color name="foreground_primary">#000000</color>
-	<color name="background_secondary">#CECECE</color>
+	<color name="background_secondary">#EEEEEE</color>
 	<color name="foreground_secondary">#212121</color>
 	<color name="background_accent">#C8C8C8</color>
 	<color name="foreground_accent">#646464</color>
