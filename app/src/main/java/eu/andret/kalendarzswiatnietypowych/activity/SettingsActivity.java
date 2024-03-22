@@ -13,22 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends UHCActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-		if (getSupportActionBar() != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+		retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(android.R.id.content, new PrefsFragment())
@@ -67,6 +63,18 @@ public class SettingsActivity extends AppCompatActivity {
 			aboutHolidaysPreference.setOnPreferenceClickListener(preference -> {
 				createAlertWithImage(getContext(), R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
 				return false;
+			});
+
+			final ListPreference themePreference = findPreference(getContext().getString(R.string.settings_key_app_theme));
+
+			if (themePreference == null) {
+				return;
+			}
+
+			themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+				final SettingsActivity activity = (SettingsActivity) getContext();
+				activity.recreate();
+				return true;
 			});
 		}
 

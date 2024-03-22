@@ -11,7 +11,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
@@ -30,14 +29,13 @@ public class MonthFragmentAdapter extends FragmentStateAdapter {
 	@NonNull
 	@Override
 	public Fragment createFragment(final int position) {
-		final MonthFragment fragment = new MonthFragment(holidayDays);
 		final Bundle bundle = new Bundle();
 		final int current = position + 1;
 		bundle.putInt(MainActivity.MONTH, current);
 		final LocalDate before = getBefore(current);
 		final LocalDate after = getAfter(current, before);
 		final List<HolidayDay> holidays = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after);
-		bundle.putParcelableArrayList(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidays));
+		final MonthFragment fragment = new MonthFragment(holidays);
 		fragment.setArguments(bundle);
 		return fragment;
 	}

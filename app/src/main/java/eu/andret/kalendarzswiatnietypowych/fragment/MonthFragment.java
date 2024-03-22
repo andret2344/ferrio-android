@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -33,19 +32,9 @@ public class MonthFragment extends Fragment {
 		}
 
 		final int current = getArguments().getInt(MainActivity.MONTH, 1);
-		final List<HolidayDay> days = getArguments().getParcelableArrayList(MainActivity.HOLIDAY_DAYS);
-		final GridView grid = month.findViewById(R.id.fragment_month_grid_days);
-		grid.measure(0, 0);
-		final DayAdapter adapter = new DayAdapter(getActivity(), holidayDays, days, current);
-		grid.setAdapter(adapter);
-		grid.post(() -> {
-			final int itemHeight = grid.getMeasuredHeight() / 6 - 25;
-			for (int i = 0; i < grid.getChildCount(); i++) {
-				final View view = grid.getChildAt(i);
-				final ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-				view.setLayoutParams(new AbsListView.LayoutParams(layoutParams.width, itemHeight));
-			}
-		});
+		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
+		final DayAdapter adapter = new DayAdapter(getContext(), current, holidayDays);
+		recyclerView.setAdapter(adapter);
 		return month;
 	}
 }

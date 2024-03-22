@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/adapter_holiday_relative_main"
+	android:orientation="horizontal"
 	android:layout_width="match_parent"
+	android:paddingStart="5dp"
+	android:paddingEnd="5dp"
+	android:layout_gravity="center_vertical"
 	android:layout_height="wrap_content">
 
 	<TextView
+		android:id="@+id/adapter_holiday_text_bullet"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="5dp"
+		android:gravity="center_vertical"
+		android:text="@string/bullet_point"
+		android:textColor="@color/foreground_primary"
+		android:textSize="@dimen/adapter_holiday_main" />
+
+	<TextView
 		android:id="@+id/adapter_holiday_text_holiday"
+		android:layout_toEndOf="@id/adapter_holiday_text_bullet"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
-		android:paddingTop="5dp"
 		android:paddingBottom="5dp"
+		android:paddingTop="5dp"
 		android:textColor="@color/foreground_secondary"
+		android:gravity="center_vertical"
 		android:textSize="@dimen/adapter_holiday_main" />
 
 </RelativeLayout>
