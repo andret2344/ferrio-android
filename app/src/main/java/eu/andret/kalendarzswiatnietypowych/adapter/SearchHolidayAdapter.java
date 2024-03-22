@@ -24,7 +24,6 @@ import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
@@ -64,18 +63,13 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 		}
 
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-		final Data.ColorSet color = Data.getColors(getContext());
-		final float dimension = getContext().getResources().getDimension(R.dimen.adapter_month_holiday_main_text);
+		final float dimension = getContext().getResources().getDimension(R.dimen.adapter_holiday_main);
 
-		holder.date.setTextColor(color.getForegroundColor());
 		holder.date.setText(String.format(Locale.ROOT, "%02d.%02d", day.getDay(), day.getMonth()));
-		holder.date.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
 		holder.holidays.removeAllViews();
 
 		if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
 			convertView.setBackgroundColor(Util.randomizeColor(getContext(), day.getSeed()));
-		} else {
-			convertView.setBackgroundColor(color.getBackgroundColor());
 		}
 		final boolean isUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
 		for (final Holiday holiday : day.getHolidaysList(isUsual)) {
@@ -88,7 +82,7 @@ public class SearchHolidayAdapter extends ArrayAdapter<HolidayDay> {
 			textView.setText(getContext().getString(R.string.pointed_text, holiday.getName()));
 			textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
 			holder.holidays.addView(textView);
-			textView.setTextColor(color.getForegroundColor());
+			textView.setTextColor(getContext().getResources().getColor(R.color.foreground_primary, null));
 			if (holiday.isUsual()) {
 				textView.setTypeface(null, Typeface.BOLD);
 			}

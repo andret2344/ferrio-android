@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<color name="background_primary">#000000</color>
+	<color name="foreground_primary">#FFFFFF</color>
+	<color name="background_secondary">#FF212121</color>
+	<color name="foreground_secondary">#FFF5F5F5</color>
+	<color name="background_accent">#646464</color>
+	<color name="foreground_accent">#C8C8C8</color>
+	<color name="dynamic_selection">#370000</color>
+	<color name="dynamic_action_bar">#FF8A00</color>
+
+</resources>
