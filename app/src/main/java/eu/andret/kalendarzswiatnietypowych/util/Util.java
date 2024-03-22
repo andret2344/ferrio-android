@@ -17,7 +17,7 @@ import java.util.Random;
 
 public final class Util {
 	private static final Random RANDOM = new Random();
-	private static final List<Integer> networkCapabilities = List.of(
+	public static final List<Integer> NETWORK_CAPABILITIES = List.of(
 			NetworkCapabilities.TRANSPORT_WIFI,
 			NetworkCapabilities.TRANSPORT_CELLULAR,
 			NetworkCapabilities.TRANSPORT_ETHERNET);
@@ -28,29 +28,30 @@ public final class Util {
 	@NonNull
 	public static Pair<Month, Integer> calculateDates(final int id) {
 		final LocalDate now = LocalDate.now();
+		final int year = now.getYear();
 		if (id == 61) {
 			return new Pair<>(Month.FEBRUARY, 30);
 		}
 		if (now.isLeapYear()) {
 			if (id < 61) {
-				final LocalDate date = LocalDate.ofYearDay(now.getYear(), id);
+				final LocalDate date = LocalDate.ofYearDay(year, id);
 				return new Pair<>(date.getMonth(), date.getDayOfMonth());
 			}
-			final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 1);
+			final LocalDate date = LocalDate.ofYearDay(year, id - 1);
 			return new Pair<>(date.getMonth(), date.getDayOfMonth());
 		}
 		if (id < 60) {
-			final LocalDate date = LocalDate.ofYearDay(now.getYear(), id);
+			final LocalDate date = LocalDate.ofYearDay(year, id);
 			return new Pair<>(date.getMonth(), date.getDayOfMonth());
 		}
 		if (id == 60) {
 			return new Pair<>(Month.FEBRUARY, 29);
 		}
-		final LocalDate date = LocalDate.ofYearDay(now.getYear(), id - 2);
+		final LocalDate date = LocalDate.ofYearDay(year, id - 2);
 		return new Pair<>(date.getMonth(), date.getDayOfMonth());
 	}
 
-	public static int randomizeColor(final Context context, final long seed) {
+	public static int randomizeColor(@NonNull final Context context, final long seed) {
 		RANDOM.setSeed(seed);
 		final boolean dark = isDarkTheme(context);
 		return Color.rgb(randomize(dark), randomize(dark), randomize(dark));
@@ -60,16 +61,16 @@ public final class Util {
 		return RANDOM.nextInt(127) + (dark ? 0 : 127);
 	}
 
-	static boolean isDarkTheme(final Context context) {
+	private static boolean isDarkTheme(@NonNull final Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
 				== Configuration.UI_MODE_NIGHT_YES;
 	}
 
-	public static boolean isNetworkAvailable(final Context context) {
+	public static boolean isNetworkAvailable(@NonNull final Context context) {
 		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		return Optional.ofNullable(connectivityManager.getActiveNetwork())
 				.map(connectivityManager::getNetworkCapabilities)
-				.filter(capabilities -> networkCapabilities.stream().anyMatch(capabilities::hasTransport))
+				.filter(capabilities -> NETWORK_CAPABILITIES.stream().anyMatch(capabilities::hasTransport))
 				.isPresent();
 	}
 }

@@ -1,12 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<declare-styleable name="images">
-		<attr name="event" format="reference" />
-		<attr name="info" format="reference" />
-		<attr name="search" format="reference" />
-		<attr name="settings" format="reference" />
-		<attr name="share" format="reference" />
-		<attr name="shuffle" format="reference" />
-	</declare-styleable>
+	<attr name="iconColor" format="color" />
 
 </resources>

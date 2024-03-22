@@ -19,7 +19,6 @@ import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.util.Data;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayFragment extends Fragment {
@@ -35,7 +34,6 @@ public class DayFragment extends Fragment {
 			return dayView;
 		}
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-		final Data.ColorSet color = Data.getColors(getContext());
 		final boolean includeUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
 		final List<Holiday> holidays = holidayDay.getHolidaysList(includeUsual);
 		if (holidays.isEmpty()) {
@@ -43,13 +41,10 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setBackgroundColor(Color.GRAY);
 		}
-		final int backgroundColor;
 		if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
-			backgroundColor = Util.randomizeColor(getContext(), holidayDay.getSeed());
-		} else {
-			backgroundColor = color.getBackgroundColor();
+			final int backgroundColor = Util.randomizeColor(getContext(), holidayDay.getSeed());
+			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
 		}
-		dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
 		final ListView listView = dayView.findViewById(R.id.fragment_day_list_holidays);
 		listView.setAdapter(new HolidayAdapter(getContext(), holidays));
 		return dayView;

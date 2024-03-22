@@ -1,25 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/day_relative_main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+	xmlns:ads="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/day_relative_main"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:saveEnabled="false"
-        android:id="@+id/day_pager_days"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/day_adview_bottom"
-        android:background="#000000" />
+	<androidx.viewpager2.widget.ViewPager2
+		android:id="@+id/day_pager_days"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@+id/day_adview_bottom"
+		android:saveEnabled="false" />
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/day_adview_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:contentDescription="@string/content_description_ad"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id" />
+	<com.google.android.gms.ads.AdView
+		android:id="@+id/day_adview_bottom"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:contentDescription="@string/content_description_ad"
+		ads:adSize="BANNER"
+		ads:adUnitId="@string/banner_ad_unit_id" />
 
 </RelativeLayout>
