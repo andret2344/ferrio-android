@@ -80,7 +80,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		} else if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
 			viewHolder.cardView.setCardBackgroundColor(Util.randomizeColor(context, holidayDay.getSeed()));
 		} else {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_secondary));
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_secondary));
 		}
 
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {

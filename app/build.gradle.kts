@@ -43,22 +43,31 @@ android {
     }
 }
 
+val versionPlayAdsService = "23.0.0"
+val versionMultidex = "2.0.1"
+val versionGson = "2.10.1"
+val versionAndroidRetroFuture = "1.7.4"
+val versionMozillaRhino = "1.7.14"
+val versionAppCompat = "1.6.1"
+val versionAndroidxPreference = "1.2.1"
+val versionAndroidxViewPager2 = "1.0.0"
+val versionAndroidxCardView = "1.0.0"
+val versionAndroidxRoom = "2.6.1"
+val versionJetBrainsAnnotations = "24.1.0"
+val versionJdkLibs = "2.0.4"
+
 dependencies {
-    implementation(group = "com.google.android.gms", name = "play-services-ads", version = "22.6.0")
-    implementation(group = "com.google.android.material", name = "material", version = "1.12.0-alpha03")
-
-    implementation(group = "com.android.support", name = "multidex", version = "2.0.1")
-
-    implementation(group = "com.google.code.gson", name = "gson", version = "2.10.1")
-    implementation(group = "net.sourceforge.streamsupport", name = "android-retrofuture", version = "1.7.4")
-    implementation(group = "org.mozilla", name = "rhino", version = "1.7.14")
-
-    implementation(group = "androidx.appcompat", name = "appcompat", version = "1.6.1")
-    implementation(group = "androidx.preference", name = "preference", version = "1.2.1")
-    implementation(group = "androidx.viewpager2", name = "viewpager2", version = "1.0.0")
-    implementation(group = "androidx.cardview", name = "cardview", version = "1.0.0")
-    implementation(group = "androidx.room", name = "room-runtime", version = "2.6.1")
-
-    annotationProcessor(group = "org.jetbrains", name = "annotations", version = "24.1.0")
-    coreLibraryDesugaring(group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4")
+    implementation("com.google.android.gms:play-services-ads:${versionPlayAdsService}")
+    implementation("com.android.support:multidex:${versionMultidex}")
+    implementation("com.google.code.gson:gson:${versionGson}")
+    implementation("net.sourceforge.streamsupport:android-retrofuture:${versionAndroidRetroFuture}")
+    implementation("org.mozilla:rhino:${versionMozillaRhino}")
+    implementation("androidx.appcompat:appcompat:${versionAppCompat}")
+    implementation("androidx.preference:preference:${versionAndroidxPreference}")
+    implementation("androidx.viewpager2:viewpager2:${versionAndroidxViewPager2}")
+    implementation("androidx.cardview:cardview:${versionAndroidxCardView}")
+    implementation("androidx.room:room-runtime:${versionAndroidxRoom}")
+    annotationProcessor("androidx.room:room-compiler:${versionAndroidxRoom}")
+    annotationProcessor("org.jetbrains:annotations:${versionJetBrainsAnnotations}")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versionJdkLibs}")
 }
