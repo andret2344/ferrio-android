@@ -19,7 +19,6 @@ public class HolidayActivity extends UHCActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setupTheme();
 		setContentView(R.layout.activity_holiday);
 
 		retrieveSupportActionBar().ifPresent(actionBar ->

@@ -87,6 +87,7 @@ public class MainActivity extends UHCActivity {
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
+		final int currentMonthValue = LocalDate.now().getMonthValue();
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 		viewPager2.setCurrentItem(currentMonthValue - 1, false);
 		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));

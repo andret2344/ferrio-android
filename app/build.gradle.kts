@@ -53,6 +53,7 @@ val versionAndroidxPreference = "1.2.1"
 val versionAndroidxViewPager2 = "1.0.0"
 val versionAndroidxCardView = "1.0.0"
 val versionAndroidxRoom = "2.6.1"
+val versionAndroidMaterial = "1.11.0"
 val versionJetBrainsAnnotations = "24.1.0"
 val versionJdkLibs = "2.0.4"
 
@@ -67,6 +68,7 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:${versionAndroidxViewPager2}")
     implementation("androidx.cardview:cardview:${versionAndroidxCardView}")
     implementation("androidx.room:room-runtime:${versionAndroidxRoom}")
+    implementation("com.google.android.material:material:${versionAndroidMaterial}")
     annotationProcessor("androidx.room:room-compiler:${versionAndroidxRoom}")
     annotationProcessor("org.jetbrains:annotations:${versionJetBrainsAnnotations}")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versionJdkLibs}")
