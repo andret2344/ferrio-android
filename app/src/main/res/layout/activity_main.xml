@@ -2,14 +2,16 @@
 	xmlns:ads="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/activity_main_relative_main"
 	android:layout_width="match_parent"
+	android:background="@color/background_primary"
 	android:layout_height="match_parent">
 
 	<androidx.viewpager2.widget.ViewPager2
 		android:id="@+id/main_pager_months"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_marginBottom="20dp"
+		android:layout_marginTop="20dp"
 		android:layout_above="@id/main_bottom_layout_container"
-		android:background="@color/foreground_secondary"
 		android:saveEnabled="false" />
 
 	<androidx.recyclerview.widget.RecyclerView
@@ -17,7 +19,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_above="@id/main_bottom_layout_container"
-		android:background="@color/foreground_secondary"
 		android:visibility="invisible"
 		ads:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

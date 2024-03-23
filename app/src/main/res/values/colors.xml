@@ -2,11 +2,13 @@
 <resources>
 
 	<color name="background_primary">#FFFFFF</color>
+	<color name="background_secondary">#F2F2F6</color>
+	<color name="background_accent">#E4E4E5</color>
+
 	<color name="foreground_primary">#000000</color>
-	<color name="background_secondary">#EEEEEE</color>
-	<color name="foreground_secondary">#212121</color>
-	<color name="background_accent">#C8C8C8</color>
-	<color name="foreground_accent">#646464</color>
+	<color name="foreground_secondary">#1C1C1D</color>
+	<color name="foreground_accent">#2B2B2D</color>
+
 	<color name="dynamic_selection">#C8FFFF</color>
 	<color name="dynamic_action_bar">#FF8A00</color>
 

@@ -3,7 +3,6 @@
 	android:id="@+id/fragment_month_grid_days"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/foreground_secondary"
 	android:orientation="vertical"
 	app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
 	app:spanCount="7" />

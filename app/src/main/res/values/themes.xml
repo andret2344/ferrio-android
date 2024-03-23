@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
+	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
 		<item name="android:textColor">@color/foreground_primary</item>
 		<item name="iconColor">@color/foreground_primary</item>
 	</style>

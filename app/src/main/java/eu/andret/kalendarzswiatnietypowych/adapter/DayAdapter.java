@@ -3,6 +3,7 @@ package eu.andret.kalendarzswiatnietypowych.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		private final TextView holidayTextView;
 		private final TextView moreTextView;
 		private final ImageView sadImageView;
-		private final CardView cardView;
+		private final MaterialCardView cardView;
 
 		public ViewHolder(final View view) {
 			super(view);
@@ -64,8 +66,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
-		final View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(R.layout.adapter_day, viewGroup, false);
+		final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_day, viewGroup, false);
 		view.getLayoutParams().height = viewGroup.getMeasuredHeight() / 6;
 		return new ViewHolder(view);
 	}
@@ -80,16 +81,17 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		}
 
 		if (holidayDay.getMonth() != month) {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_accent));
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_secondary));
 		} else if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
 			viewHolder.cardView.setCardBackgroundColor(Util.randomizeColor(context, holidayDay.getSeed()));
 		} else {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_secondary));
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_accent));
 		}
 
 		final LocalDate now = LocalDate.now();
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dynamic_selection));
+			viewHolder.cardView.setStrokeColor(Color.RED);
+			viewHolder.cardView.setStrokeWidth(4);
 		}
 
 		viewHolder.cardView.setOnClickListener(v -> {

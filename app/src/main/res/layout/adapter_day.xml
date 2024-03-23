@@ -4,14 +4,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:gravity="center"
-	android:padding="2dp">
+	android:padding="4dp">
 
-	<androidx.cardview.widget.CardView
+	<com.google.android.material.card.MaterialCardView
 		android:id="@+id/adapter_day_card_view"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:foregroundGravity="center"
-		app:cardCornerRadius="5dp">
+		app:cardCornerRadius="8dp">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
@@ -60,5 +60,5 @@
 				android:gravity="center|center"
 				android:textSize="@dimen/adapter_day_holiday" />
 		</RelativeLayout>
-	</androidx.cardview.widget.CardView>
+	</com.google.android.material.card.MaterialCardView>
 </RelativeLayout>
