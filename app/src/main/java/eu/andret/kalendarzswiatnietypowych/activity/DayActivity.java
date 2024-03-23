@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -46,9 +43,6 @@ public class DayActivity extends UHCActivity {
 
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
-		final Window window = getWindow();
-		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-		window.setStatusBarColor(ContextCompat.getColor(this, R.color.dynamic_action_bar));
 
 		pager = findViewById(R.id.day_pager_days);
 

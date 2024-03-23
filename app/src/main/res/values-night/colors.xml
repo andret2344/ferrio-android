@@ -9,7 +9,4 @@
 	<color name="foreground_secondary">#F2F2F6</color>
 	<color name="foreground_accent">#E4E4E5</color>
 
-	<color name="dynamic_selection">#370000</color>
-	<color name="dynamic_action_bar">#FF8A00</color>
-
 </resources>
