@@ -8,6 +8,7 @@
 	<dimen name="adapter_day_more">11sp</dimen>
 	<dimen name="adapter_day_small_date">12sp</dimen>
 	<dimen name="adapter_holiday_main">18sp</dimen>
+	<dimen name="adapter_holiday_country">15sp</dimen>
 	<dimen name="adapter_search_main">18sp</dimen>
 	<dimen name="fragment_day_empty">32sp</dimen>
 

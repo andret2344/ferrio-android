@@ -3,26 +3,26 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_marginBottom="1dp"
-	android:gravity="center_horizontal"
 	android:background="@color/background_primary"
+	android:gravity="center_horizontal"
 	android:orientation="horizontal">
 
 	<TextView
 		android:id="@+id/adapter_search_text_date"
-		android:textSize="@dimen/adapter_search_main"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center|center"
 		android:layout_marginStart="5dp"
-		android:layout_marginEnd="10dp" />
+		android:layout_marginEnd="10dp"
+		android:textSize="@dimen/adapter_search_main" />
 
 	<TextView
 		android:id="@+id/adapter_search_text_content"
-		android:textSize="@dimen/adapter_search_main"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
+		android:layout_marginTop="2dp"
 		android:layout_marginBottom="2dp"
-		android:layout_marginTop="2dp" />
+		android:gravity="center_vertical"
+		android:textSize="@dimen/adapter_search_main" />
 
 </LinearLayout>

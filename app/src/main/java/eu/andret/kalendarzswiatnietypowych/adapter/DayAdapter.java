@@ -99,7 +99,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 			intent.putExtra(MainActivity.DAY, holidayDay.getDay());
 			intent.putExtra(MainActivity.MONTH, holidayDay.getMonth());
 			intent.putParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidayDays));
-			((MainActivity) context).startActivityForResult(intent, context.getResources().getInteger(R.integer.request_code_change_month));
+			((MainActivity) context).activityResult.launch(intent);
 		});
 
 		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);

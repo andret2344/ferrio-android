@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -60,6 +61,15 @@ public class MainActivity extends UHCActivity {
 	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
+	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+		if (result.getResultCode() == Activity.RESULT_OK) {
+			final Intent data = result.getData();
+			if (data != null) {
+				final int currentMonthValue = LocalDate.now().getMonthValue();
+				viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
+			}
+		}
+	});
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -67,21 +77,11 @@ public class MainActivity extends UHCActivity {
 		setContentView(R.layout.activity_main);
 		configureObservers();
 		final String stringFrom = getIntent().getStringExtra(FROM);
-		final int currentMonthValue = LocalDate.now().getMonthValue();
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
 			final Intent intent = new Intent(this, DayActivity.class);
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
-			registerForActivityResult(
-					new ActivityResultContracts.StartActivityForResult(),
-					result -> {
-						if (result.getResultCode() == Activity.RESULT_OK) {
-							final Intent data = result.getData();
-							if (data != null) {
-								viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
-							}
-						}
-					}).launch(intent);
+			activityResult.launch(intent);
 		}
 
 		searchListView = findViewById(R.id.main_list_results);
@@ -91,6 +91,7 @@ public class MainActivity extends UHCActivity {
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
+		final int currentMonthValue = LocalDate.now().getMonthValue();
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
 		viewPager2.setCurrentItem(currentMonthValue - 1, false);
 		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
@@ -98,7 +99,7 @@ public class MainActivity extends UHCActivity {
 		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
+				retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setTitle(getMonthName(position + 1)));
 			}
 		});
 
@@ -118,12 +119,11 @@ public class MainActivity extends UHCActivity {
 				viewPager2.setVisibility(View.VISIBLE);
 			}
 		});
-		final ConnectivityManager connectivityManager =
-				(ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		final ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 		Util.NETWORK_CAPABILITIES.stream()
 				.map(new NetworkRequest.Builder()::addTransportType)
 				.map(NetworkRequest.Builder::build)
-				.forEach(x -> connectivityManager.registerNetworkCallback(x, new ConnectivityManager.NetworkCallback() {
+				.forEach(request -> connectivityManager.registerNetworkCallback(request, new ConnectivityManager.NetworkCallback() {
 					@Override
 					public void onAvailable(@NonNull final Network network) {
 						super.onAvailable(network);
@@ -227,7 +227,7 @@ public class MainActivity extends UHCActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 		final int itemId = item.getItemId();
 		if (itemId == R.id.menu_main_today) {
 			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
