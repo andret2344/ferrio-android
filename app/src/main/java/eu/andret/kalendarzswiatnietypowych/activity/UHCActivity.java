@@ -22,11 +22,12 @@ public abstract class UHCActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setupTheme();
 		sharedViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
 				.get(SharedViewModel.class);
 	}
 
-	protected void setupTheme() {
+	private void setupTheme() {
 		final String[] themeValues = getResources().getStringArray(R.array.preference_theme_values);
 		final String themeSetting = getSharedPreferences().getString(getResources().getString(R.string.settings_key_app_theme), themeValues[0]);
 		switch (themeSetting) {

@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -21,7 +18,6 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -42,15 +38,12 @@ public class DayActivity extends UHCActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setupTheme();
 		setContentView(R.layout.activity_day);
 
-		pager = findViewById(R.id.day_pager_days);
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
-		final Window window = getWindow();
-		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-		window.setStatusBarColor(ContextCompat.getColor(this, R.color.dynamic_action_bar));
+
+		pager = findViewById(R.id.day_pager_days);
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
@@ -71,7 +64,8 @@ public class DayActivity extends UHCActivity {
 				final Pair<Month, Integer> pair = Util.calculateDates(position + 1);
 				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
 				final String format = localDate.format(formatter).replace("19", String.valueOf(pair.second));
-				Objects.requireNonNull(getSupportActionBar()).setTitle(format);
+				retrieveSupportActionBar().ifPresent(actionBar ->
+						actionBar.setTitle(format));
 			}
 		});
 		MobileAds.initialize(this);

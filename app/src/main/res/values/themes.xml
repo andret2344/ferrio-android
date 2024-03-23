@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
+	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
 		<item name="android:textColor">@color/foreground_primary</item>
 		<item name="iconColor">@color/foreground_primary</item>
+
+		<item name="colorPrimary">@color/background_secondary</item>
+		<item name="colorPrimaryDark">@color/background_accent</item>
+		<item name="android:windowLightStatusBar">true</item>
 	</style>
 
 	<style name="DayActionBarTheme" parent="AppTheme">
 		<item name="colorPrimary">@color/dynamic_action_bar</item>
+		<item name="colorPrimaryDark">@color/dynamic_action_bar</item>
+		<item name="android:windowLightStatusBar">true</item>
 	</style>
 
 </resources>

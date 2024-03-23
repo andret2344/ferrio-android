@@ -24,9 +24,7 @@ public class SettingsActivity extends UHCActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setupTheme();
-		retrieveSupportActionBar().ifPresent(actionBar ->
-				actionBar.setDisplayHomeAsUpEnabled(true));
+		retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(android.R.id.content, new PrefsFragment())

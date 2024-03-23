@@ -57,32 +57,27 @@ public class MainActivity extends UHCActivity {
 	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
-
-	public final ActivityResultLauncher<Intent> startActivityResultLauncher = registerForActivityResult(
-			new ActivityResultContracts.StartActivityForResult(),
-			result -> {
+	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+		if (result.getResultCode() == Activity.RESULT_OK) {
+			final Intent data = result.getData();
+			if (data != null) {
 				final int currentMonthValue = LocalDate.now().getMonthValue();
-				if (result.getResultCode() == Activity.RESULT_OK) {
-					final Intent data = result.getData();
-					if (data != null) {
-						viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
-					}
-				}
-			});
+				viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
+			}
+		}
+	});
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setupTheme();
 		setContentView(R.layout.activity_main);
 		configureObservers();
 		final String stringFrom = getIntent().getStringExtra(FROM);
-		final int currentMonthValue = LocalDate.now().getMonthValue();
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
 			final Intent intent = new Intent(this, DayActivity.class);
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
-			startActivityResultLauncher.launch(intent);
+			activityResult.launch(intent);
 		}
 
 		searchListView = findViewById(R.id.main_list_results);
@@ -130,7 +125,7 @@ public class MainActivity extends UHCActivity {
 		Util.NETWORK_CAPABILITIES.stream()
 				.map(new NetworkRequest.Builder()::addTransportType)
 				.map(NetworkRequest.Builder::build)
-				.forEach(x -> connectivityManager.registerNetworkCallback(x, new ConnectivityManager.NetworkCallback() {
+				.forEach(request -> connectivityManager.registerNetworkCallback(request, new ConnectivityManager.NetworkCallback() {
 					@Override
 					public void onAvailable(@NonNull final Network network) {
 						super.onAvailable(network);
@@ -181,7 +176,7 @@ public class MainActivity extends UHCActivity {
 			@SuppressLint("NotifyDataSetChanged")
 			public boolean onQueryTextChange(final String newText) {
 				list.clear();
-				if (newText == null || newText.equals("")) {
+				if (newText == null || newText.isEmpty()) {
 					searchListView.setVisibility(View.INVISIBLE);
 					viewPager2.setVisibility(View.VISIBLE);
 				} else {
@@ -212,7 +207,7 @@ public class MainActivity extends UHCActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 		final int itemId = item.getItemId();
 		if (itemId == R.id.menu_main_today) {
 			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);

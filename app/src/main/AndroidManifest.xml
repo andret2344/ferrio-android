@@ -9,6 +9,7 @@
 	<application
 		android:name=".UHCApplication"
 		android:allowBackup="true"
+		android:dataExtractionRules="@xml/data_extraction_rules"
 		android:fullBackupContent="@xml/backup_descriptor"
 		android:dataExtractionRules="@xml/data_extraction_rules"
 		android:icon="@drawable/ic_launcher"
@@ -38,8 +39,8 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 		<activity
 			android:name=".activity.DayActivity"
-			android:theme="@style/DayActionBarTheme"
-			android:configChanges="uiMode" />
+			android:configChanges="uiMode"
+			android:theme="@style/DayActionBarTheme" />
 		<activity
 			android:name=".activity.HolidayActivity"
 			android:theme="@style/DayActionBarTheme"

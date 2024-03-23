@@ -3,6 +3,7 @@ package eu.andret.kalendarzswiatnietypowych.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -41,7 +44,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		private final TextView holidayTextView;
 		private final TextView moreTextView;
 		private final ImageView sadImageView;
-		private final CardView cardView;
+		private final MaterialCardView cardView;
 
 		public ViewHolder(final View view) {
 			super(view);
@@ -76,22 +79,24 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		final LocalDate now = LocalDate.now();
 
 		if (holidayDay.getMonth() != month) {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_accent));
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_secondary));
 		} else if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
 			viewHolder.cardView.setCardBackgroundColor(Util.randomizeColor(context, holidayDay.getSeed()));
 		} else {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_secondary));
+			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_accent));
 		}
 
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
-			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dynamic_selection));
+			viewHolder.cardView.setStrokeColor(Color.RED);
+			viewHolder.cardView.setStrokeWidth(4);
 		}
 
 		viewHolder.cardView.setOnClickListener(v -> {
 			final Intent intent = new Intent(context, DayActivity.class);
 			intent.putExtra(MainActivity.DAY, holidayDay.getDay());
 			intent.putExtra(MainActivity.MONTH, holidayDay.getMonth());
-			((MainActivity) context).startActivityResultLauncher.launch(intent);
+			intent.putParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS, new ArrayList<>(holidayDays));
+			((MainActivity) context).activityResult.launch(intent);
 		});
 
 		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
@@ -107,6 +112,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 			viewHolder.bigDateTextView.setText(String.valueOf(holidayDay.getDay()));
 			return;
 		}
+		viewHolder.smallDateTextView.setText(String.valueOf(holidayDay.getDay()));
 
 		final Holiday displayedHoliday = holidayDay.getHolidaysList(includeUsual).get(0);
 		final String[] words = displayedHoliday.getName().split(" ");
