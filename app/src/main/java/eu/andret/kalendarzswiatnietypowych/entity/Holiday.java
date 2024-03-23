@@ -14,21 +14,21 @@ public class Holiday implements Comparable<Holiday> {
 	private final String name;
 	private final String description;
 	private final boolean usual;
-	private final String country;
+	private final String countryCode;
 	private final String url;
 
-	public Holiday(final int id, final String name, final String description, final boolean usual, final String country, final String url) {
+	public Holiday(final int id, final String name, final String description, final boolean usual, final String countryCode, final String url) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.country = country;
 		this.usual = usual;
+		this.countryCode = countryCode;
 		this.url = url;
 	}
 
 	public Holiday(@NonNull final FloatingHoliday floatingHoliday) {
 		this(-floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(),
-				floatingHoliday.isUsual(), floatingHoliday.getCountry(), floatingHoliday.getUrl());
+				floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getUrl());
 	}
 
 	public int getId() {
@@ -45,14 +45,15 @@ public class Holiday implements Comparable<Holiday> {
 	}
 
 	@Nullable
-	public String getCountry() {
-		return country;
+	public String getCountryCode() {
+		return countryCode;
 	}
 
 	public boolean isUsual() {
 		return usual;
 	}
 
+	@Nullable
 	public String getUrl() {
 		return url;
 	}
@@ -67,16 +68,16 @@ public class Holiday implements Comparable<Holiday> {
 		}
 		final Holiday holiday = (Holiday) o;
 		return id == holiday.id
-				&& usual == holiday.usual
 				&& Objects.equals(name, holiday.name)
 				&& Objects.equals(description, holiday.description)
-				&& Objects.equals(country, holiday.country)
+				&& usual == holiday.usual
+				&& Objects.equals(countryCode, holiday.countryCode)
 				&& Objects.equals(url, holiday.url);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, usual, country, url);
+		return Objects.hash(id, name, description, usual, countryCode, url);
 	}
 
 	@NonNull
@@ -87,7 +88,7 @@ public class Holiday implements Comparable<Holiday> {
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", usual=" + usual +
-				", country='" + country + '\'' +
+				", countryCode='" + countryCode + '\'' +
 				", url='" + url + '\'' +
 				'}';
 	}

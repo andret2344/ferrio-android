@@ -14,17 +14,17 @@ public class FloatingHoliday {
 	private final boolean usual;
 	private final String name;
 	private final String description;
-	private final String country;
+	private final String countryCode;
 	private final String url;
 	private final String script;
 
 	public FloatingHoliday(final int id, final boolean usual, final String name, final String description,
-						   final String country, final String url, final String script) {
+						   final String countryCode, final String url, final String script) {
 		this.id = id;
 		this.usual = usual;
 		this.name = name;
 		this.description = description;
-		this.country = country;
+		this.countryCode = countryCode;
 		this.url = url;
 		this.script = script;
 	}
@@ -46,8 +46,8 @@ public class FloatingHoliday {
 	}
 
 	@Nullable
-	public String getCountry() {
-		return country;
+	public String getCountryCode() {
+		return countryCode;
 	}
 
 	public String getUrl() {
@@ -71,14 +71,14 @@ public class FloatingHoliday {
 				&& usual == that.usual
 				&& Objects.equals(name, that.name)
 				&& Objects.equals(description, that.description)
-				&& Objects.equals(country, that.country)
+				&& Objects.equals(countryCode, that.countryCode)
 				&& Objects.equals(url, that.url)
 				&& Objects.equals(script, that.script);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, usual, name, description, country, url, script);
+		return Objects.hash(id, usual, name, description, countryCode, url, script);
 	}
 
 	@NonNull
@@ -89,7 +89,7 @@ public class FloatingHoliday {
 				", usual=" + usual +
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
-				", country='" + country + '\'' +
+				", countryCode='" + countryCode + '\'' +
 				", url='" + url + '\'' +
 				", script='" + script + '\'' +
 				'}';
