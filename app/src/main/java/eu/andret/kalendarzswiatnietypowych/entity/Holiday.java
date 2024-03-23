@@ -4,8 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
-
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -48,13 +47,23 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		return name;
 	}
 
+	@NonNull
+	public String getDescription() {
+		return description;
+	}
+
 	public boolean isUsual() {
 		return usual;
 	}
 
-	@NonNull
+	@Nullable
 	public String getCountryCode() {
 		return countryCode;
+	}
+
+	@Nullable
+	public String getUrl() {
+		return url;
 	}
 
 	@Override

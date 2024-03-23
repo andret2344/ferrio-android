@@ -19,7 +19,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 public class MonthFragment extends Fragment {
 	private final List<HolidayDay> holidayDays;
 
-	public MonthFragment(final List<HolidayDay> holidayDays) {
+	public MonthFragment(@NonNull final List<HolidayDay> holidayDays) {
 		this.holidayDays = holidayDays;
 	}
 

@@ -40,6 +40,10 @@
 			android:configChanges="uiMode"
 			android:theme="@style/DayActionBarTheme" />
 		<activity
+			android:name=".activity.HolidayActivity"
+			android:configChanges="uiMode"
+			android:theme="@style/DayActionBarTheme" />
+		<activity
 			android:name=".activity.SettingsActivity"
 			android:configChanges="uiMode"
 			android:label="@string/settings">

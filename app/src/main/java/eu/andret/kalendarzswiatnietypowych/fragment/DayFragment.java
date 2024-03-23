@@ -46,7 +46,7 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
 		}
 		final RecyclerView recyclerView = dayView.findViewById(R.id.fragment_day_list_holidays);
-		recyclerView.setAdapter(new HolidayAdapter(holidays));
+		recyclerView.setAdapter(new HolidayAdapter(getContext(), holidays));
 		return dayView;
 	}
 }

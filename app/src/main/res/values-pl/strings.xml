@@ -25,6 +25,7 @@
 	<string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
 	<string name="content_description_ad">Reklama</string>
 	<string name="content_description_image_sad_face">Smutna twarz</string>
+	<string name="content_description_more">więcej</string>
 	<string name="app_theme">Styl aplikacji</string>
 
 </resources>
