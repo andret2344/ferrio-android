@@ -19,10 +19,12 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView holidayTextView;
+		private final TextView countryTextView;
 
 		public ViewHolder(final View view) {
 			super(view);
 			holidayTextView = view.findViewById(R.id.adapter_holiday_text_holiday);
+			countryTextView = view.findViewById(R.id.adapter_holiday_text_country);
 		}
 	}
 
@@ -42,6 +44,7 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final Holiday holiday = holidays.get(position);
 		viewHolder.holidayTextView.setText(holiday.getName());
+		viewHolder.countryTextView.setText(holiday.getCountryCode());
 		if (holiday.isUsual()) {
 			viewHolder.holidayTextView.setTypeface(null, Typeface.BOLD);
 		}
