@@ -67,7 +67,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -88,7 +88,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		return Objects.hash(id, name, description, usual, countryCode, url);
 	}
 
-	@NotNull
+	@NonNull
 	@Override
 	public String toString() {
 		return "Holiday{" +

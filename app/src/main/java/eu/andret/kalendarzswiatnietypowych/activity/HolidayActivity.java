@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -33,6 +34,12 @@ public class HolidayActivity extends UHCActivity {
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.activity_holiday_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		getMenuInflater().inflate(R.menu.holiday, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override

@@ -16,15 +16,17 @@ public class UnusualCalendar implements Parcelable {
 	private final List<HolidayDay> fixed;
 	private final List<FloatingHoliday> floating;
 
-	protected UnusualCalendar(final Parcel in) {
+	protected UnusualCalendar(@NonNull final Parcel in) {
 		fixed = in.createTypedArrayList(HolidayDay.CREATOR);
 		floating = in.createTypedArrayList(FloatingHoliday.CREATOR);
 	}
 
+	@NonNull
 	public List<HolidayDay> getFixed() {
 		return fixed;
 	}
 
+	@NonNull
 	public List<FloatingHoliday> getFloating() {
 		return floating;
 	}
@@ -35,7 +37,7 @@ public class UnusualCalendar implements Parcelable {
 	}
 
 	@Override
-	public void writeToParcel(final Parcel parcel, final int flags) {
+	public void writeToParcel(@NonNull final Parcel parcel, final int flags) {
 		parcel.writeParcelableArray(fixed.toArray(new HolidayDay[0]), flags);
 		parcel.writeParcelableArray(floating.toArray(new FloatingHoliday[0]), flags);
 	}
@@ -63,7 +65,7 @@ public class UnusualCalendar implements Parcelable {
 
 
 	@Nullable
-	public static HolidayDay getDay(final List<HolidayDay> holidayDays, final int month, final int day) {
+	public static HolidayDay getDay(@NonNull final List<HolidayDay> holidayDays, final int month, final int day) {
 		return holidayDays.stream()
 				.filter(holidayDay -> holidayDay.getDay() == day)
 				.filter(holidayDay -> holidayDay.getMonth() == month)
@@ -72,7 +74,7 @@ public class UnusualCalendar implements Parcelable {
 	}
 
 	@NonNull
-	public static HolidayDay getOrCreateDay(final List<HolidayDay> holidayDays, final int month, final int day) {
+	public static HolidayDay getOrCreateDay(@NonNull final List<HolidayDay> holidayDays, final int month, final int day) {
 		final HolidayDay holidayDay = getDay(holidayDays, month, day);
 		if (holidayDay != null) {
 			return holidayDay;
@@ -83,7 +85,7 @@ public class UnusualCalendar implements Parcelable {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}

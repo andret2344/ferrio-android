@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/menu_day_today"
+		android:icon="@drawable/baseline_flag_24"
+		android:orderInCategory="10"
+		android:title="@string/menu_item_today"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/menu_day_random"
+		android:icon="@drawable/baseline_star_24"
+		android:orderInCategory="9"
+		android:title="@string/menu_item_random"
+		app:showAsAction="ifRoom" />
+
+</menu>
