@@ -14,25 +14,28 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 	private final String name;
 	private final String description;
 	private final boolean usual;
+	private final String countryCode;
 	private final String url;
 
-	public Holiday(final int id, final String name, final String description, final boolean usual, final String url) {
+	public Holiday(final int id, final String name, final String description, final boolean usual, final String countryCode, final String url) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.usual = usual;
+		this.countryCode = countryCode;
 		this.url = url;
 	}
 
-	public Holiday(final FloatingHoliday floatingHoliday) {
-		this(floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(), floatingHoliday.isUsual(), floatingHoliday.getUrl());
+	public Holiday(@NonNull final FloatingHoliday floatingHoliday) {
+		this(floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(), floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getUrl());
 	}
 
-	protected Holiday(final Parcel in) {
+	protected Holiday(@NonNull final Parcel in) {
 		id = in.readInt();
 		name = in.readString();
 		description = in.readString();
 		usual = in.readByte() != 0;
+		countryCode = in.readString();
 		url = in.readString();
 	}
 
@@ -49,6 +52,11 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		return usual;
 	}
 
+	@NonNull
+	public String getCountryCode() {
+		return countryCode;
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		if (this == o) {
@@ -59,15 +67,16 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		}
 		final Holiday holiday = (Holiday) o;
 		return id == holiday.id
-				&& usual == holiday.usual
 				&& Objects.equals(name, holiday.name)
 				&& Objects.equals(description, holiday.description)
+				&& usual == holiday.usual
+				&& Objects.equals(countryCode, holiday.countryCode)
 				&& Objects.equals(url, holiday.url);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, usual, url);
+		return Objects.hash(id, name, description, usual, countryCode, url);
 	}
 
 	@NotNull
@@ -78,6 +87,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", usual=" + usual +
+				", countryCode='" + countryCode + '\'' +
 				", url='" + url + '\'' +
 				'}';
 	}
@@ -101,10 +111,11 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		parcel.writeString(name);
 		parcel.writeString(description);
 		parcel.writeByte((byte) (usual ? 1 : 0));
+		parcel.writeString(countryCode);
 		parcel.writeString(url);
 	}
 
-	public static final Creator<Holiday> CREATOR = new Creator<Holiday>() {
+	public static final Creator<Holiday> CREATOR = new Creator<>() {
 		@Override
 		public Holiday createFromParcel(final Parcel in) {
 			return new Holiday(in);

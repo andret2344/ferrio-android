@@ -14,4 +14,16 @@
 		android:textColor="@color/foreground_secondary"
 		android:textSize="@dimen/adapter_holiday_main" />
 
+	<TextView
+		android:id="@+id/adapter_holiday_text_country"
+		android:layout_alignParentEnd="true"
+		android:layout_width="50dp"
+		android:layout_height="wrap_content"
+		android:padding="5dp"
+		android:gravity="center_vertical|center_horizontal"
+		android:textColor="@color/foreground_accent"
+		android:layout_alignTop="@id/adapter_holiday_text_holiday"
+		android:layout_alignBottom="@id/adapter_holiday_text_holiday"
+		android:textSize="@dimen/adapter_holiday_main" />
+
 </RelativeLayout>
