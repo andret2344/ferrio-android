@@ -95,7 +95,7 @@ public class MainActivity extends UHCActivity {
 		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
+				retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setTitle(getMonthName(position + 1)));
 			}
 		});
 

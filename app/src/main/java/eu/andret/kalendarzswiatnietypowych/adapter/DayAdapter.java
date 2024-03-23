@@ -75,7 +75,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		final HolidayDay holidayDay = holidayDays.get(position);
-		final LocalDate now = LocalDate.now();
 
 		if (holidayDay.getMonth() != month) {
 			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_secondary));
@@ -85,6 +84,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 			viewHolder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.background_accent));
 		}
 
+		final LocalDate now = LocalDate.now();
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
 			viewHolder.cardView.setStrokeColor(Color.RED);
 			viewHolder.cardView.setStrokeWidth(4);

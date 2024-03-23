@@ -51,9 +51,6 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final Holiday holiday = holidays.get(position);
-		if (holiday == null) {
-			return;
-		}
 
 		if (holiday.getDescription().isBlank()) {
 			viewHolder.moreImageView.setVisibility(View.INVISIBLE);

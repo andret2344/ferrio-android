@@ -54,10 +54,8 @@ public class SearchHolidayAdapter extends RecyclerView.Adapter<SearchHolidayAdap
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final HolidayDay day = holidayDays.get(position);
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
 		viewHolder.dateTextView.setText(String.format(Locale.ROOT, "%02d.%02d", day.getDay(), day.getMonth()));
-
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		if (preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false)) {
 			viewHolder.itemView.setBackgroundColor(Util.randomizeColor(context, day.getSeed()));
 		}
