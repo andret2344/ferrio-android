@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -45,8 +45,8 @@ public class DayFragment extends Fragment {
 			final int backgroundColor = Util.randomizeColor(getContext(), holidayDay.getSeed());
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
 		}
-		final ListView listView = dayView.findViewById(R.id.fragment_day_list_holidays);
-		listView.setAdapter(new HolidayAdapter(getContext(), holidays));
+		final RecyclerView recyclerView = dayView.findViewById(R.id.fragment_day_list_holidays);
+		recyclerView.setAdapter(new HolidayAdapter(holidays));
 		return dayView;
 	}
 }

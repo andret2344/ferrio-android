@@ -3,8 +3,8 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_marginBottom="1dp"
+	android:background="@color/background_primary"
 	android:gravity="center_horizontal"
-	android:background="@color/background_secondary"
 	android:orientation="horizontal">
 
 	<TextView
@@ -13,14 +13,16 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center|center"
 		android:layout_marginStart="5dp"
-		android:layout_marginEnd="10dp" />
+		android:layout_marginEnd="10dp"
+		android:textSize="@dimen/adapter_search_main" />
 
-	<LinearLayout
-		android:id="@+id/adapter_search_layout_holidays"
+	<TextView
+		android:id="@+id/adapter_search_text_content"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_gravity="center|center"
+		android:layout_marginTop="2dp"
 		android:layout_marginBottom="2dp"
-		android:orientation="vertical" />
+		android:gravity="center_vertical"
+		android:textSize="@dimen/adapter_search_main" />
 
 </LinearLayout>

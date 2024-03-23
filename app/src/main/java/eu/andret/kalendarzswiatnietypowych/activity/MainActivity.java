@@ -3,24 +3,20 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.MutableLiveData;
-import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdRequest;
@@ -52,48 +48,40 @@ import eu.andret.kalendarzswiatnietypowych.util.Downloader;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
 
-public class MainActivity extends AppCompatActivity {
-	public static final String CALENDAR = "calendar";
+public class MainActivity extends UHCActivity {
 	public static final String WIDGET = "widget";
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String FROM = "from";
 	public static final String HOLIDAY_DAYS = "holidayDays";
 	public static final String HOLIDAY_DAY = "holidayDay";
-	private static final List<Integer> TRANSPORTS = List.of(
-			NetworkCapabilities.TRANSPORT_CELLULAR,
-			NetworkCapabilities.TRANSPORT_WIFI,
-			NetworkCapabilities.TRANSPORT_ETHERNET);
 
 	private ViewPager2 viewPager2;
-	private ListView searchListView;
+	private RecyclerView searchListView;
 	private AlertDialog alertDialog;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
+	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+		if (result.getResultCode() == Activity.RESULT_OK) {
+			final Intent data = result.getData();
+			if (data != null) {
+				final int currentMonthValue = LocalDate.now().getMonthValue();
+				viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
+			}
+		}
+	});
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 		setContentView(R.layout.activity_main);
 		configureObservers();
 		final String stringFrom = getIntent().getStringExtra(FROM);
-		final int currentMonthValue = LocalDate.now().getMonthValue();
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
 			final Intent intent = new Intent(this, DayActivity.class);
-			intent.putExtra(FROM, CALENDAR);
 			intent.putExtra(DAY, getIntent().getIntExtra(DAY, 1));
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
-			registerForActivityResult(
-					new ActivityResultContracts.StartActivityForResult(),
-					result -> {
-						if (result.getResultCode() == Activity.RESULT_OK) {
-							final Intent data = result.getData();
-							if (data != null) {
-								viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
-							}
-						}
-					}).launch(intent);
+			activityResult.launch(intent);
 		}
 
 		searchListView = findViewById(R.id.main_list_results);
@@ -103,15 +91,23 @@ public class MainActivity extends AppCompatActivity {
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
+		final int currentMonthValue = LocalDate.now().getMonthValue();
+		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
+		viewPager2.setCurrentItem(currentMonthValue - 1, false);
+		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
+		viewPager2.setOffscreenPageLimit(12);
+		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+			@Override
+			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+				retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setTitle(getMonthName(position + 1)));
+			}
+		});
+
 		if (!Boolean.FALSE.equals(internet.getValue())) {
 			call();
 			return;
 		}
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(R.string.no_internet_connection);
-		alert.setCancelable(false);
-		alert.setMessage(R.string.no_internet);
-		alertDialog = alert.show();
+		showNoInternetAlert();
 	}
 
 	private void configureObservers() {
@@ -120,14 +116,14 @@ public class MainActivity extends AppCompatActivity {
 			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
 				call();
 				alertDialog.dismiss();
+				viewPager2.setVisibility(View.VISIBLE);
 			}
 		});
-		final ConnectivityManager connectivityManager =
-				(ConnectivityManager) getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
-		TRANSPORTS.stream()
+		final ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		Util.NETWORK_CAPABILITIES.stream()
 				.map(new NetworkRequest.Builder()::addTransportType)
 				.map(NetworkRequest.Builder::build)
-				.forEach(x -> connectivityManager.registerNetworkCallback(x, new ConnectivityManager.NetworkCallback() {
+				.forEach(request -> connectivityManager.registerNetworkCallback(request, new ConnectivityManager.NetworkCallback() {
 					@Override
 					public void onAvailable(@NonNull final Network network) {
 						super.onAvailable(network);
@@ -163,17 +159,15 @@ public class MainActivity extends AppCompatActivity {
 							});
 				})
 				.join();
-		final int currentMonthValue = LocalDate.now().getMonthValue();
-		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
-		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
-		viewPager2.setOffscreenPageLimit(12);
-		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-			@Override
-			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(position + 1));
-			}
-		});
+	}
+
+	private void showNoInternetAlert() {
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(R.string.no_internet_connection);
+		alert.setCancelable(false);
+		alert.setMessage(R.string.no_internet);
+		alertDialog = alert.show();
+		viewPager2.setVisibility(View.INVISIBLE);
 	}
 
 	@NotNull
@@ -188,8 +182,7 @@ public class MainActivity extends AppCompatActivity {
 		final MenuItem searchItem = menu.findItem(R.id.menu_main_search);
 		final SearchView searchView = (SearchView) searchItem.getActionView();
 		final List<HolidayDay> list = new ArrayList<>(holidayDays);
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, holidayDays, list);
+		final SearchHolidayAdapter adapter = new SearchHolidayAdapter(this, list);
 		searchListView.setAdapter(adapter);
 		if (searchView == null) {
 			return true;
@@ -203,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public boolean onQueryTextChange(final String newText) {
 				list.clear();
-				if (newText == null || newText.equals("")) {
+				if (newText == null || newText.isEmpty()) {
 					searchListView.setVisibility(View.INVISIBLE);
 					viewPager2.setVisibility(View.VISIBLE);
 				} else {
@@ -211,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 					viewPager2.setVisibility(View.INVISIBLE);
 					holidayDays.stream()
 							.map(holidayDay -> {
-								final boolean includeUsual = preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false);
+								final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
 								final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
 										.stream()
 										.filter(holiday -> holiday.getName().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))
@@ -234,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 		final int itemId = item.getItemId();
 		if (itemId == R.id.menu_main_today) {
 			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);

@@ -1,7 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/fragment_day_relative_main"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:background="@color/background_primary">
 
 	<ImageView
 		android:id="@+id/fragment_day_image_sad"
@@ -16,15 +18,17 @@
 		android:id="@+id/fragment_day_text_empty"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="@color/foreground_primary"
 		android:gravity="center"
 		android:text="@string/no_unusual_holidays"
 		android:textSize="@dimen/fragment_day_empty"
-		android:background="@color/background_accent"
 		android:visibility="invisible" />
 
-	<ListView
+	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/fragment_day_list_holidays"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
+		android:layout_height="match_parent"
+		android:background="@color/background_primary"
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </RelativeLayout>

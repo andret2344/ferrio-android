@@ -1,18 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.util.Pair;
-import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdRequest;
@@ -25,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -35,7 +28,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
-public class DayActivity extends AppCompatActivity {
+public class DayActivity extends UHCActivity {
 	private static final Random RANDOM = new Random();
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
 			.withLocale(Locale.getDefault());
@@ -46,14 +39,12 @@ public class DayActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-		Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(Color.rgb(0xff, 0x8a, 0x00)));
 		setContentView(R.layout.activity_day);
 
+		retrieveSupportActionBar().ifPresent(actionBar ->
+				actionBar.setDisplayHomeAsUpEnabled(true));
+
 		pager = findViewById(R.id.day_pager_days);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayShowTitleEnabled(true);
-		getSupportActionBar().setDisplayShowCustomEnabled(false);
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
@@ -67,14 +58,16 @@ public class DayActivity extends AppCompatActivity {
 			id += leap ? 1 : 2;
 		}
 		pager.setCurrentItem(id - 1, false);
-		getSupportActionBar().setTitle(date.format(formatter));
+		retrieveSupportActionBar().ifPresent(actionBar ->
+				actionBar.setTitle(date.format(formatter)));
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				final Pair<Month, Integer> pair = Util.calculateDates(position + 1);
 				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
 				final String format = localDate.format(formatter).replace("19", String.valueOf(pair.second));
-				Objects.requireNonNull(getSupportActionBar()).setTitle(format);
+				retrieveSupportActionBar().ifPresent(actionBar ->
+						actionBar.setTitle(format));
 			}
 		});
 		MobileAds.initialize(this);
@@ -129,8 +122,7 @@ public class DayActivity extends AppCompatActivity {
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.unusual_holiday));
 			final Pair<Month, Integer> pair = Util.calculateDates(pager.getCurrentItem() + 1);
 			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
-			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-			final boolean usualHolidays = preferences.getBoolean(getString(R.string.settings_key_usual_holidays), false);
+			final boolean usualHolidays = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
 			holidayDays.stream().filter(h -> h.getMonth() == pair.first.getValue() && h.getDay() == pair.second)
 					.findAny()
 					.ifPresent(day -> {
