@@ -20,6 +20,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 
 	private static class ViewHolder {
 		private TextView holiday;
+		private TextView country;
 	}
 
 	public HolidayAdapter(final Context context, final List<Holiday> holidays) {
@@ -37,6 +38,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 			convertView = inflater.inflate(R.layout.adapter_holiday, parent, false);
 			holder = new ViewHolder();
 			holder.holiday = convertView.findViewById(R.id.adapter_holiday_text_holiday);
+			holder.country = convertView.findViewById(R.id.adapter_holiday_text_country);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -48,6 +50,7 @@ public class HolidayAdapter extends ArrayAdapter<Holiday> {
 		}
 
 		holder.holiday.setText(getContext().getString(R.string.pointed_text, holiday.getName()));
+		holder.country.setText(holiday.getCountryCode());
 		if (holiday.isUsual()) {
 			holder.holiday.setTypeface(null, Typeface.BOLD);
 		}
