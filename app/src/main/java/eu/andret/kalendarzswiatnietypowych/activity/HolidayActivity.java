@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -24,22 +23,16 @@ public class HolidayActivity extends UHCActivity {
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		final TextView nameTextView = findViewById(R.id.activity_holiday_name);
-		final TextView descTextView = findViewById(R.id.activity_holiday_description);
-		final Holiday holiday = getIntent().getParcelableExtra(MainActivity.HOLIDAY);
-
-		nameTextView.setText(holiday.getName());
-		descTextView.setText(holiday.getDescription());
-
 		MobileAds.initialize(this);
-		final AdView adView = findViewById(R.id.activity_holiday_adview_bottom);
-		adView.loadAd(new AdRequest.Builder().build());
-	}
+		this.<AdView>findViewById(R.id.activity_holiday_adview_bottom)
+				.loadAd(new AdRequest.Builder().build());
 
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.holiday, menu);
-		return super.onCreateOptionsMenu(menu);
+		final Holiday holiday = getIntent().getParcelableExtra(MainActivity.HOLIDAY);
+		if (holiday == null) {
+			return;
+		}
+		this.<TextView>findViewById(R.id.activity_holiday_name).setText(holiday.getName());
+		this.<TextView>findViewById(R.id.activity_holiday_description).setText(holiday.getDescription());
 	}
 
 	@Override
