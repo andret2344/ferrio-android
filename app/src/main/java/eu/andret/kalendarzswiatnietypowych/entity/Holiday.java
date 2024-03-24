@@ -4,8 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
-
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -48,17 +47,27 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		return name;
 	}
 
+	@NonNull
+	public String getDescription() {
+		return description;
+	}
+
 	public boolean isUsual() {
 		return usual;
 	}
 
-	@NonNull
+	@Nullable
 	public String getCountryCode() {
 		return countryCode;
 	}
 
+	@Nullable
+	public String getUrl() {
+		return url;
+	}
+
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -79,7 +88,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		return Objects.hash(id, name, description, usual, countryCode, url);
 	}
 
-	@NotNull
+	@NonNull
 	@Override
 	public String toString() {
 		return "Holiday{" +

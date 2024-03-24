@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -34,28 +35,33 @@ public class FloatingHoliday implements Parcelable {
 		return usual;
 	}
 
+	@NonNull
 	public String getName() {
 		return name;
 	}
 
+	@NonNull
 	public String getDescription() {
 		return description;
 	}
 
+	@Nullable
 	public String getCountryCode() {
 		return countryCode;
 	}
 
+	@Nullable
 	public String getUrl() {
 		return url;
 	}
 
+	@NonNull
 	public String getScript() {
 		return script;
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}

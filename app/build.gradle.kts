@@ -58,6 +58,5 @@ dependencies {
     implementation(group = "androidx.viewpager2", name = "viewpager2", version = "1.0.0")
     implementation(group = "androidx.cardview", name = "cardview", version = "1.0.0")
 
-    annotationProcessor(group = "org.jetbrains", name = "annotations", version = "24.1.0")
     coreLibraryDesugaring(group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4")
 }

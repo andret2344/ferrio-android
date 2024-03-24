@@ -11,13 +11,15 @@
 	<string name="no">Nie</string>
 	<string name="ok">OK</string>
 	<string name="caution">Uwaga!</string>
-	<string name="settings">Ustawienia</string>
-	<string name="search">Szukaj</string>
 	<string name="see_more">%d więcej</string>
 	<string name="holidays">Święta: %d</string>
-	<string name="menu_item_today">Dzisiaj</string>
-	<string name="menu_item_random">Losowe</string>
-	<string name="menu_item_share">Udostępnij</string>
+	<string name="menu_today">Dzisiaj</string>
+	<string name="menu_main_settings">Ustawienia</string>
+	<string name="menu_main_search">Szukaj</string>
+	<string name="menu_day_random">Losowe</string>
+	<string name="menu_day_share">Udostępnij</string>
+	<string name="menu_holiday_favorite">Ulubione</string>
+	<string name="menu_holiday_report">Zgłoś</string>
 	<string name="no_internet_connection">Brak połączenia z internetem.</string>
 	<string name="no_unusual_holidays">Brak nietypowych świąt.</string>
 	<string name="no_internet">Urządzenie nie jest połączone z internetem.</string>
@@ -25,6 +27,7 @@
 	<string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
 	<string name="content_description_ad">Reklama</string>
 	<string name="content_description_image_sad_face">Smutna twarz</string>
+	<string name="content_description_more">więcej</string>
 	<string name="app_theme">Styl aplikacji</string>
 
 </resources>

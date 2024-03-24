@@ -1,9 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,23 +15,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
 public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHolder> {
+	private final Context context;
 	private final List<Holiday> holidays;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView holidayTextView;
 		private final TextView countryTextView;
+		private final ImageView moreImageView;
 
 		public ViewHolder(final View view) {
 			super(view);
 			holidayTextView = view.findViewById(R.id.adapter_holiday_text_holiday);
 			countryTextView = view.findViewById(R.id.adapter_holiday_text_country);
+			moreImageView = view.findViewById(R.id.adapter_holiday_image_more);
 		}
 	}
 
-	public HolidayAdapter(final List<Holiday> holidays) {
+	public HolidayAdapter(final Context context, final List<Holiday> holidays) {
+		this.context = context;
 		this.holidays = holidays;
 	}
 
@@ -43,6 +52,16 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final Holiday holiday = holidays.get(position);
+		if (holiday.getDescription().isBlank()) {
+			viewHolder.moreImageView.setVisibility(View.INVISIBLE);
+		} else {
+			viewHolder.moreImageView.setOnClickListener(view -> {
+				final Intent intent = new Intent(context, HolidayActivity.class);
+				intent.putExtra(MainActivity.HOLIDAY, holiday);
+				context.startActivity(intent);
+			});
+		}
+
 		viewHolder.holidayTextView.setText(holiday.getName());
 		viewHolder.countryTextView.setText(holiday.getCountryCode());
 		if (holiday.isUsual()) {

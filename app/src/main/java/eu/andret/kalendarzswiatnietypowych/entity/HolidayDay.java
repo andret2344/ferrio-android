@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 		this.holidays = holidays;
 	}
 
-	protected HolidayDay(final Parcel in) {
+	protected HolidayDay(@NonNull final Parcel in) {
 		month = in.readInt();
 		day = in.readInt();
 		holidays = Arrays.stream(in.readParcelableArray(Holiday.class.getClassLoader()))
@@ -66,7 +67,7 @@ public class HolidayDay implements Comparable<HolidayDay>, Parcelable {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}
