@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,15 +23,15 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	private final List<Holiday> holidays;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
-		private final TextView holidayTextView;
+		private final TextView nameTextView;
+		private final TextView descriptionTextView;
 		private final TextView countryTextView;
-		private final ImageView moreImageView;
 
 		public ViewHolder(final View view) {
 			super(view);
-			holidayTextView = view.findViewById(R.id.adapter_holiday_text_holiday);
+			nameTextView = view.findViewById(R.id.adapter_holiday_name);
+			descriptionTextView = view.findViewById(R.id.adapter_holiday_description);
 			countryTextView = view.findViewById(R.id.adapter_holiday_text_country);
-			moreImageView = view.findViewById(R.id.adapter_holiday_image_more);
 		}
 	}
 
@@ -53,19 +52,20 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final Holiday holiday = holidays.get(position);
 		if (holiday.getDescription().isBlank()) {
-			viewHolder.moreImageView.setVisibility(View.INVISIBLE);
+			viewHolder.descriptionTextView.setVisibility(View.GONE);
 		} else {
-			viewHolder.moreImageView.setOnClickListener(view -> {
+			viewHolder.itemView.setOnClickListener(view -> {
 				final Intent intent = new Intent(context, HolidayActivity.class);
 				intent.putExtra(MainActivity.HOLIDAY, holiday);
 				context.startActivity(intent);
 			});
 		}
 
-		viewHolder.holidayTextView.setText(holiday.getName());
+		viewHolder.nameTextView.setText(holiday.getName());
+		viewHolder.descriptionTextView.setText(holiday.getDescription());
 		viewHolder.countryTextView.setText(holiday.getCountryCode());
 		if (holiday.isUsual()) {
-			viewHolder.holidayTextView.setTypeface(null, Typeface.BOLD);
+			viewHolder.nameTextView.setTypeface(null, Typeface.BOLD);
 		}
 	}
 

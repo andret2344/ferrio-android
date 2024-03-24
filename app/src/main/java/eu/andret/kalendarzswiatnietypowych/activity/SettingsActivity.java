@@ -5,12 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.app.NavUtils;
@@ -61,7 +58,7 @@ public class SettingsActivity extends UHCActivity {
 				return;
 			}
 			aboutHolidaysPreference.setOnPreferenceClickListener(preference -> {
-				createAlertWithImage(getContext(), R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
+				createAlertWithImage(getContext());
 				return false;
 			});
 
@@ -78,27 +75,15 @@ public class SettingsActivity extends UHCActivity {
 			});
 		}
 
-		public void createAlertWithImage(final Context context, final int img, final int title, final int text) {
-			final AlertDialog.Builder alert = new AlertDialog.Builder(context);
-			alert.setTitle(title);
-			final LinearLayout layout = new LinearLayout(context);
-			final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-			params.setMargins(0, 30, 0, 0);
-			layout.setLayoutParams(params);
-			layout.setOrientation(LinearLayout.VERTICAL);
-			final ImageView image = new ImageView(context);
-			image.setImageResource(img);
-			layout.addView(image);
-			final TextView tv = new TextView(context);
-			tv.setText(text);
-			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.activity_holiday_name));
-			layout.addView(tv);
-			final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-			llp.setMargins(30, 20, 30, 20);
-			tv.setLayoutParams(llp);
-			alert.setView(layout);
-			alert.setPositiveButton(R.string.ok, null);
-			alert.show();
+		private void createAlertWithImage(final Context context) {
+			final View view = LayoutInflater.from(context).inflate(R.layout.image_alert, null);
+
+			new AlertDialog.Builder(context)
+					.setTitle(R.string.about_holidays)
+					.setView(view)
+					.setPositiveButton(R.string.ok, null)
+					.create()
+					.show();
 		}
 	}
 }
