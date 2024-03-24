@@ -12,7 +12,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
 public class HolidayActivity extends UHCActivity {
 	@Override
@@ -27,7 +26,7 @@ public class HolidayActivity extends UHCActivity {
 		this.<AdView>findViewById(R.id.activity_holiday_adview_bottom)
 				.loadAd(new AdRequest.Builder().build());
 
-		final int holidayId = getIntent().getIntExtra("holiday", 0);
+		final int holidayId = getIntent().getIntExtra(MainActivity.HOLIDAY, 0);
 
 		sharedViewModel.getHoliday(holidayId).observe(this, holiday -> {
 			this.<TextView>findViewById(R.id.activity_holiday_name).setText(holiday.getName());

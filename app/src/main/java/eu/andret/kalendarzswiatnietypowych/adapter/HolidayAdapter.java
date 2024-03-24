@@ -57,7 +57,7 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		} else {
 			viewHolder.moreImageView.setOnClickListener(view -> {
 				final Intent intent = new Intent(context, HolidayActivity.class);
-				intent.putExtra(MainActivity.HOLIDAY, holiday);
+				intent.putExtra(MainActivity.HOLIDAY, holiday.getId());
 				context.startActivity(intent);
 			});
 		}

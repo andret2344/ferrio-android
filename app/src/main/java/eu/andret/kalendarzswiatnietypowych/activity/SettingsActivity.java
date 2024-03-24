@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NavUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -41,7 +43,7 @@ public class SettingsActivity extends UHCActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			getOnBackPressedDispatcher().onBackPressed();
 			return true;
@@ -51,7 +53,7 @@ public class SettingsActivity extends UHCActivity {
 
 	public static class PrefsFragment extends PreferenceFragmentCompat {
 		@Override
-		public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
+		public void onCreatePreferences(@Nullable final Bundle savedInstanceState, final String rootKey) {
 			setPreferencesFromResource(R.xml.preferences, rootKey);
 			if (getContext() == null) {
 				return;
