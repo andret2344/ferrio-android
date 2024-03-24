@@ -39,7 +39,6 @@
 		android:layout_height="wrap_content"
 		android:layout_alignTop="@id/adapter_holiday_text_holiday"
 		android:layout_alignBottom="@id/adapter_holiday_text_holiday"
-		android:layout_alignParentEnd="true"
 		android:layout_toStartOf="@id/adapter_holiday_image_more"
 		android:gravity="center_vertical|center_horizontal"
 		android:padding="5dp"

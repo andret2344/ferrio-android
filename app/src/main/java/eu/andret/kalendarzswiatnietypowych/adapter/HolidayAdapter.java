@@ -16,6 +16,7 @@ import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
 public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHolder> {
@@ -51,13 +52,12 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final Holiday holiday = holidays.get(position);
-
 		if (holiday.getDescription().isBlank()) {
 			viewHolder.moreImageView.setVisibility(View.INVISIBLE);
 		} else {
 			viewHolder.moreImageView.setOnClickListener(view -> {
 				final Intent intent = new Intent(context, HolidayActivity.class);
-				intent.putExtra("holiday", holiday.getId());
+				intent.putExtra(MainActivity.HOLIDAY, holiday);
 				context.startActivity(intent);
 			});
 		}

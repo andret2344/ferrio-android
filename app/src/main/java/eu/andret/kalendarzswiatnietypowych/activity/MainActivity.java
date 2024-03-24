@@ -25,7 +25,9 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import org.jetbrains.annotations.NotNull;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
+import org.mozilla.javascript.Scriptable;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -51,6 +53,9 @@ public class MainActivity extends UHCActivity {
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String FROM = "from";
+	public static final String HOLIDAY_DAYS = "holidayDays";
+	public static final String HOLIDAY_DAY = "holidayDay";
+	public static final String HOLIDAY = "holiday";
 
 	private ViewPager2 viewPager2;
 	private RecyclerView searchListView;
@@ -150,7 +155,7 @@ public class MainActivity extends UHCActivity {
 		viewPager2.setVisibility(View.INVISIBLE);
 	}
 
-	@NotNull
+	@NonNull
 	private String getMonthName(final int month) {
 		final String displayName = Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
 		return displayName.substring(0, 1).toUpperCase(Locale.getDefault()) + displayName.substring(1);

@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -33,7 +34,7 @@ public class HolidayDay implements Comparable<HolidayDay> {
 	}
 
 	@Ignore
-	public HolidayDay(final int month, final int day, @NonNull final List<Holiday> holidays) {
+	public HolidayDay(@NonNull final int month, final int day, @NonNull final List<Holiday> holidays) {
 		this(String.format(Locale.ROOT, "%d%d", month, day), month, day, holidays);
 	}
 
@@ -82,7 +83,7 @@ public class HolidayDay implements Comparable<HolidayDay> {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}

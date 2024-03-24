@@ -40,17 +40,18 @@ public class Holiday implements Comparable<Holiday> {
 		return name;
 	}
 
+	@NonNull
 	public String getDescription() {
 		return description;
+	}
+
+	public boolean isUsual() {
+		return usual;
 	}
 
 	@Nullable
 	public String getCountryCode() {
 		return countryCode;
-	}
-
-	public boolean isUsual() {
-		return usual;
 	}
 
 	@Nullable
@@ -59,7 +60,7 @@ public class Holiday implements Comparable<Holiday> {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}

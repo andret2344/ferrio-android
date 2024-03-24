@@ -37,10 +37,12 @@ public class FloatingHoliday {
 		return usual;
 	}
 
+	@NonNull
 	public String getName() {
 		return name;
 	}
 
+	@NonNull
 	public String getDescription() {
 		return description;
 	}
@@ -50,16 +52,18 @@ public class FloatingHoliday {
 		return countryCode;
 	}
 
+	@Nullable
 	public String getUrl() {
 		return url;
 	}
 
+	@NonNull
 	public String getScript() {
 		return script;
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}

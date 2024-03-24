@@ -15,15 +15,17 @@ public class UnusualCalendar {
 	private final List<HolidayDay> fixed;
 	private final List<FloatingHoliday> floating;
 
-	public UnusualCalendar(final List<HolidayDay> fixed, final List<FloatingHoliday> floating) {
+	public UnusualCalendar(@NonNull final List<HolidayDay> fixed, final List<FloatingHoliday> floating) {
 		this.fixed = fixed;
 		this.floating = floating;
 	}
 
+	@NonNull
 	public List<HolidayDay> getFixed() {
 		return fixed;
 	}
 
+	@NonNull
 	public List<FloatingHoliday> getFloating() {
 		return floating;
 	}
@@ -38,7 +40,7 @@ public class UnusualCalendar {
 	}
 
 	@Nullable
-	public static HolidayDay getDay(final List<HolidayDay> holidayDays, final int month, final int day) {
+	public static HolidayDay getDay(@NonNull final List<HolidayDay> holidayDays, final int month, final int day) {
 		return holidayDays.stream()
 				.filter(holidayDay -> holidayDay.getDay() == day)
 				.filter(holidayDay -> holidayDay.getMonth() == month)
@@ -47,7 +49,7 @@ public class UnusualCalendar {
 	}
 
 	@NonNull
-	public static HolidayDay getOrCreateDay(final List<HolidayDay> holidayDays, final int month, final int day) {
+	public static HolidayDay getOrCreateDay(@NonNull final List<HolidayDay> holidayDays, final int month, final int day) {
 		final HolidayDay holidayDay = getDay(holidayDays, month, day);
 		if (holidayDay != null) {
 			return holidayDay;
@@ -58,7 +60,7 @@ public class UnusualCalendar {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(@Nullable final Object o) {
 		if (this == o) {
 			return true;
 		}

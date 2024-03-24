@@ -47,7 +47,7 @@
 		<activity
 			android:name=".activity.SettingsActivity"
 			android:configChanges="uiMode"
-			android:label="@string/settings">
+			android:label="@string/menu_main_settings">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
