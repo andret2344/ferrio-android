@@ -28,6 +28,7 @@
 	<string name="content_description_ad">Reklama</string>
 	<string name="content_description_image_sad_face">Smutna twarz</string>
 	<string name="content_description_more">więcej</string>
+	<string name="content_description_image">zdjęcie</string>
 	<string name="app_theme">Styl aplikacji</string>
 
 </resources>

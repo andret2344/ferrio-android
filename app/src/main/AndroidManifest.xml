@@ -37,12 +37,10 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 		<activity
 			android:name=".activity.DayActivity"
-			android:configChanges="uiMode"
-			android:theme="@style/DayActionBarTheme" />
+			android:configChanges="uiMode" />
 		<activity
 			android:name=".activity.HolidayActivity"
-			android:configChanges="uiMode"
-			android:theme="@style/DayActionBarTheme" />
+			android:configChanges="uiMode" />
 		<activity
 			android:name=".activity.SettingsActivity"
 			android:configChanges="uiMode"

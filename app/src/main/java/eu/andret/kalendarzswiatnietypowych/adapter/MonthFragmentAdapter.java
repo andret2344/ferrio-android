@@ -10,7 +10,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
@@ -33,7 +33,7 @@ public class MonthFragmentAdapter extends FragmentStateAdapter {
 		final int current = position + 1;
 		bundle.putInt(MainActivity.MONTH, current);
 		final LocalDate before = getBefore(current);
-		final LocalDate after = getAfter(current, before);
+		final LocalDate after = before.plusDays(41);
 		final List<HolidayDay> holidays = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after);
 		final MonthFragment fragment = new MonthFragment(holidays);
 		fragment.setArguments(bundle);
@@ -45,33 +45,12 @@ public class MonthFragmentAdapter extends FragmentStateAdapter {
 		return 12;
 	}
 
+	@NonNull
 	private LocalDate getBefore(final int month) {
-		LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, 1);
-		if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-			date = date.minusDays(1);
-		}
-		while (!date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
-			date = date.minusDays(1);
-		}
-		return date;
-	}
-
-	private LocalDate getLastDay(final int month) {
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, 1);
-		return date.plusDays(date.lengthOfMonth()).minusDays(1);
-	}
-
-	private LocalDate getAfter(final int month, final LocalDate before) {
-		LocalDate date = getLastDay(month);
-		while (!date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-			date = date.plusDays(1);
+		if (date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+			return date;
 		}
-		date = date.plusDays(1);
-		final long diffDays = before.until(date, ChronoUnit.DAYS);
-		final long diffWeeks = diffDays / 7 + (diffDays % 7 == 0 ? 0 : 1);
-		if (diffWeeks < 6) {
-			date = date.plusDays(7 * (6 - diffWeeks));
-		}
-		return date;
+		return date.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
 	}
 }

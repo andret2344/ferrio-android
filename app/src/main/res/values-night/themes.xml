@@ -2,8 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
-		<item name="colorPrimary">@color/background_secondary</item>
-		<item name="colorPrimaryDark">@color/background_primary</item>
+		<item name="android:textColor">@color/foreground_primary</item>
+		<item name="android:colorPrimary">@color/background_secondary</item>
+		<item name="android:colorPrimaryDark">@color/background_primary</item>
 		<item name="android:windowLightStatusBar">false</item>
 	</style>
 
