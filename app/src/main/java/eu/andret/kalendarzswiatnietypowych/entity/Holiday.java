@@ -49,7 +49,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 
 	@NonNull
 	public String getDescription() {
-		return "very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc very long desc ";
+		return description;
 	}
 
 	public boolean isUsual() {
@@ -61,7 +61,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		return countryCode;
 	}
 
-	@Nullable
+	@NonNull
 	public String getUrl() {
 		return url;
 	}

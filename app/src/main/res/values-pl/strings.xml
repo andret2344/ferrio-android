@@ -30,5 +30,7 @@
 	<string name="content_description_more">więcej</string>
 	<string name="content_description_image">zdjęcie</string>
 	<string name="app_theme">Styl aplikacji</string>
+	<string name="read_more">Czytaj więcej…</string>
+	<string name="report">Zgłoś</string>
 
 </resources>

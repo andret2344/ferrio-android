@@ -35,5 +35,7 @@
 	<string name="content_description_more">more</string>
 	<string name="content_description_image">image</string>
 	<string name="app_theme">App theme</string>
+	<string name="read_more">Read more…</string>
+	<string name="report">Report</string>
 
 </resources>

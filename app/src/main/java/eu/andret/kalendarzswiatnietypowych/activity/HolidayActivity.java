@@ -1,7 +1,10 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.button.MaterialButton;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -33,6 +37,13 @@ public class HolidayActivity extends UHCActivity {
 		}
 		this.<TextView>findViewById(R.id.activity_holiday_name).setText(holiday.getName());
 		this.<TextView>findViewById(R.id.activity_holiday_description).setText(holiday.getDescription());
+		if (!holiday.getUrl().isBlank()) {
+			final MaterialButton buttonReadMore = findViewById(R.id.activity_holiday_button_read_more);
+			buttonReadMore.setVisibility(View.VISIBLE);
+			final Uri targetUri = Uri.parse(holiday.getUrl());
+			buttonReadMore.setOnClickListener(v ->
+					startActivity(new Intent(Intent.ACTION_VIEW).setData(targetUri)));
+		}
 	}
 
 	@Override
