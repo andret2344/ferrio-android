@@ -231,7 +231,7 @@ public class MainActivity extends UHCActivity {
 		final int itemId = item.getItemId();
 		if (itemId == R.id.menu_main_today) {
 			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
-		} else if (itemId == R.id.menu_main_settings) {
+		} else if (itemId == R.id.menu_item_settings) {
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
 		return super.onOptionsItemSelected(item);

@@ -1,26 +1,49 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:ads="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/activity_main_relative_main"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/background_primary">
 
-	<androidx.viewpager2.widget.ViewPager2
-		android:id="@+id/main_pager_months"
+	<androidx.drawerlayout.widget.DrawerLayout
+		android:id="@+id/drawerLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_above="@id/main_bottom_layout_container"
-		android:layout_marginTop="20dp"
-		android:layout_marginBottom="20dp"
-		android:saveEnabled="false" />
+		tools:openDrawer="start">
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/main_list_results"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_above="@id/main_bottom_layout_container"
-		android:visibility="invisible"
-		ads:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+		<androidx.coordinatorlayout.widget.CoordinatorLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:fitsSystemWindows="true">
+
+			<androidx.viewpager2.widget.ViewPager2
+				android:id="@+id/main_pager_months"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_above="@id/main_bottom_layout_container"
+				android:layout_marginTop="20dp"
+				android:layout_marginBottom="20dp"
+				android:saveEnabled="false" />
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/main_list_results"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_above="@id/main_bottom_layout_container"
+				android:visibility="invisible"
+				ads:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+		</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+		<com.google.android.material.navigation.NavigationView
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_gravity="start"
+			app:menu="@menu/navigation_drawer" />
+
+	</androidx.drawerlayout.widget.DrawerLayout>
 
 	<LinearLayout
 		android:id="@+id/main_bottom_layout_container"
