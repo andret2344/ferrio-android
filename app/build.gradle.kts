@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -44,19 +45,26 @@ android {
 }
 
 dependencies {
-    implementation(group = "com.google.android.gms", name = "play-services-ads", version = "22.6.0")
-    implementation(group = "com.google.android.material", name = "material", version = "1.12.0-alpha03")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation("com.google.firebase:firebase-auth")
 
-    implementation(group = "com.android.support", name = "multidex", version = "2.0.1")
+    implementation("com.google.android.gms:play-services-ads:23.0.0")
+    implementation("com.google.android.material:material:1.12.0-rc01")
 
-    implementation(group = "com.google.code.gson", name = "gson", version = "2.10.1")
-    implementation(group = "net.sourceforge.streamsupport", name = "android-retrofuture", version = "1.7.4")
-    implementation(group = "org.mozilla", name = "rhino", version = "1.7.14")
+    implementation("com.android.support:multidex:2.0.1")
+    implementation("com.google.android.gms:play-services-auth:21.1.0")
 
-    implementation(group = "androidx.appcompat", name = "appcompat", version = "1.6.1")
-    implementation(group = "androidx.preference", name = "preference", version = "1.2.1")
-    implementation(group = "androidx.viewpager2", name = "viewpager2", version = "1.0.0")
-    implementation(group = "androidx.cardview", name = "cardview", version = "1.0.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("net.sourceforge.streamsupport:android-retrofuture:1.7.4")
+    implementation("org.mozilla:rhino:1.7.14")
 
-    coreLibraryDesugaring(group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.credentials:credentials:1.2.2")
+    implementation("androidx.preference:preference:1.2.1")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.activity:activity:1.8.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }
