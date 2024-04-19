@@ -37,5 +37,6 @@
 	<string name="content_description_image_sad_face">Sad face</string>
 	<string name="content_description_more">more</string>
 	<string name="app_theme">App theme</string>
+	<string name="logging_in_anunymously">Continue without logging in</string>
 
 </resources>
