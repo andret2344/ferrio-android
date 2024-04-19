@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-//		updateUI(firebaseAuth.getCurrentUser());
+		updateUI(firebaseAuth.getCurrentUser());
 	}
 
 	@Override
