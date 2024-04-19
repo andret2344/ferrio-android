@@ -24,8 +24,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,8 +68,6 @@ public class LoginActivity extends AppCompatActivity {
 
 		final SignInButton signInButton = findViewById(R.id.activity_login_sign_in_google);
 		signInButton.setOnClickListener(view -> activityResult.launch(googleSignInClient.getSignInIntent()));
-		final TextView textView = (TextView) signInButton.getChildAt(0);
-		textView.setText("Sign in with Google");
 
 		callbackManager = CallbackManager.Factory.create();
 		final LoginButton facebookLoginButton = findViewById(R.id.activity_login_sign_in_facebook);
@@ -87,12 +88,16 @@ public class LoginActivity extends AppCompatActivity {
 				error.printStackTrace();
 			}
 		});
+
+		final MaterialButton materialButton = findViewById(R.id.activity_login_sign_in_anonymous);
+		materialButton.setOnClickListener(v ->
+				firebaseAuth.signInAnonymously().addOnCompleteListener(this, this::handleTask));
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		updateUI(firebaseAuth.getCurrentUser());
+//		updateUI(firebaseAuth.getCurrentUser());
 	}
 
 	@Override
@@ -102,14 +107,16 @@ public class LoginActivity extends AppCompatActivity {
 	}
 
 	private void firebaseSignIn(@NonNull final AuthCredential credential) {
-		firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
-			if (task.isSuccessful()) {
-				updateUI(firebaseAuth.getCurrentUser());
-			} else {
-				Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
-				updateUI(null);
-			}
-		});
+		firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, this::handleTask);
+	}
+
+	private void handleTask(@NonNull final Task<AuthResult> task) {
+		if (task.isSuccessful()) {
+			updateUI(firebaseAuth.getCurrentUser());
+		} else {
+			Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
+			updateUI(null);
+		}
 	}
 
 	private void updateUI(@Nullable final FirebaseUser user) {
