@@ -13,4 +13,12 @@
 		<item>dark</item>
 	</array>
 
+	<array name="simple_items">
+		<item>Wrong date</item>
+		<item>Wrong name</item>
+		<item>Wrong description</item>
+		<item>Not exists</item>
+		<item>Other</item>
+	</array>
+
 </resources>

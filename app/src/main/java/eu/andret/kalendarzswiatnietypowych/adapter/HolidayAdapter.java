@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -18,10 +22,14 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.fragment.ReportFragment;
+import eu.andret.kalendarzswiatnietypowych.fragment.ReportViewModel;
 
 public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHolder> {
 	private final Context context;
 	private final List<Holiday> holidays;
+
+	private final ReportViewModel reportViewModel;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView holidayTextView;
@@ -39,6 +47,7 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	public HolidayAdapter(final Context context, final List<Holiday> holidays) {
 		this.context = context;
 		this.holidays = holidays;
+		reportViewModel = new ViewModelProvider((AppCompatActivity) context).get(ReportViewModel.class);
 	}
 
 	@NonNull
@@ -67,6 +76,18 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		if (holiday.isUsual()) {
 			viewHolder.holidayTextView.setTypeface(null, Typeface.BOLD);
 		}
+
+		viewHolder.itemView.setOnLongClickListener(v -> {
+			reportViewModel.setHoliday(holiday);
+			final FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+			final ReportFragment newFragment = new ReportFragment();
+			final FragmentTransaction transaction = fragmentManager.beginTransaction();
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+					.add(android.R.id.content, newFragment)
+					.addToBackStack(null)
+					.commit();
+			return true;
+		});
 	}
 
 	@Override
