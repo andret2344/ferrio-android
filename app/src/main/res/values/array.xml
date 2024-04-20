@@ -13,12 +13,20 @@
 		<item>dark</item>
 	</array>
 
-	<array name="simple_items">
+	<array name="report_values">
 		<item>Wrong date</item>
 		<item>Wrong name</item>
 		<item>Wrong description</item>
 		<item>Not exists</item>
 		<item>Other</item>
+	</array>
+
+	<array name="report_keys">
+		<item>WRONG_DATE</item>
+		<item>WRONG_NAME</item>
+		<item>WRONG_DESCRIPTION</item>
+		<item>NOT_EXISTS</item>
+		<item>OTHER</item>
 	</array>
 
 </resources>

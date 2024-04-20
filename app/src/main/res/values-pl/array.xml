@@ -6,7 +6,7 @@
 		<item>Ciemny</item>
 	</array>
 
-	<array name="simple_items">
+	<array name="report_values">
 		<item>Wrong date</item>
 		<item>Wrong name</item>
 		<item>Wrong description</item>
