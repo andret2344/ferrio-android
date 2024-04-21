@@ -2,12 +2,12 @@ package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,22 +17,28 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayReport;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
+import java9.util.concurrent.CompletableFuture;
 
 public class ReportFragment extends DialogFragment {
 	private int selectedReason = -1;
+	private FirebaseAuth firebaseAuth;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+		firebaseAuth = FirebaseAuth.getInstance();
 		return inflater.inflate(R.layout.dialog_report, container, false);
 	}
 
@@ -59,10 +65,22 @@ public class ReportFragment extends DialogFragment {
 
 			send.setOnClickListener(v -> {
 				final String language = Util.getLanguageCode();
-				final int metadata = holiday.getId();
+				final boolean floating = holiday.getId() < 0;
+				final int metadata = Math.abs(holiday.getId());
 				final String reportType = requireActivity().getResources().getStringArray(R.array.report_keys)[selectedReason];
 				final String description = descriptionEditText.getEditText().getText().toString();
-				Log.d("UHC-fragment", "language=" + language + ", metadata=" + metadata + ", reportType=" + reportType + ", description=" + description);
+				final HolidayReport holidayReport = new HolidayReport(firebaseAuth.getUid(), metadata, language, reportType, description);
+				CompletableFuture.runAsync(() -> {
+					final boolean success = sendReport(holidayReport, floating);
+					requireActivity().runOnUiThread(() -> {
+						if (success) {
+							Toast.makeText(requireActivity(), "Report sent!", Toast.LENGTH_SHORT).show();
+							requireActivity().getSupportFragmentManager().popBackStack();
+						} else {
+							Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
+						}
+					});
+				});
 			});
 		});
 	}
@@ -75,17 +93,21 @@ public class ReportFragment extends DialogFragment {
 		return dialog;
 	}
 
-	public boolean sendReport(@NonNull final String text) throws IOException {
-		final URL url = new URL("https://dailyquote.andret.eu");
-		final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type", "application/json");
-		connection.setDoOutput(true);
-		final OutputStream outputStream = connection.getOutputStream();
-//		final Quote quote = new Quote(text);
-//		outputStream.write(Util.GSON.toJson(quote).getBytes(StandardCharsets.UTF_8));
-		final int responseCode = connection.getResponseCode();
-		connection.disconnect();
-		return responseCode < 400;
+	public boolean sendReport(@NonNull final HolidayReport holidayReport, final boolean floating) {
+		final String path = floating ? "/floating" : "/fixed";
+		try {
+			final URL url = new URL("https://api.unusualcalendar.net/v2/report" + path);
+			final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setDoOutput(true);
+			final OutputStream outputStream = connection.getOutputStream();
+			outputStream.write(Util.GSON.toJson(holidayReport).getBytes(StandardCharsets.UTF_8));
+			final int responseCode = connection.getResponseCode();
+			connection.disconnect();
+			return responseCode < 400;
+		} catch (final IOException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 }
