@@ -43,7 +43,7 @@
 	<string name="holiday_description">Holiday description</string>
 	<string name="reason">Reason</string>
 	<string name="description">Description</string>
-	<string name="note_reports_with_description_are_more_likely_to_be_checked_as_first_ones">Note: Reports with description are more likely to be checked first.</string>
+	<string name="report_note">Note: Reports with description are more likely to be checked first.</string>
 	<string name="send_report">Send report</string>
 
 </resources>

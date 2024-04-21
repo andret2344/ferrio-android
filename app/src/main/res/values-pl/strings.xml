@@ -35,7 +35,7 @@
 	<string name="holiday_description">Opis święta</string>
 	<string name="reason">Powód</string>
 	<string name="description">Opis</string>
-	<string name="note_reports_with_description_are_more_likely_to_be_checked_as_first_ones">Nota: Zgłoszenia z opisem są bardziej prawdopodobne do bycia rozpatrzonymi w pierwszej kolejności.</string>
+	<string name="report_note">Nota: Zgłoszenia z opisem są bardziej prawdopodobne do bycia rozpatrzonymi w pierwszej kolejności.</string>
 	<string name="send_report">Wyślij zgłoszenie</string>
 
 </resources>
