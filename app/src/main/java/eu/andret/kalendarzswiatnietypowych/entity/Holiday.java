@@ -26,7 +26,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 	}
 
 	public Holiday(@NonNull final FloatingHoliday floatingHoliday) {
-		this(floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(), floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getUrl());
+		this(-floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(), floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getUrl());
 	}
 
 	protected Holiday(@NonNull final Parcel in) {

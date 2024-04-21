@@ -9,18 +9,27 @@ import android.net.NetworkCapabilities;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
 public final class Util {
+	public static final Gson GSON = new GsonBuilder()
+			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.create();
 	private static final Random RANDOM = new Random();
 	public static final List<Integer> NETWORK_CAPABILITIES = List.of(
 			NetworkCapabilities.TRANSPORT_WIFI,
 			NetworkCapabilities.TRANSPORT_CELLULAR,
 			NetworkCapabilities.TRANSPORT_ETHERNET);
+	private static final List<String> LANGUAGE_CODES = List.of("pl");
 
 	private Util() {
 	}
@@ -72,5 +81,14 @@ public final class Util {
 				.map(connectivityManager::getNetworkCapabilities)
 				.filter(capabilities -> NETWORK_CAPABILITIES.stream().anyMatch(capabilities::hasTransport))
 				.isPresent();
+	}
+
+	@NonNull
+	public static String getLanguageCode() {
+		final String language = Locale.getDefault().getLanguage();
+		if (LANGUAGE_CODES.contains(language)) {
+			return language;
+		}
+		return "en";
 	}
 }
