@@ -16,6 +16,12 @@
 		tools:ignore="GoogleAppIndexingWarning"
 		tools:targetApi="s">
 		<meta-data
+			android:name="com.facebook.sdk.ApplicationId"
+			android:value="@string/facebook_app_id" />
+		<meta-data
+			android:name="com.facebook.sdk.ClientToken"
+			android:value="@string/facebook_client_token" />
+		<meta-data
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version" />
 		<meta-data
@@ -23,15 +29,19 @@
 			android:value="@string/admob_app_id" />
 
 		<activity
-			android:name=".activity.MainActivity"
+			android:name=".activity.LoginActivity"
 			android:configChanges="uiMode"
-			android:exported="true">
+			android:exported="true"
+			android:theme="@style/LoginActionBarTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity
+			android:name=".activity.MainActivity"
+			android:configChanges="uiMode" />
 		<activity
 			android:name="com.google.android.gms.ads.AdActivity"
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
@@ -42,7 +52,8 @@
 		<activity
 			android:name=".activity.HolidayActivity"
 			android:configChanges="uiMode"
-			android:theme="@style/DayActionBarTheme" />
+			android:theme="@style/DayActionBarTheme"
+			android:windowSoftInputMode="stateAlwaysHidden" />
 		<activity
 			android:name=".activity.SettingsActivity"
 			android:configChanges="uiMode"
@@ -65,4 +76,5 @@
 				android:resource="@xml/widget_provider" />
 		</receiver>
 	</application>
+
 </manifest>
