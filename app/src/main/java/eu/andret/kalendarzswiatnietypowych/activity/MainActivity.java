@@ -14,7 +14,9 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -22,6 +24,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
@@ -59,6 +62,7 @@ public class MainActivity extends UHCActivity {
 	private ViewPager2 viewPager2;
 	private RecyclerView searchListView;
 	private AlertDialog alertDialog;
+	private MaterialToolbar materialToolbar;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
 	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -86,20 +90,23 @@ public class MainActivity extends UHCActivity {
 
 		searchListView = findViewById(R.id.main_list_results);
 		viewPager2 = findViewById(R.id.main_pager_months);
+		materialToolbar = findViewById(R.id.activity_main_toolbar);
 
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
+		setUpNavDrawer();
+
 		final int currentMonthValue = LocalDate.now().getMonthValue();
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
 		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		Objects.requireNonNull(getSupportActionBar()).setTitle(getMonthName(currentMonthValue));
+		materialToolbar.setTitle(getMonthName(currentMonthValue));
 		viewPager2.setOffscreenPageLimit(12);
 		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-				retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setTitle(getMonthName(position + 1)));
+				materialToolbar.setTitle(getMonthName(position + 1));
 			}
 		});
 
@@ -235,5 +242,12 @@ public class MainActivity extends UHCActivity {
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void setUpNavDrawer() {
+		final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_layout_drawer);
+		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, materialToolbar, R.string.content_description_ad, R.string.content_description_ad);
+		drawer.addDrawerListener(toggle);
+		toggle.syncState();
 	}
 }

@@ -2,6 +2,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<style name="AppTheme" parent="Theme.Material3.DayNight">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
 		<item name="android:textColor">@color/foreground_primary</item>
 		<item name="iconColor">@color/foreground_primary</item>
 
@@ -14,11 +16,6 @@
 		<item name="colorPrimary">@color/dynamic_action_bar</item>
 		<item name="colorPrimaryDark">@color/dynamic_action_bar</item>
 		<item name="android:windowLightStatusBar">true</item>
-	</style>
-
-	<style name="LoginActionBarTheme" parent="AppTheme">
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
 	</style>
 
 </resources>

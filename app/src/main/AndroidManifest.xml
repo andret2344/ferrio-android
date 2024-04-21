@@ -31,8 +31,7 @@
 		<activity
 			android:name=".activity.LoginActivity"
 			android:configChanges="uiMode"
-			android:exported="true"
-			android:theme="@style/LoginActionBarTheme">
+			android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
