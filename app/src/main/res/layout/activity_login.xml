@@ -44,7 +44,7 @@
 			android:layout_marginTop="10dp"
 			android:layout_marginStart="50dp"
 			android:layout_marginEnd="50dp"
-			android:text="@string/logging_in_anunymously"
+			android:text="@string/logging_in_anonymously"
 			android:textColor="@color/foreground_primary"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
