@@ -38,5 +38,12 @@
 	<string name="content_description_more">more</string>
 	<string name="app_theme">App theme</string>
 	<string name="logging_in_anunymously">Continue without logging in</string>
+	<string name="dialog_report_title">Report the holiday</string>
+	<string name="holiday_name">Holiday name</string>
+	<string name="holiday_description">Holiday description</string>
+	<string name="reason">Reason</string>
+	<string name="description">Description</string>
+	<string name="note_reports_with_description_are_more_likely_to_be_checked_as_first_ones">Note: Reports with description are more likely to be checked first.</string>
+	<string name="send_report">Send report</string>
 
 </resources>

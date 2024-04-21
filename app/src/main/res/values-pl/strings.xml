@@ -30,5 +30,12 @@
 	<string name="content_description_more">więcej</string>
 	<string name="app_theme">Styl aplikacji</string>
 	<string name="logging_in_anunymously">Kontynuuj bez logowania</string>
+	<string name="dialog_report_title">Zgłoś święto</string>
+	<string name="holiday_name">Nazwa święta</string>
+	<string name="holiday_description">Opis święta</string>
+	<string name="reason">Powód</string>
+	<string name="description">Opis</string>
+	<string name="note_reports_with_description_are_more_likely_to_be_checked_as_first_ones">Nota: Zgłoszenia z opisem są bardziej prawdopodobne do bycia rozpatrzonymi w pierwszej kolejności.</string>
+	<string name="send_report">Wyślij zgłoszenie</string>
 
 </resources>

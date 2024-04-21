@@ -17,7 +17,7 @@
 			android:paddingStart="6dp"
 			android:paddingEnd="16dp"
 			app:contentInsetStartWithNavigation="0dp"
-			app:title="Report the holiday" />
+			app:title="@string/dialog_report_title" />
 
 	</com.google.android.material.appbar.AppBarLayout>
 
@@ -34,7 +34,7 @@
 
 			<androidx.constraintlayout.widget.ConstraintLayout
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
+				android:layout_height="wrap_content"
 				android:padding="20dp">
 
 				<com.google.android.material.textfield.TextInputLayout
@@ -42,7 +42,7 @@
 					style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="Holiday name"
+					android:hint="@string/holiday_name"
 					app:layout_constraintBottom_toTopOf="@id/dialog_report_holiday_desc_layout"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
 					style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="Holiday description"
+					android:hint="@string/holiday_description"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@id/dialog_report_holiday_name_layout">
@@ -80,12 +80,13 @@
 					style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="Reason"
+					android:hint="@string/reason"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@id/dialog_report_holiday_desc_layout">
 
 					<AutoCompleteTextView
+						android:hint="@string/reason"
 						android:id="@+id/dialog_report_text_reason_value"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -98,7 +99,7 @@
 					style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="Description"
+					android:hint="@string/description"
 					app:layout_constraintBottom_toTopOf="@id/dialog_report_text_note"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +116,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:padding="5dp"
-					android:text="Note: Reports with description are more likely to be checked as first ones."
+					android:text="@string/note_reports_with_description_are_more_likely_to_be_checked_as_first_ones"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@id/dialog_report_text_description" />
@@ -127,7 +128,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="20dp"
 					android:enabled="false"
-					android:text="Send report"
+					android:text="@string/send_report"
 					android:textColor="@color/foreground_primary"
 					app:icon="@drawable/baseline_send_24"
 					app:layout_constraintEnd_toEndOf="parent"

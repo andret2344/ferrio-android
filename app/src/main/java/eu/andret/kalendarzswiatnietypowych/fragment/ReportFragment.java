@@ -75,7 +75,7 @@ public class ReportFragment extends DialogFragment {
 					requireActivity().runOnUiThread(() -> {
 						if (success) {
 							Toast.makeText(requireActivity(), "Report sent!", Toast.LENGTH_SHORT).show();
-							requireActivity().getSupportFragmentManager().popBackStack();
+							requireActivity().getSupportFragmentManager().popBackStackImmediate();
 						} else {
 							Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
 						}
