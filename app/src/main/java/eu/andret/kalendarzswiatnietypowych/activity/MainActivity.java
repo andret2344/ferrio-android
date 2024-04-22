@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,6 +28,9 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
@@ -65,6 +71,7 @@ public class MainActivity extends UHCActivity {
 	private MaterialToolbar materialToolbar;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
 	private MutableLiveData<Boolean> internet;
+	private FirebaseAuth firebaseAuth;
 	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		if (result.getResultCode() == Activity.RESULT_OK) {
 			final Intent data = result.getData();
@@ -91,6 +98,7 @@ public class MainActivity extends UHCActivity {
 		searchListView = findViewById(R.id.main_list_results);
 		viewPager2 = findViewById(R.id.main_pager_months);
 		materialToolbar = findViewById(R.id.activity_main_toolbar);
+		firebaseAuth = FirebaseAuth.getInstance();
 
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
@@ -238,8 +246,6 @@ public class MainActivity extends UHCActivity {
 		final int itemId = item.getItemId();
 		if (itemId == R.id.menu_main_today) {
 			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
-		} else if (itemId == R.id.menu_item_settings) {
-			startActivity(new Intent(this, SettingsActivity.class));
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -249,5 +255,32 @@ public class MainActivity extends UHCActivity {
 		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, materialToolbar, R.string.content_description_ad, R.string.content_description_ad);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
+
+		final NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_navigation);
+		final View headerView = navigationView.getHeaderView(0);
+		final ImageView imageViewAvatar = headerView.findViewById(R.id.navigation_drawer_image);
+		final TextView textViewHeading = headerView.findViewById(R.id.navigation_drawer_heading);
+		final TextView textViewSubtitle = headerView.findViewById(R.id.navigation_drawer_subtitle);
+
+		final FirebaseUser user = firebaseAuth.getCurrentUser();
+		if (user != null) {
+			if (user.isAnonymous()) {
+				imageViewAvatar.setImageURI(Uri.parse(String.format("https://gravatar.com/avatar/%s?d=identicon", user.getUid())));
+				textViewHeading.setText("Anonymous user");
+			} else {
+				imageViewAvatar.setImageURI(user.getPhotoUrl());
+				textViewHeading.setText(user.getDisplayName());
+				textViewSubtitle.setText(user.getEmail());
+			}
+		}
+
+		navigationView.setNavigationItemSelectedListener(menuItem -> {
+			if (menuItem.getItemId() == R.id.menu_item_settings) {
+				startActivity(new Intent(this, SettingsActivity.class));
+			} else if (menuItem.getItemId() == R.id.menu_item_about) {
+				SettingsActivity.createAlertWithImage(this, R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
+			}
+			return true;
+		});
 	}
 }

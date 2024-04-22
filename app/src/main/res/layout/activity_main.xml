@@ -18,9 +18,7 @@
 			android:layout_height="wrap_content"
 			android:background="?attr/colorPrimary"
 			android:minHeight="?attr/actionBarSize"
-			app:menu="@menu/main"
-			app:popupTheme="@style/Widget.Material3.Toolbar"
-			app:theme="@style/Widget.Material3.Toolbar" />
+			app:menu="@menu/main" />
 
 		<androidx.viewpager2.widget.ViewPager2
 			android:id="@+id/main_pager_months"
@@ -55,6 +53,7 @@
 	</RelativeLayout>
 
 	<com.google.android.material.navigation.NavigationView
+		android:id="@+id/activity_main_navigation"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:layout_gravity="start"

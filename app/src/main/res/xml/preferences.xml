@@ -33,11 +33,6 @@
 			android:key="@string/settings_key_app_theme"
 			android:summary="%s"
 			android:title="@string/app_theme" />
-
-		<Preference
-			android:icon="@drawable/baseline_info_24"
-			android:key="@string/settings_key_about_holidays"
-			android:title="@string/about_holidays" />
 	</PreferenceCategory>
 
 </PreferenceScreen>
