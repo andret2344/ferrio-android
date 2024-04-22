@@ -251,12 +251,12 @@ public class MainActivity extends UHCActivity {
 	}
 
 	private void setUpNavDrawer() {
-		final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_layout_drawer);
+		final DrawerLayout drawer = findViewById(R.id.activity_main_layout_drawer);
 		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, materialToolbar, R.string.content_description_ad, R.string.content_description_ad);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 
-		final NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_navigation);
+		final NavigationView navigationView = findViewById(R.id.activity_main_navigation);
 		final View headerView = navigationView.getHeaderView(0);
 		final ImageView imageViewAvatar = headerView.findViewById(R.id.navigation_drawer_image);
 		final TextView textViewHeading = headerView.findViewById(R.id.navigation_drawer_heading);

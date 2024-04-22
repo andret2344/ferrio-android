@@ -1,14 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:ads="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/day_relative_main"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 
+	<com.google.android.material.appbar.MaterialToolbar
+		android:id="@+id/activity_day_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?attr/colorPrimary"
+		android:minHeight="?attr/actionBarSize"
+		app:menu="@menu/day" />
+
 	<androidx.viewpager2.widget.ViewPager2
 		android:id="@+id/day_pager_days"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_below="@id/activity_day_toolbar"
 		android:layout_above="@+id/day_adview_bottom"
 		android:saveEnabled="false" />
 
@@ -18,7 +27,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:contentDescription="@string/content_description_ad"
-		ads:adSize="BANNER"
-		ads:adUnitId="@string/banner_ad_unit_id" />
+		app:adSize="BANNER"
+		app:adUnitId="@string/banner_ad_unit_id" />
 
 </RelativeLayout>

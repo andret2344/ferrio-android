@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -41,6 +42,8 @@ public class DayActivity extends UHCActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_day);
 
+		final MaterialToolbar materialToolbar = findViewById(R.id.activity_day_toolbar);
+		setSupportActionBar(materialToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
