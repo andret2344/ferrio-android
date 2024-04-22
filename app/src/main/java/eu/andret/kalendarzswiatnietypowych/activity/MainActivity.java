@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -281,6 +282,17 @@ public class MainActivity extends UHCActivity {
 				SettingsActivity.createAlertWithImage(this, R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
 			}
 			return true;
+		});
+
+		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+			@Override
+			public void handleOnBackPressed() {
+				if (drawer.isOpen()) {
+					drawer.close();
+				} else {
+					finish();
+				}
+			}
 		});
 	}
 }
