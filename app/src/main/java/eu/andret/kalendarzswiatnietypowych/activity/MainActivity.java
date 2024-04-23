@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -219,6 +220,7 @@ public class MainActivity extends UHCActivity {
 				return true;
 			}
 
+			@SuppressLint("NotifyDataSetChanged")
 			@Override
 			public boolean onQueryTextChange(final String newText) {
 				list.clear();
@@ -272,15 +274,18 @@ public class MainActivity extends UHCActivity {
 		final TextView textViewHeading = headerView.findViewById(R.id.navigation_drawer_heading);
 		final TextView textViewSubtitle = headerView.findViewById(R.id.navigation_drawer_subtitle);
 		final MenuItem missing = navigationView.getMenu().findItem(R.id.menu_drawer_missing);
+		final MenuItem reports = navigationView.getMenu().findItem(R.id.menu_drawer_reports);
 
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user != null) {
 			missing.setEnabled(!user.isAnonymous());
+			reports.setEnabled(!user.isAnonymous());
 			final Picasso picasso = Picasso.get();
 			if (user.isAnonymous()) {
 				picasso.load(String.format("https://gravatar.com/avatar/%s?d=identicon", user.getUid()))
 						.into(imageViewAvatar);
 				textViewHeading.setText(R.string.anonymous_user);
+				textViewSubtitle.setVisibility(View.GONE);
 			} else {
 				picasso.load(user.getPhotoUrl())
 						.into(imageViewAvatar);
@@ -297,7 +302,6 @@ public class MainActivity extends UHCActivity {
 			}
 			return true;
 		});
-
 
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
 			@Override

@@ -48,6 +48,7 @@
 	<string name="send_report">Send report</string>
 	<string name="application">Application</string>
 	<string name="missing_holiday">Missing holiday?</string>
+	<string name="my_reports">My reports</string>
 	<string name="anonymous_user">Anonymous user</string>
 	<string name="search_placeholder">Search across %d holidays…</string>
 

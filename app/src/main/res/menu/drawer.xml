@@ -5,8 +5,13 @@
 			<item
 				android:id="@+id/menu_drawer_missing"
 				android:checkable="true"
-				android:icon="@drawable/baseline_warning_24"
+				android:icon="@drawable/baseline_edit_24"
 				android:title="@string/missing_holiday" />
+			<item
+				android:id="@+id/menu_drawer_reports"
+				android:checkable="true"
+				android:icon="@drawable/baseline_done_24"
+				android:title="@string/my_reports" />
 		</menu>
 	</item>
 	<item android:title="@string/application">
