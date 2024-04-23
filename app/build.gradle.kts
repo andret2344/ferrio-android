@@ -57,6 +57,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("net.sourceforge.streamsupport:android-retrofuture:1.7.4")
     implementation("org.mozilla:rhino:1.7.14")
+    implementation("com.squareup.picasso:picasso:2.8")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.credentials:credentials:1.2.2")

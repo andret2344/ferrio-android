@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<style name="AppTheme" parent="Theme.Material3.DayNight">
+	<style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
 		<item name="colorPrimary">@color/background_secondary</item>
 		<item name="colorPrimaryDark">@color/background_primary</item>
 		<item name="android:windowLightStatusBar">false</item>

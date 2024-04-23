@@ -41,5 +41,6 @@
 	<string name="application">Aplikacja</string>
 	<string name="missing_holiday">Brakuje święta?</string>
 	<string name="anonymous_user">Użytkownik anonimowy</string>
+	<string name="search_placeholder">Wyszukaj wśród %d świąt…</string>
 
 </resources>

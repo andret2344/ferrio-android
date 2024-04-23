@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +31,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
@@ -41,6 +41,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -98,8 +99,9 @@ public class MainActivity extends UHCActivity {
 
 		searchListView = findViewById(R.id.main_list_results);
 		viewPager2 = findViewById(R.id.main_pager_months);
-		materialToolbar = findViewById(R.id.activity_main_toolbar);
 		firebaseAuth = FirebaseAuth.getInstance();
+		materialToolbar = findViewById(R.id.activity_main_toolbar);
+		setSupportActionBar(materialToolbar);
 
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
@@ -203,6 +205,14 @@ public class MainActivity extends UHCActivity {
 		if (searchView == null) {
 			return true;
 		}
+		final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
+		final long holidaysCount = holidayDays.stream()
+				.map(holidayDay -> holidayDay.getHolidaysList(includeUsual))
+				.mapToLong(Collection::size)
+				.sum();
+		searchView.setQueryHint(getString(R.string.search_placeholder, holidaysCount));
+		searchView.setIconified(false);
+		searchView.setIconifiedByDefault(false);
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(final String query) {
@@ -220,7 +230,6 @@ public class MainActivity extends UHCActivity {
 					viewPager2.setVisibility(View.INVISIBLE);
 					holidayDays.stream()
 							.map(holidayDay -> {
-								final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
 								final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
 										.stream()
 										.filter(holiday -> holiday.getName().toLowerCase(Locale.ROOT).contains(newText.toLowerCase(Locale.ROOT)))
@@ -248,7 +257,7 @@ public class MainActivity extends UHCActivity {
 		if (itemId == R.id.menu_main_today) {
 			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
 		}
-		return super.onOptionsItemSelected(item);
+		return true;
 	}
 
 	private void setUpNavDrawer() {
@@ -267,11 +276,14 @@ public class MainActivity extends UHCActivity {
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user != null) {
 			missing.setEnabled(!user.isAnonymous());
+			final Picasso picasso = Picasso.get();
 			if (user.isAnonymous()) {
-				imageViewAvatar.setImageURI(Uri.parse(String.format("https://gravatar.com/avatar/%s?d=identicon", user.getUid())));
+				picasso.load(String.format("https://gravatar.com/avatar/%s?d=identicon", user.getUid()))
+						.into(imageViewAvatar);
 				textViewHeading.setText(R.string.anonymous_user);
 			} else {
-				imageViewAvatar.setImageURI(user.getPhotoUrl());
+				picasso.load(user.getPhotoUrl())
+						.into(imageViewAvatar);
 				textViewHeading.setText(user.getDisplayName());
 				textViewSubtitle.setText(user.getEmail());
 			}

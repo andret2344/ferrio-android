@@ -3,6 +3,7 @@ package eu.andret.kalendarzswiatnietypowych.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class SearchHolidayAdapter extends RecyclerView.Adapter<SearchHolidayAdap
 	public SearchHolidayAdapter(final Context context, final List<HolidayDay> holidayDays) {
 		this.context = context;
 		this.holidayDays = holidayDays;
+		Log.d("UHC-adapter", holidayDays + "");
 	}
 
 	@NonNull
