@@ -19,16 +19,22 @@ import androidx.core.app.NavUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.google.android.material.appbar.MaterialToolbar;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 
 public class SettingsActivity extends UHCActivity {
 	@Override
 	public void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
+		setContentView(R.layout.activity_settings);
+		final MaterialToolbar toolbar = findViewById(R.id.activity_settings_toolbar);
+		setSupportActionBar(toolbar);
+		retrieveSupportActionBar().ifPresent(actionBar ->
+				actionBar.setDisplayHomeAsUpEnabled(true));
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(android.R.id.content, new PrefsFragment())
+				.replace(R.id.activity_settings_content, new PrefsFragment())
 				.commit();
 
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {

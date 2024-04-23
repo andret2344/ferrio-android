@@ -262,12 +262,14 @@ public class MainActivity extends UHCActivity {
 		final ImageView imageViewAvatar = headerView.findViewById(R.id.navigation_drawer_image);
 		final TextView textViewHeading = headerView.findViewById(R.id.navigation_drawer_heading);
 		final TextView textViewSubtitle = headerView.findViewById(R.id.navigation_drawer_subtitle);
+		final MenuItem missing = navigationView.getMenu().findItem(R.id.menu_drawer_missing);
 
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user != null) {
+			missing.setEnabled(!user.isAnonymous());
 			if (user.isAnonymous()) {
 				imageViewAvatar.setImageURI(Uri.parse(String.format("https://gravatar.com/avatar/%s?d=identicon", user.getUid())));
-				textViewHeading.setText("Anonymous user");
+				textViewHeading.setText(R.string.anonymous_user);
 			} else {
 				imageViewAvatar.setImageURI(user.getPhotoUrl());
 				textViewHeading.setText(user.getDisplayName());
@@ -276,13 +278,14 @@ public class MainActivity extends UHCActivity {
 		}
 
 		navigationView.setNavigationItemSelectedListener(menuItem -> {
-			if (menuItem.getItemId() == R.id.menu_item_settings) {
+			if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));
-			} else if (menuItem.getItemId() == R.id.menu_item_about) {
-				SettingsActivity.createAlertWithImage(this, R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
+			} else if (menuItem.getItemId() == R.id.menu_drawer_about) {
+				SettingsActivity.createAlertWithImage(this, R.drawable.holidays, R.string.about_calendar, R.string.about_holidays_text);
 			}
 			return true;
 		});
+
 
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
 			@Override
