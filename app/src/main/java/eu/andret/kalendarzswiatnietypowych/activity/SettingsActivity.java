@@ -10,21 +10,28 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NavUtils;
 import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 
 public class SettingsActivity extends UHCActivity {
 	@Override
-	public void onCreate(final Bundle savedInstanceState) {
+	public void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
+		setContentView(R.layout.activity_settings);
+		final MaterialToolbar toolbar = findViewById(R.id.activity_settings_toolbar);
+		setSupportActionBar(toolbar);
+		retrieveSupportActionBar().ifPresent(actionBar ->
+				actionBar.setDisplayHomeAsUpEnabled(true));
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(android.R.id.content, new PrefsFragment())
+				.replace(R.id.activity_settings_content, new PrefsFragment())
 				.commit();
 
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
@@ -38,7 +45,7 @@ public class SettingsActivity extends UHCActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			getOnBackPressedDispatcher().onBackPressed();
 			return true;
@@ -48,19 +55,11 @@ public class SettingsActivity extends UHCActivity {
 
 	public static class PrefsFragment extends PreferenceFragmentCompat {
 		@Override
-		public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
+		public void onCreatePreferences(@Nullable final Bundle savedInstanceState, @Nullable final String rootKey) {
 			setPreferencesFromResource(R.xml.preferences, rootKey);
 			if (getContext() == null) {
 				return;
 			}
-			final Preference aboutHolidaysPreference = findPreference(getContext().getString(R.string.settings_key_about_holidays));
-			if (aboutHolidaysPreference == null) {
-				return;
-			}
-			aboutHolidaysPreference.setOnPreferenceClickListener(preference -> {
-				createAlertWithImage(getContext());
-				return false;
-			});
 
 			final ListPreference themePreference = findPreference(getContext().getString(R.string.settings_key_app_theme));
 
@@ -74,16 +73,16 @@ public class SettingsActivity extends UHCActivity {
 				return true;
 			});
 		}
+	}
 
-		private void createAlertWithImage(final Context context) {
-			final View view = LayoutInflater.from(context).inflate(R.layout.image_alert, null);
+	public static void createAlertWithImage(final Context context) {
+		final View view = LayoutInflater.from(context).inflate(R.layout.image_alert, null);
 
-			new AlertDialog.Builder(context)
-					.setTitle(R.string.about_holidays)
-					.setView(view)
-					.setPositiveButton(R.string.ok, null)
-					.create()
-					.show();
-		}
+		new AlertDialog.Builder(context)
+				.setTitle(R.string.about_holidays)
+				.setView(view)
+				.setPositiveButton(R.string.ok, null)
+				.create()
+				.show();
 	}
 }

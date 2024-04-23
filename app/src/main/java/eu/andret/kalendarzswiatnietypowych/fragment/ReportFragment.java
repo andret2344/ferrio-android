@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -48,6 +49,9 @@ public class ReportFragment extends DialogFragment {
 
 		final ReportViewModel reportViewModel = new ViewModelProvider(requireActivity()).get(ReportViewModel.class);
 
+		final MaterialToolbar materialToolbar = view.findViewById(R.id.fragment_report_toolbar);
+		materialToolbar.setNavigationIcon(R.drawable.baseline_close_24);
+		materialToolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 		final TextInputEditText holidayNameEditText = view.findViewById(R.id.dialog_report_holiday_name);
 		final TextInputEditText holidayDescEditText = view.findViewById(R.id.dialog_report_holiday_desc);
 		final AutoCompleteTextView reasonTextView = view.findViewById(R.id.dialog_report_text_reason_value);
