@@ -33,7 +33,7 @@ public class MonthFragmentAdapter extends FragmentStateAdapter {
 		final int current = position + 1;
 		bundle.putInt(MainActivity.MONTH, current);
 		final LocalDate before = getBefore(current);
-		final LocalDate after = before.plusDays(41);
+		final LocalDate after = getAfter(before);
 		final List<HolidayDay> holidays = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after);
 		final MonthFragment fragment = new MonthFragment(holidays);
 		fragment.setArguments(bundle);
@@ -52,5 +52,10 @@ public class MonthFragmentAdapter extends FragmentStateAdapter {
 			return date;
 		}
 		return date.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+	}
+
+	@NonNull
+	private LocalDate getAfter(final LocalDate before) {
+		return before.plusDays(42);
 	}
 }
