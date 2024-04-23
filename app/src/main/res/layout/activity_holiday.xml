@@ -1,14 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:ads="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:background="@color/background_primary"
 	android:orientation="vertical">
 
+	<com.google.android.material.appbar.MaterialToolbar
+		android:id="@+id/activity_holiday_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:paddingStart="6dp"
+		android:paddingEnd="16dp"
+		app:contentInsetStartWithNavigation="0dp"
+		app:title="@string/app_name" />
+
 	<TextView
 		android:id="@+id/activity_holiday_name"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_below="@+id/activity_holiday_toolbar"
 		android:gravity="center"
 		android:padding="10dp"
 		android:textSize="@dimen/activity_holiday_name" />
@@ -18,7 +28,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_above="@id/activity_holiday_adview_bottom"
-		android:layout_below="@+id/activity_holiday_name"
+		android:layout_below="@id/activity_holiday_name"
 		android:padding="10dp"
 		android:textSize="@dimen/activity_holiday_description" />
 
@@ -28,7 +38,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:contentDescription="@string/content_description_ad"
-		ads:adSize="BANNER"
-		ads:adUnitId="@string/banner_ad_unit_id" />
+		app:adSize="BANNER"
+		app:adUnitId="@string/banner_ad_unit_id" />
 
 </RelativeLayout>

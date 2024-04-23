@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -20,6 +21,8 @@ public class HolidayActivity extends UHCActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_holiday);
 
+		final MaterialToolbar materialToolbar = findViewById(R.id.activity_holiday_toolbar);
+		setSupportActionBar(materialToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
