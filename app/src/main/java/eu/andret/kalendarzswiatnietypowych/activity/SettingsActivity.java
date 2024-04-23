@@ -79,7 +79,7 @@ public class SettingsActivity extends UHCActivity {
 		final View view = LayoutInflater.from(context).inflate(R.layout.image_alert, null);
 
 		new AlertDialog.Builder(context)
-				.setTitle(R.string.about_holidays)
+				.setTitle(R.string.about_calendar)
 				.setView(view)
 				.setPositiveButton(R.string.ok, null)
 				.create()

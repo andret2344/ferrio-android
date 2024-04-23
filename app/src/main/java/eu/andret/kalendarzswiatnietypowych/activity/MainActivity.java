@@ -298,7 +298,7 @@ public class MainActivity extends UHCActivity {
 			if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));
 			} else if (menuItem.getItemId() == R.id.menu_drawer_about) {
-				SettingsActivity.createAlertWithImage(this, R.drawable.holidays, R.string.about_calendar, R.string.about_holidays_text);
+				SettingsActivity.createAlertWithImage(this);
 			}
 			return true;
 		});
