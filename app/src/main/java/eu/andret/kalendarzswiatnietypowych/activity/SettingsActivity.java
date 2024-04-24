@@ -1,13 +1,9 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -73,16 +69,5 @@ public class SettingsActivity extends UHCActivity {
 				return true;
 			});
 		}
-	}
-
-	public static void createAlertWithImage(final Context context) {
-		final View view = LayoutInflater.from(context).inflate(R.layout.image_alert, null);
-
-		new AlertDialog.Builder(context)
-				.setTitle(R.string.about_calendar)
-				.setView(view)
-				.setPositiveButton(R.string.ok, null)
-				.create()
-				.show();
 	}
 }
