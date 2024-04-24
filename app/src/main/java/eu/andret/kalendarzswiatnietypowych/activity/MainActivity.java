@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -298,7 +299,7 @@ public class MainActivity extends UHCActivity {
 			if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));
 			} else if (menuItem.getItemId() == R.id.menu_drawer_about) {
-				SettingsActivity.createAlertWithImage(this, R.drawable.holidays, R.string.about_calendar, R.string.about_holidays_text);
+				createAboutCalendarAlert().show();
 			}
 			return true;
 		});
@@ -313,5 +314,16 @@ public class MainActivity extends UHCActivity {
 				}
 			}
 		});
+	}
+
+	public AlertDialog createAboutCalendarAlert() {
+		final View view = LayoutInflater.from(this)
+				.inflate(R.layout.image_alert, null);
+
+		return new AlertDialog.Builder(this)
+				.setTitle(R.string.about_calendar)
+				.setView(view)
+				.setPositiveButton(R.string.ok, null)
+				.create();
 	}
 }

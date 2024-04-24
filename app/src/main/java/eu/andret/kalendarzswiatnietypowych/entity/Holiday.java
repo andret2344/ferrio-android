@@ -61,7 +61,7 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		return countryCode;
 	}
 
-	@Nullable
+	@NonNull
 	public String getUrl() {
 		return url;
 	}

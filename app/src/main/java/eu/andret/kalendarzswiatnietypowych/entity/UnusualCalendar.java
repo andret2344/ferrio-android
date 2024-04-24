@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,9 @@ public class UnusualCalendar implements Parcelable {
 		final List<HolidayDay> result = new ArrayList<>();
 		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.plusDays(1)) {
 			result.add(getOrCreateDay(holidayDays, date.getMonthValue(), date.getDayOfMonth()));
+		}
+		if (end.getMonth().equals(Month.MARCH)) {
+			result.add(getOrCreateDay(holidayDays, 2, 30));
 		}
 		return result;
 	}

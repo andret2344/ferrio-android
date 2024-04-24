@@ -138,6 +138,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
 	@Override
 	public int getItemCount() {
-		return holidayDays.size();
+		return 42;
 	}
 }

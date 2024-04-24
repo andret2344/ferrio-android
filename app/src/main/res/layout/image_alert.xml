@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/alertTextWithImage"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:drawablePadding="10dp"
+	android:gravity="center_horizontal"
+	android:padding="30dp"
+	android:text="@string/about_holidays_text"
+	android:textSize="@dimen/adapter_day_small_date"
+	app:drawableTopCompat="@drawable/holidays" />
