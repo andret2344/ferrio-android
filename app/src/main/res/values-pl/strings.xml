@@ -12,7 +12,8 @@
 	<string name="ok">OK</string>
 	<string name="caution">Uwaga!</string>
 	<string name="see_more">%d więcej</string>
-	<string name="holidays">Święta: %d</string>
+	<string name="holidays">Święta</string>
+	<string name="holidays_count">Święta: %d</string>
 	<string name="menu_today">Dzisiaj</string>
 	<string name="menu_main_settings">Ustawienia</string>
 	<string name="menu_main_search">Szukaj</string>
@@ -23,7 +24,7 @@
 	<string name="no_internet_connection">Brak połączenia z internetem.</string>
 	<string name="no_unusual_holidays">Brak nietypowych świąt.</string>
 	<string name="no_internet">Urządzenie nie jest połączone z internetem.</string>
-	<string name="about_holidays">O świętach</string>
+	<string name="about_calendar">O kalendarzu</string>
 	<string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
 	<string name="content_description_ad">Reklama</string>
 	<string name="content_description_image_sad_face">Smutna twarz</string>
@@ -37,5 +38,10 @@
 	<string name="description">Opis</string>
 	<string name="report_note">Nota: Zgłoszenia z opisem są bardziej prawdopodobne do bycia rozpatrzonymi w pierwszej kolejności.</string>
 	<string name="send_report">Wyślij zgłoszenie</string>
+	<string name="application">Aplikacja</string>
+	<string name="missing_holiday">Brakuje święta?</string>
+	<string name="my_reports">Moje zgłoszenia</string>
+	<string name="anonymous_user">Użytkownik anonimowy</string>
+	<string name="search_placeholder">Wyszukaj wśród %d świąt…</string>
 
 </resources>

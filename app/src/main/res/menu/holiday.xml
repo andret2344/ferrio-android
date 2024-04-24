@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
-
-	<item
-		android:id="@+id/menu_holiday_report"
-		android:icon="@drawable/baseline_flag_24"
-		android:orderInCategory="10"
-		android:title="@string/menu_holiday_report"
-		app:showAsAction="ifRoom" />
+	
 	<item
 		android:id="@+id/menu_holiday_favorite"
 		android:icon="@drawable/baseline_star_24"

@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -40,9 +41,6 @@ public class DayActivity extends UHCActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_day);
 
-		retrieveSupportActionBar().ifPresent(actionBar ->
-				actionBar.setDisplayHomeAsUpEnabled(true));
-
 		pager = findViewById(R.id.day_pager_days);
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
@@ -56,8 +54,14 @@ public class DayActivity extends UHCActivity {
 			id += leap ? 1 : 2;
 		}
 		pager.setCurrentItem(id - 1, false);
-		retrieveSupportActionBar().ifPresent(actionBar ->
-				actionBar.setTitle(date.format(formatter)));
+
+		final MaterialToolbar materialToolbar = findViewById(R.id.activity_day_toolbar);
+		setSupportActionBar(materialToolbar);
+		retrieveSupportActionBar().ifPresent(actionBar -> {
+			actionBar.setTitle(date.format(formatter));
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		});
+
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {

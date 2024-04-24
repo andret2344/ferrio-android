@@ -17,19 +17,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NavUtils;
 import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 
 public class SettingsActivity extends UHCActivity {
 	@Override
-	public void onCreate(final Bundle savedInstanceState) {
+	public void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		retrieveSupportActionBar().ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
+		setContentView(R.layout.activity_settings);
+		final MaterialToolbar toolbar = findViewById(R.id.activity_settings_toolbar);
+		setSupportActionBar(toolbar);
+		retrieveSupportActionBar().ifPresent(actionBar ->
+				actionBar.setDisplayHomeAsUpEnabled(true));
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(android.R.id.content, new PrefsFragment())
+				.replace(R.id.activity_settings_content, new PrefsFragment())
 				.commit();
 
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
@@ -53,19 +58,11 @@ public class SettingsActivity extends UHCActivity {
 
 	public static class PrefsFragment extends PreferenceFragmentCompat {
 		@Override
-		public void onCreatePreferences(@Nullable final Bundle savedInstanceState, final String rootKey) {
+		public void onCreatePreferences(@Nullable final Bundle savedInstanceState, @Nullable final String rootKey) {
 			setPreferencesFromResource(R.xml.preferences, rootKey);
 			if (getContext() == null) {
 				return;
 			}
-			final Preference aboutHolidaysPreference = findPreference(getContext().getString(R.string.settings_key_about_holidays));
-			if (aboutHolidaysPreference == null) {
-				return;
-			}
-			aboutHolidaysPreference.setOnPreferenceClickListener(preference -> {
-				createAlertWithImage(getContext(), R.drawable.holidays, R.string.about_holidays, R.string.about_holidays_text);
-				return false;
-			});
 
 			final ListPreference themePreference = findPreference(getContext().getString(R.string.settings_key_app_theme));
 
@@ -79,28 +76,28 @@ public class SettingsActivity extends UHCActivity {
 				return true;
 			});
 		}
+	}
 
-		public void createAlertWithImage(final Context context, final int img, final int title, final int text) {
-			final AlertDialog.Builder alert = new AlertDialog.Builder(context);
-			alert.setTitle(title);
-			final LinearLayout layout = new LinearLayout(context);
-			final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-			params.setMargins(0, 30, 0, 0);
-			layout.setLayoutParams(params);
-			layout.setOrientation(LinearLayout.VERTICAL);
-			final ImageView image = new ImageView(context);
-			image.setImageResource(img);
-			layout.addView(image);
-			final TextView tv = new TextView(context);
-			tv.setText(text);
-			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.adapter_search_main));
-			layout.addView(tv);
-			final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-			llp.setMargins(30, 20, 30, 20);
-			tv.setLayoutParams(llp);
-			alert.setView(layout);
-			alert.setPositiveButton(R.string.ok, null);
-			alert.show();
-		}
+	public static void createAlertWithImage(final Context context, final int img, final int title, final int text) {
+		final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+		alert.setTitle(title);
+		final LinearLayout layout = new LinearLayout(context);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, 30, 0, 0);
+		layout.setLayoutParams(params);
+		layout.setOrientation(LinearLayout.VERTICAL);
+		final ImageView image = new ImageView(context);
+		image.setImageResource(img);
+		layout.addView(image);
+		final TextView tv = new TextView(context);
+		tv.setText(text);
+		tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.adapter_search_main));
+		layout.addView(tv);
+		final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		llp.setMargins(30, 20, 30, 20);
+		tv.setLayoutParams(llp);
+		alert.setView(layout);
+		alert.setPositiveButton(R.string.ok, null);
+		alert.show();
 	}
 }

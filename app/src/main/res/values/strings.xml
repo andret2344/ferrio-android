@@ -17,7 +17,8 @@
 	<string name="ok">OK</string>
 	<string name="caution">Caution!</string>
 	<string name="see_more">%d more</string>
-	<string name="holidays">Holidays: %d</string>
+	<string name="holidays">Holidays</string>
+	<string name="holidays_count">Holidays: %d</string>
 	<string name="menu_today">Today</string>
 	<string name="menu_main_settings">Settings</string>
 	<string name="menu_main_search">Search</string>
@@ -28,7 +29,7 @@
 	<string name="no_internet_connection">No internet connection.</string>
 	<string name="no_unusual_holidays">No unusual holidays.</string>
 	<string name="no_internet">Your device is not connected to the internet.</string>
-	<string name="about_holidays">About holidays</string>
+	<string name="about_calendar">About calendar</string>
 	<string name="about_holidays_text">All holidays - even those most unusual - are an opportunity to look in a different way at people, and appreciate phenomena we usually ignore.</string>
 	<string name="pointed_text" translatable="false">\u00B7 %s</string>
 	<string name="bullet_point" translatable="false">\u2022</string>
@@ -45,5 +46,10 @@
 	<string name="description">Description</string>
 	<string name="report_note">Note: Reports with description are more likely to be checked first.</string>
 	<string name="send_report">Send report</string>
+	<string name="application">Application</string>
+	<string name="missing_holiday">Missing holiday?</string>
+	<string name="my_reports">My reports</string>
+	<string name="anonymous_user">Anonymous user</string>
+	<string name="search_placeholder">Search across %d holidays…</string>
 
 </resources>

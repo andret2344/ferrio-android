@@ -51,6 +51,7 @@ val versionPlayServicesAuth = "21.1.0"
 val versionGson = "2.10.1"
 val versionAndroidRetroFuture = "1.7.4"
 val versionMozillaRhino = "1.7.14"
+val versionPicasso = "2.8"
 val versionAppCompat = "1.6.1"
 val versionCredentials = "1.2.2"
 val versionGoogleId = "1.1.0"
@@ -76,6 +77,7 @@ dependencies {
     implementation("com.google.code.gson:gson:${versionGson}")
     implementation("net.sourceforge.streamsupport:android-retrofuture:${versionAndroidRetroFuture}")
     implementation("org.mozilla:rhino:${versionMozillaRhino}")
+    implementation("com.squareup.picasso:picasso:${versionPicasso}")
 
     implementation("androidx.appcompat:appcompat:${versionAppCompat}")
     implementation("androidx.credentials:credentials:${versionCredentials}")
