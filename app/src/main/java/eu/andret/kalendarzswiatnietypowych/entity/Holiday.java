@@ -54,7 +54,7 @@ public class Holiday implements Comparable<Holiday> {
 		return countryCode;
 	}
 
-	@Nullable
+	@NonNull
 	public String getUrl() {
 		return url;
 	}

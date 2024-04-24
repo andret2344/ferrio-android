@@ -9,6 +9,4 @@
 	<color name="foreground_secondary">#1C1C1D</color>
 	<color name="foreground_accent">#2B2B2D</color>
 
-	<color name="dynamic_action_bar">#FF8A00</color>
-
 </resources>

@@ -1,59 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	style="?attr/materialCardViewOutlinedStyle"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_gravity="center_vertical"
-	android:layout_marginBottom="1dp"
-	android:background="@color/background_secondary"
-	android:orientation="horizontal"
-	android:paddingStart="5dp"
-	android:paddingTop="5dp"
-	android:paddingEnd="5dp"
-	android:paddingBottom="5dp">
+	android:layout_margin="8dp"
+	android:clickable="true"
+	app:cardElevation="4dp">
 
-	<TextView
-		android:id="@+id/adapter_holiday_text_bullet"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
-		android:padding="5dp"
-		android:text="@string/bullet_point"
-		android:textColor="@color/foreground_primary"
-		android:textSize="@dimen/adapter_holiday_main" />
-
-	<TextView
-		android:id="@+id/adapter_holiday_text_holiday"
+	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_toStartOf="@id/adapter_holiday_text_country"
-		android:layout_toEndOf="@id/adapter_holiday_text_bullet"
-		android:gravity="center_vertical"
-		android:paddingTop="5dp"
-		android:paddingBottom="5dp"
-		android:textColor="@color/foreground_primary"
-		android:textSize="@dimen/adapter_holiday_main" />
+		android:orientation="horizontal">
 
-	<TextView
-		android:id="@+id/adapter_holiday_text_country"
-		android:layout_width="50dp"
-		android:layout_height="wrap_content"
-		android:layout_alignTop="@id/adapter_holiday_text_holiday"
-		android:layout_alignBottom="@id/adapter_holiday_text_holiday"
-		android:layout_toStartOf="@id/adapter_holiday_image_more"
-		android:gravity="center_vertical|center_horizontal"
-		android:padding="5dp"
-		android:textColor="@color/foreground_accent"
-		android:textSize="@dimen/adapter_holiday_country" />
+		<LinearLayout
+			android:id="@+id/adapter_holiday_layout_content"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toStartOf="@id/adapter_holiday_text_country"
+			android:orientation="vertical"
+			android:padding="16dp">
 
-	<ImageView
-		android:id="@+id/adapter_holiday_image_more"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignTop="@id/adapter_holiday_text_holiday"
-		android:layout_alignBottom="@id/adapter_holiday_text_holiday"
-		android:layout_alignParentEnd="true"
-		android:contentDescription="@string/content_description_more"
-		android:gravity="center_vertical|center_horizontal"
-		android:src="@drawable/baseline_chevron_right_48" />
+			<TextView
+				android:id="@+id/adapter_holiday_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				android:textAppearance="?attr/textAppearanceTitleMedium"
+				android:textColor="?android:attr/textColorPrimary"
+				android:textSize="@dimen/adapter_holiday_main" />
 
-</RelativeLayout>
+			<TextView
+				android:id="@+id/adapter_holiday_description"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="4dp"
+				android:ellipsize="end"
+				android:maxLines="2"
+				android:textAppearance="?attr/textAppearanceBodyMedium"
+				android:textColor="?android:attr/textColorSecondary"
+				android:textSize="@dimen/adapter_holiday_country" />
+		</LinearLayout>
+
+		<TextView
+			android:id="@+id/adapter_holiday_text_country"
+			android:layout_width="50dp"
+			android:layout_height="wrap_content"
+			android:layout_alignTop="@id/adapter_holiday_layout_content"
+			android:layout_alignBottom="@id/adapter_holiday_layout_content"
+			android:layout_alignParentEnd="true"
+			android:gravity="center_vertical|center_horizontal"
+			android:padding="5dp"
+			android:textColor="@color/foreground_accent"
+			android:textSize="@dimen/adapter_holiday_country" />
+	</RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>
