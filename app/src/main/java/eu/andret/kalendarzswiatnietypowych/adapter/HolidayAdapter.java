@@ -65,7 +65,7 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		viewHolder.descriptionTextView.setText(holiday.getDescription());
 		viewHolder.countryTextView.setText(holiday.getCountryCode());
 		if (holiday.isUsual()) {
-			viewHolder.nameTextView.setTypeface(null, Typeface.BOLD);
+			viewHolder.nameTextView.setTypeface(null, Typeface.ITALIC);
 		}
 	}
 
