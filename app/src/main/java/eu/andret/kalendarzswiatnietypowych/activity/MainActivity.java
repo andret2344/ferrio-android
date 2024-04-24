@@ -199,7 +199,6 @@ public class MainActivity extends UHCActivity {
 				return true;
 			}
 
-			@SuppressLint("NotifyDataSetChanged")
 			@Override
 			@SuppressLint("NotifyDataSetChanged")
 			public boolean onQueryTextChange(final String newText) {
