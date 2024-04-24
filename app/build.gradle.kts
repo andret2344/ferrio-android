@@ -51,7 +51,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-ads:23.0.0")
     implementation("com.google.android.material:material:1.12.0-rc01")
 
-    implementation("com.android.support:multidex:2.0.1")
     implementation("com.google.android.gms:play-services-auth:21.1.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
@@ -66,7 +65,7 @@ dependencies {
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.activity:activity:1.8.2")
+    implementation("androidx.activity:activity:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")

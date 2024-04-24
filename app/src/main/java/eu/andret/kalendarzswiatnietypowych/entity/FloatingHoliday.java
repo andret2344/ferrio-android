@@ -14,6 +14,7 @@ public class FloatingHoliday implements Parcelable {
 	private final String name;
 	private final String description;
 	private final String countryCode;
+	private final String countryName;
 	private final String url;
 	private final String script;
 
@@ -23,6 +24,7 @@ public class FloatingHoliday implements Parcelable {
 		name = in.readString();
 		description = in.readString();
 		countryCode = in.readString();
+		countryName = in.readString();
 		url = in.readString();
 		script = in.readString();
 	}
@@ -51,6 +53,11 @@ public class FloatingHoliday implements Parcelable {
 	}
 
 	@Nullable
+	public String getCountryName() {
+		return countryName;
+	}
+
+	@Nullable
 	public String getUrl() {
 		return url;
 	}
@@ -74,13 +81,14 @@ public class FloatingHoliday implements Parcelable {
 				&& Objects.equals(name, that.name)
 				&& Objects.equals(description, that.description)
 				&& Objects.equals(countryCode, that.countryCode)
+				&& Objects.equals(countryName, that.countryName)
 				&& Objects.equals(url, that.url)
 				&& Objects.equals(script, that.script);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, usual, name, description, countryCode, url, script);
+		return Objects.hash(id, usual, name, description, countryCode, countryName, url, script);
 	}
 
 	@NonNull
@@ -92,6 +100,7 @@ public class FloatingHoliday implements Parcelable {
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", countryCode='" + countryCode + '\'' +
+				", countryName='" + countryName + '\'' +
 				", url='" + url + '\'' +
 				", script='" + script + '\'' +
 				'}';
@@ -109,6 +118,7 @@ public class FloatingHoliday implements Parcelable {
 		parcel.writeString(name);
 		parcel.writeString(description);
 		parcel.writeString(countryCode);
+		parcel.writeString(countryName);
 		parcel.writeString(url);
 		parcel.writeString(script);
 	}
