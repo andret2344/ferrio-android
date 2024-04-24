@@ -35,7 +35,8 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="4dp"
-				android:maxLines="1"
+				android:ellipsize="end"
+				android:maxLines="2"
 				android:textAppearance="?attr/textAppearanceBodyMedium"
 				android:textColor="?android:attr/textColorSecondary"
 				android:textSize="@dimen/adapter_holiday_country" />
