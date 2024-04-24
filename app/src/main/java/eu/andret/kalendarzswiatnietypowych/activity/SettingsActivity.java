@@ -14,6 +14,8 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
+import java.util.Optional;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 
 public class SettingsActivity extends UHCActivity {
@@ -57,17 +59,12 @@ public class SettingsActivity extends UHCActivity {
 				return;
 			}
 
-			final ListPreference themePreference = findPreference(getContext().getString(R.string.settings_key_app_theme));
-
-			if (themePreference == null) {
-				return;
-			}
-
-			themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-				final SettingsActivity activity = (SettingsActivity) getContext();
-				activity.recreate();
-				return true;
-			});
+			Optional.ofNullable(this.<ListPreference>findPreference(getContext().getString(R.string.settings_key_app_theme)))
+					.ifPresent(o -> o.setOnPreferenceChangeListener((preference, newValue) -> {
+						final SettingsActivity activity = (SettingsActivity) getContext();
+						activity.recreate();
+						return true;
+					}));
 		}
 	}
 }
