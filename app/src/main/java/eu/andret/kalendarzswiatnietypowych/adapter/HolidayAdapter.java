@@ -53,13 +53,12 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		final Holiday holiday = holidays.get(position);
 		if (holiday.getDescription().isBlank()) {
 			viewHolder.descriptionTextView.setVisibility(View.GONE);
-		} else {
-			viewHolder.itemView.setOnClickListener(view -> {
-				final Intent intent = new Intent(context, HolidayActivity.class);
-				intent.putExtra(MainActivity.HOLIDAY, holiday);
-				context.startActivity(intent);
-			});
 		}
+		viewHolder.itemView.setOnClickListener(view -> {
+			final Intent intent = new Intent(context, HolidayActivity.class);
+			intent.putExtra(MainActivity.HOLIDAY, holiday);
+			context.startActivity(intent);
+		});
 
 		viewHolder.nameTextView.setText(holiday.getName());
 		viewHolder.descriptionTextView.setText(holiday.getDescription());

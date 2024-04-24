@@ -54,5 +54,6 @@
 	<string name="my_reports">My reports</string>
 	<string name="anonymous_user">Anonymous user</string>
 	<string name="search_placeholder">Search across %d holidays…</string>
+	<string name="no_description">No description</string>
 
 </resources>
