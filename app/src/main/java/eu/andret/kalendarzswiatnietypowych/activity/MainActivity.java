@@ -279,7 +279,7 @@ public class MainActivity extends UHCActivity {
 
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user != null) {
-			missing.setEnabled(!user.isAnonymous());
+//			missing.setEnabled(!user.isAnonymous());
 			reports.setEnabled(!user.isAnonymous());
 			final Picasso picasso = Picasso.get();
 			if (user.isAnonymous()) {
@@ -296,7 +296,9 @@ public class MainActivity extends UHCActivity {
 		}
 
 		navigationView.setNavigationItemSelectedListener(menuItem -> {
-			if (menuItem.getItemId() == R.id.menu_drawer_settings) {
+			if (menuItem.getItemId() == R.id.menu_drawer_missing) {
+				startActivity(new Intent(this, MissingActivity.class));
+			} else if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));
 			} else if (menuItem.getItemId() == R.id.menu_drawer_about) {
 				createAboutCalendarAlert().show();
