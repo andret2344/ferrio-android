@@ -2,24 +2,18 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
-
-import java.time.Month;
-import java.time.Year;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.fragment.MissingFixedFragment;
 
 public class MissingActivity extends UHCActivity {
 	@Override
@@ -32,20 +26,16 @@ public class MissingActivity extends UHCActivity {
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		final AutoCompleteTextView textViewMonth = findViewById(R.id.activity_missing_month_value);
-		final AutoCompleteTextView textViewDay = findViewById(R.id.activity_missing_day_value);
-		textViewMonth.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Month.values()));
-		textViewMonth.setOnItemClickListener((parent, view, position, id) -> {
-			final int length = YearMonth.of(Year.now().getValue(), Month.values()[position]).lengthOfMonth();
-			final List<Integer> items = Stream.iterate(1, i -> i + 1).limit(length).collect(Collectors.toList());
-			textViewDay.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items));
-			textViewDay.setEnabled(true);
-			final String currentDayValue = textViewDay.getText().toString();
-			final int currentDay = Optional.of(currentDayValue)
-					.filter(s -> !s.isBlank())
-					.map(Integer::parseInt)
-					.orElse(1);
-			textViewDay.setText(String.valueOf(Math.min(length, currentDay)), false);
+		final BottomNavigationView bottomNavigationView = findViewById(R.id.activity_missing_bottom_navigation);
+		bottomNavigationView.setOnItemSelectedListener(item -> {
+			final Fragment selectedFragment = getFragment(item);
+			if (selectedFragment == null) {
+				return false;
+			}
+			final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.replace(R.id.activity_missing_frame_layout, selectedFragment);
+			transaction.commit();
+			return true;
 		});
 
 		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -54,6 +44,17 @@ public class MissingActivity extends UHCActivity {
 				finish();
 			}
 		});
+	}
+
+	@Nullable
+	private static Fragment getFragment(@NonNull final MenuItem item) {
+		if (item.getItemId() == R.id.item_1) {
+			return MissingFixedFragment.newInstance();
+		}
+		if (item.getItemId() == R.id.item_2) {
+			return MissingFixedFragment.newInstance();
+		}
+		return null;
 	}
 
 	@Override
