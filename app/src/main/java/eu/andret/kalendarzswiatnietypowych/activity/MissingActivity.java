@@ -7,13 +7,13 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.fragment.MissingFixedFragment;
+import eu.andret.kalendarzswiatnietypowych.fragment.MissingFloatingFragment;
 
 public class MissingActivity extends UHCActivity {
 	@Override
@@ -26,16 +26,23 @@ public class MissingActivity extends UHCActivity {
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		final BottomNavigationView bottomNavigationView = findViewById(R.id.activity_missing_bottom_navigation);
-		bottomNavigationView.setOnItemSelectedListener(item -> {
-			final Fragment selectedFragment = getFragment(item);
-			if (selectedFragment == null) {
-				return false;
+		final TabLayout tabLayout = findViewById(R.id.activity_missing_bottom_navigation);
+		tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(final TabLayout.Tab tab) {
+				final Fragment selectedFragment = getFragment(tab.getPosition());
+				showFragment(selectedFragment);
 			}
-			final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.activity_missing_frame_layout, selectedFragment);
-			transaction.commit();
-			return true;
+
+			@Override
+			public void onTabUnselected(final TabLayout.Tab tab) {
+				// empty
+			}
+
+			@Override
+			public void onTabReselected(final TabLayout.Tab tab) {
+				// empty
+			}
 		});
 
 		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -44,17 +51,30 @@ public class MissingActivity extends UHCActivity {
 				finish();
 			}
 		});
+
+		showFragment(MissingFixedFragment.newInstance());
+	}
+
+	private void showFragment(@Nullable final Fragment selectedFragment) {
+		if (selectedFragment == null) {
+			return;
+		}
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.activity_missing_frame_layout, selectedFragment)
+				.commit();
 	}
 
 	@Nullable
-	private static Fragment getFragment(@NonNull final MenuItem item) {
-		if (item.getItemId() == R.id.item_1) {
-			return MissingFixedFragment.newInstance();
+	private static Fragment getFragment(final int itemId) {
+		switch (itemId) {
+			case 0:
+				return MissingFixedFragment.newInstance();
+			case 1:
+				return MissingFloatingFragment.newInstance();
+			default:
+				return null;
 		}
-		if (item.getItemId() == R.id.item_2) {
-			return MissingFixedFragment.newInstance();
-		}
-		return null;
 	}
 
 	@Override

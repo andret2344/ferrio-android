@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".fragment.MissingFixedFragment">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	tools:context=".fragment.MissingFloatingFragment">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
@@ -15,78 +15,60 @@
 		app:layout_constraintTop_toTopOf="parent">
 
 		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/fragment_missing_fixed_month"
-			style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+			android:id="@+id/fragment_missing_floating_date"
+			style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="Month"
-			app:layout_constraintBottom_toTopOf="@id/fragment_missing_fixed_day"
+			android:hint="Date"
+			app:layout_constraintBottom_toTopOf="@id/fragment_missing_floating_name"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent">
 
-			<AutoCompleteTextView
-				android:id="@+id/fragment_missing_fixed_month_value"
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/fragment_missing_floating_date_value"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:hint="Month"
-				android:inputType="none" />
+				android:lines="2"
+				android:maxLines="2"
+				android:gravity="start"
+				android:layout_height="wrap_content" />
 		</com.google.android.material.textfield.TextInputLayout>
 
 		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/fragment_missing_fixed_day"
-			style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="Day"
-			app:layout_constraintBottom_toTopOf="@id/fragment_missing_fixed_name"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/fragment_missing_fixed_month">
-
-			<AutoCompleteTextView
-				android:id="@+id/fragment_missing_fixed_day_value"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:enabled="false"
-				android:hint="Day"
-				android:inputType="none" />
-		</com.google.android.material.textfield.TextInputLayout>
-
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/fragment_missing_fixed_name"
+			android:id="@+id/fragment_missing_floating_name"
 			style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/holiday_name"
-			app:layout_constraintBottom_toTopOf="@id/fragment_missing_fixed_description"
+			app:layout_constraintBottom_toTopOf="@id/fragment_missing_floating_description"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/fragment_missing_fixed_day">
+			app:layout_constraintTop_toBottomOf="@id/fragment_missing_floating_date">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/fragment_missing_fixed_name_value"
+				android:id="@+id/fragment_missing_floating_name_value"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content" />
 		</com.google.android.material.textfield.TextInputLayout>
 
 		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/fragment_missing_fixed_description"
+			android:id="@+id/fragment_missing_floating_description"
 			style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/holiday_description"
-			app:layout_constraintTop_toBottomOf="@id/fragment_missing_fixed_name"
+			app:layout_constraintTop_toBottomOf="@id/fragment_missing_floating_name"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent">
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/fragment_missing_fixed_description_value"
+				android:id="@+id/fragment_missing_floating_description_value"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="start"
 				android:lines="6" />
 		</com.google.android.material.textfield.TextInputLayout>
 	</androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

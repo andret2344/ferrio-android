@@ -31,8 +31,8 @@ public class MissingFixedFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		final AutoCompleteTextView textViewMonth = view.findViewById(R.id.activity_missing_month_value);
-		final AutoCompleteTextView textViewDay = view.findViewById(R.id.activity_missing_day_value);
+		final AutoCompleteTextView textViewMonth = view.findViewById(R.id.fragment_missing_fixed_month_value);
+		final AutoCompleteTextView textViewDay = view.findViewById(R.id.fragment_missing_fixed_day_value);
 		textViewMonth.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, Month.values()));
 		textViewMonth.setOnItemClickListener((parent, v, position, id) -> {
 			final int length = YearMonth.of(Year.now().getValue(), Month.values()[position]).lengthOfMonth();
