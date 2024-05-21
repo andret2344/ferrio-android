@@ -10,16 +10,20 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.fragment.MissingFixedFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.MissingFloatingFragment;
 
 public class MissingActivity extends UHCActivity {
+	private FirebaseAuth firebaseAuth;
+
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_missing);
+		firebaseAuth = FirebaseAuth.getInstance();
 
 		final MaterialToolbar materialToolbar = findViewById(R.id.activity_missing_toolbar);
 		setSupportActionBar(materialToolbar);
@@ -52,7 +56,7 @@ public class MissingActivity extends UHCActivity {
 			}
 		});
 
-		showFragment(MissingFixedFragment.newInstance());
+		showFragment(MissingFixedFragment.newInstance(firebaseAuth.getUid()));
 	}
 
 	private void showFragment(@Nullable final Fragment selectedFragment) {
@@ -66,12 +70,12 @@ public class MissingActivity extends UHCActivity {
 	}
 
 	@Nullable
-	private static Fragment getFragment(final int itemId) {
+	private Fragment getFragment(final int itemId) {
 		switch (itemId) {
 			case 0:
-				return MissingFixedFragment.newInstance();
+				return MissingFixedFragment.newInstance(firebaseAuth.getUid());
 			case 1:
-				return MissingFloatingFragment.newInstance();
+				return MissingFloatingFragment.newInstance(firebaseAuth.getUid());
 			default:
 				return null;
 		}
