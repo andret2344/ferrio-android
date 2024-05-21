@@ -52,5 +52,6 @@
 	<string name="date">Data</string>
 	<string name="month">Miesiąc</string>
 	<string name="day">Dzień</string>
+	<string name="send">Wyślij</string>
 
 </resources>

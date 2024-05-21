@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:padding="20dp"
 	tools:context=".fragment.MissingFloatingFragment">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -28,10 +29,10 @@
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/fragment_missing_floating_date_value"
 				android:layout_width="match_parent"
-				android:lines="2"
-				android:maxLines="2"
+				android:layout_height="wrap_content"
 				android:gravity="start"
-				android:layout_height="wrap_content" />
+				android:lines="2"
+				android:maxLines="2" />
 		</com.google.android.material.textfield.TextInputLayout>
 
 		<com.google.android.material.textfield.TextInputLayout
@@ -57,10 +58,10 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/holiday_description"
-			app:layout_constraintTop_toBottomOf="@id/fragment_missing_floating_name"
-			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/fragment_missing_floating_button_send"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent">
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/fragment_missing_floating_name">
 
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/fragment_missing_floating_description_value"
@@ -69,6 +70,19 @@
 				android:gravity="start"
 				android:lines="6" />
 		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/fragment_missing_floating_button_send"
+			style="@style/Widget.Material3.Button.Icon"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="16dp"
+			android:text="@string/send"
+			app:icon="@drawable/baseline_send_24"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/fragment_missing_floating_description" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

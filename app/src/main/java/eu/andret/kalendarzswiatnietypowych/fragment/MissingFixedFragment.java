@@ -23,8 +23,7 @@ import eu.andret.kalendarzswiatnietypowych.R;
 
 public class MissingFixedFragment extends Fragment {
 	@Override
-	public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
-							 @Nullable final Bundle savedInstanceState) {
+	public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_missing_fixed, container, false);
 	}
 
@@ -36,7 +35,9 @@ public class MissingFixedFragment extends Fragment {
 		textViewMonth.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, Month.values()));
 		textViewMonth.setOnItemClickListener((parent, v, position, id) -> {
 			final int length = YearMonth.of(Year.now().getValue(), Month.values()[position]).lengthOfMonth();
-			final List<Integer> items = Stream.iterate(1, i -> i + 1).limit(length).collect(Collectors.toList());
+			final List<Integer> items = Stream.iterate(1, i -> i + 1)
+					.limit(length)
+					.collect(Collectors.toList());
 			textViewDay.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, items));
 			textViewDay.setEnabled(true);
 			final String currentDayValue = textViewDay.getText().toString();
