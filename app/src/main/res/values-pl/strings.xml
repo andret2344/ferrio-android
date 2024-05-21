@@ -47,5 +47,10 @@
 	<string name="anonymous_user">Użytkownik anonimowy</string>
 	<string name="search_placeholder">Wyszukaj wśród %d świąt…</string>
 	<string name="no_description">Brak opisu</string>
+	<string name="fixed">Nieruchome</string>
+	<string name="floating">Ruchome</string>
+	<string name="date">Data</string>
+	<string name="month">Miesiąc</string>
+	<string name="day">Dzień</string>
 
 </resources>

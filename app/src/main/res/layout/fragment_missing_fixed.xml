@@ -19,7 +19,7 @@
 			style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="Month"
+			android:hint="@string/month"
 			app:layout_constraintBottom_toTopOf="@id/fragment_missing_fixed_day"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
 				android:id="@+id/fragment_missing_fixed_month_value"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="Month"
+				android:hint="@string/month"
 				android:inputType="none" />
 		</com.google.android.material.textfield.TextInputLayout>
 
@@ -38,7 +38,7 @@
 			style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="Day"
+			android:hint="@string/day"
 			app:layout_constraintBottom_toTopOf="@id/fragment_missing_fixed_name"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:enabled="false"
-				android:hint="Day"
+				android:hint="@string/day"
 				android:inputType="none" />
 		</com.google.android.material.textfield.TextInputLayout>
 
