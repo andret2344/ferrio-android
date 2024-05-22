@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,12 +25,14 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 import java9.util.concurrent.CompletableFuture;
 
 public class MissingFixedFragment extends Fragment {
@@ -51,6 +53,14 @@ public class MissingFixedFragment extends Fragment {
 
 		final AutoCompleteTextView textViewMonth = view.findViewById(R.id.fragment_missing_fixed_month_value);
 		final AutoCompleteTextView textViewDay = view.findViewById(R.id.fragment_missing_fixed_day_value);
+		final EditText editTextName = view.findViewById(R.id.fragment_missing_fixed_name_value);
+		final EditText editTextDescription = view.findViewById(R.id.fragment_missing_fixed_description_value);
+		final MaterialButton button = view.findViewById(R.id.fragment_missing_fixed_button_send);
+
+		final BooleanSupplier condition = () -> !textViewMonth.getText().toString().isBlank()
+				&& !editTextName.getText().toString().isBlank()
+				&& !editTextDescription.getText().toString().isBlank();
+
 		textViewMonth.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, Month.values()));
 		textViewMonth.setOnItemClickListener((parent, v, position, id) -> {
 			final int length = YearMonth.of(Year.now().getValue(), Month.values()[position]).lengthOfMonth();
@@ -65,14 +75,17 @@ public class MissingFixedFragment extends Fragment {
 					.map(Integer::parseInt)
 					.orElse(1);
 			textViewDay.setText(String.valueOf(Math.min(length, currentDay)), false);
+			button.setEnabled(condition.getAsBoolean());
 		});
 
-		final MaterialButton button = view.findViewById(R.id.fragment_missing_fixed_button_send);
+		editTextName.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
+		editTextDescription.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
+
 		button.setOnClickListener(v -> {
 			final Month month = Month.valueOf(textViewMonth.getText().toString());
 			final int day = Integer.parseInt(textViewDay.getText().toString());
-			final String name = view.<TextView>findViewById(R.id.fragment_missing_fixed_name_value).getText().toString();
-			final String description = view.<TextView>findViewById(R.id.fragment_missing_fixed_description_value).getText().toString();
+			final String name = editTextName.getText().toString();
+			final String description = editTextDescription.getText().toString();
 			CompletableFuture.runAsync(() -> {
 				final boolean success = send(userId, month.getValue(), day, name, description);
 				requireActivity().runOnUiThread(() -> {
@@ -96,7 +109,7 @@ public class MissingFixedFragment extends Fragment {
 		return fragment;
 	}
 
-	public boolean send(@NonNull final String userId, final int month, final int day, @NonNull final String name, @NonNull final String description) {
+	public boolean send(@Nullable final String userId, final int month, final int day, @NonNull final String name, @NonNull final String description) {
 		try {
 			final URL url = new URL("https://api.unusualcalendar.net/v2/missing/fixed");
 			final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();

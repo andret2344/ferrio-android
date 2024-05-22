@@ -18,10 +18,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Locale;
+import java.util.function.BooleanSupplier;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 import java9.util.concurrent.CompletableFuture;
 
 public class MissingFloatingFragment extends Fragment {
@@ -41,11 +43,18 @@ public class MissingFloatingFragment extends Fragment {
 		final String userId = arguments.getString("userId");
 
 		final TextView textViewDate = view.findViewById(R.id.fragment_missing_floating_date_value);
+		final TextView editTextName = view.findViewById(R.id.fragment_missing_floating_name_value);
+		final TextView editTextDescription = view.findViewById(R.id.fragment_missing_floating_description_value);
+
+		final BooleanSupplier condition = () -> !textViewDate.getText().toString().isBlank()
+				&& !editTextName.getText().toString().isBlank()
+				&& !editTextDescription.getText().toString().isBlank();
+
 		final MaterialButton button = view.findViewById(R.id.fragment_missing_floating_button_send);
 		button.setOnClickListener(v -> {
 			final String date = textViewDate.getText().toString();
-			final String name = view.<TextView>findViewById(R.id.fragment_missing_floating_name_value).getText().toString();
-			final String description = view.<TextView>findViewById(R.id.fragment_missing_floating_description_value).getText().toString();
+			final String name = editTextName.getText().toString();
+			final String description = editTextDescription.getText().toString();
 			CompletableFuture.runAsync(() -> {
 				final boolean success = send(userId, date, name, description);
 				requireActivity().runOnUiThread(() -> {
@@ -58,6 +67,10 @@ public class MissingFloatingFragment extends Fragment {
 				});
 			});
 		});
+
+		editTextName.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
+		editTextDescription.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
+
 	}
 
 	@NonNull
