@@ -10,6 +10,7 @@ import java.util.Locale;
 import javax.net.ssl.HttpsURLConnection;
 
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.entity.MissingReport;
 import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 import java9.util.function.Supplier;
 
@@ -48,6 +49,27 @@ public final class Downloader {
 				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/holiday/%s/day/%d/%d", Util.getLanguageCode(), month, day);
 				final HttpsURLConnection con = (HttpsURLConnection) new URL(href).openConnection();
 				return Util.GSON.fromJson(new InputStreamReader(con.getInputStream()), HolidayDay.class);
+			} catch (final IOException ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+	}
+
+	public static class ReportsDownloader implements Supplier<MissingReport> {
+		private final String userId;
+
+		public ReportsDownloader(final String userId) {
+			this.userId = userId;
+		}
+
+		@Nullable
+		@Override
+		public MissingReport get() {
+			try {
+				final String href = String.format(Locale.ROOT, "https://api.unusualcalendar.net/v2/missing/%s", userId);
+				final HttpsURLConnection con = (HttpsURLConnection) new URL(href).openConnection();
+				return Util.GSON.fromJson(new InputStreamReader(con.getInputStream()), MissingReport.class);
 			} catch (final IOException ex) {
 				ex.printStackTrace();
 			}

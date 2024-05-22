@@ -16,6 +16,9 @@
 		tools:ignore="GoogleAppIndexingWarning"
 		tools:targetApi="s">
 		<activity
+			android:name=".activity.ReportsActivity"
+			android:exported="false" />
+		<activity
 			android:name=".activity.MissingActivity"
 			android:exported="false" />
 
