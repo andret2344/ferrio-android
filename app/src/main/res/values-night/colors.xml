@@ -9,4 +9,9 @@
 	<color name="foreground_secondary">#F2F2F6</color>
 	<color name="foreground_accent">#E4E4E5</color>
 
+	<color name="status_reported">#0D47A1</color>
+	<color name="status_applied">#1B5E20</color>
+	<color name="status_declined">#B71C1C</color>
+	<color name="status_on_hold">#FF6D00</color>
+
 </resources>

@@ -279,7 +279,7 @@ public class MainActivity extends UHCActivity {
 
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user != null) {
-			missing.setEnabled(!user.isAnonymous());
+//			missing.setEnabled(!user.isAnonymous());
 //			reports.setEnabled(!user.isAnonymous());
 			final Picasso picasso = Picasso.get();
 			if (user.isAnonymous()) {
