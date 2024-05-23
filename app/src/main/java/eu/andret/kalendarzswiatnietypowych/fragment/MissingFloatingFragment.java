@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,10 +89,9 @@ public class MissingFloatingFragment extends Fragment {
 			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setDoOutput(true);
 			final OutputStream outputStream = connection.getOutputStream();
-			final String json = String.format(Locale.getDefault(), "{\"user_id\":\"%s\",\"date\":%s,\"name\":\"%s\",\"description\":\"%s\"}", userId, date, name, description);
+			final String json = String.format(Locale.getDefault(), "{\"user_id\":\"%s\",\"date\":\"%s\",\"name\":\"%s\",\"description\":\"%s\"}", userId, date, name, description);
 			outputStream.write(json.getBytes());
 			final int responseCode = connection.getResponseCode();
-			Log.d("UHC-MissingFloatingFragment", connection.getResponseMessage());
 			connection.disconnect();
 			return responseCode < 400;
 		} catch (final IOException ex) {

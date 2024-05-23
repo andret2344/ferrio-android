@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +119,6 @@ public class MissingFixedFragment extends Fragment {
 			final String json = String.format(Locale.getDefault(), "{\"user_id\":\"%s\",\"month\":%d,\"day\":%d,\"name\":\"%s\",\"description\":\"%s\"}", userId, month, day, name, description);
 			outputStream.write(json.getBytes());
 			final int responseCode = connection.getResponseCode();
-			Log.d("UHC-MissingFixedFragment", connection.getResponseMessage());
 			connection.disconnect();
 			return responseCode < 400;
 		} catch (final IOException ex) {
