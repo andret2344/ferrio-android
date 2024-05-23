@@ -13,15 +13,13 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.util.Locale;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.function.BooleanSupplier;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.util.ConnectivityUtil;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 import java9.util.concurrent.CompletableFuture;
 
@@ -55,15 +53,24 @@ public class MissingFloatingFragment extends Fragment {
 			final String name = editTextName.getText().toString();
 			final String description = editTextDescription.getText().toString();
 			CompletableFuture.runAsync(() -> {
-				final boolean success = send(userId, date, name, description);
-				requireActivity().runOnUiThread(() -> {
-					if (success) {
-						Toast.makeText(requireActivity(), "Sent!", Toast.LENGTH_SHORT).show();
-						requireActivity().getSupportFragmentManager().popBackStackImmediate();
-					} else {
-						Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
-					}
-				});
+				try {
+					final JSONObject jsonObject = new JSONObject()
+							.put("user_id", userId)
+							.put("date", date)
+							.put("name", name)
+							.put("description", description);
+					final boolean success = ConnectivityUtil.send("missing/floating", jsonObject);
+					requireActivity().runOnUiThread(() -> {
+						if (success) {
+							Toast.makeText(requireActivity(), "Sent!", Toast.LENGTH_SHORT).show();
+							requireActivity().getSupportFragmentManager().popBackStackImmediate();
+						} else {
+							Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
+						}
+					});
+				} catch (@NonNull final JSONException ex) {
+					Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
+				}
 			});
 		});
 
@@ -79,23 +86,5 @@ public class MissingFloatingFragment extends Fragment {
 		final MissingFloatingFragment fragment = new MissingFloatingFragment();
 		fragment.setArguments(args);
 		return fragment;
-	}
-
-	public boolean send(@Nullable final String userId, @NonNull final String date, @NonNull final String name, @NonNull final String description) {
-		try {
-			final URL url = new URL("https://api.unusualcalendar.net/v2/missing/floating");
-			final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "application/json");
-			connection.setDoOutput(true);
-			final OutputStream outputStream = connection.getOutputStream();
-			final String json = String.format(Locale.getDefault(), "{\"user_id\":\"%s\",\"date\":\"%s\",\"name\":\"%s\",\"description\":\"%s\"}", userId, date, name, description);
-			outputStream.write(json.getBytes());
-			final int responseCode = connection.getResponseCode();
-			connection.disconnect();
-			return responseCode < 400;
-		} catch (final IOException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 }
