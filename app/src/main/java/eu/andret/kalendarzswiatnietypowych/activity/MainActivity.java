@@ -2,7 +2,6 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -20,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
@@ -30,6 +30,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -182,11 +183,12 @@ public class MainActivity extends UHCActivity {
 	}
 
 	private void showNoInternetAlert() {
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(R.string.no_internet_connection);
-		alert.setCancelable(false);
-		alert.setMessage(R.string.no_internet);
-		alertDialog = alert.show();
+		alertDialog = new MaterialAlertDialogBuilder(this)
+				.setTitle(R.string.no_internet_connection)
+				.setCancelable(false)
+				.setMessage(R.string.no_internet)
+				.create();
+		alertDialog.show();
 		viewPager2.setVisibility(View.INVISIBLE);
 	}
 
@@ -280,9 +282,9 @@ public class MainActivity extends UHCActivity {
 
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user != null) {
-//			missing.setEnabled(!user.isAnonymous());
-//			suggestions.setEnabled(!user.isAnonymous());
-//			reports.setEnabled(!user.isAnonymous());
+			missing.setEnabled(!user.isAnonymous());
+			suggestions.setEnabled(!user.isAnonymous());
+			reports.setEnabled(!user.isAnonymous());
 			final Picasso picasso = Picasso.get();
 			if (user.isAnonymous()) {
 				picasso.load(String.format("https://gravatar.com/avatar/%s?d=identicon", user.getUid()))
@@ -329,7 +331,7 @@ public class MainActivity extends UHCActivity {
 		final View view = LayoutInflater.from(this)
 				.inflate(R.layout.image_alert, null);
 
-		return new AlertDialog.Builder(this)
+		return new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.about_calendar)
 				.setView(view)
 				.setPositiveButton(R.string.ok, null)
