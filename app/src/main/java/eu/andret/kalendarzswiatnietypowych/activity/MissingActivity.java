@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -88,5 +89,23 @@ public class MissingActivity extends UHCActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	public void showSuccessDialog() {
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.suggestion_title)
+				.setMessage(R.string.suggestion_message)
+				.setPositiveButton(R.string.ok, (dialog, which) -> finish())
+				.create()
+				.show();
+	}
+
+	public void showErrorDialog() {
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.error_title)
+				.setMessage(R.string.error_message)
+				.setPositiveButton(R.string.ok, null)
+				.create()
+				.show();
 	}
 }

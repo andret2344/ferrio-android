@@ -12,7 +12,7 @@
 	<string name="ok">OK</string>
 	<string name="caution">Uwaga!</string>
 	<string name="see_more">%d więcej</string>
-	<string name="holidays">Święta</string>
+	<string name="calendar">Kalendarz</string>
 	<string name="holidays_count">Święta: %d</string>
 	<string name="menu_today">Dzisiaj</string>
 	<string name="menu_main_settings">Ustawienia</string>
@@ -44,6 +44,7 @@
 	<string name="application">Aplikacja</string>
 	<string name="missing_holiday">Brakuje święta?</string>
 	<string name="my_reports">Moje zgłoszenia</string>
+	<string name="my_suggestions">Moje sugestie</string>
 	<string name="anonymous_user">Użytkownik anonimowy</string>
 	<string name="search_placeholder">Wyszukaj wśród %d świąt…</string>
 	<string name="no_description">Brak opisu</string>
@@ -53,5 +54,11 @@
 	<string name="month">Miesiąc</string>
 	<string name="day">Dzień</string>
 	<string name="send">Wyślij</string>
+	<string name="suggestion_title">Wysłano sugestię</string>
+	<string name="suggestion_message">Sugestia święta została zapisana i zostanie zweryfikowana. Poinformujemy, kiedy tylko weryfikacja się zakończy.</string>
+	<string name="error_title">Błąd!</string>
+	<string name="error_message">Wystąpił błąd. Spróbój ponownie później.</string>
+	<string name="report_title">Wysłano zgłoszenie</string>
+	<string name="report_message">Święto zostało zgłoszone i zostanie to teraz zweryfikowane. Poinformujemy, kiedy tylko zgłoszenie zostanie zweryfikowane.</string>
 
 </resources>

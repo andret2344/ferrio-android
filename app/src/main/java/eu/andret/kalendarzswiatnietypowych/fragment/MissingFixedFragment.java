@@ -1,14 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,22 +14,21 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.MissingActivity;
+import eu.andret.kalendarzswiatnietypowych.util.ConnectivityUtil;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 import java9.util.concurrent.CompletableFuture;
 
@@ -87,15 +84,25 @@ public class MissingFixedFragment extends Fragment {
 			final String name = editTextName.getText().toString();
 			final String description = editTextDescription.getText().toString();
 			CompletableFuture.runAsync(() -> {
-				final boolean success = send(userId, month.getValue(), day, name, description);
-				requireActivity().runOnUiThread(() -> {
-					if (success) {
-						Toast.makeText(requireActivity(), "Sent!", Toast.LENGTH_SHORT).show();
-						requireActivity().getSupportFragmentManager().popBackStackImmediate();
-					} else {
-						Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
-					}
-				});
+				final MissingActivity activity = (MissingActivity) requireActivity();
+				try {
+					final JSONObject jsonObject = new JSONObject()
+							.put("user_id", userId)
+							.put("month", month.getValue())
+							.put("day", day)
+							.put("name", name)
+							.put("description", description);
+					final boolean success = ConnectivityUtil.send("missing/fixed", jsonObject);
+					requireActivity().runOnUiThread(() -> {
+						if (success) {
+							activity.showSuccessDialog();
+						} else {
+							activity.showErrorDialog();
+						}
+					});
+				} catch (@NonNull final JSONException ex) {
+					activity.showErrorDialog();
+				}
 			});
 		});
 	}
@@ -107,24 +114,5 @@ public class MissingFixedFragment extends Fragment {
 		final MissingFixedFragment fragment = new MissingFixedFragment();
 		fragment.setArguments(args);
 		return fragment;
-	}
-
-	public boolean send(@Nullable final String userId, final int month, final int day, @NonNull final String name, @NonNull final String description) {
-		try {
-			final URL url = new URL("https://api.unusualcalendar.net/v2/missing/fixed");
-			final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "application/json");
-			connection.setDoOutput(true);
-			final OutputStream outputStream = connection.getOutputStream();
-			final String json = String.format(Locale.getDefault(), "{\"user_id\":\"%s\",\"month\":%d,\"day\":%d,\"name\":\"%s\",\"description\":\"%s\"}", userId, month, day, name, description);
-			outputStream.write(json.getBytes());
-			final int responseCode = connection.getResponseCode();
-			Log.d("UHC-MissingFixedFragment", connection.getResponseMessage());
-			connection.disconnect();
-			return responseCode < 400;
-		} catch (final IOException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 }

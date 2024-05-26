@@ -275,12 +275,14 @@ public class MainActivity extends UHCActivity {
 		final TextView textViewHeading = headerView.findViewById(R.id.navigation_drawer_heading);
 		final TextView textViewSubtitle = headerView.findViewById(R.id.navigation_drawer_subtitle);
 		final MenuItem missing = navigationView.getMenu().findItem(R.id.menu_drawer_missing);
+		final MenuItem suggestions = navigationView.getMenu().findItem(R.id.menu_drawer_suggestions);
 		final MenuItem reports = navigationView.getMenu().findItem(R.id.menu_drawer_reports);
 
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user != null) {
-//			missing.setEnabled(!user.isAnonymous());
-//			reports.setEnabled(!user.isAnonymous());
+			missing.setEnabled(!user.isAnonymous());
+			suggestions.setEnabled(!user.isAnonymous());
+			reports.setEnabled(!user.isAnonymous());
 			final Picasso picasso = Picasso.get();
 			if (user.isAnonymous()) {
 				picasso.load(String.format("https://gravatar.com/avatar/%s?d=identicon", user.getUid()))
@@ -298,10 +300,13 @@ public class MainActivity extends UHCActivity {
 		navigationView.setNavigationItemSelectedListener(menuItem -> {
 			if (menuItem.getItemId() == R.id.menu_drawer_missing) {
 				startActivity(new Intent(this, MissingActivity.class));
+				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_reports) {
 				startActivity(new Intent(this, ReportsActivity.class));
+				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));
+				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_about) {
 				createAboutCalendarAlert().show();
 			}

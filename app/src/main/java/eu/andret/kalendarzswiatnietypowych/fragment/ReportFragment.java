@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,10 +78,19 @@ public class ReportFragment extends DialogFragment {
 					final boolean success = sendReport(holidayReport, floating);
 					requireActivity().runOnUiThread(() -> {
 						if (success) {
-							Toast.makeText(requireActivity(), "Report sent!", Toast.LENGTH_SHORT).show();
-							requireActivity().getSupportFragmentManager().popBackStackImmediate();
+							new AlertDialog.Builder(requireActivity())
+									.setTitle(R.string.report_title)
+									.setMessage(R.string.report_message)
+									.setPositiveButton(R.string.ok, (dialog, which) -> requireActivity().finish())
+									.create()
+									.show();
 						} else {
-							Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
+							new AlertDialog.Builder(requireActivity())
+									.setTitle(R.string.error_title)
+									.setMessage(R.string.error_message)
+									.setPositiveButton(R.string.ok, null)
+									.create()
+									.show();
 						}
 					});
 				});
