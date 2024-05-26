@@ -9,7 +9,8 @@
 
 	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:padding="8dp">
 
 		<TextView
 			android:id="@+id/adapter_suggestion_fixed_text_id"
@@ -47,8 +48,7 @@
 			android:layout_height="wrap_content"
 			android:layout_below="@id/adapter_suggestion_fixed_text_name"
 			android:ellipsize="end"
-			android:lines="2"
-			android:textStyle="bold" />
+			android:lines="2" />
 	</RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>
