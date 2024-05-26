@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:title="@string/holidays">
+	<item android:title="@string/calendar">
 		<menu>
 			<item
 				android:id="@+id/menu_drawer_missing"
-				android:checkable="true"
 				android:icon="@drawable/baseline_edit_24"
 				android:title="@string/missing_holiday" />
 			<item
-				android:id="@+id/menu_drawer_reports"
-				android:checkable="true"
+				android:id="@+id/menu_drawer_suggestions"
 				android:icon="@drawable/baseline_done_24"
+				android:title="@string/my_suggestions" />
+			<item
+				android:id="@+id/menu_drawer_reports"
+				android:icon="@drawable/baseline_edit_calendar_24"
 				android:title="@string/my_reports" />
 		</menu>
 	</item>
@@ -18,12 +20,10 @@
 		<menu>
 			<item
 				android:id="@+id/menu_drawer_settings"
-				android:checkable="true"
 				android:icon="@drawable/baseline_settings_24"
 				android:title="@string/menu_main_settings" />
 			<item
 				android:id="@+id/menu_drawer_about"
-				android:checkable="true"
 				android:icon="@drawable/baseline_info_24"
 				android:title="@string/about_calendar" />
 		</menu>
