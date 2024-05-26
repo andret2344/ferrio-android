@@ -1,7 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,7 +7,6 @@ import android.view.View;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -22,6 +19,7 @@ import java9.util.concurrent.CompletableFuture;
 
 public class ReportsActivity extends UHCActivity {
 	private FirebaseAuth firebaseAuth;
+	private CompletableFuture<Void> future;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -36,7 +34,7 @@ public class ReportsActivity extends UHCActivity {
 
 		final RecyclerView recyclerView = findViewById(R.id.activity_reports_list);
 
-		CompletableFuture.supplyAsync(new Downloader.ReportsDownloader(firebaseAuth.getUid()))
+		future = CompletableFuture.supplyAsync(new Downloader.ReportsDownloader(firebaseAuth.getUid()))
 				.thenAccept(missingReport -> runOnUiThread(() -> {
 					recyclerView.setAdapter(new ReportAdapter(missingReport.getFixed()));
 					findViewById(R.id.activity_reports_indicator).setVisibility(View.GONE);
@@ -45,9 +43,10 @@ public class ReportsActivity extends UHCActivity {
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
 			@Override
 			public void handleOnBackPressed() {
-				final Intent returnIntent = new Intent();
-				setResult(Activity.RESULT_OK, returnIntent);
-				NavUtils.navigateUpFromSameTask(ReportsActivity.this);
+				if (future != null && !future.isDone()) {
+					future.cancel(true);
+				}
+				finish();
 			}
 		});
 	}
