@@ -17,7 +17,7 @@
 	<string name="ok">OK</string>
 	<string name="caution">Caution!</string>
 	<string name="see_more">%d more</string>
-	<string name="holidays">Holidays</string>
+	<string name="calendar">Calendar</string>
 	<string name="holidays_count">Holidays: %d</string>
 	<string name="menu_today">Today</string>
 	<string name="menu_main_settings">Settings</string>
@@ -52,7 +52,21 @@
 	<string name="application">Application</string>
 	<string name="missing_holiday">Missing holiday?</string>
 	<string name="my_reports">My reports</string>
+	<string name="my_suggestions">My suggestions</string>
 	<string name="anonymous_user">Anonymous user</string>
 	<string name="search_placeholder">Search across %d holidays…</string>
+	<string name="no_description">No description</string>
+	<string name="fixed">Fixed</string>
+	<string name="floating">Floating</string>
+	<string name="date">Date</string>
+	<string name="month">Month</string>
+	<string name="day">Day</string>
+	<string name="send">Send</string>
+	<string name="suggestion_title">Successfully sent the suggestion</string>
+	<string name="suggestion_message">The holiday has been recorded and will now be verified. You\'ll be informed when the holiday is verified.</string>
+	<string name="error_title">Error!</string>
+	<string name="error_message">An error occurred. Try again later.</string>
+	<string name="report_title">Successfully sent the report</string>
+	<string name="report_message">The holiday has been reported and will be now verified. You\'ll be informed when the report is verified.</string>
 
 </resources>

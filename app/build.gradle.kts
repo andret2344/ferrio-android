@@ -44,51 +44,51 @@ android {
     }
 }
 
-val versionPlayAdsService = "23.0.0"
-val versionMaterial = "1.12.0-rc01"
-val versionMultidex = "2.0.1"
-val versionPlayServicesAuth = "21.1.0"
-val versionGson = "2.10.1"
-val versionAndroidRetroFuture = "1.7.4"
-val versionMozillaRhino = "1.7.14"
-val versionPicasso = "2.8"
-val versionAppCompat = "1.6.1"
-val versionCredentials = "1.2.2"
-val versionGoogleId = "1.1.0"
-val versionAndroidxPreference = "1.2.1"
-val versionAndroidxViewPager2 = "1.0.0"
-val versionAndroidxCardView = "1.0.0"
-val versionAndroidxActivity = "1.8.2"
-val versionAndroidxConstraint = "2.1.4"
-val versionAndroidxRoom = "2.6.1"
-val versionJetBrainsAnnotations = "24.1.0"
-val versionJdkLibs = "2.0.4"
+val versionFirebase by extra("33.0.0")
+val versionPlayServices by extra("23.1.0")
+val versionMaterial by extra("1.12.0")
+val versionPlayServicesAuth by extra("21.2.0")
+val versionGoogleId by extra("1.1.0")
+val versionGson by extra("2.10.1")
+val versionStreamSupport by extra("1.7.4")
+val versionRhino by extra("1.7.14")
+val versionPicasso by extra("2.8")
+val versionAndroidXAppcompat by extra("1.6.1")
+val versionAndroidXCredentials by extra("1.2.2")
+val versionAndroidXCredentialsPlayServicesAuth by extra("1.2.2")
+val versionAndroidXPreference by extra("1.2.1")
+val versionAndroidXViewPager2 by extra("1.1.0")
+val versionAndroidXCardView by extra("1.0.0")
+val versionAndroidXActivity by extra("1.9.0")
+val versionAndroidXConstraintLayout by extra("2.1.4")
+val versionAndroidxRoom by extra("2.6.1")
+val versionDesguarJdkLibs by extra("2.0.4")
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation(platform("com.google.firebase:firebase-bom:$versionFirebase"))
     implementation("com.google.firebase:firebase-auth")
 
-    implementation("com.google.android.gms:play-services-ads:${versionPlayAdsService}")
-    implementation("com.google.android.material:material:${versionMaterial}")
+    implementation("com.google.android.gms:play-services-ads:$versionPlayServices")
+    implementation("com.google.android.material:material:$versionMaterial")
+    implementation("com.google.android.gms:play-services-auth:$versionPlayServicesAuth")
+    implementation("com.google.android.libraries.identity.googleid:googleid:$versionGoogleId")
 
-    implementation("com.android.support:multidex:${versionMultidex}")
-    implementation("com.google.android.gms:play-services-auth:${versionPlayServicesAuth}")
+    implementation("com.google.code.gson:gson:$versionGson")
+    implementation("net.sourceforge.streamsupport:android-retrofuture:$versionStreamSupport")
+    implementation("org.mozilla:rhino:$versionRhino")
+    implementation("com.squareup.picasso:picasso:$versionPicasso")
 
-    implementation("com.google.code.gson:gson:${versionGson}")
-    implementation("net.sourceforge.streamsupport:android-retrofuture:${versionAndroidRetroFuture}")
-    implementation("org.mozilla:rhino:${versionMozillaRhino}")
-    implementation("com.squareup.picasso:picasso:${versionPicasso}")
+    implementation("androidx.appcompat:appcompat:$versionAndroidXAppcompat")
+    implementation("androidx.credentials:credentials:$versionAndroidXCredentials")
+    implementation("androidx.credentials:credentials-play-services-auth:$versionAndroidXCredentialsPlayServicesAuth")
+    implementation("androidx.preference:preference:$versionAndroidXPreference")
+    implementation("androidx.viewpager2:viewpager2:$versionAndroidXViewPager2")
+    implementation("androidx.cardview:cardview:$versionAndroidXCardView")
+    implementation("androidx.activity:activity:$versionAndroidXActivity")
+    implementation("androidx.constraintlayout:constraintlayout:$versionAndroidXConstraintLayout")
+    implementation("androidx.room:room-runtime:$versionAndroidxRoom")
 
-    implementation("androidx.appcompat:appcompat:${versionAppCompat}")
-    implementation("androidx.credentials:credentials:${versionCredentials}")
-    implementation("androidx.credentials:credentials-play-services-auth:${versionCredentials}")
-    implementation("com.google.android.libraries.identity.googleid:googleid:${versionGoogleId}")
-    implementation("androidx.preference:preference:${versionAndroidxPreference}")
-    implementation("androidx.viewpager2:viewpager2:${versionAndroidxViewPager2}")
-    implementation("androidx.cardview:cardview:${versionAndroidxCardView}")
-    implementation("androidx.activity:activity:${versionAndroidxActivity}")
-    implementation("androidx.constraintlayout:constraintlayout:${versionAndroidxConstraint}")
-    implementation("androidx.room:room-runtime:${versionAndroidxRoom}")
-    annotationProcessor("androidx.room:room-compiler:${versionAndroidxRoom}")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versionJdkLibs}")
+    annotationProcessor("androidx.room:room-compiler:$versionAndroidxRoom")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:$versionDesguarJdkLibs")
 }

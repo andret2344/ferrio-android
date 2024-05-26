@@ -1,8 +1,10 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -24,8 +26,6 @@ import eu.andret.kalendarzswiatnietypowych.fragment.ReportFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportViewModel;
 
 public class HolidayActivity extends UHCActivity {
-
-
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,8 +43,17 @@ public class HolidayActivity extends UHCActivity {
 		final int holidayId = getIntent().getIntExtra(MainActivity.HOLIDAY, 0);
 
 		sharedViewModel.getHoliday(holidayId).observe(this, holiday -> {
-			this.<TextView>findViewById(R.id.activity_holiday_name).setText(holiday.getName());
-			this.<TextView>findViewById(R.id.activity_holiday_description).setText(holiday.getDescription());
+			final TextView holidayNameTextView = findViewById(R.id.activity_holiday_name);
+			final TextView holidayDescTextView = findViewById(R.id.activity_holiday_description);
+
+			holidayNameTextView.setText(holiday.getName());
+			if (holiday.getDescription().isBlank()) {
+				holidayDescTextView.setText(R.string.no_description);
+				holidayDescTextView.setTypeface(null, Typeface.ITALIC);
+				holidayDescTextView.setGravity(Gravity.CENTER);
+			} else {
+				holidayDescTextView.setText(holiday.getDescription());
+			}
 			if (!holiday.getUrl().isBlank()) {
 				final MaterialButton buttonReadMore = findViewById(R.id.activity_holiday_button_read_more);
 				buttonReadMore.setVisibility(View.VISIBLE);
