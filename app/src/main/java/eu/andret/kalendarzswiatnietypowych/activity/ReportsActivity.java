@@ -13,7 +13,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapter.ReportAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.SuggestionFixedAdapter;
 import eu.andret.kalendarzswiatnietypowych.util.Downloader;
 import java9.util.concurrent.CompletableFuture;
 
@@ -34,9 +34,9 @@ public class ReportsActivity extends UHCActivity {
 
 		final RecyclerView recyclerView = findViewById(R.id.activity_reports_list);
 
-		future = CompletableFuture.supplyAsync(new Downloader.ReportsDownloader(firebaseAuth.getUid()))
+		future = CompletableFuture.supplyAsync(new Downloader.MissingFixedHolidaysDownloader(firebaseAuth.getUid()))
 				.thenAccept(missingReport -> runOnUiThread(() -> {
-					recyclerView.setAdapter(new ReportAdapter(missingReport.getFixed()));
+					recyclerView.setAdapter(new SuggestionFixedAdapter(missingReport));
 					findViewById(R.id.activity_reports_indicator).setVisibility(View.GONE);
 				}));
 

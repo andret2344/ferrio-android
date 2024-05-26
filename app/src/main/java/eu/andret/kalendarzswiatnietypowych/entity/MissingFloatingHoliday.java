@@ -4,21 +4,19 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class MissingFixedHoliday {
+public class MissingFloatingHoliday {
 	private int id;
 	private String userId;
-	private int day;
-	private int month;
+	private String date;
 	private String name;
 	private String description;
 	private ReportState reportState;
 	private Integer holidayId;
 
-	public MissingFixedHoliday(final int id, final String userId, final int day, final int month, final String name, final String description, final ReportState reportState, final Integer holidayId) {
+	public MissingFloatingHoliday(final int id, final String userId, final String date, final String name, final String description, final ReportState reportState, final Integer holidayId) {
 		this.id = id;
 		this.userId = userId;
-		this.day = day;
-		this.month = month;
+		this.date = date;
 		this.name = name;
 		this.description = description;
 		this.reportState = reportState;
@@ -41,20 +39,12 @@ public class MissingFixedHoliday {
 		this.userId = userId;
 	}
 
-	public int getDay() {
-		return day;
+	public String getDate() {
+		return date;
 	}
 
-	public void setDay(final int day) {
-		this.day = day;
-	}
-
-	public int getMonth() {
-		return month;
-	}
-
-	public void setMonth(final int month) {
-		this.month = month;
+	public void setDate(final String date) {
+		this.date = date;
 	}
 
 	public String getName() {
@@ -85,7 +75,7 @@ public class MissingFixedHoliday {
 		return holidayId;
 	}
 
-	public void setHolidayId(final Integer holidayId) {
+	public void setHolidayId(final int holidayId) {
 		this.holidayId = holidayId;
 	}
 
@@ -97,10 +87,9 @@ public class MissingFixedHoliday {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		final MissingFixedHoliday that = (MissingFixedHoliday) o;
+		final MissingFloatingHoliday that = (MissingFloatingHoliday) o;
 		return id == that.id
-				&& day == that.day
-				&& month == that.month
+				&& Objects.equals(date, that.date)
 				&& Objects.equals(userId, that.userId)
 				&& Objects.equals(name, that.name)
 				&& Objects.equals(description, that.description)
@@ -110,7 +99,7 @@ public class MissingFixedHoliday {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, userId, day, month, name, description, reportState, holidayId);
+		return Objects.hash(id, userId, date, name, description, reportState, holidayId);
 	}
 
 	@NonNull
@@ -119,8 +108,7 @@ public class MissingFixedHoliday {
 		return "MissingFixedHoliday{" +
 				"id=" + id +
 				", userId='" + userId + '\'' +
-				", day=" + day +
-				", month=" + month +
+				", date='" + date + '\'' +
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", reportState=" + reportState +

@@ -76,7 +76,6 @@ public class MissingFloatingFragment extends Fragment {
 
 		editTextName.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
 		editTextDescription.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
-
 	}
 
 	@NonNull

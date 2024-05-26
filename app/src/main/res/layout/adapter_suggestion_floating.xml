@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="8dp"
+	app:cardBackgroundColor="@color/background_accent"
+	app:cardCornerRadius="16dp">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<TextView
+			android:id="@+id/adapter_suggestion_floating_text_id"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+
+		<TextView
+			android:id="@+id/adapter_suggestion_floating_text_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBaseline="@id/adapter_suggestion_floating_chip"
+			android:layout_marginEnd="48dp"
+			android:layout_toStartOf="@id/adapter_suggestion_floating_chip"
+			android:textStyle="italic" />
+
+		<com.google.android.material.chip.Chip
+			android:id="@+id/adapter_suggestion_floating_chip"
+			style="@style/Widget.Material3.Chip.Suggestion"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_marginEnd="16dp" />
+
+		<TextView
+			android:id="@+id/adapter_suggestion_floating_text_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/adapter_suggestion_floating_chip"
+			android:textSize="@dimen/activity_holiday_name"
+			android:textStyle="bold" />
+
+		<TextView
+			android:id="@+id/adapter_suggestion_floating_text_description"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/adapter_suggestion_floating_text_name"
+			android:ellipsize="end"
+			android:lines="2"
+			android:textStyle="bold" />
+	</RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>
