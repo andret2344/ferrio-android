@@ -96,9 +96,17 @@ public final class Util {
 
 
 	@NonNull
-	public static String getFormattedDate(@NonNull final Pair<Month, Integer> pair) {
+	public static String getFormattedDateWithYear(@NonNull final Pair<Month, Integer> pair) {
 		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
 		return localDate.format(getDateTimeFormatter()).replace("19", String.valueOf(pair.second));
+	}
+
+	@NonNull
+	public static String getFormattedDate(@NonNull final Pair<Month, Integer> pair) {
+		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd")
+				.withLocale(Locale.getDefault());
+		return localDate.format(formatter).replace("19", String.valueOf(pair.second));
 	}
 
 	@NonNull

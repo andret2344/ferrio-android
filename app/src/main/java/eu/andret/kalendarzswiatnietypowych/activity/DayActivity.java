@@ -63,7 +63,7 @@ public class DayActivity extends UHCActivity {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				final Pair<Month, Integer> pair = Util.calculateDates(position + 1);
-				final String format = Util.getFormattedDate(pair);
+				final String format = Util.getFormattedDateWithYear(pair);
 				retrieveSupportActionBar().ifPresent(actionBar ->
 						actionBar.setTitle(format));
 			}
