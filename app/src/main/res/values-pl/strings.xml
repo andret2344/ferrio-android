@@ -53,5 +53,11 @@
 	<string name="month">Miesiąc</string>
 	<string name="day">Dzień</string>
 	<string name="send">Wyślij</string>
+	<string name="suggestion_title">Wysłano sugestię</string>
+	<string name="suggestion_message">Sugestia święta została zapisana i zostanie zweryfikowana. Poinformujemy, kiedy tylko weryfikacja się zakończy.</string>
+	<string name="error_title">Błąd!</string>
+	<string name="error_message">Wystąpił błąd. Spróbój ponownie później.</string>
+	<string name="report_title">Wysłano zgłoszenie</string>
+	<string name="report_message">Święto zostało zgłoszone i zostanie to teraz zweryfikowane. Poinformujemy, kiedy tylko zgłoszenie zostanie zweryfikowane.</string>
 
 </resources>

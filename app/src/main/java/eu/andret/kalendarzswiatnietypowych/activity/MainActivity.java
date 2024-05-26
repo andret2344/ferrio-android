@@ -298,8 +298,10 @@ public class MainActivity extends UHCActivity {
 		navigationView.setNavigationItemSelectedListener(menuItem -> {
 			if (menuItem.getItemId() == R.id.menu_drawer_missing) {
 				startActivity(new Intent(this, MissingActivity.class));
+				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));
+				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_about) {
 				createAboutCalendarAlert().show();
 			}

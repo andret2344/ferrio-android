@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +18,7 @@ import org.json.JSONObject;
 import java.util.function.BooleanSupplier;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.activity.MissingActivity;
 import eu.andret.kalendarzswiatnietypowych.util.ConnectivityUtil;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 import java9.util.concurrent.CompletableFuture;
@@ -53,6 +53,7 @@ public class MissingFloatingFragment extends Fragment {
 			final String name = editTextName.getText().toString();
 			final String description = editTextDescription.getText().toString();
 			CompletableFuture.runAsync(() -> {
+				final MissingActivity activity = (MissingActivity) requireActivity();
 				try {
 					final JSONObject jsonObject = new JSONObject()
 							.put("user_id", userId)
@@ -62,14 +63,13 @@ public class MissingFloatingFragment extends Fragment {
 					final boolean success = ConnectivityUtil.send("missing/floating", jsonObject);
 					requireActivity().runOnUiThread(() -> {
 						if (success) {
-							Toast.makeText(requireActivity(), "Sent!", Toast.LENGTH_SHORT).show();
-							requireActivity().getSupportFragmentManager().popBackStackImmediate();
+							activity.showSuccessDialog();
 						} else {
-							Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
+							activity.showErrorDialog();
 						}
 					});
 				} catch (@NonNull final JSONException ex) {
-					Toast.makeText(requireActivity(), "Error!", Toast.LENGTH_SHORT).show();
+					activity.showErrorDialog();
 				}
 			});
 		});
