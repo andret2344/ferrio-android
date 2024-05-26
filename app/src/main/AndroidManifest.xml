@@ -42,6 +42,9 @@
 			android:name=".activity.MainActivity"
 			android:configChanges="uiMode" />
 		<activity
+			android:name=".activity.MissingActivity"
+			android:exported="false" />
+		<activity
 			android:name="com.google.android.gms.ads.AdActivity"
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 		<activity
