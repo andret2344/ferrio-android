@@ -2,24 +2,24 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapter.SuggestionFixedAdapter;
-import eu.andret.kalendarzswiatnietypowych.util.Downloader;
-import java9.util.concurrent.CompletableFuture;
+import eu.andret.kalendarzswiatnietypowych.adapter.CustomFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.fragment.ReportsFixedFragment;
+import eu.andret.kalendarzswiatnietypowych.fragment.ReportsFloatingFragment;
 
 public class ReportsActivity extends UHCActivity {
 	private FirebaseAuth firebaseAuth;
-	private CompletableFuture<Void> future;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -32,20 +32,30 @@ public class ReportsActivity extends UHCActivity {
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		final RecyclerView recyclerView = findViewById(R.id.activity_reports_list);
+		final TabLayout tabLayout = findViewById(R.id.activity_reports_tab_layout);
+		final ViewPager2 viewPager2 = findViewById(R.id.activity_reports_view_pager);
 
-		future = CompletableFuture.supplyAsync(new Downloader.MissingFixedHolidaysDownloader(firebaseAuth.getUid()))
-				.thenAccept(missingReport -> runOnUiThread(() -> {
-					recyclerView.setAdapter(new SuggestionFixedAdapter(missingReport));
-					findViewById(R.id.activity_reports_indicator).setVisibility(View.GONE);
-				}));
+		final CustomFragmentAdapter adapter = new CustomFragmentAdapter(this);
+		adapter.addFragment(ReportsFixedFragment.newInstance(firebaseAuth.getUid()));
+		adapter.addFragment(ReportsFloatingFragment.newInstance(firebaseAuth.getUid()));
+		viewPager2.setAdapter(adapter);
+
+		new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+			switch (position) {
+				case 0:
+					tab.setText(R.string.fixed);
+					break;
+				case 1:
+					tab.setText(R.string.floating);
+					break;
+				default:
+					break;
+			}
+		}).attach();
 
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
 			@Override
 			public void handleOnBackPressed() {
-				if (future != null && !future.isDone()) {
-					future.cancel(true);
-				}
 				finish();
 			}
 		});

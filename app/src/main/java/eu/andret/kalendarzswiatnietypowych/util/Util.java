@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -25,6 +26,7 @@ import java.util.Random;
 public final class Util {
 	public static final Gson GSON = new GsonBuilder()
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
 			.create();
 	private static final Random RANDOM = new Random();
 	public static final List<Integer> NETWORK_CAPABILITIES = List.of(

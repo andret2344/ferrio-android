@@ -14,7 +14,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.adapter.SuggestionsPagerAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.CustomFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.fragment.SuggestionsFixedFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.SuggestionsFloatingFragment;
 
@@ -35,7 +35,7 @@ public class SuggestionsActivity extends UHCActivity {
 		final TabLayout tabLayout = findViewById(R.id.activity_suggestions_tab_layout);
 		final ViewPager2 viewPager2 = findViewById(R.id.activity_suggestions_view_pager);
 
-		final SuggestionsPagerAdapter adapter = new SuggestionsPagerAdapter(this);
+		final CustomFragmentAdapter adapter = new CustomFragmentAdapter(this);
 		adapter.addFragment(SuggestionsFixedFragment.newInstance(firebaseAuth.getUid()));
 		adapter.addFragment(SuggestionsFloatingFragment.newInstance(firebaseAuth.getUid()));
 		viewPager2.setAdapter(adapter);

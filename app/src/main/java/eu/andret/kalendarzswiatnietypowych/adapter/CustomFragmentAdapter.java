@@ -8,10 +8,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuggestionsPagerAdapter extends FragmentStateAdapter {
+public class CustomFragmentAdapter extends FragmentStateAdapter {
 	private final List<Fragment> fragmentList = new ArrayList<>();
 
-	public SuggestionsPagerAdapter(@NonNull final FragmentActivity fragmentActivity) {
+	public CustomFragmentAdapter(@NonNull final FragmentActivity fragmentActivity) {
 		super(fragmentActivity);
 	}
 

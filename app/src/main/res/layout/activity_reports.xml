@@ -13,32 +13,28 @@
 		android:paddingStart="6dp"
 		android:paddingEnd="16dp"
 		app:contentInsetStartWithNavigation="0dp"
-		app:layout_constraintBottom_toTopOf="@id/activity_reports_list"
+		app:layout_constraintBottom_toTopOf="@id/activity_reports_tab_layout"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:title="@string/my_reports" />
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/activity_reports_list"
+	<com.google.android.material.tabs.TabLayout
+		android:id="@+id/activity_reports_tab_layout"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toTopOf="@id/activity_reports_view_pager"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/activity_reports_toolbar" />
 
-	<com.google.android.material.progressindicator.CircularProgressIndicator
-		android:id="@+id/activity_reports_indicator"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:indeterminate="true"
-		app:indicatorSize="80dp"
-		app:indicatorInset="16dp"
+	<androidx.viewpager2.widget.ViewPager2
+		android:id="@+id/activity_reports_view_pager"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/activity_reports_toolbar" />
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/activity_reports_tab_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
