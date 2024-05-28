@@ -14,7 +14,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -23,6 +26,7 @@ import java.util.Random;
 public final class Util {
 	public static final Gson GSON = new GsonBuilder()
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
 			.create();
 	private static final Random RANDOM = new Random();
 	public static final List<Integer> NETWORK_CAPABILITIES = List.of(
@@ -90,5 +94,26 @@ public final class Util {
 			return language;
 		}
 		return "en";
+	}
+
+
+	@NonNull
+	public static String getFormattedDateWithYear(@NonNull final Pair<Month, Integer> pair) {
+		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
+		return localDate.format(getDateTimeFormatter()).replace("19", String.valueOf(pair.second));
+	}
+
+	@NonNull
+	public static String getFormattedDate(@NonNull final Pair<Month, Integer> pair) {
+		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd")
+				.withLocale(Locale.getDefault());
+		return localDate.format(formatter).replace("19", String.valueOf(pair.second));
+	}
+
+	@NonNull
+	public static DateTimeFormatter getDateTimeFormatter() {
+		return DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
+				.withLocale(Locale.getDefault());
 	}
 }

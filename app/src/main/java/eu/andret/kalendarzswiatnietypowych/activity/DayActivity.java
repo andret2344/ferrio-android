@@ -16,9 +16,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Locale;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -30,9 +28,6 @@ import eu.andret.kalendarzswiatnietypowych.util.Util;
 public class DayActivity extends UHCActivity {
 	public static final String POSITION = "position";
 	private static final Random RANDOM = new Random();
-
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
-			.withLocale(Locale.getDefault());
 
 	private ViewPager2 pager;
 
@@ -58,7 +53,7 @@ public class DayActivity extends UHCActivity {
 		final MaterialToolbar materialToolbar = findViewById(R.id.activity_day_toolbar);
 		setSupportActionBar(materialToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar -> {
-			actionBar.setTitle(date.format(formatter));
+			actionBar.setTitle(date.format(Util.getDateTimeFormatter()));
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		});
 
@@ -66,8 +61,7 @@ public class DayActivity extends UHCActivity {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 				final Pair<Month, Integer> pair = Util.calculateDates(position + 1);
-				final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
-				final String format = localDate.format(formatter).replace("19", String.valueOf(pair.second));
+				final String format = Util.getFormattedDateWithYear(pair);
 				retrieveSupportActionBar().ifPresent(actionBar ->
 						actionBar.setTitle(format));
 			}
