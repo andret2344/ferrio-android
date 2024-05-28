@@ -14,14 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
 
 public class MonthFragment extends Fragment {
@@ -48,14 +44,9 @@ public class MonthFragment extends Fragment {
 		final LocalDate after = before.plusDays(42);
 
 		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
-		final List<HolidayDay> days = new ArrayList<>();
-		final DayAdapter adapter = new DayAdapter(getContext(), current, days);
-		recyclerView.setAdapter(adapter);
-		sharedViewModel.getHolidayDays(before, after).observe(getViewLifecycleOwner(), holidayDays -> {
-			days.clear();
-			days.addAll(UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after));
-			adapter.notifyDataSetChanged();
-		});
+		sharedViewModel.getHolidayDays(before, after)
+				.observe(getViewLifecycleOwner(), holidayDays ->
+						recyclerView.setAdapter(new DayAdapter(getContext(), current, holidayDays)));
 		return month;
 	}
 
