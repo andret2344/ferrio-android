@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -10,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -92,7 +92,7 @@ public class MissingActivity extends UHCActivity {
 	}
 
 	public void showSuccessDialog() {
-		new AlertDialog.Builder(this)
+		new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.suggestion_title)
 				.setMessage(R.string.suggestion_message)
 				.setPositiveButton(R.string.ok, (dialog, which) -> finish())
@@ -101,7 +101,7 @@ public class MissingActivity extends UHCActivity {
 	}
 
 	public void showErrorDialog() {
-		new AlertDialog.Builder(this)
+		new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.error_title)
 				.setMessage(R.string.error_message)
 				.setPositiveButton(R.string.ok, null)
