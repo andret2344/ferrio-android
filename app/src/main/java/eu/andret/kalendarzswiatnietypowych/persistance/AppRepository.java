@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.persistance;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -65,6 +66,7 @@ public class AppRepository {
 	}
 
 	public void updateCalendarData(@NonNull final UnusualCalendar calendar) {
+		Log.d("UHC-Repository", "Update start");
 		holidayDao.deleteAllHolidays();
 		holidayDao.deleteAllHolidayDays();
 		holidayDao.deleteAllFloatingHolidays();
@@ -75,6 +77,7 @@ public class AppRepository {
 				.forEach(holidayDao::insertHoliday);
 		calendar.getFixed().forEach(holidayDao::insertHolidayDay);
 		calendar.getFloating().forEach(holidayDao::insertFloatingHoliday);
+		Log.d("UHC-Repository", "Update finished");
 	}
 
 	private void loadHolidays() {

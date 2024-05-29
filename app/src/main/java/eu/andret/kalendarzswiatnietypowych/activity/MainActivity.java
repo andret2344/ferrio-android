@@ -26,6 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -57,9 +58,7 @@ import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.persistance.UpdateDataWorker;
-import eu.andret.kalendarzswiatnietypowych.util.Downloader;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
-import java9.util.concurrent.CompletableFuture;
 
 public class MainActivity extends UHCActivity {
 	public static final String WIDGET = "widget";
@@ -84,6 +83,7 @@ public class MainActivity extends UHCActivity {
 			}
 		}
 	});
+	private boolean updated;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -98,11 +98,13 @@ public class MainActivity extends UHCActivity {
 			activityResult.launch(intent);
 		}
 
+		final int currentMonthValue = LocalDate.now().getMonthValue();
 		searchListView = findViewById(R.id.main_list_results);
 		viewPager2 = findViewById(R.id.main_pager_months);
 		firebaseAuth = FirebaseAuth.getInstance();
 		materialToolbar = findViewById(R.id.activity_main_toolbar);
 		setSupportActionBar(materialToolbar);
+		materialToolbar.setTitle(getMonthName(currentMonthValue));
 
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
@@ -110,10 +112,8 @@ public class MainActivity extends UHCActivity {
 
 		setUpNavDrawer();
 
-		final int currentMonthValue = LocalDate.now().getMonthValue();
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		materialToolbar.setTitle(getMonthName(currentMonthValue));
 		viewPager2.setOffscreenPageLimit(12);
 		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
@@ -122,31 +122,40 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
+		observeHolidayData();
+	}
+
+	private void observeHolidayData() {
 		holidayViewModel.getAllHolidayDays().observe(this, days -> {
-			final boolean hasInternet = Boolean.TRUE.equals(internet.getValue());
 			if (days != null && !days.isEmpty()) {
+				holidayDays.clear();
 				holidayDays.addAll(days);
-				if (hasInternet) {
-					final WorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
-					WorkManager.getInstance(this).enqueue(updateDataRequest);
-				}
-			} else {
-				if (hasInternet) {
-					final WorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
-					WorkManager.getInstance(this).enqueue(updateDataRequest);
-				} else {
-					showNoInternetAlert();
-				}
+			}
+			if (isInternetAvailable() && !updated) {
+				updated = true;
+				enqueueDataUpdateWorker();
+			} else if (days == null || days.isEmpty()) {
+				showNoInternetAlert();
 			}
 		});
+	}
+
+	private boolean isInternetAvailable() {
+		return Boolean.TRUE.equals(internet.getValue());
+	}
+
+	private void enqueueDataUpdateWorker() {
+		final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
+		WorkManager.getInstance(this).enqueueUniqueWork("updateData", ExistingWorkPolicy.KEEP, updateDataRequest)
+				.getResult();
 	}
 
 	private void configureObservers() {
 		internet = new MutableLiveData<>(Util.isNetworkAvailable(this));
 		internet.observe(this, isConnected -> {
 			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
-				CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
-						.thenAccept(holidayViewModel::updateData);
+				final WorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
+				WorkManager.getInstance(this).enqueue(updateDataRequest);
 				alertDialog.dismiss();
 				viewPager2.setVisibility(View.VISIBLE);
 			}
