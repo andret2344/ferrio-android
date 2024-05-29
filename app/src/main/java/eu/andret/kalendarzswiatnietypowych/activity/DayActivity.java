@@ -16,7 +16,6 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -119,7 +118,7 @@ public class DayActivity extends UHCActivity {
 			final Pair<Month, Integer> pair = Util.calculateDates(pager.getCurrentItem() + 1);
 			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
 			final boolean usualHolidays = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
-			sharedViewModel.getHolidayDay(pair.first.getValue(), pair.second)
+			holidayViewModel.getHolidayDay(pair.first.getValue(), pair.second)
 					.observe(this, holidayDay -> holidayDay.ifPresent(day -> {
 						final String holidays = day.getHolidaysList(usualHolidays)
 								.stream()

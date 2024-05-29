@@ -14,17 +14,17 @@ import androidx.preference.PreferenceManager;
 import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
+import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 
 public abstract class UHCActivity extends AppCompatActivity {
-	protected SharedViewModel sharedViewModel;
+	protected HolidayViewModel holidayViewModel;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setupTheme();
-		sharedViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
-				.get(SharedViewModel.class);
+		holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
+				.get(HolidayViewModel.class);
 	}
 
 	private void setupTheme() {

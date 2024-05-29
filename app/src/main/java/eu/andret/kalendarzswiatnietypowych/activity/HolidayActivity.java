@@ -42,7 +42,7 @@ public class HolidayActivity extends UHCActivity {
 
 		final int holidayId = getIntent().getIntExtra(MainActivity.HOLIDAY, 0);
 
-		sharedViewModel.getHoliday(holidayId).observe(this, holiday -> {
+		holidayViewModel.getHoliday(holidayId).observe(this, holiday -> {
 			final TextView holidayNameTextView = findViewById(R.id.activity_holiday_name);
 			final TextView holidayDescTextView = findViewById(R.id.activity_holiday_description);
 

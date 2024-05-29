@@ -18,16 +18,16 @@ import java.time.temporal.TemporalAdjusters;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
-import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
+import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 
 public class MonthFragment extends Fragment {
-	private SharedViewModel sharedViewModel;
+	private HolidayViewModel holidayViewModel;
 
 	@Override
 	public void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		sharedViewModel = new ViewModelProvider(requireActivity(), ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
-				.get(SharedViewModel.class);
+		holidayViewModel = new ViewModelProvider(requireActivity(), ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
+				.get(HolidayViewModel.class);
 	}
 
 	@NonNull
@@ -44,7 +44,7 @@ public class MonthFragment extends Fragment {
 		final LocalDate after = before.plusDays(42);
 
 		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
-		sharedViewModel.getHolidayDays(before, after)
+		holidayViewModel.getHolidayDays(before, after)
 				.observe(getViewLifecycleOwner(), holidayDays ->
 						recyclerView.setAdapter(new DayAdapter(getContext(), current, holidayDays)));
 		return month;

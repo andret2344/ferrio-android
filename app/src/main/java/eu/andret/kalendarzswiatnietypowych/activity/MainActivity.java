@@ -26,6 +26,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -53,6 +56,7 @@ import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.persistance.UpdateDataWorker;
 import eu.andret.kalendarzswiatnietypowych.util.Downloader;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 import java9.util.concurrent.CompletableFuture;
@@ -118,14 +122,21 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
-		sharedViewModel.getAllHolidayDays().observe(this, days -> {
+		holidayViewModel.getAllHolidayDays().observe(this, days -> {
+			final boolean hasInternet = Boolean.TRUE.equals(internet.getValue());
 			if (days != null && !days.isEmpty()) {
 				holidayDays.addAll(days);
-			} else if (Boolean.TRUE.equals(internet.getValue())) {
-				CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
-						.thenAccept(sharedViewModel::updateData);
+				if (hasInternet) {
+					final WorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
+					WorkManager.getInstance(this).enqueue(updateDataRequest);
+				}
 			} else {
-				showNoInternetAlert();
+				if (hasInternet) {
+					final WorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
+					WorkManager.getInstance(this).enqueue(updateDataRequest);
+				} else {
+					showNoInternetAlert();
+				}
 			}
 		});
 	}
@@ -135,7 +146,7 @@ public class MainActivity extends UHCActivity {
 		internet.observe(this, isConnected -> {
 			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
 				CompletableFuture.supplyAsync(new Downloader.UnusualCalendarDownloader())
-						.thenAccept(sharedViewModel::updateData);
+						.thenAccept(holidayViewModel::updateData);
 				alertDialog.dismiss();
 				viewPager2.setVisibility(View.VISIBLE);
 			}

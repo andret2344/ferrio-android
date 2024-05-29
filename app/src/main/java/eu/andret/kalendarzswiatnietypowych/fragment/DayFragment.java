@@ -19,7 +19,7 @@ import java.util.Locale;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
-import eu.andret.kalendarzswiatnietypowych.persistance.SharedViewModel;
+import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayFragment extends Fragment {
@@ -36,8 +36,8 @@ public class DayFragment extends Fragment {
 		final boolean includeUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
 		final RecyclerView recyclerView = dayView.findViewById(R.id.fragment_day_list_holidays);
 
-		final SharedViewModel sharedViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(SharedViewModel.INITIALIZER))
-				.get(SharedViewModel.class);
+		final HolidayViewModel holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
+				.get(HolidayViewModel.class);
 		final long seed = Long.parseLong(String.format(Locale.ROOT, "%d%d", date.second, date.first.getValue()));
 		if (preferences.getBoolean(getString(R.string.settings_key_theme_colorized), false)) {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(Util.randomizeColor(getContext(), seed));
@@ -46,7 +46,7 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
 		};
-		sharedViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay ->
+		holidayViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay ->
 				holidayDay.ifPresentOrElse(day -> recyclerView.setAdapter(new HolidayAdapter(getContext(), day.getHolidaysList(includeUsual))), onElseAction));
 		return dayView;
 	}

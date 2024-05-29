@@ -32,7 +32,6 @@ public class AppRepository {
 	public AppRepository(final Application application) {
 		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "uhc")
 				.enableMultiInstanceInvalidation()
-				.allowMainThreadQueries()
 				.build();
 		holidayDao = database.appDao();
 		loadHolidays();

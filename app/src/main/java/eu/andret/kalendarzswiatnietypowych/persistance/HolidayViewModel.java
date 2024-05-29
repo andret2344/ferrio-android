@@ -16,15 +16,15 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
 import java9.util.concurrent.CompletableFuture;
 
-public class SharedViewModel extends ViewModel {
-	public static final ViewModelInitializer<SharedViewModel> INITIALIZER = new ViewModelInitializer<>(SharedViewModel.class, creationExtras -> {
+public class HolidayViewModel extends ViewModel {
+	public static final ViewModelInitializer<HolidayViewModel> INITIALIZER = new ViewModelInitializer<>(HolidayViewModel.class, creationExtras -> {
 		final UHCApplication uhcApplication = (UHCApplication) creationExtras.get(ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY);
 		assert uhcApplication != null;
-		return new SharedViewModel(uhcApplication.getAppRepository());
+		return new HolidayViewModel(uhcApplication.getAppRepository());
 	});
 	private final AppRepository repository;
 
-	public SharedViewModel(final AppRepository repository) {
+	public HolidayViewModel(final AppRepository repository) {
 		this.repository = repository;
 	}
 
