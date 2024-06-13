@@ -19,7 +19,10 @@ android {
             isShrinkResources = true
             isMinifyEnabled = true
             isDebuggable = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             ndk {
                 debugSymbolLevel = "FULL"
             }
@@ -54,7 +57,7 @@ val versionStreamSupport by extra("1.7.4")
 val versionRhino by extra("1.7.14")
 val versionPicasso by extra("2.8")
 val versionGuava by extra("31.1-android")
-val versionAndroidXAppcompat by extra("1.6.1")
+val versionAndroidXAppcompat by extra("1.7.0")
 val versionAndroidXCredentials by extra("1.2.2")
 val versionAndroidXCredentialsPlayServicesAuth by extra("1.2.2")
 val versionAndroidXPreference by extra("1.2.1")

@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -36,7 +35,7 @@ public class SettingsActivity extends UHCActivity {
 			@Override
 			public void handleOnBackPressed() {
 				final Intent returnIntent = new Intent();
-				setResult(Activity.RESULT_OK, returnIntent);
+				setResult(RESULT_OK, returnIntent);
 				NavUtils.navigateUpFromSameTask(SettingsActivity.this);
 			}
 		});

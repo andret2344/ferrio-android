@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -32,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 	private FirebaseAuth firebaseAuth;
 
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-		if (result.getResultCode() == Activity.RESULT_OK) {
+		if (result.getResultCode() == RESULT_OK) {
 			final Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
 			try {
 				final GoogleSignInAccount account = task.getResult(ApiException.class);
