@@ -1,8 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -26,7 +24,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -53,6 +50,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.UHCApplication;
 import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -75,7 +73,7 @@ public class MainActivity extends UHCActivity {
 	private MutableLiveData<Boolean> internet;
 	private FirebaseAuth firebaseAuth;
 	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-		if (result.getResultCode() == Activity.RESULT_OK) {
+		if (result.getResultCode() == RESULT_OK) {
 			final Intent data = result.getData();
 			if (data != null) {
 				final int currentMonthValue = LocalDate.now().getMonthValue();
@@ -122,6 +120,8 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
+		((UHCApplication) getApplicationContext()).getAppRepository().extracted(this);
+
 		observeHolidayData();
 	}
 
@@ -146,8 +146,7 @@ public class MainActivity extends UHCActivity {
 
 	private void enqueueDataUpdateWorker() {
 		final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
-		WorkManager.getInstance(this).enqueueUniqueWork("updateData", ExistingWorkPolicy.KEEP, updateDataRequest)
-				.getResult();
+		WorkManager.getInstance(this).enqueue(updateDataRequest);
 	}
 
 	private void configureObservers() {
@@ -161,7 +160,7 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 		final ConnectivityManager connectivityManager =
-				(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+				(ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 		Util.NETWORK_CAPABILITIES.stream()
 				.map(new NetworkRequest.Builder()::addTransportType)
 				.map(NetworkRequest.Builder::build)

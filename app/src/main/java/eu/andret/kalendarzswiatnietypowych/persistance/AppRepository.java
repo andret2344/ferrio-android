@@ -1,11 +1,12 @@
 package eu.andret.kalendarzswiatnietypowych.persistance;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.room.Room;
 
@@ -35,7 +36,29 @@ public class AppRepository {
 				.enableMultiInstanceInvalidation()
 				.build();
 		holidayDao = database.appDao();
-		loadHolidays();
+	}
+
+	public void extracted(@NonNull final LifecycleOwner owner) {
+		final LiveData<List<HolidayDay>> allHolidayDays = holidayDao.getAllHolidayDays();
+		final LiveData<List<FloatingHoliday>> allFloatingHolidays = holidayDao.getAllFloatingHolidays();
+		final Observer<List<HolidayDay>> fixed = new Observer<>() {
+			@Override
+			public void onChanged(final List<HolidayDay> holidayDays) {
+				fixedHolidaysCache = holidayDays;
+				mergeHolidays();
+				allHolidayDays.removeObserver(this);
+			}
+		};
+		final Observer<List<FloatingHoliday>> floating = new Observer<>() {
+			@Override
+			public void onChanged(final List<FloatingHoliday> holidayDays) {
+				floatingHolidaysCache = holidayDays;
+				mergeHolidays();
+				allFloatingHolidays.removeObserver(this);
+			}
+		};
+		allHolidayDays.observe(owner, fixed);
+		allFloatingHolidays.observe(owner, floating);
 	}
 
 	public LiveData<List<HolidayDay>> getHolidayDays(final int monthFrom, final int dayFrom, final int monthTo, final int dayTo) {
@@ -66,7 +89,6 @@ public class AppRepository {
 	}
 
 	public void updateCalendarData(@NonNull final UnusualCalendar calendar) {
-		Log.d("UHC-Repository", "Update start");
 		holidayDao.deleteAllHolidays();
 		holidayDao.deleteAllHolidayDays();
 		holidayDao.deleteAllFloatingHolidays();
@@ -77,22 +99,6 @@ public class AppRepository {
 				.forEach(holidayDao::insertHoliday);
 		calendar.getFixed().forEach(holidayDao::insertHolidayDay);
 		calendar.getFloating().forEach(holidayDao::insertFloatingHoliday);
-		Log.d("UHC-Repository", "Update finished");
-	}
-
-	private void loadHolidays() {
-		final LiveData<List<HolidayDay>> fixedHolidays = holidayDao.getAllHolidayDays();
-		final LiveData<List<FloatingHoliday>> floatingHolidays = holidayDao.getAllFloatingHolidays();
-
-		mergedHolidays.addSource(fixedHolidays, fixed -> {
-			fixedHolidaysCache = fixed;
-			mergeHolidays();
-		});
-
-		mergedHolidays.addSource(floatingHolidays, floating -> {
-			floatingHolidaysCache = floating;
-			mergeHolidays();
-		});
 	}
 
 	private void mergeHolidays() {

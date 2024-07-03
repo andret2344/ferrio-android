@@ -32,7 +32,6 @@ import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 	private static final int MAX_WORDS_COUNT = 4;
-
 	private final Context context;
 	private final int month;
 	private final List<HolidayDay> holidayDays;

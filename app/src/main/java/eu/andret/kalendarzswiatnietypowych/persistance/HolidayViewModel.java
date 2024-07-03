@@ -13,8 +13,6 @@ import java.util.Optional;
 import eu.andret.kalendarzswiatnietypowych.UHCApplication;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
-import java9.util.concurrent.CompletableFuture;
 
 public class HolidayViewModel extends ViewModel {
 	public static final ViewModelInitializer<HolidayViewModel> INITIALIZER = new ViewModelInitializer<>(HolidayViewModel.class, creationExtras -> {
@@ -42,9 +40,5 @@ public class HolidayViewModel extends ViewModel {
 
 	public LiveData<Holiday> getHoliday(final int id) {
 		return repository.getHoliday(id);
-	}
-
-	public void updateData(final UnusualCalendar calendar) {
-		CompletableFuture.runAsync(() -> repository.updateCalendarData(calendar));
 	}
 }
