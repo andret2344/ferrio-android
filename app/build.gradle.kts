@@ -48,10 +48,10 @@ android {
 }
 
 val versionFirebase by extra("33.0.0")
-val versionPlayServices by extra("23.1.0")
+val versionPlayServices by extra("23.2.0")
 val versionMaterial by extra("1.12.0")
 val versionPlayServicesAuth by extra("21.2.0")
-val versionGoogleId by extra("1.1.0")
+val versionGoogleId by extra("1.1.1")
 val versionGson by extra("2.10.1")
 val versionStreamSupport by extra("1.7.4")
 val versionRhino by extra("1.7.14")

@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +42,6 @@ public class MonthFragment extends Fragment {
 
 		final LocalDate before = getBefore(current);
 		final LocalDate after = before.plusDays(42);
-		month.setBackgroundColor(Color.RED);
 
 		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
 		holidayViewModel.getHolidayDays(before, after)
