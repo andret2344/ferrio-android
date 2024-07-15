@@ -1,14 +1,15 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-public class FloatingHoliday implements Parcelable {
+@Entity(tableName = "floating_holiday")
+public class FloatingHoliday {
+	@PrimaryKey
 	private final int id;
 	private final boolean usual;
 	private final String name;
@@ -18,15 +19,16 @@ public class FloatingHoliday implements Parcelable {
 	private final String url;
 	private final String script;
 
-	protected FloatingHoliday(final Parcel in) {
-		id = in.readInt();
-		usual = in.readByte() != 0;
-		name = in.readString();
-		description = in.readString();
-		countryCode = in.readString();
-		countryName = in.readString();
-		url = in.readString();
-		script = in.readString();
+	public FloatingHoliday(final int id, final boolean usual, final String name, final String description,
+						   final String countryCode, final String countryName, final String url, final String script) {
+		this.id = id;
+		this.usual = usual;
+		this.name = name;
+		this.description = description;
+		this.countryCode = countryCode;
+		this.countryName = countryName;
+		this.url = url;
+		this.script = script;
 	}
 
 	public int getId() {
@@ -105,35 +107,4 @@ public class FloatingHoliday implements Parcelable {
 				", script='" + script + '\'' +
 				'}';
 	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(@NonNull final Parcel parcel, final int flags) {
-		parcel.writeInt(id);
-		parcel.writeByte((byte) (usual ? 1 : 0));
-		parcel.writeString(name);
-		parcel.writeString(description);
-		parcel.writeString(countryCode);
-		parcel.writeString(countryName);
-		parcel.writeString(url);
-		parcel.writeString(script);
-	}
-
-
-	public static final Creator<FloatingHoliday> CREATOR = new Creator<>() {
-		@Override
-		public FloatingHoliday createFromParcel(final Parcel in) {
-			return new FloatingHoliday(in);
-		}
-
-		@Override
-		public FloatingHoliday[] newArray(final int size) {
-			return new FloatingHoliday[size];
-		}
-	};
-
 }

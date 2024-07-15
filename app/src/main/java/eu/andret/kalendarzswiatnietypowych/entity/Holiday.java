@@ -1,14 +1,15 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-public class Holiday implements Comparable<Holiday>, Parcelable {
+@Entity(tableName = "holiday")
+public class Holiday implements Comparable<Holiday> {
+	@PrimaryKey
 	private final int id;
 	private final String name;
 	private final String description;
@@ -28,17 +29,8 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 	}
 
 	public Holiday(@NonNull final FloatingHoliday floatingHoliday) {
-		this(-floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(), floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getCountryName(), floatingHoliday.getUrl());
-	}
-
-	protected Holiday(@NonNull final Parcel in) {
-		id = in.readInt();
-		name = in.readString();
-		description = in.readString();
-		usual = in.readByte() != 0;
-		countryCode = in.readString();
-		countryName = in.readString();
-		url = in.readString();
+		this(-floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(),
+				floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getCountryName(), floatingHoliday.getUrl());
 	}
 
 	public int getId() {
@@ -118,32 +110,4 @@ public class Holiday implements Comparable<Holiday>, Parcelable {
 		}
 		return name.compareTo(o.name);
 	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(@NonNull final Parcel parcel, final int i) {
-		parcel.writeInt(id);
-		parcel.writeString(name);
-		parcel.writeString(description);
-		parcel.writeByte((byte) (usual ? 1 : 0));
-		parcel.writeString(countryCode);
-		parcel.writeString(countryName);
-		parcel.writeString(url);
-	}
-
-	public static final Creator<Holiday> CREATOR = new Creator<>() {
-		@Override
-		public Holiday createFromParcel(final Parcel in) {
-			return new Holiday(in);
-		}
-
-		@Override
-		public Holiday[] newArray(final int size) {
-			return new Holiday[size];
-		}
-	};
 }

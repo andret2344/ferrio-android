@@ -8,17 +8,24 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.UHCApplication;
+import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 
 public abstract class UHCActivity extends AppCompatActivity {
+	protected HolidayViewModel holidayViewModel;
+
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setupTheme();
+		holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
+				.get(HolidayViewModel.class);
 	}
 
 	private void setupTheme() {
@@ -47,5 +54,10 @@ public abstract class UHCActivity extends AppCompatActivity {
 	@NonNull
 	protected SharedPreferences getSharedPreferences() {
 		return PreferenceManager.getDefaultSharedPreferences(this);
+	}
+
+	@NonNull
+	protected UHCApplication getUHCApplication() {
+		return (UHCApplication) getApplication();
 	}
 }

@@ -8,5 +8,5 @@
 	android:gravity="center_horizontal"
 	android:padding="30dp"
 	android:text="@string/about_holidays_text"
-	android:textSize="@dimen/adapter_day_small_date"
+	android:textSize="@dimen/adapter_search_main"
 	app:drawableTopCompat="@drawable/holidays" />

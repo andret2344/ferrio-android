@@ -1,24 +1,25 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import java.time.Month;
+import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
-import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayFragment extends Fragment {
@@ -29,24 +30,24 @@ public class DayFragment extends Fragment {
 		if (getArguments() == null || getContext() == null) {
 			return dayView;
 		}
-		final HolidayDay holidayDay = getArguments().getParcelable(MainActivity.HOLIDAY_DAY);
-		if (holidayDay == null) {
-			return dayView;
-		}
+		final int position = getArguments().getInt(DayActivity.POSITION);
+		final Pair<Month, Integer> date = Util.calculateDates(position + 1);
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 		final boolean includeUsual = preferences.getBoolean(getContext().getString(R.string.settings_key_usual_holidays), false);
-		final List<Holiday> holidays = holidayDay.getHolidaysList(includeUsual);
-		if (holidays.isEmpty()) {
+		final RecyclerView recyclerView = dayView.findViewById(R.id.fragment_day_list_holidays);
+
+		final HolidayViewModel holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
+				.get(HolidayViewModel.class);
+		final long seed = Long.parseLong(String.format(Locale.ROOT, "%d%d", date.second, date.first.getValue()));
+		if (preferences.getBoolean(getString(R.string.settings_key_theme_colorized), false)) {
+			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(Util.randomizeColor(getContext(), seed));
+		}
+		final Runnable onElseAction = () -> {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
-			dayView.findViewById(R.id.fragment_day_text_empty).setBackgroundColor(Color.GRAY);
-		}
-		if (preferences.getBoolean(getContext().getString(R.string.settings_key_theme_colorized), false)) {
-			final int backgroundColor = Util.randomizeColor(getContext(), holidayDay.getSeed());
-			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(backgroundColor);
-		}
-		final RecyclerView recyclerView = dayView.findViewById(R.id.fragment_day_list_holidays);
-		recyclerView.setAdapter(new HolidayAdapter(getContext(), holidays));
+		};
+		holidayViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay ->
+				holidayDay.ifPresentOrElse(day -> recyclerView.setAdapter(new HolidayAdapter(getContext(), day.getHolidaysList(includeUsual))), onElseAction));
 		return dayView;
 	}
 }

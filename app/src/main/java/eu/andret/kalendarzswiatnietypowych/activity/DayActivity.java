@@ -16,21 +16,19 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayActivity extends UHCActivity {
+	public static final String POSITION = "position";
 	private static final Random RANDOM = new Random();
 
 	private ViewPager2 pager;
-	private List<HolidayDay> holidayDays;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -42,8 +40,7 @@ public class DayActivity extends UHCActivity {
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
 
-		holidayDays = getIntent().getParcelableArrayListExtra(MainActivity.HOLIDAY_DAYS);
-		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle(), holidayDays));
+		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
 		final boolean leap = date.isLeapYear();
 		int id = date.getDayOfYear();
@@ -121,9 +118,8 @@ public class DayActivity extends UHCActivity {
 			final Pair<Month, Integer> pair = Util.calculateDates(pager.getCurrentItem() + 1);
 			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
 			final boolean usualHolidays = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
-			holidayDays.stream().filter(h -> h.getMonth() == pair.first.getValue() && h.getDay() == pair.second)
-					.findAny()
-					.ifPresent(day -> {
+			holidayViewModel.getHolidayDay(pair.first.getValue(), pair.second)
+					.observe(this, holidayDay -> holidayDay.ifPresent(day -> {
 						final String holidays = day.getHolidaysList(usualHolidays)
 								.stream()
 								.map(Holiday::getName)
@@ -131,7 +127,7 @@ public class DayActivity extends UHCActivity {
 								.collect(Collectors.joining("\n"));
 						intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message, localDate, holidays));
 						startActivity(Intent.createChooser(intent, getString(R.string.share_via)));
-					});
+					}));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
