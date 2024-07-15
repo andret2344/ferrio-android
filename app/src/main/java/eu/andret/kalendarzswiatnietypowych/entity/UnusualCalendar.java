@@ -32,7 +32,10 @@ public class UnusualCalendar {
 	}
 
 	@NonNull
-	public static List<HolidayDay> getHolidayDaysInDateRange(final List<HolidayDay> holidayDays, final LocalDate begin, final LocalDate end) {
+	public static List<HolidayDay> getHolidayDaysInDateRange(
+			@NonNull final List<HolidayDay> holidayDays,
+			@NonNull final LocalDate begin,
+			@NonNull final LocalDate end) {
 		final List<HolidayDay> result = new ArrayList<>();
 		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.plusDays(1)) {
 			result.add(getOrCreateDay(holidayDays, date.getMonthValue(), date.getDayOfMonth()));

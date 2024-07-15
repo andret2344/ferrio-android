@@ -50,7 +50,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.UHCApplication;
 import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -120,7 +119,7 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
-		((UHCApplication) getApplicationContext()).getAppRepository().extracted(this);
+		getUHCApplication().getAppRepository().loadHolidays(this);
 
 		observeHolidayData();
 	}

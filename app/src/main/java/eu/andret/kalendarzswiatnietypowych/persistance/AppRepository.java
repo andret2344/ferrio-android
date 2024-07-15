@@ -38,7 +38,7 @@ public class AppRepository {
 		holidayDao = database.appDao();
 	}
 
-	public void extracted(@NonNull final LifecycleOwner owner) {
+	public void loadHolidays(@NonNull final LifecycleOwner owner) {
 		final LiveData<List<HolidayDay>> allHolidayDays = holidayDao.getAllHolidayDays();
 		final LiveData<List<FloatingHoliday>> allFloatingHolidays = holidayDao.getAllFloatingHolidays();
 		final Observer<List<HolidayDay>> fixed = new Observer<>() {

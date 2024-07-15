@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.UHCApplication;
 import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 
 public abstract class UHCActivity extends AppCompatActivity {
@@ -53,5 +54,10 @@ public abstract class UHCActivity extends AppCompatActivity {
 	@NonNull
 	protected SharedPreferences getSharedPreferences() {
 		return PreferenceManager.getDefaultSharedPreferences(this);
+	}
+
+	@NonNull
+	protected UHCApplication getUHCApplication() {
+		return (UHCApplication) getApplication();
 	}
 }
