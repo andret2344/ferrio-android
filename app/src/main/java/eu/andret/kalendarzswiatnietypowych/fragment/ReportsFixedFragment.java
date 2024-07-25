@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,6 @@ public class ReportsFixedFragment extends Fragment {
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_reports_fixed_list);
 		CompletableFuture.supplyAsync(new Downloader.ReportFixedHolidaysDownloader(userId))
 				.thenAccept(reportedFixedHolidays -> requireActivity().runOnUiThread(() -> {
-					Log.d("UHC-ReportsFixedFragment", "Downloaded: " + reportedFixedHolidays);
 					recyclerView.setAdapter(new ReportedHolidayAdapter(reportedFixedHolidays));
 					view.findViewById(R.id.fragment_reports_fixed_indicator).setVisibility(View.GONE);
 				}));

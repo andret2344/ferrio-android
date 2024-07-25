@@ -2,9 +2,6 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,12 +18,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -55,7 +50,6 @@ import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.persistance.UpdateDataWorker;
-import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class MainActivity extends UHCActivity {
 	public static final String WIDGET = "widget";
@@ -63,13 +57,13 @@ public class MainActivity extends UHCActivity {
 	public static final String DAY = "day";
 	public static final String FROM = "from";
 	public static final String HOLIDAY = "holiday";
+	public static final String INTERNET = "INTERNET";
 
 	private ViewPager2 viewPager2;
 	private RecyclerView searchListView;
-	private AlertDialog alertDialog;
 	private MaterialToolbar materialToolbar;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
-	private MutableLiveData<Boolean> internet;
+	private boolean internetAvailable;
 	private FirebaseAuth firebaseAuth;
 	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		if (result.getResultCode() == RESULT_OK) {
@@ -80,13 +74,11 @@ public class MainActivity extends UHCActivity {
 			}
 		}
 	});
-	private boolean updated;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		configureObservers();
 		final String stringFrom = getIntent().getStringExtra(FROM);
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
 			final Intent intent = new Intent(this, DayActivity.class);
@@ -94,6 +86,8 @@ public class MainActivity extends UHCActivity {
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
 			activityResult.launch(intent);
 		}
+
+		internetAvailable = getIntent().getBooleanExtra(INTERNET, false);
 
 		final int currentMonthValue = LocalDate.now().getMonthValue();
 		searchListView = findViewById(R.id.main_list_results);
@@ -125,67 +119,10 @@ public class MainActivity extends UHCActivity {
 	}
 
 	private void observeHolidayData() {
-		holidayViewModel.getAllHolidayDays().observe(this, days -> {
-			if (days != null && !days.isEmpty()) {
-				holidayDays.clear();
-				holidayDays.addAll(days);
-			}
-			if (isInternetAvailable() && !updated) {
-				updated = true;
-				enqueueDataUpdateWorker();
-			} else if (days == null || days.isEmpty()) {
-				showNoInternetAlert();
-			}
-		});
-	}
-
-	private boolean isInternetAvailable() {
-		return Boolean.TRUE.equals(internet.getValue());
-	}
-
-	private void enqueueDataUpdateWorker() {
-		final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
-		WorkManager.getInstance(this).enqueue(updateDataRequest);
-	}
-
-	private void configureObservers() {
-		internet = new MutableLiveData<>(Util.isNetworkAvailable(this));
-		internet.observe(this, isConnected -> {
-			if (Boolean.TRUE.equals(isConnected) && alertDialog != null && holidayDays.isEmpty()) {
-				final WorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
-				WorkManager.getInstance(this).enqueue(updateDataRequest);
-				alertDialog.dismiss();
-				viewPager2.setVisibility(View.VISIBLE);
-			}
-		});
-		final ConnectivityManager connectivityManager =
-				(ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-		Util.NETWORK_CAPABILITIES.stream()
-				.map(new NetworkRequest.Builder()::addTransportType)
-				.map(NetworkRequest.Builder::build)
-				.forEach(request -> connectivityManager.registerNetworkCallback(request, new ConnectivityManager.NetworkCallback() {
-					@Override
-					public void onAvailable(@NonNull final Network network) {
-						super.onAvailable(network);
-						internet.postValue(true);
-					}
-
-					@Override
-					public void onLost(@NonNull final Network network) {
-						super.onLost(network);
-						internet.postValue(false);
-					}
-				}));
-	}
-
-	private void showNoInternetAlert() {
-		alertDialog = new MaterialAlertDialogBuilder(this)
-				.setTitle(R.string.no_internet_connection)
-				.setCancelable(false)
-				.setMessage(R.string.no_internet)
-				.create();
-		alertDialog.show();
-		viewPager2.setVisibility(View.INVISIBLE);
+		if (internetAvailable) {
+			final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
+			WorkManager.getInstance(this).enqueue(updateDataRequest);
+		}
 	}
 
 	@NonNull
