@@ -3,7 +3,6 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +42,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -125,10 +123,6 @@ public class MainActivity extends UHCActivity {
 			final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
 			WorkManager.getInstance(this).enqueue(updateDataRequest);
 		}
-		holidayViewModel.getAllHolidayDays().observe(this, days -> {
-			Log.d("UHC-Main", "observed");
-			Optional.ofNullable(days).ifPresent(holidayDays::addAll);
-		});
 	}
 
 	@NonNull

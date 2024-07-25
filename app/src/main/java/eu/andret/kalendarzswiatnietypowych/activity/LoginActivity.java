@@ -14,9 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,7 +32,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.persistance.UpdateDataWorker;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class LoginActivity extends AppCompatActivity {
@@ -61,9 +57,8 @@ public class LoginActivity extends AppCompatActivity {
 
 		alertDialog = new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.no_internet_connection)
-				.setCancelable(true)
+				.setCancelable(false)
 				.setMessage(R.string.no_internet)
-				.setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
 				.create();
 
 		configureObservers();
@@ -119,10 +114,10 @@ public class LoginActivity extends AppCompatActivity {
 	private void configureObservers() {
 		internet = new MutableLiveData<>(Util.isNetworkAvailable(this));
 		internet.observe(this, isConnected -> {
-			if (Boolean.TRUE.equals(isConnected) && alertDialog != null) {
-				final WorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
-				WorkManager.getInstance(this).enqueue(updateDataRequest);
+			if (Boolean.TRUE.equals(isConnected)) {
 				alertDialog.dismiss();
+			} else {
+				alertDialog.show();
 			}
 		});
 		final ConnectivityManager connectivityManager =
