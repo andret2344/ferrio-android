@@ -7,10 +7,10 @@
 	</array>
 
 	<array name="report_values">
-		<item>Wrong date</item>
-		<item>Wrong name</item>
-		<item>Wrong description</item>
-		<item>Not exists</item>
-		<item>Other</item>
+		<item>Błędny data</item>
+		<item>Błędny nazwa</item>
+		<item>Błędny opis</item>
+		<item>Święto nie istnieje</item>
+		<item>Inne</item>
 	</array>
 </resources>

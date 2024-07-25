@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -80,7 +81,7 @@ public final class Downloader {
 			} catch (final IOException ex) {
 				ex.printStackTrace();
 			}
-			return null;
+			return Collections.emptyList();
 		}
 	}
 
@@ -102,7 +103,7 @@ public final class Downloader {
 			} catch (final IOException ex) {
 				ex.printStackTrace();
 			}
-			return null;
+			return Collections.emptyList();
 		}
 	}
 
@@ -124,7 +125,7 @@ public final class Downloader {
 			} catch (final IOException ex) {
 				ex.printStackTrace();
 			}
-			return null;
+			return Collections.emptyList();
 		}
 	}
 
@@ -146,7 +147,7 @@ public final class Downloader {
 			} catch (final IOException ex) {
 				ex.printStackTrace();
 			}
-			return null;
+			return Collections.emptyList();
 		}
 	}
 }
