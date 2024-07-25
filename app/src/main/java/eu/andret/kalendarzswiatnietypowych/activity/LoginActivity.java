@@ -45,14 +45,12 @@ public class LoginActivity extends AppCompatActivity {
 	private AlertDialog alertDialog;
 
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-		if (result.getResultCode() == RESULT_OK) {
-			final Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-			try {
-				final GoogleSignInAccount account = task.getResult(ApiException.class);
-				firebaseSignIn(GoogleAuthProvider.getCredential(account.getIdToken(), null));
-			} catch (final ApiException e) {
-				updateUI(null);
-			}
+		final Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+		try {
+			final GoogleSignInAccount account = task.getResult(ApiException.class);
+			firebaseSignIn(GoogleAuthProvider.getCredential(account.getIdToken(), null));
+		} catch (final ApiException e) {
+			updateUI(null);
 		}
 	});
 
