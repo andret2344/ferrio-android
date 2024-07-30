@@ -79,7 +79,7 @@ public class SuggestionFixedAdapter extends RecyclerView.Adapter<SuggestionFixed
 				break;
 		}
 
-		if (holiday.getReportState() == ReportState.APPLIED && holiday.getHolidayId() != 0) {
+		if (holiday.getReportState() == ReportState.APPLIED && holiday.getHolidayId() != null) {
 			viewHolder.itemView.setOnClickListener(view -> {
 				// TODO Fix after database
 //				final Intent intent = new Intent(view.getContext(), HolidayActivity.class);
