@@ -14,13 +14,13 @@
       },
       "oauth_client": [
         {
-          "client_id": "124787310112-b1qm79pocs5pkuso527v86ini2b86qmo.apps.googleusercontent.com",
+          "client_id": "124787310112-974c6aaaancftde90vdlbs33qq6tg44s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "eu.andret.kalendarzswiatnietypowych",
-            "certificate_hash": "aab245bf75b1ad1ad4e28548336249d3422da1b3"
+            "certificate_hash": "149e23cfa9f2dcc45e4e7e5d3a67e2315c120bfe"
           }
-        }, 
+        },
         {
           "client_id": "124787310112-q2pkvuo39bfp75mlcaue3adpvgs7jsfa.apps.googleusercontent.com",
           "client_type": 3
@@ -39,16 +39,17 @@
               "client_type": 3
             },
             {
-              "client_id": "124787310112-dtmvonna9f662e8qvhf5f7nd1gk80ugo.apps.googleusercontent.com",
+              "client_id": "124787310112-m7qjkg1u6c1j8tpkrb4qjgft18jkvbjr.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "eu.andret.UHC",
+                "bundle_id": "eu.andret.uhc",
                 "app_store_id": "6464416113"
               }
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-3410450408196791~3872850665"
     }
   ],
   "configuration_version": "1"

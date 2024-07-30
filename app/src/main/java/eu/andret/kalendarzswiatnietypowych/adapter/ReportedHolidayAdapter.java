@@ -1,5 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,6 +21,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.ReportedHoliday;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class ReportedHolidayAdapter extends RecyclerView.Adapter<ReportedHolidayAdapter.ViewHolder> {
+	private final Context context;
 	private final List<ReportedHoliday> holidays;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -37,7 +41,8 @@ public class ReportedHolidayAdapter extends RecyclerView.Adapter<ReportedHoliday
 		}
 	}
 
-	public ReportedHolidayAdapter(final List<ReportedHoliday> holidays) {
+	public ReportedHolidayAdapter(final Context context, final List<ReportedHoliday> holidays) {
+		this.context = context;
 		this.holidays = holidays;
 	}
 
@@ -56,7 +61,7 @@ public class ReportedHolidayAdapter extends RecyclerView.Adapter<ReportedHoliday
 		viewHolder.textViewId.setText(String.format(Locale.getDefault(), "#%d", holiday.getId()));
 		viewHolder.textViewDate.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
 		viewHolder.chipStatus.setText(holiday.getReportState().name().replace("_", " "));
-		viewHolder.textViewName.setText(holiday.getReportType());
+		viewHolder.textViewName.setText(mapReason(holiday.getReportType()));
 		viewHolder.textViewDescription.setText(holiday.getDescription());
 		switch (holiday.getReportState()) {
 			case REPORTED:
@@ -79,5 +84,11 @@ public class ReportedHolidayAdapter extends RecyclerView.Adapter<ReportedHoliday
 	@Override
 	public int getItemCount() {
 		return holidays.size();
+	}
+
+	private String mapReason(final String reportType) {
+		final Resources resources = context.getResources();
+		final int index = Arrays.asList(resources.getStringArray(R.array.report_keys)).indexOf(reportType);
+		return resources.getStringArray(R.array.report_values)[index];
 	}
 }

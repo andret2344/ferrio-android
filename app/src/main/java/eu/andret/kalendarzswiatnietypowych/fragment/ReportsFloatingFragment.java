@@ -34,7 +34,7 @@ public class ReportsFloatingFragment extends Fragment {
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_reports_floating_list);
 		CompletableFuture.supplyAsync(new Downloader.ReportFloatingHolidaysDownloader(userId))
 				.thenAccept(reportedFloatingHolidays -> requireActivity().runOnUiThread(() -> {
-					recyclerView.setAdapter(new ReportedHolidayAdapter(reportedFloatingHolidays));
+					recyclerView.setAdapter(new ReportedHolidayAdapter(requireContext(), reportedFloatingHolidays));
 					view.findViewById(R.id.fragment_reports_floating_indicator).setVisibility(View.GONE);
 				}));
 	}

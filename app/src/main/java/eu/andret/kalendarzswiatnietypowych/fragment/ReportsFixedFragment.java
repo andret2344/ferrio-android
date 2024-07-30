@@ -34,7 +34,7 @@ public class ReportsFixedFragment extends Fragment {
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_reports_fixed_list);
 		CompletableFuture.supplyAsync(new Downloader.ReportFixedHolidaysDownloader(userId))
 				.thenAccept(reportedFixedHolidays -> requireActivity().runOnUiThread(() -> {
-					recyclerView.setAdapter(new ReportedHolidayAdapter(reportedFixedHolidays));
+					recyclerView.setAdapter(new ReportedHolidayAdapter(requireContext(), reportedFixedHolidays));
 					view.findViewById(R.id.fragment_reports_fixed_indicator).setVisibility(View.GONE);
 				}));
 	}
