@@ -1,14 +1,15 @@
 package eu.andret.kalendarzswiatnietypowych.persistance;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.UHCApplication;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -26,18 +27,17 @@ public class HolidayViewModel extends ViewModel {
 		this.repository = repository;
 	}
 
-	public LiveData<Optional<HolidayDay>> getHolidayDay(final int month, final int day) {
-		return repository.getHolidayDay(month, day);
+	@NonNull
+	public LiveData<HolidayDay> getHolidayDay(final int month, final int day) {
+		return Transformations.map(repository.getHolidayDay(month, day), holidayDay -> holidayDay.orElse(new HolidayDay(month, day)));
 	}
 
+	@NonNull
 	public LiveData<List<HolidayDay>> getHolidayDays(@NonNull final LocalDate from, @NonNull final LocalDate to) {
 		return repository.getHolidayDays(from.getMonthValue(), from.getDayOfMonth(), to.getMonthValue(), to.getDayOfMonth());
 	}
 
-	public LiveData<List<HolidayDay>> getAllHolidayDays() {
-		return repository.getAllHolidayDays();
-	}
-
+	@Nullable
 	public LiveData<Holiday> getHoliday(final int id) {
 		return repository.getHoliday(id);
 	}

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.util.HolidayDiffCallback;
 
 public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHolder> {
 	private final Context context;
@@ -74,5 +76,12 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 	@Override
 	public int getItemCount() {
 		return holidays.size();
+	}
+
+	public void updateData(final List<Holiday> newHolidaysList) {
+		final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new HolidayDiffCallback(holidays, newHolidaysList));
+		holidays.clear();
+		holidays.addAll(newHolidaysList);
+		diffResult.dispatchUpdatesTo(this);
 	}
 }

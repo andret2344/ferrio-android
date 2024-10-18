@@ -119,15 +119,15 @@ public class DayActivity extends UHCActivity {
 			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
 			final boolean usualHolidays = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
 			holidayViewModel.getHolidayDay(pair.first.getValue(), pair.second)
-					.observe(this, holidayDay -> holidayDay.ifPresent(day -> {
-						final String holidays = day.getHolidaysList(usualHolidays)
+					.observe(this, holidayDay -> {
+						final String holidays = holidayDay.getHolidaysList(usualHolidays)
 								.stream()
 								.map(Holiday::getName)
 								.map(text -> getString(R.string.pointed_text, text))
 								.collect(Collectors.joining("\n"));
 						intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message, localDate, holidays));
 						startActivity(Intent.createChooser(intent, getString(R.string.share_via)));
-					}));
+					});
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
