@@ -33,7 +33,7 @@
 		android:text="@string/no_unusual_holidays"
 		android:textColor="@color/foreground_primary"
 		android:textSize="@dimen/fragment_day_empty"
-		android:visibility="visible"
+		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintVertical_bias="0.1"

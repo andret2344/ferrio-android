@@ -1,16 +1,17 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
-public class HolidayDiffCallback extends DiffUtil.Callback {
+public final class HolidayDiffCallback extends DiffUtil.Callback {
 	private final List<Holiday> oldList;
 	private final List<Holiday> newList;
 
-	public HolidayDiffCallback(final List<Holiday> oldList, final List<Holiday> newList) {
+	public HolidayDiffCallback(@NonNull final List<Holiday> oldList, @NonNull final List<Holiday> newList) {
 		this.oldList = oldList;
 		this.newList = newList;
 	}

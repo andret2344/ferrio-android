@@ -35,7 +35,6 @@ public class AppRepository {
 				.build();
 		holidayDao = database.appDao();
 
-		// Initialize mergedHolidays
 		final LiveData<List<HolidayDay>> fixedHolidays = holidayDao.getAllHolidayDays();
 		final LiveData<List<FloatingHoliday>> floatingHolidays = holidayDao.getAllFloatingHolidays();
 
@@ -86,19 +85,15 @@ public class AppRepository {
 	private void mergeHolidays(final List<HolidayDay> fixedHolidays, final List<FloatingHoliday> floatingHolidays) {
 		if (fixedHolidays != null && floatingHolidays != null) {
 			Executors.newSingleThreadExecutor().execute(() -> {
-				final List<HolidayDay> allHolidays = new ArrayList<>();
+				final List<HolidayDay> allHolidays = fixedHolidays.stream()
+						.map(HolidayDay::new)
+						.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-				// Deep copy fixedHolidays to avoid modifying the original list
-				for (final HolidayDay fixedHoliday : fixedHolidays) {
-					allHolidays.add(new HolidayDay(fixedHoliday));
-				}
-
-				// Process floating holidays
 				try (final Context context = Context.enter()) {
 					context.setOptimizationLevel(-1);
 					final Scriptable scope = context.initStandardObjects();
 
-					for (final FloatingHoliday floatingHoliday : floatingHolidays) {
+					floatingHolidays.stream().forEach(floatingHoliday -> {
 						try {
 							final Object calculated = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
 							if (calculated != null) {
@@ -111,7 +106,7 @@ public class AppRepository {
 						} catch (final EcmaError ex) {
 							Log.e("AppRepository", "Error evaluating script for floating holiday ID " + floatingHoliday.getId(), ex);
 						}
-					}
+					});
 				}
 
 				mergedHolidays.postValue(allHolidays);
@@ -125,7 +120,6 @@ public class AppRepository {
 				return holidayDay;
 			}
 		}
-		// If not found, create a new one
 		final HolidayDay newHolidayDay = new HolidayDay(month, day, new ArrayList<>());
 		holidays.add(newHolidayDay);
 		return newHolidayDay;

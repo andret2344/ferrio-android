@@ -7,8 +7,10 @@
 /assetWizardSettings.xml
 /deploymentTargetDropDown.xml
 /deploymentTargetSelector.xml
+/fileColors.xml
 /gradle.xml
 /jarRepositories.xml
+/kotlinc.xml
 /migrations.xml
 /misc.xml
 /navEditor.xml
