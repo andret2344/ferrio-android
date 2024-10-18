@@ -42,7 +42,7 @@ public class HolidayActivity extends UHCActivity {
 
 		final int holidayId = getIntent().getIntExtra(MainActivity.HOLIDAY, 0);
 
-		holidayViewModel.getHoliday(holidayId).observe(this, holiday -> {
+		holidayViewModel.getHoliday(holidayId).observe(this, optionalHoliday -> optionalHoliday.ifPresent(holiday -> {
 			final TextView holidayNameTextView = findViewById(R.id.activity_holiday_name);
 			final TextView holidayDescTextView = findViewById(R.id.activity_holiday_description);
 
@@ -72,7 +72,7 @@ public class HolidayActivity extends UHCActivity {
 						.addToBackStack(null)
 						.commit();
 			});
-		});
+		}));
 	}
 
 	@Override

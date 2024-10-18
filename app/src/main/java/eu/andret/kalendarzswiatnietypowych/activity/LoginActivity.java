@@ -26,7 +26,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -39,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
 	private FirebaseAuth firebaseAuth;
 	private MutableLiveData<Boolean> internet;
 	private AlertDialog alertDialog;
-
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		final Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
 		try {
@@ -82,14 +80,29 @@ public class LoginActivity extends AppCompatActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		updateUI(firebaseAuth.getCurrentUser());
+
+		final FirebaseUser user = firebaseAuth.getCurrentUser();
+		if (user == null) {
+			return;
+		}
+		if (user.isAnonymous()) {
+			updateUI(user);
+			return;
+		}
+		final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+		if (acct == null) {
+			updateUI(null);
+			return;
+		}
+		final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+		user.reauthenticate(credential).addOnCompleteListener(this::handleTask);
 	}
 
 	private void firebaseSignIn(@NonNull final AuthCredential credential) {
 		firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, this::handleTask);
 	}
 
-	private void handleTask(@NonNull final Task<AuthResult> task) {
+	private <T> void handleTask(@NonNull final Task<T> task) {
 		if (task.isSuccessful()) {
 			updateUI(firebaseAuth.getCurrentUser());
 		} else {

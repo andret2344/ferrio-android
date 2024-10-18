@@ -10,7 +10,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 71
-        versionName = "3.0-rc.1"
+        versionName = "3.0-build.1"
         multiDexEnabled = true
         signingConfig = signingConfigs.getByName("debug")
     }
@@ -63,7 +63,7 @@ val versionAndroidXCredentialsPlayServicesAuth by extra("1.3.0")
 val versionAndroidXPreference by extra("1.2.1")
 val versionAndroidXViewPager2 by extra("1.1.0")
 val versionAndroidXCardView by extra("1.0.0")
-val versionAndroidXActivity by extra("1.9.2")
+val versionAndroidXActivity by extra("1.9.3")
 val versionAndroidXConstraintLayout by extra("2.1.4")
 val versionAndroidxRoom by extra("2.6.1")
 val versionDesguarJdkLibs by extra("2.0.4")
