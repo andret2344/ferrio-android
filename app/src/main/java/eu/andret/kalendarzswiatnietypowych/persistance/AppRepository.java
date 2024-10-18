@@ -1,12 +1,11 @@
 package eu.andret.kalendarzswiatnietypowych.persistance;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.room.Room;
 
@@ -14,9 +13,11 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Scriptable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.entity.FloatingHoliday;
@@ -28,44 +29,23 @@ public class AppRepository {
 	private final AppDao holidayDao;
 	private final MediatorLiveData<List<HolidayDay>> mergedHolidays = new MediatorLiveData<>();
 
-	private List<HolidayDay> fixedHolidaysCache;
-	private List<FloatingHoliday> floatingHolidaysCache;
-
 	public AppRepository(final Application application) {
 		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "uhc")
 				.enableMultiInstanceInvalidation()
 				.build();
 		holidayDao = database.appDao();
-	}
 
-	public void loadHolidays(@NonNull final LifecycleOwner owner) {
-		final LiveData<List<HolidayDay>> allHolidayDays = holidayDao.getAllHolidayDays();
-		final LiveData<List<FloatingHoliday>> allFloatingHolidays = holidayDao.getAllFloatingHolidays();
-		final Observer<List<HolidayDay>> fixed = new Observer<>() {
-			@Override
-			public void onChanged(final List<HolidayDay> holidayDays) {
-				fixedHolidaysCache = holidayDays;
-				mergeHolidays();
-				allHolidayDays.removeObserver(this);
-			}
-		};
-		final Observer<List<FloatingHoliday>> floating = new Observer<>() {
-			@Override
-			public void onChanged(final List<FloatingHoliday> holidayDays) {
-				floatingHolidaysCache = holidayDays;
-				mergeHolidays();
-				allFloatingHolidays.removeObserver(this);
-			}
-		};
-		allHolidayDays.observe(owner, fixed);
-		allFloatingHolidays.observe(owner, floating);
+		// Initialize mergedHolidays
+		final LiveData<List<HolidayDay>> fixedHolidays = holidayDao.getAllHolidayDays();
+		final LiveData<List<FloatingHoliday>> floatingHolidays = holidayDao.getAllFloatingHolidays();
+
+		mergedHolidays.addSource(fixedHolidays, fixed -> mergeHolidays(fixed, floatingHolidays.getValue()));
+		mergedHolidays.addSource(floatingHolidays, floating -> mergeHolidays(fixedHolidays.getValue(), floating));
 	}
 
 	public LiveData<List<HolidayDay>> getHolidayDays(final int monthFrom, final int dayFrom, final int monthTo, final int dayTo) {
 		return Transformations.map(mergedHolidays, originalList -> originalList.stream()
-				.filter(holidayDay -> holidayDay.getMonth() == monthFrom && holidayDay.getDay() >= dayFrom
-						|| holidayDay.getMonth() > (monthFrom == 12 ? 0 : monthFrom) && holidayDay.getMonth() < (monthTo == 1 ? 13 : monthTo)
-						|| holidayDay.getMonth() == monthTo && holidayDay.getDay() <= dayTo)
+				.filter(holidayDay -> isWithinRange(holidayDay, monthFrom, dayFrom, monthTo, dayTo))
 				.collect(Collectors.toList()));
 	}
 
@@ -89,35 +69,76 @@ public class AppRepository {
 	}
 
 	public void updateCalendarData(@NonNull final UnusualCalendar calendar) {
-		holidayDao.deleteAllHolidays();
-		holidayDao.deleteAllHolidayDays();
-		holidayDao.deleteAllFloatingHolidays();
-		calendar.getFixed()
-				.stream()
-				.map(HolidayDay::getHolidays)
-				.flatMap(Collection::stream)
-				.forEach(holidayDao::insertHoliday);
-		calendar.getFixed().forEach(holidayDao::insertHolidayDay);
-		calendar.getFloating().forEach(holidayDao::insertFloatingHoliday);
+		Executors.newSingleThreadExecutor().execute(() -> {
+			holidayDao.deleteAllHolidays();
+			holidayDao.deleteAllHolidayDays();
+			holidayDao.deleteAllFloatingHolidays();
+			calendar.getFixed()
+					.stream()
+					.map(HolidayDay::getHolidays)
+					.flatMap(Collection::stream)
+					.forEach(holidayDao::insertHoliday);
+			calendar.getFixed().forEach(holidayDao::insertHolidayDay);
+			calendar.getFloating().forEach(holidayDao::insertFloatingHoliday);
+		});
 	}
 
-	private void mergeHolidays() {
-		if (fixedHolidaysCache != null && floatingHolidaysCache != null) {
-			floatingHolidaysCache.forEach(floatingHoliday -> {
+	private void mergeHolidays(final List<HolidayDay> fixedHolidays, final List<FloatingHoliday> floatingHolidays) {
+		if (fixedHolidays != null && floatingHolidays != null) {
+			Executors.newSingleThreadExecutor().execute(() -> {
+				final List<HolidayDay> allHolidays = new ArrayList<>();
+
+				// Deep copy fixedHolidays to avoid modifying the original list
+				for (final HolidayDay fixedHoliday : fixedHolidays) {
+					allHolidays.add(new HolidayDay(fixedHoliday));
+				}
+
+				// Process floating holidays
 				try (final Context context = Context.enter()) {
 					context.setOptimizationLevel(-1);
 					final Scriptable scope = context.initStandardObjects();
-					final Object calculated = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
-					if (calculated != null) {
-						final String[] split = calculated.toString().split("\\.");
-						UnusualCalendar.getOrCreateDay(fixedHolidaysCache, Integer.parseInt(split[1]), Integer.parseInt(split[0]))
-								.addHoliday(new Holiday(floatingHoliday));
+
+					for (final FloatingHoliday floatingHoliday : floatingHolidays) {
+						try {
+							final Object calculated = context.evaluateString(scope, floatingHoliday.getScript(), "<cmd>", 1, null);
+							if (calculated != null) {
+								final String[] split = calculated.toString().split("\\.");
+								final int day = Integer.parseInt(split[0]);
+								final int month = Integer.parseInt(split[1]);
+								final HolidayDay holidayDay = findOrCreateHolidayDay(allHolidays, month, day);
+								holidayDay.addHoliday(new Holiday(floatingHoliday));
+							}
+						} catch (final EcmaError ex) {
+							Log.e("AppRepository", "Error evaluating script for floating holiday ID " + floatingHoliday.getId(), ex);
+						}
 					}
-				} catch (final EcmaError ex) {
-					// do nothing, ignore the holiday
 				}
+
+				mergedHolidays.postValue(allHolidays);
 			});
-			mergedHolidays.setValue(fixedHolidaysCache);
 		}
+	}
+
+	private HolidayDay findOrCreateHolidayDay(final List<HolidayDay> holidays, final int month, final int day) {
+		for (final HolidayDay holidayDay : holidays) {
+			if (holidayDay.getMonth() == month && holidayDay.getDay() == day) {
+				return holidayDay;
+			}
+		}
+		// If not found, create a new one
+		final HolidayDay newHolidayDay = new HolidayDay(month, day, new ArrayList<>());
+		holidays.add(newHolidayDay);
+		return newHolidayDay;
+	}
+
+	private boolean isWithinRange(final HolidayDay holidayDay, final int monthFrom, final int dayFrom, final int monthTo, final int dayTo) {
+		final int holidayDate = holidayDay.getMonth() * 100 + holidayDay.getDay();
+		final int fromDate = monthFrom * 100 + dayFrom;
+		final int toDate = monthTo * 100 + dayTo;
+
+		if (fromDate > toDate) {
+			return holidayDate >= fromDate || holidayDate <= toDate;
+		}
+		return holidayDate >= fromDate && holidayDate <= toDate;
 	}
 }

@@ -33,6 +33,10 @@ public class HolidayDay implements Comparable<HolidayDay> {
 		this.holidays = holidays;
 	}
 
+	public HolidayDay(@NonNull final HolidayDay holidayDay) {
+		this(holidayDay.id, holidayDay.month, holidayDay.day, holidayDay.holidays);
+	}
+
 	@Ignore
 	public HolidayDay(final int month, final int day, @NonNull final List<Holiday> holidays) {
 		this(String.format(Locale.ROOT, "%d%d", month, day), month, day, holidays);

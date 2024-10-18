@@ -113,9 +113,9 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
-		getUHCApplication().getAppRepository().loadHolidays(this);
-
 		observeHolidayData();
+
+		getUHCApplication().getAppRepository().getAllHolidayDays().observe(this, holidayDays::addAll);
 	}
 
 	private void observeHolidayData() {

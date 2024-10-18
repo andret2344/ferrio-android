@@ -46,8 +46,10 @@ public class DayFragment extends Fragment {
 			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
 			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
 		};
-		holidayViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay ->
-				holidayDay.ifPresentOrElse(day -> recyclerView.setAdapter(new HolidayAdapter(getContext(), day.getHolidaysList(includeUsual))), onElseAction));
+		holidayViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay -> {
+			System.out.println("I've changed");
+			holidayDay.ifPresentOrElse(day -> recyclerView.setAdapter(new HolidayAdapter(getContext(), day.getHolidaysList(includeUsual))), onElseAction);
+		});
 		return dayView;
 	}
 }
