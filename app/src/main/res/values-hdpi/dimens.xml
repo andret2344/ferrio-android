@@ -10,6 +10,6 @@
 	<dimen name="adapter_holiday_main">16sp</dimen>
 	<dimen name="adapter_holiday_country">14sp</dimen>
 	<dimen name="adapter_search_main">15sp</dimen>
-	<dimen name="fragment_day_empty">25sp</dimen>
+	<dimen name="fragment_day_empty">16sp</dimen>
 
 </resources>

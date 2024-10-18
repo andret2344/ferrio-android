@@ -63,7 +63,6 @@ public class MainActivity extends UHCActivity {
 	private RecyclerView searchListView;
 	private MaterialToolbar materialToolbar;
 	private final List<HolidayDay> holidayDays = new ArrayList<>();
-	private boolean internetAvailable;
 	private FirebaseAuth firebaseAuth;
 	public final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		if (result.getResultCode() == RESULT_OK) {
@@ -86,8 +85,6 @@ public class MainActivity extends UHCActivity {
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
 			activityResult.launch(intent);
 		}
-
-		internetAvailable = getIntent().getBooleanExtra(INTERNET, false);
 
 		final int currentMonthValue = LocalDate.now().getMonthValue();
 		searchListView = findViewById(R.id.main_list_results);
@@ -113,13 +110,9 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
-		getUHCApplication().getAppRepository().loadHolidays(this);
+		getUHCApplication().getAppRepository().getAllHolidayDays().observe(this, holidayDays::addAll);
 
-		observeHolidayData();
-	}
-
-	private void observeHolidayData() {
-		if (internetAvailable) {
+		if (getIntent().getBooleanExtra(INTERNET, false)) {
 			final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
 			WorkManager.getInstance(this).enqueue(updateDataRequest);
 		}

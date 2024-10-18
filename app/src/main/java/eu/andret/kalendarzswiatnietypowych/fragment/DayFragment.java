@@ -14,15 +14,20 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.adapter.HolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class DayFragment extends Fragment {
+	private HolidayAdapter holidayAdapter;
+
 	@NonNull
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
@@ -38,16 +43,22 @@ public class DayFragment extends Fragment {
 
 		final HolidayViewModel holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
 				.get(HolidayViewModel.class);
+
+		holidayAdapter = new HolidayAdapter(getContext(), new ArrayList<>());
+		recyclerView.setAdapter(holidayAdapter);
+
 		final long seed = Long.parseLong(String.format(Locale.ROOT, "%d%d", date.second, date.first.getValue()));
 		if (preferences.getBoolean(getString(R.string.settings_key_theme_colorized), false)) {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(Util.randomizeColor(getContext(), seed));
 		}
-		final Runnable onElseAction = () -> {
-			dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
-			dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
-		};
-		holidayViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay ->
-				holidayDay.ifPresentOrElse(day -> recyclerView.setAdapter(new HolidayAdapter(getContext(), day.getHolidaysList(includeUsual))), onElseAction));
+		holidayViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay -> {
+			final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual);
+			holidayAdapter.updateData(holidaysList);
+			if (holidaysList.isEmpty()) {
+				dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
+				dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);
+			}
+		});
 		return dayView;
 	}
 }

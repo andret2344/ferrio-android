@@ -1,4 +1,5 @@
-/modules
+/caches/
+/modules/
 /shelf/
 /sonarlint/
 
@@ -6,12 +7,15 @@
 /assetWizardSettings.xml
 /deploymentTargetDropDown.xml
 /deploymentTargetSelector.xml
+/fileColors.xml
 /gradle.xml
 /jarRepositories.xml
+/kotlinc.xml
 /migrations.xml
 /misc.xml
 /navEditor.xml
 /other.xml
 /render.experimental.xml
+/runConfigurations.xml
 /uhc-android.iml
 /workspace.xml

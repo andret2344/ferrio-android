@@ -39,7 +39,7 @@
 				android:layout_height="match_parent"
 				android:contentDescription="@string/content_description_image_sad_face"
 				android:scaleType="centerInside"
-				android:src="@drawable/ic_sad_face"
+				android:src="@drawable/baseline_emoji_sad"
 				android:visibility="invisible" />
 
 			<TextView

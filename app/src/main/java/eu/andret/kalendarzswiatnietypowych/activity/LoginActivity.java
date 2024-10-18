@@ -80,15 +80,21 @@ public class LoginActivity extends AppCompatActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-		if (acct == null) {
-			return;
-		}
-		final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+
 		final FirebaseUser user = firebaseAuth.getCurrentUser();
 		if (user == null) {
 			return;
 		}
+		if (user.isAnonymous()) {
+			updateUI(user);
+			return;
+		}
+		final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+		if (acct == null) {
+			updateUI(null);
+			return;
+		}
+		final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 		user.reauthenticate(credential).addOnCompleteListener(this::handleTask);
 	}
 
