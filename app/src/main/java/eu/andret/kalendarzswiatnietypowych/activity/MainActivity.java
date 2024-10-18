@@ -113,12 +113,8 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
-		observeHolidayData();
-
 		getUHCApplication().getAppRepository().getAllHolidayDays().observe(this, holidayDays::addAll);
-	}
 
-	private void observeHolidayData() {
 		if (internetAvailable) {
 			final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
 			WorkManager.getInstance(this).enqueue(updateDataRequest);
