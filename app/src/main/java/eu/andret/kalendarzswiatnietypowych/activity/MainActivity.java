@@ -193,7 +193,7 @@ public class MainActivity extends UHCActivity {
 
 	private void setUpNavDrawer() {
 		final DrawerLayout drawer = findViewById(R.id.activity_main_layout_drawer);
-		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, materialToolbar, R.string.content_description_ad, R.string.content_description_ad);
+		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, materialToolbar, R.string.content_description_drawer_open, R.string.content_description_drawer_close);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 

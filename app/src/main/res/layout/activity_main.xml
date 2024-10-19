@@ -31,6 +31,7 @@
 			android:id="@+id/main_list_results"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			android:contentDescription="@string/content_description_search_results"
 			android:layout_above="@id/main_bottom_layout_container"
 			android:layout_below="@id/activity_main_toolbar"
 			android:visibility="invisible"

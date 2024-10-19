@@ -26,10 +26,6 @@
 	<string name="no_internet">Urządzenie nie jest połączone z internetem.</string>
 	<string name="about_calendar">O kalendarzu</string>
 	<string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
-	<string name="content_description_ad">Reklama</string>
-	<string name="content_description_image_sad_face">Smutna twarz</string>
-	<string name="content_description_more">więcej</string>
-	<string name="content_description_image">zdjęcie</string>
 	<string name="app_theme">Styl aplikacji</string>
 	<string name="read_more">Czytaj więcej…</string>
 	<string name="report">Zgłoś</string>
@@ -60,5 +56,16 @@
 	<string name="error_message">Wystąpił błąd. Spróbój ponownie później.</string>
 	<string name="report_title">Wysłano zgłoszenie</string>
 	<string name="report_message">Święto zostało zgłoszone i zostanie to teraz zweryfikowane. Poinformujemy, kiedy tylko zgłoszenie zostanie zweryfikowane.</string>
+
+	<!-- content descriptions -->
+	<string name="content_description_ad">Reklama</string>
+	<string name="content_description_icon_sad">Smuta ikona</string>
+	<string name="content_description_icon_sad_appendix">Smutna ikona $1%s</string>
+	<string name="content_description_more">więcej</string>
+	<string name="content_description_image">zdjęcie</string>
+	<string name="content_description_drawer_open">Otwórz menu</string>
+	<string name="content_description_drawer_close">Zamknij menu</string>
+	<string name="content_description_list_holidays">Lista świąt</string>
+	<string name="content_description_search_results">Wynik wyszukiwania</string>
 
 </resources>

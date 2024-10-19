@@ -82,7 +82,7 @@ public class MonthFragment extends Fragment {
 	@NonNull
 	public HolidayDayViewModel convert(@NonNull final HolidayDay holidayDay) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-		final HolidayDayViewModel holidayDayViewModel = new HolidayDayViewModel(holidayDay.getDay(), holidayDay.getMonth());
+		final HolidayDayViewModel holidayDayViewModel = new HolidayDayViewModel(holidayDay);
 		if (holidayDay.getMonth() != currentMonth) {
 			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(requireContext(), R.color.background_secondary);
 		} else if (preferences.getBoolean(requireContext().getString(R.string.settings_key_theme_colorized), false)) {
@@ -135,6 +135,7 @@ public class MonthFragment extends Fragment {
 	}
 
 	public static class HolidayDayViewModel {
+		private final String id;
 		private final int day;
 		private final int month;
 		private int cardBackgroundColor;
@@ -147,9 +148,14 @@ public class MonthFragment extends Fragment {
 		private String holidayText;
 		private String moreText;
 
-		public HolidayDayViewModel(final int day, final int month) {
+		public HolidayDayViewModel(final String id, final int day, final int month) {
+			this.id = id;
 			this.day = day;
 			this.month = month;
+		}
+
+		public HolidayDayViewModel(@NonNull final HolidayDay holidayDay) {
+			this(holidayDay.getId(), holidayDay.getDay(), holidayDay.getMonth());
 		}
 
 		public int getDay() {
@@ -194,6 +200,10 @@ public class MonthFragment extends Fragment {
 
 		public String getMoreText() {
 			return moreText;
+		}
+
+		public String getId() {
+			return id;
 		}
 	}
 }

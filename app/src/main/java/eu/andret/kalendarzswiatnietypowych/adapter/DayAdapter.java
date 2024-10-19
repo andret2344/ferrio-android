@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 	}
 
 	@Override
+	@SuppressLint("WrongConstant")
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final MonthFragment.HolidayDayViewModel holidayDay = holidayDays.get(position);
 
@@ -65,6 +67,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		viewHolder.cardView.setStrokeColor(holidayDay.getStrokeColor());
 		viewHolder.cardView.setStrokeWidth(holidayDay.getStrokeWidth());
 		viewHolder.sadImageView.setVisibility(holidayDay.getSadImageVisibility());
+		viewHolder.sadImageView.setContentDescription(context.getResources().getString(R.string.content_description_icon_sad_appendix, holidayDay.getId()));
 		viewHolder.smallDateTextView.setText(holidayDay.getSmallDate());
 		viewHolder.bigDateTextView.setText(holidayDay.getBigDate());
 		viewHolder.holidayTextView.setTypeface(null, holidayDay.getTypeFace());
