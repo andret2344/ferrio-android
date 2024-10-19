@@ -9,8 +9,8 @@ android {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 23
         targetSdk = 35
-        versionCode = 77
-        versionName = "3.0.0-build.1"
+        versionCode = 78
+        versionName = "3.0.0-build.2"
         multiDexEnabled = true
         signingConfig = signingConfigs.getByName("debug")
     }
