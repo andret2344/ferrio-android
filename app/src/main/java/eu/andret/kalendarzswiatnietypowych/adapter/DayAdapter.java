@@ -62,12 +62,13 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 	@SuppressLint("WrongConstant")
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final MonthFragment.HolidayDayViewModel holidayDay = holidayDays.get(position);
+		final String contentDescription = context.getResources().getString(R.string.content_description_icon_sad_appendix, holidayDay.getId());
 
 		viewHolder.cardView.setCardBackgroundColor(holidayDay.getCardBackgroundColor());
 		viewHolder.cardView.setStrokeColor(holidayDay.getStrokeColor());
 		viewHolder.cardView.setStrokeWidth(holidayDay.getStrokeWidth());
 		viewHolder.sadImageView.setVisibility(holidayDay.getSadImageVisibility());
-		viewHolder.sadImageView.setContentDescription(context.getResources().getString(R.string.content_description_icon_sad_appendix, holidayDay.getId()));
+		viewHolder.sadImageView.setContentDescription(contentDescription);
 		viewHolder.smallDateTextView.setText(holidayDay.getSmallDate());
 		viewHolder.bigDateTextView.setText(holidayDay.getBigDate());
 		viewHolder.holidayTextView.setTypeface(null, holidayDay.getTypeFace());

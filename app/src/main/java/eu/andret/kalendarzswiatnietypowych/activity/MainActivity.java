@@ -110,7 +110,10 @@ public class MainActivity extends UHCActivity {
 			}
 		});
 
-		getUHCApplication().getAppRepository().getAllHolidayDays().observe(this, holidayDays::addAll);
+		getUHCApplication().getAppRepository().getAllHolidayDays().observe(this, days -> {
+			holidayDays.clear();
+			holidayDays.addAll(days);
+		});
 
 		if (getIntent().getBooleanExtra(INTERNET, false)) {
 			final OneTimeWorkRequest updateDataRequest = new OneTimeWorkRequest.Builder(UpdateDataWorker.class).build();
