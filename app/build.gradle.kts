@@ -7,8 +7,8 @@ android {
     compileSdk = 34
     defaultConfig {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
-        minSdk = 26
-        targetSdk = 34
+        minSdk = 24
+        targetSdk = 35
         versionCode = 72
         versionName = "3.0.0-build.1"
         multiDexEnabled = true
