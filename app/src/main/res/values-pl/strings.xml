@@ -67,5 +67,6 @@
 	<string name="content_description_drawer_close">Zamknij menu</string>
 	<string name="content_description_list_holidays">Lista świąt</string>
 	<string name="content_description_search_results">Wynik wyszukiwania</string>
+	<string name="content_description_icon_main">Główna ikona</string>
 
 </resources>

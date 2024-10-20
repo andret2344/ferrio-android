@@ -76,5 +76,6 @@
 	<string name="content_description_drawer_close">Close drawer</string>
 	<string name="content_description_list_holidays">List of holidays</string>
 	<string name="content_description_search_results">Search result</string>
+	<string name="content_description_icon_main">Main icon</string>
 
 </resources>

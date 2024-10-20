@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,24 +36,30 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class LoginActivity extends AppCompatActivity {
-	private GoogleSignInClient googleSignInClient;
 	private FirebaseAuth firebaseAuth;
 	private MutableLiveData<Boolean> internet;
 	private AlertDialog alertDialog;
+	private RelativeLayout progressLayout;
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		final Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+		progressLayout.setVisibility(View.VISIBLE);
 		try {
 			final GoogleSignInAccount account = task.getResult(ApiException.class);
 			firebaseSignIn(GoogleAuthProvider.getCredential(account.getIdToken(), null));
 		} catch (final ApiException e) {
 			updateUI(null);
+			Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
 		}
+		progressLayout.setVisibility(View.GONE);
 	});
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+
+		progressLayout = findViewById(R.id.activity_login_layout_progress);
 
 		alertDialog = new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.no_internet_connection)
@@ -66,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 				.requestEmail()
 				.build();
 
-		googleSignInClient = GoogleSignIn.getClient(this, gso);
+		final GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, gso);
 		firebaseAuth = FirebaseAuth.getInstance();
 
 		final SignInButton signInButton = findViewById(R.id.activity_login_sign_in_google);
