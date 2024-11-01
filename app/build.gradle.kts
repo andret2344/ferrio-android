@@ -48,7 +48,7 @@ android {
 }
 
 val versionFirebase by extra("33.0.0")
-val versionPlayServices by extra("23.4.0")
+val versionPlayServices by extra("23.5.0")
 val versionMaterial by extra("1.12.0")
 val versionPlayServicesAuth by extra("21.2.0")
 val versionGoogleId by extra("1.1.1")
@@ -64,7 +64,7 @@ val versionAndroidXPreference by extra("1.2.1")
 val versionAndroidXViewPager2 by extra("1.1.0")
 val versionAndroidXCardView by extra("1.0.0")
 val versionAndroidXActivity by extra("1.9.3")
-val versionAndroidXConstraintLayout by extra("2.1.4")
+val versionAndroidXConstraintLayout by extra("2.2.0")
 val versionAndroidxRoom by extra("2.6.1")
 val versionDesguarJdkLibs by extra("2.0.4")
 
