@@ -68,18 +68,8 @@ public class AppRepository {
 	}
 
 	public void updateCalendarData(@NonNull final UnusualCalendar calendar) {
-		Executors.newSingleThreadExecutor().execute(() -> {
-			holidayDao.deleteAllHolidays();
-			holidayDao.deleteAllHolidayDays();
-			holidayDao.deleteAllFloatingHolidays();
-			calendar.getFixed()
-					.stream()
-					.map(HolidayDay::getHolidays)
-					.flatMap(Collection::stream)
-					.forEach(holidayDao::insertHoliday);
-			calendar.getFixed().forEach(holidayDao::insertHolidayDay);
-			calendar.getFloating().forEach(holidayDao::insertFloatingHoliday);
-		});
+		Log.d("UHC-Repository", "Updating calendar data");
+		Executors.newSingleThreadExecutor().execute(() -> holidayDao.replaceAllData(calendar));
 	}
 
 	private void mergeHolidays(final List<HolidayDay> fixedHolidays, final List<FloatingHoliday> floatingHolidays) {

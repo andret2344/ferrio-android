@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,8 +61,11 @@ public class MonthFragment extends Fragment {
 		final View month = inflater.inflate(R.layout.fragment_month, parent, false);
 
 		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
+		recyclerView.setHasFixedSize(true);
+		Log.d("UHC-MontFragment", currentMonth + " created");
 		holidayViewModel.getHolidayDays(before, after)
 				.observe(getViewLifecycleOwner(), holidayDays -> {
+					Log.d("UHC-MontFragment", currentMonth + ": " + holidayDays.size());
 					final List<HolidayDayViewModel> dataSet = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after)
 							.stream()
 							.map(this::convert)
