@@ -92,7 +92,6 @@ public class MainActivity extends UHCActivity {
 		firebaseAuth = FirebaseAuth.getInstance();
 		materialToolbar = findViewById(R.id.activity_main_toolbar);
 		setSupportActionBar(materialToolbar);
-		materialToolbar.setTitle(getMonthName(currentMonthValue));
 
 		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.main_adview_bottom);
@@ -123,7 +122,7 @@ public class MainActivity extends UHCActivity {
 
 	@NonNull
 	private String getMonthName(final int month) {
-		final String displayName = Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
+		final String displayName = Month.of(month).getDisplayName(TextStyle.FULL, Locale.getDefault());
 		return displayName.substring(0, 1).toUpperCase(Locale.getDefault()) + displayName.substring(1);
 	}
 
