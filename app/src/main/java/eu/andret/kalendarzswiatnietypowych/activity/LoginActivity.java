@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
@@ -42,16 +41,14 @@ public class LoginActivity extends AppCompatActivity {
 	private RelativeLayout progressLayout;
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		final Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-		progressLayout.setVisibility(View.VISIBLE);
 		try {
 			final GoogleSignInAccount account = task.getResult(ApiException.class);
 			firebaseSignIn(GoogleAuthProvider.getCredential(account.getIdToken(), null));
 		} catch (final ApiException e) {
-			updateUI(null);
+			progressLayout.setVisibility(View.GONE);
 			Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
-		progressLayout.setVisibility(View.GONE);
 	});
 
 	@Override
@@ -78,7 +75,10 @@ public class LoginActivity extends AppCompatActivity {
 		firebaseAuth = FirebaseAuth.getInstance();
 
 		final SignInButton signInButton = findViewById(R.id.activity_login_sign_in_google);
-		signInButton.setOnClickListener(view -> activityResult.launch(googleSignInClient.getSignInIntent()));
+		signInButton.setOnClickListener(view -> {
+			progressLayout.setVisibility(View.VISIBLE);
+			activityResult.launch(googleSignInClient.getSignInIntent());
+		});
 
 		final MaterialButton materialButton = findViewById(R.id.activity_login_sign_in_anonymous);
 		materialButton.setOnClickListener(v ->
@@ -94,15 +94,14 @@ public class LoginActivity extends AppCompatActivity {
 			return;
 		}
 		if (user.isAnonymous()) {
-			updateUI(user);
+			navigateToMainActivity();
 			return;
 		}
-		final GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-		if (acct == null) {
-			updateUI(null);
+		final GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+		if (account == null) {
 			return;
 		}
-		final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+		final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 		user.reauthenticate(credential).addOnCompleteListener(this::handleTask);
 	}
 
@@ -112,24 +111,23 @@ public class LoginActivity extends AppCompatActivity {
 
 	private <T> void handleTask(@NonNull final Task<T> task) {
 		if (task.isSuccessful()) {
-			updateUI(firebaseAuth.getCurrentUser());
+			navigateToMainActivity();
 		} else {
 			if (task.getException() instanceof FirebaseNetworkException) {
 				alertDialog.show();
 			} else {
 				Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
+				task.getException().printStackTrace();
 			}
-			updateUI(null);
+			progressLayout.setVisibility(View.GONE);
 		}
 	}
 
-	private void updateUI(@Nullable final FirebaseUser user) {
-		if (user != null) {
-			final Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra(MainActivity.INTERNET, internet.getValue());
-			startActivity(intent);
-			finish();
-		}
+	private void navigateToMainActivity() {
+		final Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra(MainActivity.INTERNET, internet.getValue());
+		startActivity(intent);
+		finish();
 	}
 
 	private void configureObservers() {
