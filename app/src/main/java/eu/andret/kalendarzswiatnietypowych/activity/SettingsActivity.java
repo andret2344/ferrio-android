@@ -9,9 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NavUtils;
 import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Optional;
 
@@ -22,6 +24,7 @@ public class SettingsActivity extends UHCActivity {
 	public void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
+
 		final MaterialToolbar toolbar = findViewById(R.id.activity_settings_toolbar);
 		setSupportActionBar(toolbar);
 		retrieveSupportActionBar().ifPresent(actionBar ->
@@ -54,6 +57,8 @@ public class SettingsActivity extends UHCActivity {
 		@Override
 		public void onCreatePreferences(@Nullable final Bundle savedInstanceState, @Nullable final String rootKey) {
 			setPreferencesFromResource(R.xml.preferences, rootKey);
+			final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
 			if (getContext() == null) {
 				return;
 			}
@@ -62,6 +67,16 @@ public class SettingsActivity extends UHCActivity {
 					.ifPresent(o -> o.setOnPreferenceChangeListener((preference, newValue) -> {
 						final SettingsActivity activity = (SettingsActivity) getContext();
 						activity.recreate();
+						return true;
+					}));
+
+			Optional.ofNullable(this.<Preference>findPreference(getContext().getString(R.string.settings_key_logout)))
+					.ifPresent(o -> o.setOnPreferenceClickListener(preference -> {
+						requireActivity().finishAffinity();
+						firebaseAuth.signOut();
+						final Intent intent = new Intent(getContext(), LoginActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);
 						return true;
 					}));
 		}

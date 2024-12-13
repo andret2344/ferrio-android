@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "124787310112",
     "project_id": "unusual-holiday-calendar-1",
-    "storage_bucket": "unusual-holiday-calendar-1.appspot.com"
+    "storage_bucket": "unusual-holiday-calendar-1.firebasestorage.app"
   },
   "client": [
     {
@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "124787310112-974c6aaaancftde90vdlbs33qq6tg44s.apps.googleusercontent.com",
+          "client_id": "124787310112-b3bginn5j5s5gh7i54ctj2idkmtqso17.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "eu.andret.kalendarzswiatnietypowych",
-            "certificate_hash": "149e23cfa9f2dcc45e4e7e5d3a67e2315c120bfe"
+            "certificate_hash": "28528d008e903563e72da227d59459be1ba9e78a"
           }
         },
         {

@@ -27,6 +27,7 @@
 	<string name="about_calendar">O kalendarzu</string>
 	<string name="about_holidays_text">Wszystkie święta – nawet te najbardziej nietypowe – są okazją, by inaczej spojrzeć na otaczających nas ludzi i docenić zjawiska, na które normalnie nie zwracamy uwagi.</string>
 	<string name="app_theme">Styl aplikacji</string>
+	<string name="logout">Wyloguj się</string>
 	<string name="read_more">Czytaj więcej…</string>
 	<string name="report">Zgłoś</string>
 	<string name="logging_in_anonymously">Kontynuuj bez logowania</string>
