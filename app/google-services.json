@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "124787310112-974c6aaaancftde90vdlbs33qq6tg44s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eu.andret.kalendarzswiatnietypowych",
+            "certificate_hash": "149e23cfa9f2dcc45e4e7e5d3a67e2315c120bfe"
+          }
+        },
+        {
+          "client_id": "124787310112-ajoktjdf85blnt61ka2tvfd4vgdcj9a8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eu.andret.kalendarzswiatnietypowych",
+            "certificate_hash": "aab245bf75b1ad1ad4e28548336249d3422da1b3"
+          }
+        },
+        {
           "client_id": "124787310112-b3bginn5j5s5gh7i54ctj2idkmtqso17.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
