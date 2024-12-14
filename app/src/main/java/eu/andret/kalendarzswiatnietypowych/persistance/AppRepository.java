@@ -68,7 +68,6 @@ public class AppRepository {
 	}
 
 	public void updateCalendarData(@NonNull final UnusualCalendar calendar) {
-		Log.d("UHC-Repository", "Updating calendar data");
 		Executors.newSingleThreadExecutor().execute(() -> holidayDao.replaceAllData(calendar));
 	}
 

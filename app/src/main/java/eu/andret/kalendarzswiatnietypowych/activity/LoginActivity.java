@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 			return;
 		}
 		if (user.isAnonymous()) {
+			progressLayout.setVisibility(View.VISIBLE);
 			navigateToMainActivity();
 			return;
 		}
@@ -101,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
 		if (account == null) {
 			return;
 		}
+		progressLayout.setVisibility(View.VISIBLE);
 		final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 		user.reauthenticate(credential).addOnCompleteListener(this::handleTask);
 	}
