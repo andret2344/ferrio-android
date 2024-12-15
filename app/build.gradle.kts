@@ -9,16 +9,16 @@ android {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 23
         targetSdk = 35
-        versionCode = 84
-        versionName = "3.0.0-build.8"
+        versionCode = 85
+        versionName = "3.0.0-build.9"
         multiDexEnabled = true
         signingConfig = signingConfigs.getByName("debug")
     }
     buildTypes {
         release {
-            isShrinkResources = false
+            isShrinkResources = true
             isMinifyEnabled = true
-            isDebuggable = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -31,6 +31,9 @@ android {
             isShrinkResources = false
             isMinifyEnabled = false
             isDebuggable = true
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     compileOptions {
