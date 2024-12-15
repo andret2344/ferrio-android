@@ -96,7 +96,6 @@ public final class Util {
 		return "en";
 	}
 
-
 	@NonNull
 	public static String getFormattedDateWithYear(@NonNull final Pair<Month, Integer> pair) {
 		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);

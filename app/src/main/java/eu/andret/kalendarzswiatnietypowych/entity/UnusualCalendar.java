@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.processing.Generated;
+
 @Entity(tableName = "unusual_calendar")
 public class UnusualCalendar {
 	private final List<HolidayDay> fixed;
@@ -19,6 +21,11 @@ public class UnusualCalendar {
 	public UnusualCalendar(@NonNull final List<HolidayDay> fixed, final List<FloatingHoliday> floating) {
 		this.fixed = fixed;
 		this.floating = floating;
+	}
+
+	@Generated("Required for GSON")
+	public UnusualCalendar() {
+		this(new ArrayList<>(), new ArrayList<>());
 	}
 
 	@NonNull

@@ -10,19 +10,23 @@
 
 -keepattributes Signature
 -keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar {
- !transient <fields>;
+    <init>();
+    <fields>;
 }
 
 -keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.HolidayDay {
- !transient <fields>;
+    <init>();
+    <fields>;
 }
 
 -keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.Holiday {
- !transient <fields>;
+    <init>();
+    <fields>;
 }
 
 -keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.FloatingHoliday {
- !transient <fields>;
+    <init>();
+    <fields>;
 }
 
 -keep class org.mozilla.javascript.** { *; }
