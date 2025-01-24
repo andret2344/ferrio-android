@@ -3,6 +3,7 @@ package eu.andret.kalendarzswiatnietypowych.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,9 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		viewHolder.descriptionTextView.setText(holiday.getDescription());
 		if (holiday.getCountryCode() != null && !holiday.getCountryCode().isBlank()) {
 			viewHolder.countryTextView.setText(holiday.getCountryCode());
-			viewHolder.countryTextView.setTooltipText(holiday.getCountryName());
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				viewHolder.countryTextView.setTooltipText(holiday.getCountryName());
+			}
 		}
 		if (holiday.isUsual()) {
 			viewHolder.nameTextView.setTypeface(null, Typeface.ITALIC);
