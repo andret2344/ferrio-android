@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 23
