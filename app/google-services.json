@@ -22,22 +22,6 @@
           }
         },
         {
-          "client_id": "124787310112-ajoktjdf85blnt61ka2tvfd4vgdcj9a8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "eu.andret.kalendarzswiatnietypowych",
-            "certificate_hash": "aab245bf75b1ad1ad4e28548336249d3422da1b3"
-          }
-        },
-        {
-          "client_id": "124787310112-b3bginn5j5s5gh7i54ctj2idkmtqso17.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "eu.andret.kalendarzswiatnietypowych",
-            "certificate_hash": "28528d008e903563e72da227d59459be1ba9e78a"
-          }
-        },
-        {
           "client_id": "124787310112-q2pkvuo39bfp75mlcaue3adpvgs7jsfa.apps.googleusercontent.com",
           "client_type": 3
         }
