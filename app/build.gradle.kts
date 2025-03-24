@@ -7,16 +7,16 @@ android {
     compileSdk = 35
     defaultConfig {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
-        minSdk = 23
+        minSdk = 28
         targetSdk = 35
-        versionCode = 87
-        versionName = "3.0.0-build.11"
+        versionCode = 92
+        versionName = "3.0.0-build.16"
         multiDexEnabled = true
         signingConfig = signingConfigs.getByName("debug")
     }
     buildTypes {
         release {
-            isShrinkResources = true
+            isShrinkResources = false
             isMinifyEnabled = true
             isDebuggable = false
             proguardFiles(

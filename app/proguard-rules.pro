@@ -1,42 +1,27 @@
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
 -keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
 -renamesourcefileattribute SourceFile
 -ignorewarnings
 
--keepattributes Signature
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar {
-    <init>();
-    <fields>;
-}
+# Reguły URLConnection (SSL)
+-keep class javax.net.ssl.** { *; }
+-keep class java.net.** { *; }
+-keep class sun.net.** { *; }
 
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.HolidayDay {
-    <init>();
-    <fields>;
-}
+# Gson
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keep class com.google.gson.** { *; }
 
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.Holiday {
-    <init>();
-    <fields>;
-}
+# Twoje klasy modelowe encji używane przez Gson
+-keep class eu.andret.kalendarzswiatnietypowych.entity.** { *; }
 
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.FloatingHoliday {
-    <init>();
-    <fields>;
-}
+# Inne Twoje klasy użytkowe (już obecne w konfiguracji)
+-keep class eu.andret.kalendarzswiatnietypowych.util.** { *; }
 
--keep class org.mozilla.javascript.** { *; }
-
--if class androidx.credentials.CredentialManager
--keep class androidx.credentials.playservices.** {
-  *;
-}
-
+# Firebase i PlayServices (już obecne w konfiguracji)
 -keep class com.google.android.gms.** { *; }
--dontwarn com.google.android.gms.**
 -keep class com.google.firebase.** { *; }
--dontwarn com.google.firebase.**
+
+# Pozostałe obecne reguły
+-keep class org.mozilla.javascript.** { *; }
+-if class androidx.credentials.CredentialManager
+-keep class androidx.credentials.playservices.** { *; }
