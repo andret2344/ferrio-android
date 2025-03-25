@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity(tableName = "holiday")
@@ -15,22 +16,20 @@ public class Holiday implements Comparable<Holiday> {
 	private final String description;
 	private final boolean usual;
 	private final String countryCode;
-	private final String countryName;
 	private final String url;
 
-	public Holiday(final int id, final String name, final String description, final boolean usual, final String countryCode, final String countryName, final String url) {
+	public Holiday(final int id, final String name, final String description, final boolean usual, final String countryCode, final String url) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.usual = usual;
 		this.countryCode = countryCode;
-		this.countryName = countryName;
 		this.url = url;
 	}
 
 	public Holiday(@NonNull final FloatingHoliday floatingHoliday) {
 		this(-floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(),
-				floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getCountryName(), floatingHoliday.getUrl());
+				floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getUrl());
 	}
 
 	public int getId() {
@@ -58,7 +57,10 @@ public class Holiday implements Comparable<Holiday> {
 
 	@Nullable
 	public String getCountryName() {
-		return countryName;
+		if (getCountryCode() == null) {
+			return null;
+		}
+		return new Locale(Locale.getDefault().getLanguage(), countryCode).getDisplayCountry();
 	}
 
 	@NonNull
@@ -80,13 +82,12 @@ public class Holiday implements Comparable<Holiday> {
 				&& Objects.equals(description, holiday.description)
 				&& usual == holiday.usual
 				&& Objects.equals(countryCode, holiday.countryCode)
-				&& Objects.equals(countryName, holiday.countryName)
 				&& Objects.equals(url, holiday.url);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, usual, countryCode, countryName, url);
+		return Objects.hash(id, name, description, usual, countryCode, url);
 	}
 
 	@NonNull
@@ -98,7 +99,6 @@ public class Holiday implements Comparable<Holiday> {
 				", description='" + description + '\'' +
 				", usual=" + usual +
 				", countryCode='" + countryCode + '\'' +
-				", countryName='" + countryName + '\'' +
 				", url='" + url + '\'' +
 				'}';
 	}

@@ -93,18 +93,12 @@ public class LoginActivity extends AppCompatActivity {
 		if (user == null) {
 			return;
 		}
+		progressLayout.setVisibility(View.VISIBLE);
 		if (user.isAnonymous()) {
-			progressLayout.setVisibility(View.VISIBLE);
 			navigateToMainActivity();
 			return;
 		}
-		final GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-		if (account == null) {
-			return;
-		}
-		progressLayout.setVisibility(View.VISIBLE);
-		final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-		user.reauthenticate(credential).addOnCompleteListener(this::handleTask);
+		user.getIdToken(true).addOnCompleteListener(this::handleTask);
 	}
 
 	private void firebaseSignIn(@NonNull final AuthCredential credential) {

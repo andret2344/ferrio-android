@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity(tableName = "floating_holiday")
@@ -15,18 +16,16 @@ public class FloatingHoliday {
 	private final String name;
 	private final String description;
 	private final String countryCode;
-	private final String countryName;
 	private final String url;
 	private final String script;
 
 	public FloatingHoliday(final int id, final boolean usual, final String name, final String description,
-						   final String countryCode, final String countryName, final String url, final String script) {
+						   final String countryCode, final String url, final String script) {
 		this.id = id;
 		this.usual = usual;
 		this.name = name;
 		this.description = description;
 		this.countryCode = countryCode;
-		this.countryName = countryName;
 		this.url = url;
 		this.script = script;
 	}
@@ -56,7 +55,10 @@ public class FloatingHoliday {
 
 	@Nullable
 	public String getCountryName() {
-		return countryName;
+		if (getCountryCode() == null) {
+			return null;
+		}
+		return new Locale(Locale.getDefault().getLanguage(), countryCode).getDisplayCountry();
 	}
 
 	@Nullable
@@ -83,14 +85,13 @@ public class FloatingHoliday {
 				&& Objects.equals(name, that.name)
 				&& Objects.equals(description, that.description)
 				&& Objects.equals(countryCode, that.countryCode)
-				&& Objects.equals(countryName, that.countryName)
 				&& Objects.equals(url, that.url)
 				&& Objects.equals(script, that.script);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, usual, name, description, countryCode, countryName, url, script);
+		return Objects.hash(id, usual, name, description, countryCode, url, script);
 	}
 
 	@NonNull
@@ -102,7 +103,6 @@ public class FloatingHoliday {
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", countryCode='" + countryCode + '\'' +
-				", countryName='" + countryName + '\'' +
 				", url='" + url + '\'' +
 				", script='" + script + '\'' +
 				'}';
