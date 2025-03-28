@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<color name="background_primary">#FFFFFF</color>
-	<color name="background_secondary">#F2F2F6</color>
-	<color name="background_accent">#E4E4E5</color>
+	<!-- Tła -->
+	<color name="background">#FFFFFF</color>
+	<color name="surface">#F7F7F7</color>
+	<color name="surfaceVariant">#E0E0E0</color>
+	<color name="cardBackground">#F0F0F0</color>
 
-	<color name="foreground_primary">#000000</color>
-	<color name="foreground_secondary">#1C1C1D</color>
-	<color name="foreground_accent">#2B2B2D</color>
+	<!-- Tekst -->
+	<color name="textPrimary">#212121</color>
+	<color name="textSecondary">#757575</color>
+	<color name="onSurface">#000000</color>
 
+	<!-- Akcenty -->
+	<color name="accent">#FF6F00</color>
+	<color name="accentLight">#FFE0B2</color>
+
+	<!-- Przycisk continue -->
+	<color name="buttonBackground">#FFFFFF</color>
+	<color name="buttonBorder">#DDDDDD</color>
+	<color name="buttonText">#212121</color>
+
+	<!-- Report button -->
+	<color name="reportText">#FF3D00</color>
+
+	<color name="background_secondary">#E0E0E0</color>
+	<color name="background_accent">#F0F0F0</color>
+	<color name="today_outline">#D32F2F</color>
+
+	<!-- # CUSTOM COLORS # -->
+	<!-- Basic colors -->
+	<color name="error">#B00020</color>
+	<color name="success">#388E3C</color>
+	<color name="warning">#FBC02D</color>
+	<color name="info">#1976D2</color>
+
+	<!-- Statuses -->
 	<color name="status_reported">#2196F3</color>
 	<color name="status_applied">#4CAF50</color>
 	<color name="status_declined">#F44336</color>

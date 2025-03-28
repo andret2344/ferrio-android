@@ -51,7 +51,6 @@
 			android:layout_alignParentEnd="true"
 			android:gravity="center_vertical|center_horizontal"
 			android:padding="5dp"
-			android:textColor="@color/foreground_accent"
 			android:textSize="@dimen/adapter_holiday_country" />
 	</RelativeLayout>
 

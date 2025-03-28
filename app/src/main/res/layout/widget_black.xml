@@ -13,7 +13,6 @@
 		android:layout_marginTop="10dp"
 		android:gravity="center"
 		android:text="@string/today_is"
-		android:textColor="@color/foreground_secondary"
 		android:textSize="20sp" />
 
 	<TextView
@@ -23,7 +22,6 @@
 		android:layout_below="@+id/widget_text_today"
 		android:layout_marginLeft="10dp"
 		android:layout_marginRight="10dp"
-		android:layout_marginBottom="10dp"
-		android:textColor="@color/foreground_secondary" />
+		android:layout_marginBottom="10dp" />
 
 </RelativeLayout>

@@ -17,17 +17,17 @@
 
 		<ProgressBar
 			android:id="@+id/activity_login_progress"
+			style="@style/Widget.UnusualHoliday.ProgressBar.White"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:indeterminate="true"
-			android:indeterminateTintMode="src_atop" />
+			android:indeterminate="true" />
 	</RelativeLayout>
 
 	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:src="@drawable/ic_app_logo"
 		android:contentDescription="@string/content_description_icon_main"
+		android:src="@drawable/ic_app_logo"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"
@@ -57,13 +57,13 @@
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/activity_login_sign_in_anonymous"
+			style="@style/Widget.UnusualHoliday.SecondaryButton"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="50dp"
 			android:layout_marginTop="10dp"
 			android:layout_marginEnd="50dp"
 			android:text="@string/logging_in_anonymously"
-			android:textColor="@color/background_primary"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"

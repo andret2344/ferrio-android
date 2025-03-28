@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -93,7 +92,7 @@ public class MonthFragment extends Fragment {
 		}
 
 		final LocalDate now = LocalDate.now();
-		holidayDayViewModel.strokeColor = Color.RED;
+		holidayDayViewModel.strokeColor = ContextCompat.getColor(requireContext(), R.color.today_outline);
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
 			holidayDayViewModel.strokeWidth = 4;
 		}

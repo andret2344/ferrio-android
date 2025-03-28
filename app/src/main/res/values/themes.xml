@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
-	<style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
-		<item name="android:textColor">@color/foreground_primary</item>
-		<item name="android:colorPrimary">@color/background_secondary</item>
-		<item name="android:colorPrimaryDark">@color/background_accent</item>
-		<item name="android:windowLightStatusBar">true</item>
+	<style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+
+		<!-- Kolory bazowe -->
+		<item name="colorPrimary">@color/textPrimary</item>
+		<item name="colorPrimaryVariant">@color/textPrimary</item>
+		<item name="colorOnPrimary">@color/background</item>
+
+		<item name="colorSecondary">@color/accent</item>
+		<item name="colorSecondaryVariant">@color/accentLight</item>
+		<item name="colorOnSecondary">@color/textPrimary</item>
+
+		<!-- Tła i powierzchnie -->
+		<item name="android:colorBackground">@color/background</item>
+		<item name="colorSurface">@color/surface</item>
+		<item name="colorSurfaceVariant">@color/surfaceVariant</item>
+		<item name="colorOnSurface">@color/onSurface</item>
+
+		<!-- Tekst -->
+		<item name="android:textColorPrimary">@color/textPrimary</item>
+		<item name="android:textColorSecondary">@color/textSecondary</item>
+
+		<!-- Bars -->
+		<item name="android:statusBarColor">@android:color/transparent</item>
+		<item name="android:navigationBarColor">@color/background</item>
+
+		<!-- Independent on colors -->
+		<item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+		<item name="android:windowLightNavigationBar">?attr/isLightTheme</item>
+
+		<item name="textAppearanceBodyLarge">@style/TextAppearance.Material3.BodyLarge</item>
+		<item name="textAppearanceBodyMedium">@style/TextAppearance.Material3.BodyMedium</item>
+		<item name="textAppearanceBodySmall">@style/TextAppearance.Material3.BodySmall</item>
+
 	</style>
 
 </resources>
