@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room)
 
+    implementation(libs.emoji.java)
+
     annotationProcessor(libs.room.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)

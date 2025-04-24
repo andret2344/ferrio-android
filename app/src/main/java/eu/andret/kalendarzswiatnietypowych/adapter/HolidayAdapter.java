@@ -12,7 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiManager;
+
 import java.util.List;
+import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
@@ -65,8 +69,10 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		viewHolder.nameTextView.setText(holiday.getName());
 		viewHolder.descriptionTextView.setText(holiday.getDescription());
 		if (holiday.getCountryCode() != null && !holiday.getCountryCode().isBlank()) {
-			viewHolder.countryTextView.setText(holiday.getCountryCode());
-			viewHolder.countryTextView.setTooltipText(holiday.getCountryName());
+			final Emoji emoji = EmojiManager.getForAlias(holiday.getCountryCode().toLowerCase(Locale.ROOT));
+			final Locale locale = new Locale("", holiday.getCountryCode().toUpperCase(Locale.ROOT));
+			viewHolder.countryTextView.setText(emoji.getUnicode());
+			viewHolder.countryTextView.setTooltipText(locale.getDisplayCountry());
 		}
 		if (holiday.isUsual()) {
 			viewHolder.nameTextView.setTypeface(null, Typeface.ITALIC);

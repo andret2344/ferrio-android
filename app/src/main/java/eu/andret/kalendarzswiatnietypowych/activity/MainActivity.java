@@ -122,7 +122,7 @@ public class MainActivity extends UHCActivity {
 
 	@NonNull
 	private String getMonthName(final int month) {
-		final String displayName = Month.of(month).getDisplayName(TextStyle.FULL, Locale.getDefault());
+		final String displayName = Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
 		return displayName.substring(0, 1).toUpperCase(Locale.getDefault()) + displayName.substring(1);
 	}
 
