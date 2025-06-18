@@ -31,6 +31,7 @@ public class AppRepository {
 
 	public AppRepository(final Application application) {
 		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "uhc")
+				.fallbackToDestructiveMigrationFrom(true, 1)
 				.enableMultiInstanceInvalidation()
 				.build();
 		holidayDao = database.appDao();
