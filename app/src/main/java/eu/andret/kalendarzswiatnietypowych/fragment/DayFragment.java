@@ -44,7 +44,7 @@ public class DayFragment extends Fragment {
 		final HolidayViewModel holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
 				.get(HolidayViewModel.class);
 
-		holidayAdapter = new HolidayAdapter(getContext(), new ArrayList<>());
+		holidayAdapter = new HolidayAdapter(getContext(), new ArrayList<>(), date);
 		recyclerView.setAdapter(holidayAdapter);
 
 		final long seed = Long.parseLong(String.format(Locale.ROOT, "%d%d", date.second, date.first.getValue()));

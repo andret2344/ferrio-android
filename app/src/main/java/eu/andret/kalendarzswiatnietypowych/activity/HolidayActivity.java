@@ -21,11 +21,19 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportViewModel;
 
 public class HolidayActivity extends UHCActivity {
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM", Locale.getDefault());
+
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,12 +49,18 @@ public class HolidayActivity extends UHCActivity {
 				.loadAd(new AdRequest.Builder().build());
 
 		final int holidayId = getIntent().getIntExtra(MainActivity.HOLIDAY, 0);
+		final Month month = Month.of(getIntent().getIntExtra(MainActivity.MONTH, 1));
+		final int day = getIntent().getIntExtra(MainActivity.DAY, 1);
+		final LocalDate date = LocalDate.of(Year.now().getValue(), month, day);
 
 		holidayViewModel.getHoliday(holidayId).observe(this, optionalHoliday -> optionalHoliday.ifPresent(holiday -> {
 			final TextView holidayNameTextView = findViewById(R.id.activity_holiday_name);
+			final TextView holidayDateTextView = findViewById(R.id.activity_holiday_date);
 			final TextView holidayDescTextView = findViewById(R.id.activity_holiday_description);
 
 			holidayNameTextView.setText(holiday.getName());
+
+			holidayDateTextView.setText(formatter.format(date));
 			if (holiday.getDescription().isBlank()) {
 				holidayDescTextView.setText(R.string.no_description);
 				holidayDescTextView.setTypeface(null, Typeface.ITALIC);

@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 
+import java.time.Month;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +29,7 @@ import eu.andret.kalendarzswiatnietypowych.util.HolidayDiffCallback;
 public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHolder> {
 	private final Context context;
 	private final List<Holiday> holidays;
+	private final Pair<Month, Integer> datePair;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView nameTextView;
@@ -41,9 +44,10 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		}
 	}
 
-	public HolidayAdapter(final Context context, final List<Holiday> holidays) {
+	public HolidayAdapter(final Context context, final List<Holiday> holidays, final Pair<Month, Integer> datePair) {
 		this.context = context;
 		this.holidays = holidays;
+		this.datePair = datePair;
 	}
 
 	@NonNull
@@ -63,6 +67,8 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		viewHolder.itemView.setOnClickListener(view -> {
 			final Intent intent = new Intent(context, HolidayActivity.class);
 			intent.putExtra(MainActivity.HOLIDAY, holiday.getId());
+			intent.putExtra(MainActivity.MONTH, datePair.first.getValue());
+			intent.putExtra(MainActivity.DAY, datePair.second);
 			context.startActivity(intent);
 		});
 

@@ -3,6 +3,7 @@
 
 	<!-- High DPI ~240dpi -->
 	<dimen name="activity_holiday_name">18sp</dimen>
+	<dimen name="activity_holiday_date">12sp</dimen>
 	<dimen name="activity_holiday_description">9sp</dimen>
 	<dimen name="adapter_day_holiday">8sp</dimen>
 	<dimen name="adapter_day_more">10sp</dimen>
