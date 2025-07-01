@@ -76,9 +76,8 @@ public class HolidayAdapter extends RecyclerView.Adapter<HolidayAdapter.ViewHold
 		viewHolder.descriptionTextView.setText(holiday.getDescription());
 		if (holiday.getCountryCode() != null && !holiday.getCountryCode().isBlank()) {
 			final Emoji emoji = EmojiManager.getForAlias(holiday.getCountryCode().toLowerCase(Locale.ROOT));
-			final Locale locale = new Locale("", holiday.getCountryCode().toUpperCase(Locale.ROOT));
 			viewHolder.countryTextView.setText(emoji.getUnicode());
-			viewHolder.countryTextView.setTooltipText(locale.getDisplayCountry());
+			viewHolder.countryTextView.setTooltipText(holiday.getCountryName());
 		}
 		if (holiday.isUsual()) {
 			viewHolder.nameTextView.setTypeface(null, Typeface.ITALIC);

@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Locale;
 import java.util.Objects;
 
 @Entity(tableName = "floating_holiday")
@@ -19,8 +18,9 @@ public class FloatingHoliday {
 	private final String url;
 	private final String script;
 
-	public FloatingHoliday(final int id, final boolean usual, final String name, final String description,
-						   final String countryCode, final String url, final String script) {
+	public FloatingHoliday(
+			final int id, final boolean usual, final String name, final String description,
+			final String countryCode, final String url, final String script) {
 		this.id = id;
 		this.usual = usual;
 		this.name = name;
@@ -51,14 +51,6 @@ public class FloatingHoliday {
 	@Nullable
 	public String getCountryCode() {
 		return countryCode;
-	}
-
-	@Nullable
-	public String getCountryName() {
-		if (getCountryCode() == null) {
-			return null;
-		}
-		return new Locale(Locale.getDefault().getLanguage(), countryCode).getDisplayCountry();
 	}
 
 	@Nullable
