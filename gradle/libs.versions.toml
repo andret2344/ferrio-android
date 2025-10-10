@@ -1,23 +1,23 @@
 [versions]
-firebase = "33.16.0"
-play-services = "24.4.0"
-material = "1.12.0"
-play-services-auth = "21.3.0"
+firebase = "34.3.0"
+play-services = "24.6.0"
+material = "1.13.0"
+play-services-auth = "21.4.0"
 google-id = "1.1.1"
-gson = "2.13.1"
+gson = "2.13.2"
 stream-support = "1.7.4"
 rhino = "1.8.0"
 picasso = "2.71828"
-guava = "33.4.8-android"
+guava = "33.5.0-android"
 androidx-appcompat = "1.7.1"
 androidx-credentials = "1.5.0"
 androidx-credentials-play-services-auth = "1.5.0"
 androidx-preference = "1.2.1"
 androidx-viewpager2 = "1.1.0"
 androidx-cardview = "1.0.0"
-androidx-activity = "1.10.1"
+androidx-activity = "1.11.0"
 androidx-constraintlayout = "2.2.1"
-androidx-room = "2.7.2"
+androidx-room = "2.8.2"
 desugar-jdk-libs = "2.1.5"
 emoji-java = "5.1.1"
 
@@ -47,5 +47,5 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 emoji-java = { module = "com.vdurmont:emoji-java", version.ref = "emoji-java" }
 
 [plugins]
-android-application = { id = "com.android.application", version = "8.11.0" }
+android-application = { id = "com.android.application", version = "8.13.0" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.3" }

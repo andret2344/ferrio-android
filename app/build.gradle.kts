@@ -7,7 +7,7 @@ android {
     compileSdk = 36
     defaultConfig {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
-        minSdk = 28
+        minSdk = 29
         targetSdk = 36
         versionCode = 95
         versionName = "3.0.0-build.19"
