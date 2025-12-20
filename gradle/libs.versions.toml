@@ -1,12 +1,13 @@
 [versions]
-firebase = "34.3.0"
-play-services = "24.6.0"
+# dependencies
+firebase = "34.7.0"
+play-services = "24.9.0"
 material = "1.13.0"
 play-services-auth = "21.4.0"
 google-id = "1.1.1"
 gson = "2.13.2"
 stream-support = "1.7.4"
-rhino = "1.8.0"
+rhino = "1.8.1"
 picasso = "2.71828"
 guava = "33.5.0-android"
 androidx-appcompat = "1.7.1"
@@ -15,11 +16,15 @@ androidx-credentials-play-services-auth = "1.5.0"
 androidx-preference = "1.2.1"
 androidx-viewpager2 = "1.1.0"
 androidx-cardview = "1.0.0"
-androidx-activity = "1.11.0"
+androidx-activity = "1.12.2"
 androidx-constraintlayout = "2.2.1"
-androidx-room = "2.8.2"
+androidx-room = "2.8.4"
 desugar-jdk-libs = "2.1.5"
 emoji-java = "5.1.1"
+
+# plugins
+plugin-application = "8.13.2"
+plugin-android-services = "4.4.4"
 
 [libraries]
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
@@ -47,5 +52,5 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 emoji-java = { module = "com.vdurmont:emoji-java", version.ref = "emoji-java" }
 
 [plugins]
-android-application = { id = "com.android.application", version = "8.13.0" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.3" }
+android-application = { id = "com.android.application", version.ref = "plugin-application" }
+google-services = { id = "com.google.gms.google-services", version.ref = "plugin-android-services" }
