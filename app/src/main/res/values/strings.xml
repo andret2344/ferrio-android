@@ -4,9 +4,7 @@
 	<string name="banner_ad_unit_id" translatable="false">ca-app-pub-3410450408196791/4823111464</string>
 	<string name="admob_app_id" translatable="false">ca-app-pub-3410450408196791~3872850665</string>
 	<string name="default_web_client_id" translatable="false">124787310112-q2pkvuo39bfp75mlcaue3adpvgs7jsfa.apps.googleusercontent.com</string>
-	<string name="facebook_app_id" translatable="false">1099267601358995</string>
-	<string name="facebook_client_token" translatable="false">8547cfc9cd42063d16c93cadcbb2cb90</string>
-	<string name="app_name">Unusual Holiday Calendar</string>
+	<string name="app_name">Ferrio</string>
 	<string name="unusual_holiday">Unusual holiday</string>
 	<string name="share_message">%1$s:\n%2$s\n\nCheck it!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
 	<string name="share_via">Share via</string>

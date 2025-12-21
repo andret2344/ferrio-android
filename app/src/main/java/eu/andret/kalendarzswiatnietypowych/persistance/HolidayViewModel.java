@@ -17,9 +17,9 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 
 public class HolidayViewModel extends ViewModel {
 	public static final ViewModelInitializer<HolidayViewModel> INITIALIZER = new ViewModelInitializer<>(HolidayViewModel.class, creationExtras -> {
-		final UHCApplication uhcApplication = (UHCApplication) creationExtras.get(ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY);
-		assert uhcApplication != null;
-		return new HolidayViewModel(uhcApplication.getAppRepository());
+		final UHCApplication ferrioApplication = (UHCApplication) creationExtras.get(ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY);
+		assert ferrioApplication != null;
+		return new HolidayViewModel(ferrioApplication.getAppRepository());
 	});
 	private final AppRepository repository;
 
