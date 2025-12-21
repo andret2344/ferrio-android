@@ -45,15 +45,16 @@
 			android:layout_height="match_parent"
 			android:padding="24dp"
 			android:scaleType="fitCenter"
-			android:src="@drawable/logo_transparent" />
+			android:src="@drawable/logo_transparent"
+			android:contentDescription="@string/content_description_icon_main" />
 	</FrameLayout>
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Ferrio"
-		android:textSize="34dp"
 		android:contentDescription="@string/content_description_icon_main"
+		android:text="@string/app_name"
+		android:textSize="@dimen/activity_login_text_name"
 		app:layout_constraintBottom_toTopOf="@id/activity_login_buttons_container"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"

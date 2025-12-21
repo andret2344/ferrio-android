@@ -12,5 +12,6 @@
 	<dimen name="adapter_holiday_country">15sp</dimen>
 	<dimen name="adapter_search_main">18sp</dimen>
 	<dimen name="fragment_day_empty">20sp</dimen>
+	<dimen name="activity_login_text_name">29sp</dimen>
 
 </resources>
