@@ -30,7 +30,7 @@ public class AppRepository {
 	private final MediatorLiveData<List<HolidayDay>> mergedHolidays = new MediatorLiveData<>();
 
 	public AppRepository(final Application application) {
-		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "uhc")
+		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "ferrio")
 				.fallbackToDestructiveMigrationFrom(true, 1)
 				.enableMultiInstanceInvalidation()
 				.build();
