@@ -2,15 +2,13 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/fragment_day_relative_main"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/background_primary">
+	android:layout_height="match_parent">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/fragment_day_list_holidays"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:contentDescription="@string/content_description_list_holidays"
-		android:background="@color/background_primary"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 	<ImageView
@@ -32,7 +30,6 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:text="@string/no_unusual_holidays"
-		android:textColor="@color/foreground_primary"
 		android:textSize="@dimen/fragment_day_empty"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="parent"

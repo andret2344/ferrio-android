@@ -6,4 +6,19 @@
 		<item name="cornerFamily">rounded</item>
 	</style>
 
+	<style name="Widget.UnusualHoliday.SecondaryButton" parent="Widget.Material3.Button.TextButton">
+		<item name="android:background">@color/surface</item>
+		<item name="android:textColor">@android:color/black</item>
+	</style>
+
+	<style name="Widget.UnusualHoliday.TextButton.Report" parent="Widget.Material3.Button.TextButton.Icon">
+		<item name="iconTint">@color/reportText</item>
+		<item name="android:textColor">@color/reportText</item>
+	</style>
+
+	<style name="Widget.UnusualHoliday.ProgressBar.White" parent="Widget.AppCompat.ProgressBar">
+		<item name="android:indeterminateTint">@android:color/white</item>
+		<item name="android:indeterminateTintMode">src_atop</item>
+	</style>
+
 </resources>

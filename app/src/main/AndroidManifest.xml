@@ -55,7 +55,7 @@
 		<activity
 			android:name=".activity.HolidayActivity"
 			android:configChanges="uiMode"
-			android:windowSoftInputMode="stateAlwaysHidden" />
+			android:windowSoftInputMode="stateVisible|adjustResize" />
 		<activity
 			android:name=".activity.SettingsActivity"
 			android:configChanges="uiMode"
