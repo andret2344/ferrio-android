@@ -11,21 +11,17 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.auth.FirebaseAuth;
-
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.CustomFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportsFixedFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportsFloatingFragment;
 
-public class ReportsActivity extends UHCActivity {
-	private FirebaseAuth firebaseAuth;
+public class ReportsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reports);
-		firebaseAuth = FirebaseAuth.getInstance();
 
 		final MaterialToolbar materialToolbar = findViewById(R.id.activity_reports_toolbar);
 		setSupportActionBar(materialToolbar);
@@ -36,8 +32,8 @@ public class ReportsActivity extends UHCActivity {
 		final ViewPager2 viewPager2 = findViewById(R.id.activity_reports_view_pager);
 
 		final CustomFragmentAdapter adapter = new CustomFragmentAdapter(this);
-		adapter.addFragment(ReportsFixedFragment.newInstance(firebaseAuth.getUid()));
-		adapter.addFragment(ReportsFloatingFragment.newInstance(firebaseAuth.getUid()));
+		adapter.addFragment(ReportsFixedFragment.newInstance());
+		adapter.addFragment(ReportsFloatingFragment.newInstance());
 		viewPager2.setAdapter(adapter);
 
 		new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {

@@ -3,37 +3,51 @@ package eu.andret.kalendarzswiatnietypowych.entity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Locale;
 import java.util.Objects;
 
-@Entity(tableName = "holiday")
+@Entity(tableName = "holiday", indices = @Index({"month", "day"}))
 public class Holiday implements Comparable<Holiday> {
 	@PrimaryKey
-	private final int id;
+	@NonNull
+	private final String id;
+	private final int day;
+	private final int month;
 	private final String name;
 	private final String description;
 	private final boolean usual;
-	private final String countryCode;
+	private final String country;
 	private final String url;
+	private final boolean matureContent;
 
-	public Holiday(final int id, final String name, final String description, final boolean usual, final String countryCode, final String url) {
+	public Holiday(@NonNull final String id, final int day, final int month, final String name,
+			final String description, final boolean usual, final String country,
+			final String url, final boolean matureContent) {
 		this.id = id;
+		this.day = day;
+		this.month = month;
 		this.name = name;
 		this.description = description;
 		this.usual = usual;
-		this.countryCode = countryCode;
+		this.country = country;
 		this.url = url;
+		this.matureContent = matureContent;
 	}
 
-	public Holiday(@NonNull final FloatingHoliday floatingHoliday) {
-		this(-floatingHoliday.getId(), floatingHoliday.getName(), floatingHoliday.getDescription(),
-				floatingHoliday.isUsual(), floatingHoliday.getCountryCode(), floatingHoliday.getUrl());
-	}
-
-	public int getId() {
+	@NonNull
+	public String getId() {
 		return id;
+	}
+
+	public int getDay() {
+		return day;
+	}
+
+	public int getMonth() {
+		return month;
 	}
 
 	@NonNull
@@ -51,21 +65,25 @@ public class Holiday implements Comparable<Holiday> {
 	}
 
 	@Nullable
-	public String getCountryCode() {
-		return countryCode;
+	public String getCountry() {
+		return country;
 	}
 
 	@Nullable
 	public String getCountryName() {
-		if (getCountryCode() == null) {
+		if (country == null) {
 			return null;
 		}
-		return Locale.forLanguageTag(countryCode).getDisplayCountry(Locale.getDefault());
+		return Locale.forLanguageTag(country).getDisplayCountry(Locale.getDefault());
 	}
 
 	@NonNull
 	public String getUrl() {
 		return url;
+	}
+
+	public boolean isMatureContent() {
+		return matureContent;
 	}
 
 	@Override
@@ -77,29 +95,35 @@ public class Holiday implements Comparable<Holiday> {
 			return false;
 		}
 		final Holiday holiday = (Holiday) o;
-		return id == holiday.id
+		return day == holiday.day
+				&& month == holiday.month
+				&& usual == holiday.usual
+				&& matureContent == holiday.matureContent
+				&& Objects.equals(id, holiday.id)
 				&& Objects.equals(name, holiday.name)
 				&& Objects.equals(description, holiday.description)
-				&& usual == holiday.usual
-				&& Objects.equals(countryCode, holiday.countryCode)
+				&& Objects.equals(country, holiday.country)
 				&& Objects.equals(url, holiday.url);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, description, usual, countryCode, url);
+		return Objects.hash(id, day, month, name, description, usual, country, url, matureContent);
 	}
 
 	@NonNull
 	@Override
 	public String toString() {
 		return "Holiday{" +
-				"id=" + id +
+				"id='" + id + '\'' +
+				", day=" + day +
+				", month=" + month +
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", usual=" + usual +
-				", countryCode='" + countryCode + '\'' +
+				", country='" + country + '\'' +
 				", url='" + url + '\'' +
+				", matureContent=" + matureContent +
 				'}';
 	}
 

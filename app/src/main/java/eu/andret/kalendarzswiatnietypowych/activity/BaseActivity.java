@@ -14,10 +14,10 @@ import androidx.preference.PreferenceManager;
 import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.UHCApplication;
+import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 
-public abstract class UHCActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 	protected HolidayViewModel holidayViewModel;
 
 	@Override
@@ -57,7 +57,7 @@ public abstract class UHCActivity extends AppCompatActivity {
 	}
 
 	@NonNull
-	protected UHCApplication getUHCApplication() {
-		return (UHCApplication) getApplication();
+	protected FerrioApplication getFerrioApplication() {
+		return (FerrioApplication) getApplication();
 	}
 }

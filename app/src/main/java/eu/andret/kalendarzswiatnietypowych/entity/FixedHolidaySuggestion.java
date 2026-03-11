@@ -1,26 +1,32 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class MissingFixedHoliday {
+public class FixedHolidaySuggestion {
 	private int id;
-	private String userId;
 	private int day;
 	private int month;
 	private String name;
 	private String description;
+	private LocalDateTime datetime;
+	private String country;
 	private ReportState reportState;
 	private Integer holidayId;
 
-	public MissingFixedHoliday(final int id, final String userId, final int day, final int month, final String name, final String description, final ReportState reportState, final Integer holidayId) {
+	public FixedHolidaySuggestion(final int id, final int day, final int month, final String name,
+			final String description, final LocalDateTime datetime, final String country,
+			final ReportState reportState, final Integer holidayId) {
 		this.id = id;
-		this.userId = userId;
 		this.day = day;
 		this.month = month;
 		this.name = name;
 		this.description = description;
+		this.datetime = datetime;
+		this.country = country;
 		this.reportState = reportState;
 		this.holidayId = holidayId;
 	}
@@ -31,14 +37,6 @@ public class MissingFixedHoliday {
 
 	public void setId(final int id) {
 		this.id = id;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(final String userId) {
-		this.userId = userId;
 	}
 
 	public int getDay() {
@@ -73,6 +71,22 @@ public class MissingFixedHoliday {
 		this.description = description;
 	}
 
+	public LocalDateTime getDatetime() {
+		return datetime;
+	}
+
+	public void setDatetime(final LocalDateTime datetime) {
+		this.datetime = datetime;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(final String country) {
+		this.country = country;
+	}
+
 	public ReportState getReportState() {
 		return reportState;
 	}
@@ -83,6 +97,14 @@ public class MissingFixedHoliday {
 
 	public Integer getHolidayId() {
 		return holidayId;
+	}
+
+	@Nullable
+	public String getFullHolidayId() {
+		if (holidayId == null) {
+			return null;
+		}
+		return "fixed-" + holidayId;
 	}
 
 	public void setHolidayId(final Integer holidayId) {
@@ -97,32 +119,34 @@ public class MissingFixedHoliday {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		final MissingFixedHoliday that = (MissingFixedHoliday) o;
+		final FixedHolidaySuggestion that = (FixedHolidaySuggestion) o;
 		return id == that.id
 				&& day == that.day
 				&& month == that.month
-				&& Objects.equals(userId, that.userId)
 				&& Objects.equals(name, that.name)
 				&& Objects.equals(description, that.description)
+				&& Objects.equals(datetime, that.datetime)
+				&& Objects.equals(country, that.country)
 				&& reportState == that.reportState
 				&& Objects.equals(holidayId, that.holidayId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, userId, day, month, name, description, reportState, holidayId);
+		return Objects.hash(id, day, month, name, description, datetime, country, reportState, holidayId);
 	}
 
 	@NonNull
 	@Override
 	public String toString() {
-		return "MissingFixedHoliday{" +
+		return "FixedHolidaySuggestion{" +
 				"id=" + id +
-				", userId='" + userId + '\'' +
 				", day=" + day +
 				", month=" + month +
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
+				", datetime=" + datetime +
+				", country='" + country + '\'' +
 				", reportState=" + reportState +
 				", holidayId=" + holidayId +
 				'}';

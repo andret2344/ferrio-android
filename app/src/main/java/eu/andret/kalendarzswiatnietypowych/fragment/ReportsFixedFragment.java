@@ -7,15 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.adapter.ReportedHolidayAdapter;
-import eu.andret.kalendarzswiatnietypowych.util.Downloader;
-import java9.util.concurrent.CompletableFuture;
+import eu.andret.kalendarzswiatnietypowych.entity.ReportedHoliday;
 
-public class ReportsFixedFragment extends Fragment {
+public class ReportsFixedFragment extends AuthenticatedFragment {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
@@ -26,25 +25,21 @@ public class ReportsFixedFragment extends Fragment {
 	public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		final Bundle arguments = getArguments();
-		if (arguments == null) {
-			return;
-		}
-		final String userId = arguments.getString("userId");
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_reports_fixed_list);
-		CompletableFuture.supplyAsync(new Downloader.ReportFixedHolidaysDownloader(userId))
-				.thenAccept(reportedFixedHolidays -> requireActivity().runOnUiThread(() -> {
+		fetchAuthenticated(
+				token -> getApiClient().getList(getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_ERROR, ApiClient.HOLIDAY_TYPE_FIXED), token, ReportedHoliday.class),
+				reportedFixedHolidays -> {
 					recyclerView.setAdapter(new ReportedHolidayAdapter(requireContext(), reportedFixedHolidays));
 					view.findViewById(R.id.fragment_reports_fixed_indicator).setVisibility(View.GONE);
-				}));
+				},
+				ex -> {
+					view.findViewById(R.id.fragment_reports_fixed_indicator).setVisibility(View.GONE);
+					handleApiError(ex);
+				});
 	}
 
 	@NonNull
-	public static ReportsFixedFragment newInstance(@Nullable final String userId) {
-		final Bundle args = new Bundle();
-		args.putString("userId", userId);
-		final ReportsFixedFragment fragment = new ReportsFixedFragment();
-		fragment.setArguments(args);
-		return fragment;
+	public static ReportsFixedFragment newInstance() {
+		return new ReportsFixedFragment();
 	}
 }

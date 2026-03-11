@@ -6,6 +6,7 @@ import android.os.CancellationSignal;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +26,7 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -34,18 +35,19 @@ import eu.andret.kalendarzswiatnietypowych.util.auth.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {
 
+	private static final String TAG = "LoginActivity";
 	public static final String INTERNET = "INTERNET";
 
 	private AuthViewModel authViewModel;
 	private RelativeLayout progress;
-	private AlertDialog offlineDialog;
 	private CancellationSignal cancellationSignal;
 
 	private CredentialManager credentialManager;
-	private Executor executor;
+	private ExecutorService executorService;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
+		final AlertDialog offlineDialog;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
@@ -79,10 +81,23 @@ public class LoginActivity extends AppCompatActivity {
 		});
 
 		findViewById(R.id.activity_login_sign_in_google).setOnClickListener(v -> authViewModel.clickGoogle());
-		findViewById(R.id.activity_login_sign_in_anonymous).setOnClickListener(v -> authViewModel.signInAnonymously());
+		final View anonymousButton = findViewById(R.id.activity_login_sign_in_anonymous);
+		anonymousButton.setOnClickListener(v ->
+				new MaterialAlertDialogBuilder(this)
+						.setMessage(R.string.anonymous_login_alert)
+						.setPositiveButton(R.string.ok, (dialog, which) -> authViewModel.signInAnonymously())
+						.setNegativeButton(android.R.string.cancel, null)
+						.show());
+		final TextView moreOptions = findViewById(R.id.activity_login_more_options);
+		moreOptions.setOnClickListener(v -> {
+			final boolean expanding = anonymousButton.getVisibility() != View.VISIBLE;
+			final int chevron = expanding ? R.drawable.baseline_expand_less_24 : R.drawable.baseline_expand_more_24;
+			anonymousButton.setVisibility(expanding ? View.VISIBLE : View.GONE);
+			moreOptions.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, chevron, 0);
+		});
 
 		credentialManager = CredentialManager.create(this);
-		executor = Executors.newSingleThreadExecutor();
+		executorService = Executors.newSingleThreadExecutor();
 	}
 
 	@Override
@@ -92,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
 	}
 
 	private void beginGoogleSignIn() {
-		Log.d("Ferrio-default_web_client_id", getString(R.string.default_web_client_id));
 		final GetGoogleIdOption googleOption = new GetGoogleIdOption.Builder()
 				.setServerClientId(getString(R.string.default_web_client_id))
 				.build();
@@ -110,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
 				this,
 				request,
 				cancellationSignal,
-				executor,
+				executorService,
 				new CredentialManagerCallback<>() {
 					@Override
 					public void onResult(final GetCredentialResponse response) {
@@ -121,13 +135,24 @@ public class LoginActivity extends AppCompatActivity {
 					public void onError(@NonNull final GetCredentialException e) {
 						progress.post(() -> {
 							progress.setVisibility(View.GONE);
-							Log.d("Ferrio-LoginActivity-1", "error=" + e.getMessage());
-							e.printStackTrace();
+							Log.e(TAG, "Credential request failed", e);
 							authViewModel.reportError(e.getMessage() != null ? e.getMessage() : "Authentication failed");
 						});
 					}
 				}
 		);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (cancellationSignal != null) {
+			cancellationSignal.cancel();
+			cancellationSignal = null;
+		}
+		if (executorService != null) {
+			executorService.shutdownNow();
+		}
 	}
 
 	private void handleCredentialResponse(@NonNull final GetCredentialResponse response) {
@@ -144,8 +169,7 @@ public class LoginActivity extends AppCompatActivity {
 					authViewModel.handleGoogleIdToken(idToken);
 					return;
 				} catch (final Throwable e) {
-					Log.d("Ferrio-LoginActivity-2", "error=" + e.getMessage());
-					e.printStackTrace();
+					Log.e(TAG, "Failed to process Google credential", e);
 					authViewModel.reportError(e.getMessage() != null ? e.getMessage() : "Authentication failed");
 				}
 			} else {

@@ -1,9 +1,11 @@
+import com.android.build.api.dsl.ApplicationExtension
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
 }
 
-android {
+configure<ApplicationExtension> {
     compileSdk = 36
     defaultConfig {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
@@ -11,12 +13,10 @@ android {
         targetSdk = 36
         versionCode = 95
         versionName = "3.0.0-build.19"
-        multiDexEnabled = true
-        signingConfig = signingConfigs.getByName("debug")
     }
     buildTypes {
         release {
-            isShrinkResources = false
+            isShrinkResources = true
             isMinifyEnabled = true
             isDebuggable = false
             proguardFiles(
@@ -24,13 +24,14 @@ android {
                 "proguard-rules.pro"
             )
             ndk {
-                debugSymbolLevel = "FULL"
+                debugSymbolLevel = "SYMBOL_TABLE"
             }
         }
         debug {
             isShrinkResources = false
             isMinifyEnabled = false
             isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
             ndk {
                 debugSymbolLevel = "FULL"
             }
@@ -43,8 +44,8 @@ android {
     }
     namespace = "eu.andret.kalendarzswiatnietypowych"
     dependenciesInfo {
-        includeInApk = true
-        includeInBundle = true
+        includeInApk = false
+        includeInBundle = false
     }
 }
 
@@ -58,11 +59,7 @@ dependencies {
     implementation(libs.googleid)
 
     implementation(libs.gson)
-    implementation(libs.stream.support)
-    implementation(libs.rhino)
     implementation(libs.picasso)
-    implementation(libs.guava)
-
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
@@ -72,6 +69,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room)
+    implementation(libs.androidx.swiperefreshlayout)
 
     implementation(libs.emoji.java)
 

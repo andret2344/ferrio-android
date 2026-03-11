@@ -17,6 +17,8 @@ import java.util.concurrent.Executors;
 import eu.andret.kalendarzswiatnietypowych.util.NetworkMonitor;
 
 public final class AuthViewModel extends AndroidViewModel {
+	private static final String TAG = "AuthViewModel";
+
 	private final AuthRepository repo;
 	private final NetworkMonitor network;
 	private final ExecutorService io = Executors.newSingleThreadExecutor();
@@ -52,19 +54,24 @@ public final class AuthViewModel extends AndroidViewModel {
 		return launchGoogle;
 	}
 
+	private boolean isOffline() {
+		final AuthUiState current = ui.getValue();
+		return current != null && current.offline;
+	}
+
 	public void start() {
 		final FirebaseUser current = repo.getCurrentUser();
 		if (current == null) {
 			return;
 		}
-		ui.postValue(AuthUiState.progress(ui.getValue() != null && ui.getValue().offline));
+		ui.postValue(AuthUiState.progress(isOffline()));
 		io.submit(() -> {
 			final Result<FirebaseUser> res = repo.reloadAndGetCurrentUserBlocking();
 			if (res.status == Result.Status.SUCCESS) {
-				ui.postValue(AuthUiState.idle(ui.getValue().offline, res.data));
+				ui.postValue(AuthUiState.idle(isOffline(), res.data));
 			} else {
-				Log.d("Ferrio-AuthViewModel-1", "res=" + res);
-				ui.postValue(AuthUiState.error(ui.getValue().offline, mapError(res.throwable)));
+				Log.d(TAG, "Auth failed, status=" + res.status);
+				ui.postValue(AuthUiState.error(isOffline(), mapError(res.throwable)));
 			}
 		});
 	}
@@ -74,34 +81,34 @@ public final class AuthViewModel extends AndroidViewModel {
 	}
 
 	public void handleGoogleIdToken(@NonNull final String idToken) {
-		ui.postValue(AuthUiState.progress(ui.getValue() != null && ui.getValue().offline));
+		ui.postValue(AuthUiState.progress(isOffline()));
 		io.submit(() -> {
 			final Result<FirebaseUser> res = repo.exchangeGoogleIdTokenBlocking(idToken);
 			if (res.status == Result.Status.SUCCESS) {
-				ui.postValue(AuthUiState.idle(ui.getValue().offline, res.data));
+				ui.postValue(AuthUiState.idle(isOffline(), res.data));
 			} else {
-				Log.d("Ferrio-AuthViewModel-2", "res=" + res);
-				ui.postValue(AuthUiState.error(ui.getValue().offline, mapError(res.throwable)));
+				Log.d(TAG, "Auth failed, status=" + res.status);
+				ui.postValue(AuthUiState.error(isOffline(), mapError(res.throwable)));
 			}
 		});
 	}
 
 	public void signInAnonymously() {
-		ui.postValue(AuthUiState.progress(ui.getValue() != null && ui.getValue().offline));
+		ui.postValue(AuthUiState.progress(isOffline()));
 		io.submit(() -> {
 			final Result<FirebaseUser> res = repo.signInAnonymouslyBlocking();
 			if (res.status == Result.Status.SUCCESS) {
-				ui.postValue(AuthUiState.idle(ui.getValue().offline, res.data));
+				ui.postValue(AuthUiState.idle(isOffline(), res.data));
 			} else {
-				Log.d("Ferrio-AuthViewModel-3", "res=" + res);
-				ui.postValue(AuthUiState.error(ui.getValue().offline, mapError(res.throwable)));
+				Log.d(TAG, "Auth failed, status=" + res.status);
+				ui.postValue(AuthUiState.error(isOffline(), mapError(res.throwable)));
 			}
 		});
 	}
 
 	public void reportError(@NonNull final String message) {
-		Log.d("Ferrio-AuthViewModel-4", "msg=" + message);
-		ui.postValue(AuthUiState.error(ui.getValue() != null && ui.getValue().offline, message));
+		Log.d(TAG, "Auth error reported");
+		ui.postValue(AuthUiState.error(isOffline(), message));
 	}
 
 	private String mapError(final Throwable e) {

@@ -5,15 +5,13 @@ import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
-public class HolidayReport {
-	private final String userId;
+public class HolidayError {
 	private final int metadata;
 	private final String language;
 	private final String reportType;
 	private final String description;
 
-	public HolidayReport(final String userId, final int metadata, final String language, final String reportType, final String description) {
-		this.userId = userId;
+	public HolidayError(final int metadata, final String language, final String reportType, final String description) {
 		this.metadata = metadata;
 		this.language = language;
 		this.reportType = reportType;
@@ -28,9 +26,8 @@ public class HolidayReport {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		final HolidayReport that = (HolidayReport) o;
+		final HolidayError that = (HolidayError) o;
 		return metadata == that.metadata
-				&& Objects.equals(userId, that.userId)
 				&& Objects.equals(language, that.language)
 				&& Objects.equals(reportType, that.reportType)
 				&& Objects.equals(description, that.description);
@@ -38,15 +35,14 @@ public class HolidayReport {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(userId, metadata, language, reportType, description);
+		return Objects.hash(metadata, language, reportType, description);
 	}
 
 	@NonNull
 	@Override
 	public String toString() {
-		return "HolidayReport{" +
-				"userId='" + userId + '\'' +
-				", metadata=" + metadata +
+		return "HolidayError{" +
+				"metadata=" + metadata +
 				", language='" + language + '\'' +
 				", reportType='" + reportType + '\'' +
 				", description='" + description + '\'' +

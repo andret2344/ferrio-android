@@ -8,7 +8,7 @@
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
 	<application
-		android:name=".UHCApplication"
+		android:name=".FerrioApplication"
 		android:allowBackup="true"
 		android:dataExtractionRules="@xml/data_extraction_rules"
 		android:fullBackupContent="@xml/backup_descriptor"
@@ -26,7 +26,6 @@
 
 		<activity
 			android:name=".activity.LoginActivity"
-			android:configChanges="uiMode"
 			android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -35,10 +34,9 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".activity.MainActivity"
-			android:configChanges="uiMode" />
+			android:name=".activity.MainActivity" />
 		<activity
-			android:name=".activity.MissingActivity"
+			android:name=".activity.SuggestionActivity"
 			android:exported="false" />
 		<activity
 			android:name=".activity.ReportsActivity"
@@ -47,23 +45,27 @@
 			android:name=".activity.SuggestionsActivity"
 			android:exported="false" />
 		<activity
-			android:name="com.google.android.gms.ads.AdActivity"
-			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-		<activity
-			android:name=".activity.DayActivity"
-			android:configChanges="uiMode" />
+			android:name=".activity.DayActivity" />
 		<activity
 			android:name=".activity.HolidayActivity"
-			android:configChanges="uiMode"
 			android:windowSoftInputMode="stateVisible|adjustResize" />
 		<activity
 			android:name=".activity.SettingsActivity"
-			android:configChanges="uiMode"
 			android:label="@string/menu_main_settings">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />
 		</activity>
+
+		<provider
+			android:name="androidx.core.content.FileProvider"
+			android:authorities="${applicationId}.fileprovider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_paths" />
+		</provider>
 
 		<receiver
 			android:name=".WidgetProvider"
@@ -71,6 +73,7 @@
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 				<action android:name="ACTION_AUTO_UPDATE_WIDGET" />
+				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
 			</intent-filter>
 
 			<meta-data

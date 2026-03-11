@@ -1,8 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +8,45 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 
-import java.util.List;
-
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
-import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 
-public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
-	private final Context context;
-	private final List<MonthFragment.HolidayDayViewModel> holidayDays;
+public class DayAdapter extends ListAdapter<MonthFragment.HolidayDayViewModel, DayAdapter.ViewHolder> {
+	private static final DiffUtil.ItemCallback<MonthFragment.HolidayDayViewModel> DIFF_CALLBACK =
+			new DiffUtil.ItemCallback<>() {
+				@Override
+				public boolean areItemsTheSame(@NonNull final MonthFragment.HolidayDayViewModel oldItem,
+						@NonNull final MonthFragment.HolidayDayViewModel newItem) {
+					return oldItem.getMonth() == newItem.getMonth() && oldItem.getDay() == newItem.getDay();
+				}
+
+				@Override
+				public boolean areContentsTheSame(@NonNull final MonthFragment.HolidayDayViewModel oldItem,
+						@NonNull final MonthFragment.HolidayDayViewModel newItem) {
+					return oldItem.getCardBackgroundColor() == newItem.getCardBackgroundColor()
+							&& oldItem.getStrokeColor() == newItem.getStrokeColor()
+							&& oldItem.getStrokeWidth() == newItem.getStrokeWidth()
+							&& oldItem.getSadImageVisibility() == newItem.getSadImageVisibility()
+							&& oldItem.getTypeFace() == newItem.getTypeFace()
+							&& java.util.Objects.equals(oldItem.getSmallDate(), newItem.getSmallDate())
+							&& java.util.Objects.equals(oldItem.getBigDate(), newItem.getBigDate())
+							&& java.util.Objects.equals(oldItem.getHolidayText(), newItem.getHolidayText())
+							&& java.util.Objects.equals(oldItem.getMoreText(), newItem.getMoreText());
+				}
+			};
+
+	private final DayClickListener dayClickListener;
+
+	public DayAdapter(@NonNull final DayClickListener dayClickListener) {
+		super(DIFF_CALLBACK);
+		this.dayClickListener = dayClickListener;
+	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView smallDateTextView;
@@ -44,25 +67,21 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		}
 	}
 
-	public DayAdapter(final Context context, final List<MonthFragment.HolidayDayViewModel> holidayDays) {
-		this.context = context;
-		this.holidayDays = holidayDays;
-	}
-
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
 		final View view = LayoutInflater.from(viewGroup.getContext())
 				.inflate(R.layout.adapter_day, viewGroup, false);
-		view.getLayoutParams().height = viewGroup.getMeasuredHeight() / 6;
+		final int adHeight = (int) (50 * viewGroup.getResources().getDisplayMetrics().density);
+		view.getLayoutParams().height = (viewGroup.getMeasuredHeight() - adHeight) / 6;
 		return new ViewHolder(view);
 	}
 
 	@Override
 	@SuppressLint("WrongConstant")
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-		final MonthFragment.HolidayDayViewModel holidayDay = holidayDays.get(position);
-		final String contentDescription = context.getResources().getString(R.string.content_description_icon_sad_appendix, holidayDay.getId());
+		final MonthFragment.HolidayDayViewModel holidayDay = getItem(position);
+		final String contentDescription = viewHolder.itemView.getContext().getString(R.string.content_description_icon_sad_appendix, holidayDay.getId());
 
 		viewHolder.cardView.setCardBackgroundColor(holidayDay.getCardBackgroundColor());
 		viewHolder.cardView.setStrokeColor(holidayDay.getStrokeColor());
@@ -75,16 +94,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 		viewHolder.holidayTextView.setText(holidayDay.getHolidayText());
 		viewHolder.moreTextView.setText(holidayDay.getMoreText());
 
-		viewHolder.cardView.setOnClickListener(v -> {
-			final Intent intent = new Intent(context, DayActivity.class);
-			intent.putExtra(MainActivity.DAY, holidayDay.getDay());
-			intent.putExtra(MainActivity.MONTH, holidayDay.getMonth());
-			((MainActivity) context).activityResult.launch(intent);
-		});
-	}
-
-	@Override
-	public int getItemCount() {
-		return holidayDays.size();
+		viewHolder.cardView.setOnClickListener(v ->
+				dayClickListener.onDayClicked(holidayDay.getDay(), holidayDay.getMonth()));
 	}
 }

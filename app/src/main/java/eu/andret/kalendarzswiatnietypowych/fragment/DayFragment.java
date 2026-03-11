@@ -14,9 +14,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
@@ -44,16 +42,16 @@ public class DayFragment extends Fragment {
 		final HolidayViewModel holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
 				.get(HolidayViewModel.class);
 
-		holidayAdapter = new HolidayAdapter(getContext(), new ArrayList<>(), date);
+		holidayAdapter = new HolidayAdapter();
 		recyclerView.setAdapter(holidayAdapter);
 
-		final long seed = Long.parseLong(String.format(Locale.ROOT, "%d%d", date.second, date.first.getValue()));
+		final long seed = Util.calculateSeed(date.second, date.first.getValue());
 		if (preferences.getBoolean(getString(R.string.settings_key_theme_colorized), false)) {
 			dayView.findViewById(R.id.fragment_day_relative_main).setBackgroundColor(Util.randomizeColor(getContext(), seed));
 		}
 		holidayViewModel.getHolidayDay(date.first.getValue(), date.second).observe(getViewLifecycleOwner(), holidayDay -> {
 			final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual);
-			holidayAdapter.updateData(holidaysList);
+			holidayAdapter.submitList(holidaysList);
 			if (holidaysList.isEmpty()) {
 				dayView.findViewById(R.id.fragment_day_image_sad).setVisibility(View.VISIBLE);
 				dayView.findViewById(R.id.fragment_day_text_empty).setVisibility(View.VISIBLE);

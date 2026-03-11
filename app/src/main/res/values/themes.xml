@@ -3,36 +3,49 @@
 
 	<style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
 
-		<!-- Kolory bazowe -->
-		<item name="colorPrimary">@color/textPrimary</item>
-		<item name="colorPrimaryVariant">@color/textPrimary</item>
-		<item name="colorOnPrimary">@color/background</item>
+		<!-- Primary (red-orange accent) -->
+		<item name="colorPrimary">@color/accent</item>
+		<item name="colorOnPrimary">@color/on_accent</item>
+		<item name="colorPrimaryContainer">@color/accent_container</item>
+		<item name="colorOnPrimaryContainer">@color/on_accent_container</item>
 
-		<item name="colorSecondary">@color/accent</item>
-		<item name="colorSecondaryVariant">@color/accentLight</item>
-		<item name="colorOnSecondary">@color/textPrimary</item>
+		<!-- Secondary -->
+		<item name="colorSecondary">@color/secondary</item>
+		<item name="colorOnSecondary">@color/on_secondary</item>
+		<item name="colorSecondaryContainer">@color/secondary_container</item>
+		<item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
 
-		<!-- Tła i powierzchnie -->
-		<item name="android:colorBackground">@color/background</item>
+		<!-- Surface -->
 		<item name="colorSurface">@color/surface</item>
-		<item name="colorSurfaceVariant">@color/surfaceVariant</item>
-		<item name="colorOnSurface">@color/onSurface</item>
+		<item name="colorOnSurface">@color/on_surface</item>
+		<item name="colorSurfaceVariant">@color/surface_variant</item>
+		<item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+		<item name="colorSurfaceContainerLowest">@color/surface_container_lowest</item>
+		<item name="colorSurfaceContainerLow">@color/surface_container_low</item>
+		<item name="colorSurfaceContainer">@color/surface_container</item>
+		<item name="colorSurfaceContainerHigh">@color/surface_container_high</item>
+		<item name="colorSurfaceContainerHighest">@color/surface_container_highest</item>
 
-		<!-- Tekst -->
-		<item name="android:textColorPrimary">@color/textPrimary</item>
-		<item name="android:textColorSecondary">@color/textSecondary</item>
+		<!-- Background -->
+		<item name="android:colorBackground">@color/background</item>
 
-		<!-- Bars -->
+		<!-- Outline -->
+		<item name="colorOutline">@color/outline</item>
+		<item name="colorOutlineVariant">@color/outline_variant</item>
+
+		<!-- Error -->
+		<item name="colorError">@color/error</item>
+		<item name="colorOnError">@color/on_error</item>
+
+		<!-- Text -->
+		<item name="android:textColorPrimary">@color/text_primary</item>
+		<item name="android:textColorSecondary">@color/text_secondary</item>
+
+		<!-- System bars -->
 		<item name="android:statusBarColor">@android:color/transparent</item>
 		<item name="android:navigationBarColor">@color/background</item>
-
-		<!-- Independent on colors -->
 		<item name="android:windowLightStatusBar">?attr/isLightTheme</item>
 		<item name="android:windowLightNavigationBar">?attr/isLightTheme</item>
-
-		<item name="textAppearanceBodyLarge">@style/TextAppearance.Material3.BodyLarge</item>
-		<item name="textAppearanceBodyMedium">@style/TextAppearance.Material3.BodyMedium</item>
-		<item name="textAppearanceBodySmall">@style/TextAppearance.Material3.BodySmall</item>
 
 	</style>
 

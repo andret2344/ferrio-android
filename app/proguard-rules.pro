@@ -6,15 +6,16 @@
 -keep class java.net.** { *; }
 -keep class sun.net.** { *; }
 
+# Gson serialization
 -keepattributes Signature, InnerClasses, EnclosingMethod
 -keep class com.google.gson.** { *; }
 
+# Entity classes used by Gson and Room
 -keep class eu.andret.kalendarzswiatnietypowych.entity.** { *; }
--keep class eu.andret.kalendarzswiatnietypowych.util.** { *; }
 
--keep class com.google.android.gms.** { *; }
--keep class com.google.firebase.** { *; }
+# Gson TypeAdapter
+-keep class eu.andret.kalendarzswiatnietypowych.util.LocalDateTimeAdapter { *; }
 
--keep class org.mozilla.javascript.** { *; }
+# Credentials play services
 -if class androidx.credentials.CredentialManager
 -keep class androidx.credentials.playservices.** { *; }

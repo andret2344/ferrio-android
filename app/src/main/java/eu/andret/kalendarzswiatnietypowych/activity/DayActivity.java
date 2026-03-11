@@ -7,24 +7,25 @@ import android.view.MenuItem;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.util.Pair;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayFragmentAdapter;
-import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.util.ShareCardRenderer;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
-public class DayActivity extends UHCActivity {
+public class DayActivity extends BaseActivity {
 	public static final String POSITION = "position";
 	private static final Random RANDOM = new Random();
 
@@ -39,15 +40,14 @@ public class DayActivity extends UHCActivity {
 
 		final int day = getIntent().getIntExtra(MainActivity.DAY, -1);
 		final int month = getIntent().getIntExtra(MainActivity.MONTH, -1);
+		if (month < 1 || month > 12 || day < 1 || day > 31) {
+			finish();
+			return;
+		}
 
 		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
-		final boolean leap = date.isLeapYear();
-		int id = date.getDayOfYear();
-		if (id > (leap ? 60 : 59)) {
-			id += leap ? 1 : 2;
-		}
-		pager.setCurrentItem(id - 1, false);
+		pager.setCurrentItem(Util.calculateIndex(month, day), false);
 
 		final MaterialToolbar materialToolbar = findViewById(R.id.activity_day_toolbar);
 		setSupportActionBar(materialToolbar);
@@ -58,27 +58,22 @@ public class DayActivity extends UHCActivity {
 
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
-			public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+			public void onPageSelected(final int position) {
 				final Pair<Month, Integer> pair = Util.calculateDates(position + 1);
 				final String format = Util.getFormattedDateWithYear(pair);
 				retrieveSupportActionBar().ifPresent(actionBar ->
 						actionBar.setTitle(format));
 			}
 		});
-		MobileAds.initialize(this);
 		final AdView adView = findViewById(R.id.day_adview_bottom);
 		adView.loadAd(new AdRequest.Builder().build());
 
 		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
 			@Override
 			public void handleOnBackPressed() {
-				int id = pager.getCurrentItem();
-				if (id > 58) {
-					id -= LocalDate.now().isLeapYear() ? 0 : 1;
-				}
-				final LocalDate date = LocalDate.ofYearDay(LocalDate.now().getYear(), Math.max(id, 1));
+				final Pair<Month, Integer> pair = Util.calculateDates(pager.getCurrentItem() + 1);
 				final Intent returnIntent = new Intent();
-				returnIntent.putExtra(MainActivity.MONTH, date.getMonthValue());
+				returnIntent.putExtra(MainActivity.MONTH, pair.first.getValue());
 				setResult(RESULT_OK, returnIntent);
 				finish();
 			}
@@ -98,13 +93,8 @@ public class DayActivity extends UHCActivity {
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_day_today) {
-			final LocalDate date = LocalDate.now();
-			final boolean leap = date.isLeapYear();
-			int id = date.getDayOfYear();
-			if (id > (leap ? 60 : 59)) {
-				id += leap ? 0 : 1;
-			}
-			pager.setCurrentItem(id, true);
+			final LocalDate now = LocalDate.now();
+			pager.setCurrentItem(Util.calculateIndex(now.getMonthValue(), now.getDayOfMonth()), true);
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_day_random) {
@@ -112,22 +102,17 @@ public class DayActivity extends UHCActivity {
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_day_share) {
-			final Intent intent = new Intent(Intent.ACTION_SEND);
-			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.unusual_holiday));
 			final Pair<Month, Integer> pair = Util.calculateDates(pager.getCurrentItem() + 1);
 			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
 			final boolean usualHolidays = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
-			holidayViewModel.getHolidayDay(pair.first.getValue(), pair.second)
-					.observe(this, holidayDay -> {
-						final String holidays = holidayDay.getHolidaysList(usualHolidays)
-								.stream()
-								.map(Holiday::getName)
-								.map(text -> getString(R.string.pointed_text, text))
-								.collect(Collectors.joining("\n"));
-						intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message, localDate, holidays));
-						startActivity(Intent.createChooser(intent, getString(R.string.share_via)));
-					});
+			final LiveData<HolidayDay> liveData = holidayViewModel.getHolidayDay(pair.first.getValue(), pair.second);
+			liveData.observe(this, new Observer<>() {
+				@Override
+				public void onChanged(final HolidayDay holidayDay) {
+					liveData.removeObserver(this);
+					ShareCardRenderer.shareDay(DayActivity.this, localDate, holidayDay.getHolidaysList(usualHolidays));
+				}
+			});
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

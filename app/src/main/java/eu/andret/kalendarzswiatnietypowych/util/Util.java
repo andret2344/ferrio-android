@@ -3,10 +3,14 @@ package eu.andret.kalendarzswiatnietypowych.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.google.gson.FieldNamingPolicy;
@@ -23,55 +27,81 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
+import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
+
 public final class Util {
 	public static final Gson GSON = new GsonBuilder()
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 			.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
 			.create();
-	private static final Random RANDOM = new Random();
 	public static final List<Integer> NETWORK_CAPABILITIES = List.of(
 			NetworkCapabilities.TRANSPORT_WIFI,
 			NetworkCapabilities.TRANSPORT_CELLULAR,
 			NetworkCapabilities.TRANSPORT_ETHERNET);
 	private static final List<String> LANGUAGE_CODES = List.of("pl");
 
+	private static final DateTimeFormatter DATE_TIME_FORMATTER =
+			DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+
+	private static final DateTimeFormatter MONTH_DAY_FORMATTER =
+			DateTimeFormatter.ofPattern("MMMM dd");
+
+	private static final int FEB_29_NON_LEAP_INDEX = 60;
+	private static final int FEB_30_INDEX = 61;
+
 	private Util() {
+	}
+
+	public static long calculateSeed(final int day, final int month) {
+		return day * 100L + month;
 	}
 
 	@NonNull
 	public static Pair<Month, Integer> calculateDates(final int id) {
 		final LocalDate now = LocalDate.now();
 		final int year = now.getYear();
-		if (id == 61) {
+		if (id == FEB_30_INDEX) {
 			return new Pair<>(Month.FEBRUARY, 30);
 		}
 		if (now.isLeapYear()) {
-			if (id < 61) {
+			if (id < FEB_30_INDEX) {
 				final LocalDate date = LocalDate.ofYearDay(year, id);
 				return new Pair<>(date.getMonth(), date.getDayOfMonth());
 			}
 			final LocalDate date = LocalDate.ofYearDay(year, id - 1);
 			return new Pair<>(date.getMonth(), date.getDayOfMonth());
 		}
-		if (id < 60) {
+		if (id < FEB_29_NON_LEAP_INDEX) {
 			final LocalDate date = LocalDate.ofYearDay(year, id);
 			return new Pair<>(date.getMonth(), date.getDayOfMonth());
 		}
-		if (id == 60) {
+		if (id == FEB_29_NON_LEAP_INDEX) {
 			return new Pair<>(Month.FEBRUARY, 29);
 		}
 		final LocalDate date = LocalDate.ofYearDay(year, id - 2);
 		return new Pair<>(date.getMonth(), date.getDayOfMonth());
 	}
 
+	public static int calculateIndex(final int month, final int day) {
+		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
+		final boolean leap = date.isLeapYear();
+		int id = date.getDayOfYear();
+		if (id > (leap ? 60 : 59)) {
+			id += leap ? 1 : 2;
+		}
+		return id - 1;
+	}
+
+	private static final Random COLOR_RANDOM = new Random();
+
 	public static int randomizeColor(@NonNull final Context context, final long seed) {
-		RANDOM.setSeed(seed);
+		COLOR_RANDOM.setSeed(seed);
 		final boolean dark = isDarkTheme(context);
 		return Color.rgb(randomize(dark), randomize(dark), randomize(dark));
 	}
 
 	private static int randomize(final boolean dark) {
-		return RANDOM.nextInt(127) + (dark ? 0 : 127);
+		return COLOR_RANDOM.nextInt(127) + (dark ? 0 : 127);
 	}
 
 	private static boolean isDarkTheme(@NonNull final Context context) {
@@ -105,14 +135,30 @@ public final class Util {
 	@NonNull
 	public static String getFormattedDate(@NonNull final Pair<Month, Integer> pair) {
 		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd")
-				.withLocale(Locale.getDefault());
-		return localDate.format(formatter).replace("19", String.valueOf(pair.second));
+		return localDate.format(MONTH_DAY_FORMATTER.withLocale(Locale.getDefault())).replace("19", String.valueOf(pair.second));
+	}
+
+	public static void applyStatusBadge(@NonNull final TextView textView,
+			@NonNull final ReportState state) {
+		@ColorInt final int color = ContextCompat.getColor(textView.getContext(), state.getColorResId());
+		textView.setText(state.getLabelResId());
+		textView.setTextColor(color);
+		final GradientDrawable background = new GradientDrawable();
+		background.setCornerRadius(6 * textView.getContext().getResources().getDisplayMetrics().density);
+		background.setColor(Color.argb(31, Color.red(color), Color.green(color), Color.blue(color)));
+		textView.setBackground(background);
+	}
+
+	@NonNull
+	public static String countryCodeToFlag(@NonNull final String countryCode) {
+		final String upper = countryCode.toUpperCase(Locale.ROOT);
+		final int firstChar = Character.codePointAt(upper, 0) - 0x41 + 0x1F1E6;
+		final int secondChar = Character.codePointAt(upper, 1) - 0x41 + 0x1F1E6;
+		return new String(Character.toChars(firstChar)) + new String(Character.toChars(secondChar));
 	}
 
 	@NonNull
 	public static DateTimeFormatter getDateTimeFormatter() {
-		return DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
-				.withLocale(Locale.getDefault());
+		return DATE_TIME_FORMATTER.withLocale(Locale.getDefault());
 	}
 }

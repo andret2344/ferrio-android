@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
 import android.content.Context;
+import android.util.Log;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -53,8 +54,8 @@ public final class NetworkMonitor extends LiveData<Boolean> {
 	protected void onInactive() {
 		try {
 			connectivityManager.unregisterNetworkCallback(networkCallback);
-		} catch (final Exception ignored) {
-			// ignored
+		} catch (final Exception ex) {
+			Log.w("NetworkMonitor", "Failed to unregister network callback", ex);
 		}
 	}
 

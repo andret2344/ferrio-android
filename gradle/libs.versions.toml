@@ -1,29 +1,27 @@
 [versions]
 # dependencies
-firebase = "34.7.0"
-play-services = "24.9.0"
+firebase = "34.10.0"
+play-services = "25.0.0"
 material = "1.13.0"
-play-services-auth = "21.4.0"
-google-id = "1.1.1"
+play-services-auth = "21.5.1"
+google-id = "1.2.0"
 gson = "2.13.2"
-stream-support = "1.7.4"
-rhino = "1.8.1"
 picasso = "2.71828"
-guava = "33.5.0-android"
 androidx-appcompat = "1.7.1"
 androidx-credentials = "1.5.0"
 androidx-credentials-play-services-auth = "1.5.0"
 androidx-preference = "1.2.1"
 androidx-viewpager2 = "1.1.0"
 androidx-cardview = "1.0.0"
-androidx-activity = "1.12.2"
+androidx-activity = "1.12.4"
 androidx-constraintlayout = "2.2.1"
 androidx-room = "2.8.4"
+androidx-swiperefreshlayout = "1.1.0"
 desugar-jdk-libs = "2.1.5"
 emoji-java = "5.1.1"
 
 # plugins
-plugin-application = "8.13.2"
+plugin-application = "9.1.0"
 plugin-android-services = "4.4.4"
 
 [libraries]
@@ -34,10 +32,7 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-id" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-stream-support = { module = "net.sourceforge.streamsupport:android-retrofuture", version.ref = "stream-support" }
-rhino = { module = "org.mozilla:rhino", version.ref = "rhino" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials-play-services-auth" }
@@ -47,6 +42,7 @@ androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "andr
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-room = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 emoji-java = { module = "com.vdurmont:emoji-java", version.ref = "emoji-java" }

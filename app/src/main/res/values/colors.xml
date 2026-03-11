@@ -1,44 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!-- Tła -->
-	<color name="background">#FFFFFF</color>
-	<color name="surface">#F7F7F7</color>
-	<color name="surfaceVariant">#E0E0E0</color>
-	<color name="cardBackground">#F0F0F0</color>
+	<!-- Backgrounds -->
+	<color name="background">#FFFBFE</color>
+	<color name="surface">#FFFBFE</color>
+	<color name="surface_variant">#F5DED6</color>
+	<color name="card_background">#FFF1EC</color>
 
-	<!-- Tekst -->
-	<color name="textPrimary">#212121</color>
-	<color name="textSecondary">#757575</color>
-	<color name="onSurface">#000000</color>
+	<!-- Surface containers (M3) -->
+	<color name="surface_container_lowest">#FFFFFF</color>
+	<color name="surface_container_low">#FFF1EC</color>
+	<color name="surface_container">#FFEDE7</color>
+	<color name="surface_container_high">#FFE4DB</color>
+	<color name="surface_container_highest">#FFDDD2</color>
 
-	<!-- Akcenty -->
-	<color name="accent">#FF6F00</color>
-	<color name="accentLight">#FFE0B2</color>
+	<!-- Text -->
+	<color name="text_primary">#1C1B1F</color>
+	<color name="text_secondary">#49454F</color>
+	<color name="on_surface">#1C1B1F</color>
+	<color name="on_surface_variant">#52443C</color>
 
-	<!-- Przycisk continue -->
-	<color name="buttonBackground">#FFFFFF</color>
-	<color name="buttonBorder">#DDDDDD</color>
-	<color name="buttonText">#212121</color>
+	<!-- Primary accent (red-orange from app icon) -->
+	<color name="accent">#C6400A</color>
+	<color name="on_accent">#FFFFFF</color>
+	<color name="accent_container">#FFDBCE</color>
+	<color name="on_accent_container">#3B0900</color>
 
-	<!-- Report button -->
-	<color name="reportText">#FF3D00</color>
+	<!-- Secondary -->
+	<color name="secondary">#77574B</color>
+	<color name="on_secondary">#FFFFFF</color>
+	<color name="secondary_container">#FFDBCE</color>
+	<color name="on_secondary_container">#2C160D</color>
 
+	<!-- Outline -->
+	<color name="outline">#85736B</color>
+	<color name="outline_variant">#D8C2BA</color>
+
+	<!-- Buttons -->
+	<color name="button_background">#FFFFFF</color>
+	<color name="button_border">#D8C2BA</color>
+	<color name="button_text">#1C1B1F</color>
+
+	<!-- Report -->
+	<color name="report_text">#C6400A</color>
+
+	<!-- Day tiles -->
+	<color name="tile_current_month">#F2F2F2</color>
+	<color name="tile_other_month">#E0E0E0</color>
+
+	<!-- Legacy references -->
 	<color name="background_secondary">#E0E0E0</color>
-	<color name="background_accent">#F0F0F0</color>
-	<color name="today_outline">#D32F2F</color>
+	<color name="background_accent">#FFF1EC</color>
+	<color name="today_outline">#C6400A</color>
 
-	<!-- # CUSTOM COLORS # -->
-	<!-- Basic colors -->
-	<color name="error">#B00020</color>
+	<!-- Semantic colors -->
+	<color name="error">#BA1A1A</color>
+	<color name="on_error">#FFFFFF</color>
 	<color name="success">#388E3C</color>
-	<color name="warning">#FBC02D</color>
+	<color name="warning">#F9A825</color>
 	<color name="info">#1976D2</color>
 
+	<!-- Share card (fixed, not theme-dependent) -->
+	<color name="share_card_background">#1E1E2E</color>
+	<color name="share_card_text">#FFFFFF</color>
+	<color name="share_card_text_secondary">#CCB3B3B3</color>
+	<color name="share_card_text_muted">#99B3B3B3</color>
+	<color name="share_card_divider">#26FFFFFF</color>
+
 	<!-- Statuses -->
-	<color name="status_reported">#2196F3</color>
-	<color name="status_applied">#4CAF50</color>
-	<color name="status_declined">#F44336</color>
-	<color name="status_on_hold">#FFA500</color>
+	<color name="status_reported">#007AFF</color>
+	<color name="status_applied">#34C759</color>
+	<color name="status_declined">#FF3B30</color>
+	<color name="status_on_hold">#FFCC00</color>
 
 </resources>

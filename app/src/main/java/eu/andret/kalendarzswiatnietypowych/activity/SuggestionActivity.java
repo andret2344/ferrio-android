@@ -14,24 +14,24 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.fragment.MissingFixedFragment;
-import eu.andret.kalendarzswiatnietypowych.fragment.MissingFloatingFragment;
+import eu.andret.kalendarzswiatnietypowych.fragment.FixedSuggestionFragment;
+import eu.andret.kalendarzswiatnietypowych.fragment.FloatingSuggestionFragment;
 
-public class MissingActivity extends UHCActivity {
+public class SuggestionActivity extends BaseActivity implements FormResultHandler {
 	private FirebaseAuth firebaseAuth;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_missing);
+		setContentView(R.layout.activity_suggestion);
 		firebaseAuth = FirebaseAuth.getInstance();
 
-		final MaterialToolbar materialToolbar = findViewById(R.id.activity_missing_toolbar);
+		final MaterialToolbar materialToolbar = findViewById(R.id.activity_suggestion_toolbar);
 		setSupportActionBar(materialToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		final TabLayout tabLayout = findViewById(R.id.activity_missing_bottom_navigation);
+		final TabLayout tabLayout = findViewById(R.id.activity_suggestion_bottom_navigation);
 		tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(final TabLayout.Tab tab) {
@@ -57,7 +57,7 @@ public class MissingActivity extends UHCActivity {
 			}
 		});
 
-		showFragment(MissingFixedFragment.newInstance(firebaseAuth.getUid()));
+		showFragment(FixedSuggestionFragment.newInstance());
 	}
 
 	private void showFragment(@Nullable final Fragment selectedFragment) {
@@ -66,7 +66,7 @@ public class MissingActivity extends UHCActivity {
 		}
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.activity_missing_frame_layout, selectedFragment)
+				.replace(R.id.activity_suggestion_frame_layout, selectedFragment)
 				.commit();
 	}
 
@@ -74,9 +74,9 @@ public class MissingActivity extends UHCActivity {
 	private Fragment getFragment(final int itemId) {
 		switch (itemId) {
 			case 0:
-				return MissingFixedFragment.newInstance(firebaseAuth.getUid());
+				return FixedSuggestionFragment.newInstance();
 			case 1:
-				return MissingFloatingFragment.newInstance(firebaseAuth.getUid());
+				return FloatingSuggestionFragment.newInstance();
 			default:
 				return null;
 		}
@@ -91,6 +91,7 @@ public class MissingActivity extends UHCActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
 	public void showSuccessDialog() {
 		new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.suggestion_title)
@@ -100,11 +101,22 @@ public class MissingActivity extends UHCActivity {
 				.show();
 	}
 
+	@Override
 	public void showErrorDialog() {
 		new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.error_title)
 				.setMessage(R.string.error_message)
 				.setPositiveButton(R.string.ok, null)
+				.create()
+				.show();
+	}
+
+	@Override
+	public void showBanDialog(@NonNull final String reason) {
+		new MaterialAlertDialogBuilder(this)
+				.setTitle(R.string.ban_title)
+				.setMessage(getString(R.string.ban_message, reason))
+				.setPositiveButton(R.string.ok, (dialog, which) -> finish())
 				.create()
 				.show();
 	}

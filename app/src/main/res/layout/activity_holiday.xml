@@ -40,10 +40,20 @@
 				app:icon="@drawable/baseline_star_24" />
 		</RelativeLayout>
 
+		<com.google.android.material.progressindicator.CircularProgressIndicator
+			android:id="@+id/activity_holiday_progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_margin="48dp"
+			android:indeterminate="true" />
+
 		<LinearLayout
+			android:id="@+id/activity_holiday_content"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="vertical">
+			android:orientation="vertical"
+			android:visibility="gone">
 
 			<ImageView
 				android:id="@+id/activity_holiday_image"

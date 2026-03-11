@@ -17,9 +17,11 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Optional;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 
-public class SettingsActivity extends UHCActivity {
+public class SettingsActivity extends BaseActivity {
 	@Override
 	public void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,8 +67,17 @@ public class SettingsActivity extends UHCActivity {
 
 			Optional.ofNullable(this.<ListPreference>findPreference(getContext().getString(R.string.settings_key_app_theme)))
 					.ifPresent(o -> o.setOnPreferenceChangeListener((preference, newValue) -> {
-						final SettingsActivity activity = (SettingsActivity) getContext();
-						activity.recreate();
+						switch ((String) newValue) {
+							case "light":
+								AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+								break;
+							case "dark":
+								AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+								break;
+							default:
+								AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+								break;
+						}
 						return true;
 					}));
 

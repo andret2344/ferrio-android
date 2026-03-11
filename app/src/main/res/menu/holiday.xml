@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
-	
+
+	<item
+		android:id="@+id/menu_holiday_share"
+		android:icon="@drawable/baseline_share_24"
+		android:orderInCategory="8"
+		android:title="@string/menu_day_share"
+		app:showAsAction="ifRoom" />
+
 	<item
 		android:id="@+id/menu_holiday_favorite"
 		android:icon="@drawable/baseline_star_24"
 		android:orderInCategory="9"
 		android:title="@string/menu_holiday_favorite"
+		android:visible="false"
 		app:showAsAction="ifRoom" />
 
 </menu>

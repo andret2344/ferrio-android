@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name">Kalendarz świąt nietypowych</string>
 	<string name="unusual_holiday">Nietypowe święto</string>
-	<string name="share_message">%1$s:\n%2$s\n\nSprawdź!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
 	<string name="share_via">Udostępnij przez</string>
 	<string name="today_is">Dzisiaj jest:</string>
 	<string name="share">Udostępnij</string>
@@ -30,16 +28,19 @@
 	<string name="logout">Wyloguj się</string>
 	<string name="read_more">Czytaj więcej…</string>
 	<string name="report">Zgłoś</string>
+	<string name="sign_in_with_google">Zaloguj się przez Google</string>
 	<string name="logging_in_anonymously">Kontynuuj bez logowania</string>
+	<string name="anonymous_login_alert">Logując się anonimowo, nie będziesz w stanie w pełni wykorzystać funkcji aplikacji, przykładowo, zgłaszanie błędów.</string>
+	<string name="more_login_options">Więcej opcji logowania</string>
 	<string name="dialog_report_title">Zgłoś święto</string>
 	<string name="holiday_name">Nazwa święta</string>
 	<string name="holiday_description">Opis święta</string>
 	<string name="reason">Powód</string>
 	<string name="description">Opis</string>
-	<string name="report_note">Nota: Zgłoszenia z opisem są bardziej prawdopodobne do bycia rozpatrzonymi w pierwszej kolejności.</string>
+	<string name="report_note">Zgłoszenia i sugestie zawierające opis będą sprawdzane w pierwszej kolejności.</string>
 	<string name="send_report">Wyślij zgłoszenie</string>
 	<string name="application">Aplikacja</string>
-	<string name="missing_holiday">Brakuje święta?</string>
+	<string name="suggest_holiday">Zasugeruj święto</string>
 	<string name="my_reports">Moje zgłoszenia</string>
 	<string name="my_suggestions">Moje sugestie</string>
 	<string name="anonymous_user">Użytkownik anonimowy</string>
@@ -55,8 +56,20 @@
 	<string name="suggestion_message">Sugestia święta została zapisana i zostanie zweryfikowana. Poinformujemy, kiedy tylko weryfikacja się zakończy.</string>
 	<string name="error_title">Błąd!</string>
 	<string name="error_message">Wystąpił błąd. Spróbój ponownie później.</string>
+	<string name="ban_title">Konto zawieszone</string>
+	<string name="ban_message">Twoje konto zostało zawieszone. Powód: %s</string>
 	<string name="report_title">Wysłano zgłoszenie</string>
 	<string name="report_message">Święto zostało zgłoszone i zostanie to teraz zweryfikowane. Poinformujemy, kiedy tylko zgłoszenie zostanie zweryfikowane.</string>
+
+	<!-- report states -->
+	<string name="status_reported">Zgłoszone</string>
+	<string name="status_applied">Zatwierdzone</string>
+	<string name="status_declined">Odrzucone</string>
+	<string name="status_on_hold">Wstrzymane</string>
+
+	<!-- refresh -->
+	<string name="refresh_error">Nie udało się odświeżyć świąt</string>
+	<string name="retry">Ponów</string>
 
 	<!-- content descriptions -->
 	<string name="content_description_ad">Reklama</string>
@@ -69,5 +82,12 @@
 	<string name="content_description_list_holidays">Lista świąt</string>
 	<string name="content_description_search_results">Wynik wyszukiwania</string>
 	<string name="content_description_icon_main">Główna ikona</string>
+	<string name="international">Międzynarodowe</string>
+
+	<string name="loading">Ładowanie…</string>
+
+	<!-- widget preview -->
+	<string name="widget_preview_date">20 Marca</string>
+	<string name="widget_preview_holidays">\u2022 Święto pierwsze\n\u2022 Święto drugie\n\u2022 Święto trzecie\n\u2022 Święto czwarte</string>
 
 </resources>

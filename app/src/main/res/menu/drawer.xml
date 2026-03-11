@@ -3,9 +3,9 @@
 	<item android:title="@string/calendar">
 		<menu>
 			<item
-				android:id="@+id/menu_drawer_missing"
+				android:id="@+id/menu_drawer_suggest"
 				android:icon="@drawable/baseline_edit_24"
-				android:title="@string/missing_holiday" />
+				android:title="@string/suggest_holiday" />
 			<item
 				android:id="@+id/menu_drawer_suggestions"
 				android:icon="@drawable/baseline_done_24"
