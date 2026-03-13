@@ -8,18 +8,31 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportedHoliday;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
-public class ReportedHolidayAdapter extends RecyclerView.Adapter<ReportedHolidayAdapter.ViewHolder> {
-	private final List<ReportedHoliday> holidays;
+public class ReportedHolidayAdapter extends ListAdapter<ReportedHoliday, ReportedHolidayAdapter.ViewHolder> {
+
+	private static final DiffUtil.ItemCallback<ReportedHoliday> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+		@Override
+		public boolean areItemsTheSame(@NonNull final ReportedHoliday oldItem, @NonNull final ReportedHoliday newItem) {
+			return oldItem.getId() == newItem.getId();
+		}
+
+		@Override
+		public boolean areContentsTheSame(@NonNull final ReportedHoliday oldItem, @NonNull final ReportedHoliday newItem) {
+			return oldItem.equals(newItem);
+		}
+	};
+
 	private final Map<String, String> reasonMap;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -37,8 +50,8 @@ public class ReportedHolidayAdapter extends RecyclerView.Adapter<ReportedHoliday
 		}
 	}
 
-	public ReportedHolidayAdapter(final Context context, final List<ReportedHoliday> holidays) {
-		this.holidays = holidays;
+	public ReportedHolidayAdapter(@NonNull final Context context) {
+		super(DIFF_CALLBACK);
 		final Resources resources = context.getResources();
 		final String[] keys = resources.getStringArray(R.array.report_keys);
 		final String[] values = resources.getStringArray(R.array.report_values);
@@ -58,17 +71,12 @@ public class ReportedHolidayAdapter extends RecyclerView.Adapter<ReportedHoliday
 
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-		final ReportedHoliday holiday = holidays.get(position);
+		final ReportedHoliday holiday = getItem(position);
 
 		viewHolder.textViewDate.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
 		viewHolder.textViewName.setText(mapReason(holiday.getReportType()));
 		viewHolder.textViewDescription.setText(holiday.getDescription());
 		Util.applyStatusBadge(viewHolder.textViewStatus, holiday.getReportState());
-	}
-
-	@Override
-	public int getItemCount() {
-		return holidays.size();
 	}
 
 	private String mapReason(final String reportType) {

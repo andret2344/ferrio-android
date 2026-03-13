@@ -26,10 +26,12 @@ public class ReportsFloatingFragment extends AuthenticatedFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_reports_floating_list);
+		final ReportedHolidayAdapter adapter = new ReportedHolidayAdapter(requireContext());
+		recyclerView.setAdapter(adapter);
 		fetchAuthenticated(
 				token -> getApiClient().getList(getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_ERROR, ApiClient.HOLIDAY_TYPE_FLOATING), token, ReportedHoliday.class),
 				reportedFloatingHolidays -> {
-					recyclerView.setAdapter(new ReportedHolidayAdapter(requireContext(), reportedFloatingHolidays));
+					adapter.submitList(reportedFloatingHolidays);
 					view.findViewById(R.id.fragment_reports_floating_indicator).setVisibility(View.GONE);
 				},
 				ex -> {

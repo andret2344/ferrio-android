@@ -9,10 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.Month;
-import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
@@ -21,8 +22,19 @@ import eu.andret.kalendarzswiatnietypowych.entity.FixedHolidaySuggestion;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
-public class SuggestionFixedAdapter extends RecyclerView.Adapter<SuggestionFixedAdapter.ViewHolder> {
-	private final List<FixedHolidaySuggestion> holidays;
+public class SuggestionFixedAdapter extends ListAdapter<FixedHolidaySuggestion, SuggestionFixedAdapter.ViewHolder> {
+
+	private static final DiffUtil.ItemCallback<FixedHolidaySuggestion> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+		@Override
+		public boolean areItemsTheSame(@NonNull final FixedHolidaySuggestion oldItem, @NonNull final FixedHolidaySuggestion newItem) {
+			return oldItem.getId() == newItem.getId();
+		}
+
+		@Override
+		public boolean areContentsTheSame(@NonNull final FixedHolidaySuggestion oldItem, @NonNull final FixedHolidaySuggestion newItem) {
+			return oldItem.equals(newItem);
+		}
+	};
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView textViewDatetime;
@@ -45,8 +57,8 @@ public class SuggestionFixedAdapter extends RecyclerView.Adapter<SuggestionFixed
 		}
 	}
 
-	public SuggestionFixedAdapter(final List<FixedHolidaySuggestion> holidays) {
-		this.holidays = holidays;
+	public SuggestionFixedAdapter() {
+		super(DIFF_CALLBACK);
 	}
 
 	@NonNull
@@ -59,7 +71,7 @@ public class SuggestionFixedAdapter extends RecyclerView.Adapter<SuggestionFixed
 
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-		final FixedHolidaySuggestion holiday = holidays.get(position);
+		final FixedHolidaySuggestion holiday = getItem(position);
 		final Pair<Month, Integer> datePair = Pair.create(Month.of(holiday.getMonth()), holiday.getDay());
 
 		viewHolder.textViewDatetime.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
@@ -80,10 +92,5 @@ public class SuggestionFixedAdapter extends RecyclerView.Adapter<SuggestionFixed
 			viewHolder.chevron.setVisibility(View.GONE);
 			viewHolder.itemView.setOnClickListener(null);
 		}
-	}
-
-	@Override
-	public int getItemCount() {
-		return holidays.size();
 	}
 }

@@ -33,13 +33,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +51,7 @@ import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.LoadState;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class MainActivity extends BaseActivity implements DayClickListener {
 	public static final String WIDGET = "widget";
@@ -62,14 +59,13 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	public static final String DAY = "day";
 	public static final String FROM = "from";
 	public static final String HOLIDAY = "holiday";
-	public static final String INTERNET = "INTERNET";
 
 	private static final long SEARCH_DEBOUNCE_MS = 300;
 
 	private ViewPager2 viewPager2;
 	private RecyclerView searchListView;
 	private MaterialToolbar materialToolbar;
-	private final List<HolidayDay> holidayDays = new ArrayList<>();
+	private volatile List<HolidayDay> holidayDays = Collections.emptyList();
 	private SearchHolidayAdapter searchAdapter;
 	private final Handler searchHandler = new Handler(Looper.getMainLooper());
 	private FirebaseAuth firebaseAuth;
@@ -136,10 +132,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 			}
 		});
 
-		getFerrioApplication().getAppRepository().getAllHolidayDays().observe(this, days -> {
-			holidayDays.clear();
-			holidayDays.addAll(days);
-		});
+		getFerrioApplication().getAppRepository().getAllHolidayDays().observe(this, days -> holidayDays = days);
 
 		getFerrioApplication().getAppRepository().refresh();
 	}
@@ -184,7 +177,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 						searchListView.setVisibility(View.VISIBLE);
 						viewPager2.setVisibility(View.INVISIBLE);
 						final String query = newText.toLowerCase(Locale.ROOT);
-						final List<HolidayDay> snapshot = new ArrayList<>(holidayDays);
+						final List<HolidayDay> snapshot = holidayDays;
 						CompletableFuture.supplyAsync(() -> snapshot.stream()
 								.map(holidayDay -> {
 									final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
@@ -211,11 +204,11 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
-		final int itemId = item.getItemId();
-		if (itemId == R.id.menu_main_today) {
+		if (item.getItemId() == R.id.menu_main_today) {
 			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
+			return true;
 		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void setUpNavDrawer() {
@@ -240,7 +233,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 			reports.setEnabled(!user.isAnonymous());
 			final Picasso picasso = Picasso.get();
 			if (user.isAnonymous()) {
-				picasso.load(String.format("https://gravatar.com/avatar/%s?d=identicon", sha256(user.getUid())))
+				picasso.load(String.format("https://gravatar.com/avatar/%s?d=identicon", Util.sha256(user.getUid())))
 						.into(imageViewAvatar);
 				textViewHeading.setText(R.string.anonymous_user);
 				textViewSubtitle.setVisibility(View.GONE);
@@ -302,22 +295,4 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 				.create();
 	}
 
-	@NonNull
-	private String sha256(@NonNull final String input) {
-		try {
-			final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			final byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
-			final StringBuilder hexString = new StringBuilder();
-			for (final byte b : hash) {
-				final String hex = Integer.toHexString(0xff & b);
-				if (hex.length() == 1) {
-					hexString.append('0');
-				}
-				hexString.append(hex);
-			}
-			return hexString.toString();
-		} catch (final NoSuchAlgorithmException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
 }

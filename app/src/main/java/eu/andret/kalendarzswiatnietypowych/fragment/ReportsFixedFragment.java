@@ -26,10 +26,12 @@ public class ReportsFixedFragment extends AuthenticatedFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_reports_fixed_list);
+		final ReportedHolidayAdapter adapter = new ReportedHolidayAdapter(requireContext());
+		recyclerView.setAdapter(adapter);
 		fetchAuthenticated(
 				token -> getApiClient().getList(getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_ERROR, ApiClient.HOLIDAY_TYPE_FIXED), token, ReportedHoliday.class),
 				reportedFixedHolidays -> {
-					recyclerView.setAdapter(new ReportedHolidayAdapter(requireContext(), reportedFixedHolidays));
+					adapter.submitList(reportedFixedHolidays);
 					view.findViewById(R.id.fragment_reports_fixed_indicator).setVisibility(View.GONE);
 				},
 				ex -> {

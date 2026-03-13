@@ -11,9 +11,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
 
+import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.util.NetworkMonitor;
 
 public final class AuthViewModel extends AndroidViewModel {
@@ -21,7 +21,6 @@ public final class AuthViewModel extends AndroidViewModel {
 
 	private final AuthRepository repo;
 	private final NetworkMonitor network;
-	private final ExecutorService io = Executors.newSingleThreadExecutor();
 
 	private final MediatorLiveData<AuthUiState> ui = new MediatorLiveData<>();
 	private final MutableLiveData<Boolean> launchGoogle = new MutableLiveData<>();
@@ -65,45 +64,37 @@ public final class AuthViewModel extends AndroidViewModel {
 			return;
 		}
 		ui.postValue(AuthUiState.progress(isOffline()));
-		io.submit(() -> {
-			final Result<FirebaseUser> res = repo.reloadAndGetCurrentUserBlocking();
-			if (res.status == Result.Status.SUCCESS) {
-				ui.postValue(AuthUiState.idle(isOffline(), res.data));
-			} else {
-				Log.d(TAG, "Auth failed, status=" + res.status);
-				ui.postValue(AuthUiState.error(isOffline(), mapError(res.throwable)));
-			}
-		});
+		CompletableFuture.supplyAsync(repo::reloadAndGetCurrentUserBlocking)
+				.thenAccept(this::handleResult);
 	}
 
 	public void clickGoogle() {
-		launchGoogle.postValue(Boolean.TRUE);
+		launchGoogle.setValue(Boolean.TRUE);
+	}
+
+	public void consumeGoogleEvent() {
+		launchGoogle.setValue(null);
 	}
 
 	public void handleGoogleIdToken(@NonNull final String idToken) {
 		ui.postValue(AuthUiState.progress(isOffline()));
-		io.submit(() -> {
-			final Result<FirebaseUser> res = repo.exchangeGoogleIdTokenBlocking(idToken);
-			if (res.status == Result.Status.SUCCESS) {
-				ui.postValue(AuthUiState.idle(isOffline(), res.data));
-			} else {
-				Log.d(TAG, "Auth failed, status=" + res.status);
-				ui.postValue(AuthUiState.error(isOffline(), mapError(res.throwable)));
-			}
-		});
+		CompletableFuture.supplyAsync(() -> repo.exchangeGoogleIdTokenBlocking(idToken))
+				.thenAccept(this::handleResult);
 	}
 
 	public void signInAnonymously() {
 		ui.postValue(AuthUiState.progress(isOffline()));
-		io.submit(() -> {
-			final Result<FirebaseUser> res = repo.signInAnonymouslyBlocking();
-			if (res.status == Result.Status.SUCCESS) {
-				ui.postValue(AuthUiState.idle(isOffline(), res.data));
-			} else {
-				Log.d(TAG, "Auth failed, status=" + res.status);
-				ui.postValue(AuthUiState.error(isOffline(), mapError(res.throwable)));
-			}
-		});
+		CompletableFuture.supplyAsync(repo::signInAnonymouslyBlocking)
+				.thenAccept(this::handleResult);
+	}
+
+	private void handleResult(@NonNull final Result<FirebaseUser> res) {
+		if (res.status == Result.Status.SUCCESS) {
+			ui.postValue(AuthUiState.idle(isOffline(), res.data));
+		} else {
+			Log.d(TAG, "Auth failed, status=" + res.status);
+			ui.postValue(AuthUiState.error(isOffline(), mapError(res.throwable)));
+		}
 	}
 
 	public void reportError(@NonNull final String message) {
@@ -113,17 +104,16 @@ public final class AuthViewModel extends AndroidViewModel {
 
 	private String mapError(final Throwable e) {
 		if (e == null) {
-			return "Authentication failed";
+			return getString(R.string.auth_failed);
 		}
 		if (repo.isNetworkError(e)) {
-			return "No internet connection";
+			return getString(R.string.auth_no_internet);
 		}
-		return e.getMessage() != null ? e.getMessage() : "Authentication failed";
+		return e.getMessage() != null ? e.getMessage() : getString(R.string.auth_failed);
 	}
 
-	@Override
-	protected void onCleared() {
-		super.onCleared();
-		io.shutdownNow();
+	@NonNull
+	private String getString(final int resId) {
+		return getApplication().getString(resId);
 	}
 }

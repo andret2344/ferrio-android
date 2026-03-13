@@ -27,10 +27,12 @@ public class SuggestionsFloatingFragment extends AuthenticatedFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_suggestions_floating_list);
+		final SuggestionFloatingAdapter adapter = new SuggestionFloatingAdapter();
+		recyclerView.setAdapter(adapter);
 		fetchAuthenticated(
 				token -> getApiClient().getList(getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FLOATING), token, FloatingHolidaySuggestion.class),
 				floatingHolidaySuggestions -> {
-					recyclerView.setAdapter(new SuggestionFloatingAdapter(floatingHolidaySuggestions));
+					adapter.submitList(floatingHolidaySuggestions);
 					view.findViewById(R.id.fragment_suggestions_floating_indicator).setVisibility(View.GONE);
 				},
 				ex -> {

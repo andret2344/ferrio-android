@@ -27,10 +27,12 @@ public class SuggestionsFixedFragment extends AuthenticatedFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		final RecyclerView recyclerView = view.findViewById(R.id.fragment_suggestions_fixed_list);
+		final SuggestionFixedAdapter adapter = new SuggestionFixedAdapter();
+		recyclerView.setAdapter(adapter);
 		fetchAuthenticated(
 				token -> getApiClient().getList(getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FIXED), token, FixedHolidaySuggestion.class),
 				fixedHolidaySuggestions -> {
-					recyclerView.setAdapter(new SuggestionFixedAdapter(fixedHolidaySuggestions));
+					adapter.submitList(fixedHolidaySuggestions);
 					view.findViewById(R.id.fragment_suggestions_fixed_indicator).setVisibility(View.GONE);
 				},
 				ex -> {

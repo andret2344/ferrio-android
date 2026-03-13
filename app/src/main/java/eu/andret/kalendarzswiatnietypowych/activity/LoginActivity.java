@@ -23,6 +23,7 @@ import androidx.credentials.exceptions.GetCredentialException;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -36,7 +37,7 @@ import eu.andret.kalendarzswiatnietypowych.util.auth.AuthViewModel;
 public class LoginActivity extends AppCompatActivity {
 
 	private static final String TAG = "LoginActivity";
-	public static final String INTERNET = "INTERNET";
+
 
 	private AuthViewModel authViewModel;
 	private RelativeLayout progress;
@@ -76,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
 		authViewModel.getLaunchGoogleEvent().observe(this, launch -> {
 			if (Boolean.TRUE.equals(launch)) {
+				authViewModel.consumeGoogleEvent();
 				beginGoogleSignIn();
 			}
 		});
@@ -107,16 +109,46 @@ public class LoginActivity extends AppCompatActivity {
 	}
 
 	private void beginGoogleSignIn() {
+		final String clientId = getString(R.string.default_web_client_id);
+
 		final GetGoogleIdOption googleOption = new GetGoogleIdOption.Builder()
-				.setServerClientId(getString(R.string.default_web_client_id))
+				.setServerClientId(clientId)
 				.build();
 
 		final GetCredentialRequest request = new GetCredentialRequest.Builder()
 				.addCredentialOption(googleOption)
-//				.setPreferImmediatelyAvailableCredentials(true)
 				.build();
 
 		progress.setVisibility(View.VISIBLE);
+		cancellationSignal = new CancellationSignal();
+
+		credentialManager.getCredentialAsync(
+				this,
+				request,
+				cancellationSignal,
+				executorService,
+				new CredentialManagerCallback<>() {
+					@Override
+					public void onResult(final GetCredentialResponse response) {
+						handleCredentialResponse(response);
+					}
+
+					@Override
+					public void onError(@NonNull final GetCredentialException e) {
+						Log.w(TAG, "GetGoogleIdOption failed, falling back to sign-in flow", e);
+						progress.post(() -> beginGoogleSignInFallback(clientId));
+					}
+				}
+		);
+	}
+
+	private void beginGoogleSignInFallback(@NonNull final String clientId) {
+		final GetSignInWithGoogleOption signInOption = new GetSignInWithGoogleOption.Builder(clientId)
+				.build();
+
+		final GetCredentialRequest request = new GetCredentialRequest.Builder()
+				.addCredentialOption(signInOption)
+				.build();
 
 		cancellationSignal = new CancellationSignal();
 
@@ -135,8 +167,8 @@ public class LoginActivity extends AppCompatActivity {
 					public void onError(@NonNull final GetCredentialException e) {
 						progress.post(() -> {
 							progress.setVisibility(View.GONE);
-							Log.e(TAG, "Credential request failed", e);
-							authViewModel.reportError(e.getMessage() != null ? e.getMessage() : "Authentication failed");
+							Log.e(TAG, "Sign-in fallback failed", e);
+							authViewModel.reportError(e.getMessage() != null ? e.getMessage() : getString(R.string.auth_failed));
 						});
 					}
 				}
@@ -170,13 +202,13 @@ public class LoginActivity extends AppCompatActivity {
 					return;
 				} catch (final Throwable e) {
 					Log.e(TAG, "Failed to process Google credential", e);
-					authViewModel.reportError(e.getMessage() != null ? e.getMessage() : "Authentication failed");
+					authViewModel.reportError(e.getMessage() != null ? e.getMessage() : getString(R.string.auth_failed));
 				}
 			} else {
-				authViewModel.reportError("Authentication failed");
+				authViewModel.reportError(getString(R.string.auth_failed));
 			}
 		} else {
-			authViewModel.reportError("Authentication failed");
+			authViewModel.reportError(getString(R.string.auth_failed));
 		}
 		progress.post(() -> progress.setVisibility(View.GONE));
 	}
@@ -187,8 +219,7 @@ public class LoginActivity extends AppCompatActivity {
 			Toast.makeText(this, s.errorMessage, Toast.LENGTH_SHORT).show();
 		}
 		if (!s.loading && s.user != null) {
-			startActivity(new Intent(this, MainActivity.class)
-					.putExtra(INTERNET, !s.offline));
+			startActivity(new Intent(this, MainActivity.class));
 			finish();
 		}
 	}

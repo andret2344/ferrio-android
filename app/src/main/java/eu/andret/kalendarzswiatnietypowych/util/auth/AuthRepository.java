@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import eu.andret.kalendarzswiatnietypowych.util.TasksExt;
+import com.google.android.gms.tasks.Tasks;
 
 public final class AuthRepository {
 
@@ -25,7 +25,7 @@ public final class AuthRepository {
 		try {
 			final AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
 			final Task<AuthResult> t = auth.signInWithCredential(credential);
-			final AuthResult res = TasksExt.await(t);
+			final AuthResult res = Tasks.await(t);
 			return Result.success(res.getUser());
 		} catch (final Throwable e) {
 			return Result.error(e);
@@ -35,7 +35,7 @@ public final class AuthRepository {
 	public Result<FirebaseUser> signInAnonymouslyBlocking() {
 		try {
 			final Task<AuthResult> t = auth.signInAnonymously();
-			final AuthResult res = TasksExt.await(t);
+			final AuthResult res = Tasks.await(t);
 			return Result.success(res.getUser());
 		} catch (final Throwable e) {
 			return Result.error(e);
@@ -49,7 +49,7 @@ public final class AuthRepository {
 		}
 		try {
 			final Task<Void> t = current.reload();
-			TasksExt.await(t);
+			Tasks.await(t);
 			return Result.success(auth.getCurrentUser());
 		} catch (final Throwable e) {
 			return Result.error(e);

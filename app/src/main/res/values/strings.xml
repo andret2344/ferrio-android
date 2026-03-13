@@ -92,9 +92,12 @@
 	<string name="international">International</string>
 
 	<string name="loading">Loading…</string>
+	<string name="widget_error">Failed to load holidays. Please wait patiently until the error is resolved on our end.</string>
+	<string name="auth_failed">Authentication failed</string>
+	<string name="auth_no_internet">No internet connection</string>
 
 	<!-- widget preview -->
-	<string name="widget_preview_date">20 March</string>
-	<string name="widget_preview_holidays">\u2022 First holiday\n\u2022 Second holiday\n\u2022 Third holiday\n\u2022 Fourth holiday</string>
+	<string name="widget_preview_date">Today is:</string>
+	<string name="widget_preview_holidays">\u2022 A perfect day for using the widget!</string>
 
 </resources>

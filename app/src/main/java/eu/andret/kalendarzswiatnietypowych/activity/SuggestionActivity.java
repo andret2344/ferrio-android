@@ -11,20 +11,16 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.fragment.FixedSuggestionFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.FloatingSuggestionFragment;
 
 public class SuggestionActivity extends BaseActivity implements FormResultHandler {
-	private FirebaseAuth firebaseAuth;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_suggestion);
-		firebaseAuth = FirebaseAuth.getInstance();
 
 		final MaterialToolbar materialToolbar = findViewById(R.id.activity_suggestion_toolbar);
 		setSupportActionBar(materialToolbar);

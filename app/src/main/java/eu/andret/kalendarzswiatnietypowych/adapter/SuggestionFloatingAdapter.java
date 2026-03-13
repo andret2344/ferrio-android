@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
@@ -19,8 +19,19 @@ import eu.andret.kalendarzswiatnietypowych.entity.FloatingHolidaySuggestion;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
-public class SuggestionFloatingAdapter extends RecyclerView.Adapter<SuggestionFloatingAdapter.ViewHolder> {
-	private final List<FloatingHolidaySuggestion> holidays;
+public class SuggestionFloatingAdapter extends ListAdapter<FloatingHolidaySuggestion, SuggestionFloatingAdapter.ViewHolder> {
+
+	private static final DiffUtil.ItemCallback<FloatingHolidaySuggestion> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+		@Override
+		public boolean areItemsTheSame(@NonNull final FloatingHolidaySuggestion oldItem, @NonNull final FloatingHolidaySuggestion newItem) {
+			return oldItem.getId() == newItem.getId();
+		}
+
+		@Override
+		public boolean areContentsTheSame(@NonNull final FloatingHolidaySuggestion oldItem, @NonNull final FloatingHolidaySuggestion newItem) {
+			return oldItem.equals(newItem);
+		}
+	};
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView textViewDatetime;
@@ -43,8 +54,8 @@ public class SuggestionFloatingAdapter extends RecyclerView.Adapter<SuggestionFl
 		}
 	}
 
-	public SuggestionFloatingAdapter(final List<FloatingHolidaySuggestion> holidays) {
-		this.holidays = holidays;
+	public SuggestionFloatingAdapter() {
+		super(DIFF_CALLBACK);
 	}
 
 	@NonNull
@@ -57,7 +68,7 @@ public class SuggestionFloatingAdapter extends RecyclerView.Adapter<SuggestionFl
 
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-		final FloatingHolidaySuggestion holiday = holidays.get(position);
+		final FloatingHolidaySuggestion holiday = getItem(position);
 
 		viewHolder.textViewDatetime.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
 		viewHolder.textViewCountry.setText(holiday.getCountry() != null ? Util.countryCodeToFlag(holiday.getCountry()) : "");
@@ -77,10 +88,5 @@ public class SuggestionFloatingAdapter extends RecyclerView.Adapter<SuggestionFl
 			viewHolder.chevron.setVisibility(View.GONE);
 			viewHolder.itemView.setOnClickListener(null);
 		}
-	}
-
-	@Override
-	public int getItemCount() {
-		return holidays.size();
 	}
 }

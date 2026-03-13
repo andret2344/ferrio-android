@@ -7,8 +7,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
@@ -47,8 +47,6 @@ public class WidgetProvider extends AppWidgetProvider {
 	public void onUpdate(@NonNull final Context context,
 			@NonNull final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
 		final LocalDate now = LocalDate.now();
-		final boolean dark = isDarkTheme(context);
-		final int layoutId = dark ? R.layout.widget_dark : R.layout.widget_light;
 
 		final Pair<Month, Integer> datePair = new Pair<>(now.getMonth(), now.getDayOfMonth());
 		final String dateText = Util.getFormattedDate(datePair);
@@ -62,7 +60,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
 		// Show date and click handler immediately so widget is never blank
 		for (final int appWidgetId : appWidgetIds) {
-			final RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
+			final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
 			views.setTextViewText(R.id.widget_text_date, dateText);
 			views.setTextViewText(R.id.widget_text_holidays, context.getString(R.string.loading));
 			views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
@@ -77,19 +75,35 @@ public class WidgetProvider extends AppWidgetProvider {
 					final List<Holiday> holidayList = new ArrayList<>(holidays);
 					final HolidayDay holidayDay = new HolidayDay(now.getMonthValue(), now.getDayOfMonth(), holidayList);
 					final String content = getContent(context, holidayDay);
+					final boolean empty = isHolidayListEmpty(context, holidayDay);
 
 					for (final int appWidgetId : appWidgetIds) {
-						final RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
+						final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
 						views.setTextViewText(R.id.widget_text_date, dateText);
 						views.setTextViewText(R.id.widget_text_holidays, content);
+						views.setViewVisibility(R.id.widget_image_empty, empty ? View.VISIBLE : View.GONE);
 						views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 						appWidgetManager.updateAppWidget(appWidgetId, views);
 					}
 				})
 				.exceptionally(ex -> {
 					Log.e(TAG, "Failed to update widget", ex);
+					for (final int appWidgetId : appWidgetIds) {
+						final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+						views.setTextViewText(R.id.widget_text_date, dateText);
+						views.setTextViewText(R.id.widget_text_holidays, context.getString(R.string.widget_error));
+						views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
+						appWidgetManager.updateAppWidget(appWidgetId, views);
+					}
 					return null;
 				});
+	}
+
+	private boolean isHolidayListEmpty(@NonNull final Context context,
+			@NonNull final HolidayDay holidayDay) {
+		final boolean includeUsual = PreferenceManager.getDefaultSharedPreferences(context)
+				.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
+		return holidayDay.countHolidays(includeUsual) == 0;
 	}
 
 	@NonNull
@@ -114,8 +128,4 @@ public class WidgetProvider extends AppWidgetProvider {
 		return sb.toString();
 	}
 
-	private static boolean isDarkTheme(@NonNull final Context context) {
-		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-				== Configuration.UI_MODE_NIGHT_YES;
-	}
 }

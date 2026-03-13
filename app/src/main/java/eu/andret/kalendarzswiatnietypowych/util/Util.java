@@ -3,9 +3,9 @@ package eu.andret.kalendarzswiatnietypowych.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.text.format.DateFormat;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -13,10 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
+import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -43,8 +48,8 @@ public final class Util {
 	private static final DateTimeFormatter DATE_TIME_FORMATTER =
 			DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
 
-	private static final DateTimeFormatter MONTH_DAY_FORMATTER =
-			DateTimeFormatter.ofPattern("MMMM dd");
+	private static final String MONTH_DAY_SKELETON = "MMMMd";
+	private static final String YEAR_MONTH_DAY_SKELETON = "yMMMMd";
 
 	private static final int FEB_29_NON_LEAP_INDEX = 60;
 	private static final int FEB_30_INDEX = 61;
@@ -128,14 +133,21 @@ public final class Util {
 
 	@NonNull
 	public static String getFormattedDateWithYear(@NonNull final Pair<Month, Integer> pair) {
-		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
-		return localDate.format(getDateTimeFormatter()).replace("19", String.valueOf(pair.second));
+		return formatDate(pair, YEAR_MONTH_DAY_SKELETON);
 	}
 
 	@NonNull
 	public static String getFormattedDate(@NonNull final Pair<Month, Integer> pair) {
+		return formatDate(pair, MONTH_DAY_SKELETON);
+	}
+
+	@NonNull
+	private static String formatDate(@NonNull final Pair<Month, Integer> pair, @NonNull final String skeleton) {
+		final Locale locale = Locale.getDefault();
+		final String pattern = DateFormat.getBestDateTimePattern(locale, skeleton);
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, locale);
 		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
-		return localDate.format(MONTH_DAY_FORMATTER.withLocale(Locale.getDefault())).replace("19", String.valueOf(pair.second));
+		return localDate.format(formatter).replace("19", String.valueOf(pair.second));
 	}
 
 	public static void applyStatusBadge(@NonNull final TextView textView,
@@ -143,9 +155,10 @@ public final class Util {
 		@ColorInt final int color = ContextCompat.getColor(textView.getContext(), state.getColorResId());
 		textView.setText(state.getLabelResId());
 		textView.setTextColor(color);
-		final GradientDrawable background = new GradientDrawable();
-		background.setCornerRadius(6 * textView.getContext().getResources().getDisplayMetrics().density);
-		background.setColor(Color.argb(31, Color.red(color), Color.green(color), Color.blue(color)));
+		final float cornerRadius = 6 * textView.getContext().getResources().getDisplayMetrics().density;
+		final MaterialShapeDrawable background = new MaterialShapeDrawable(
+				ShapeAppearanceModel.builder().setAllCornerSizes(cornerRadius).build());
+		background.setTint(Color.argb(31, Color.red(color), Color.green(color), Color.blue(color)));
 		textView.setBackground(background);
 	}
 
@@ -160,5 +173,24 @@ public final class Util {
 	@NonNull
 	public static DateTimeFormatter getDateTimeFormatter() {
 		return DATE_TIME_FORMATTER.withLocale(Locale.getDefault());
+	}
+
+	@NonNull
+	public static String sha256(@NonNull final String input) {
+		try {
+			final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			final byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+			final StringBuilder hexString = new StringBuilder();
+			for (final byte b : hash) {
+				final String hex = Integer.toHexString(0xff & b);
+				if (hex.length() == 1) {
+					hexString.append('0');
+				}
+				hexString.append(hex);
+			}
+			return hexString.toString();
+		} catch (final NoSuchAlgorithmException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 }

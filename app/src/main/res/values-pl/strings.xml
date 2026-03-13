@@ -85,9 +85,12 @@
 	<string name="international">Międzynarodowe</string>
 
 	<string name="loading">Ładowanie…</string>
+	<string name="widget_error">Nie udało się załadować świąt. Prosimy o cierpliwość do chwili, gdy problem zostanie rozwiązany.</string>
+	<string name="auth_failed">Uwierzytelnianie nie powiodło się</string>
+	<string name="auth_no_internet">Brak połączenia z internetem</string>
 
 	<!-- widget preview -->
-	<string name="widget_preview_date">20 Marca</string>
-	<string name="widget_preview_holidays">\u2022 Święto pierwsze\n\u2022 Święto drugie\n\u2022 Święto trzecie\n\u2022 Święto czwarte</string>
+	<string name="widget_preview_date">Dzisiaj jest:</string>
+	<string name="widget_preview_holidays">\u2022 Świetny dzień, by użyć widgetu!</string>
 
 </resources>
