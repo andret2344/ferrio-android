@@ -14,6 +14,7 @@
 /gradle.xml
 /jarRepositories.xml
 /kotlinc.xml
+/markdown.xml
 /migrations.xml
 /misc.xml
 /navEditor.xml
