@@ -1,31 +1,23 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
-import androidx.annotation.NonNull;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	@NonNull
 	@Override
-	public JsonElement serialize(final LocalDateTime src, final Type typeOfSrc, final JsonSerializationContext context) {
-		return new JsonPrimitive(src.format(formatter));
+	public void write(final JsonWriter out, final LocalDateTime value) throws IOException {
+		out.value(value.format(formatter));
 	}
 
-	@NonNull
 	@Override
-	public LocalDateTime deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-		return LocalDateTime.parse(json.getAsString(), formatter);
+	public LocalDateTime read(final JsonReader in) throws IOException {
+		return LocalDateTime.parse(in.nextString(), formatter);
 	}
 }

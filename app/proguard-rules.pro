@@ -1,33 +1,19 @@
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
 -keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
 -renamesourcefileattribute SourceFile
--ignorewarnings
+-keep class javax.net.ssl.** { *; }
+-keep class java.net.** { *; }
+-keep class sun.net.** { *; }
 
--keepattributes Signature
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar {
- !transient <fields>;
-}
+# Gson serialization
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keep class com.google.gson.** { *; }
 
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.HolidayDay {
- !transient <fields>;
-}
+# Entity classes used by Gson and Room
+-keep class eu.andret.kalendarzswiatnietypowych.entity.** { *; }
 
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.Holiday {
- !transient <fields>;
-}
+# Gson TypeAdapter
+-keep class eu.andret.kalendarzswiatnietypowych.util.LocalDateTimeAdapter { *; }
 
--keepclassmembers class eu.andret.kalendarzswiatnietypowych.entity.FloatingHoliday {
- !transient <fields>;
-}
-
--keep class org.mozilla.javascript.** { *; }
-
+# Credentials play services
 -if class androidx.credentials.CredentialManager
--keep class androidx.credentials.playservices.** {
-  *;
-}
+-keep class androidx.credentials.playservices.** { *; }

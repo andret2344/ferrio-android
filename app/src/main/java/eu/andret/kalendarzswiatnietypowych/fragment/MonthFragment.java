@@ -1,7 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.DayOfWeek;
@@ -23,12 +24,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
-import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterCompact;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterDetailed;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterSimple;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayClickListener;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.entity.UnusualCalendar;
+import eu.andret.kalendarzswiatnietypowych.persistance.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
@@ -56,19 +61,46 @@ public class MonthFragment extends Fragment {
 
 	@NonNull
 	@Override
-	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent, final Bundle savedInstanceState) {
+	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent,
+			final Bundle savedInstanceState) {
 		final View month = inflater.inflate(R.layout.fragment_month, parent, false);
 
 		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
-		holidayViewModel.getHolidayDays(before, after)
-				.observe(getViewLifecycleOwner(), holidayDays -> {
-					final List<HolidayDayViewModel> dataSet = UnusualCalendar.getHolidayDaysInDateRange(holidayDays, before, after)
+		recyclerView.setHasFixedSize(true);
+		final AppRepository repository = ((FerrioApplication) requireActivity().getApplication()).getAppRepository();
+		final DayClickListener listener = (DayClickListener) requireActivity();
+
+		final Context context = requireContext();
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		final boolean colorized = preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false);
+		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
+		final String mode = preferences.getString(context.getString(R.string.settings_key_month_view_mode), "compact");
+
+		final ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> dayAdapter = getHolidayDayAdapter(mode, listener);
+		recyclerView.setAdapter(dayAdapter);
+
+		holidayViewModel.getHolidayDayMap()
+				.observe(getViewLifecycleOwner(), dayMap -> {
+					final List<HolidayDayViewModel> dataSet = repository.getHolidayDaysInDateRange(dayMap, before, after)
 							.stream()
-							.map(this::convert)
+							.map(holidayDay -> convert(holidayDay, colorized, includeUsual))
 							.collect(Collectors.toList());
-					recyclerView.setAdapter(new DayAdapter(getContext(), dataSet));
+					dayAdapter.submitList(dataSet);
 				});
 		return month;
+	}
+
+	@NonNull
+	private static ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> getHolidayDayAdapter(
+			@NonNull final String mode, @NonNull final DayClickListener listener) {
+		switch (mode) {
+			case "compact":
+				return new DayAdapterCompact(listener);
+			case "simple":
+				return new DayAdapterSimple(listener);
+			default:
+				return new DayAdapterDetailed(listener);
+		}
 	}
 
 	private LocalDate getBefore() {
@@ -80,34 +112,29 @@ public class MonthFragment extends Fragment {
 	}
 
 	@NonNull
-	public HolidayDayViewModel convert(@NonNull final HolidayDay holidayDay) {
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-		final HolidayDayViewModel holidayDayViewModel = new HolidayDayViewModel(holidayDay.getDay(), holidayDay.getMonth());
+	private HolidayDayViewModel convert(@NonNull final HolidayDay holidayDay,
+			final boolean colorized, final boolean includeUsual) {
+		final Context context = requireContext();
+		final HolidayDayViewModel holidayDayViewModel = new HolidayDayViewModel(holidayDay);
 		if (holidayDay.getMonth() != currentMonth) {
-			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(requireContext(), R.color.background_secondary);
-		} else if (preferences.getBoolean(requireContext().getString(R.string.settings_key_theme_colorized), false)) {
-			holidayDayViewModel.cardBackgroundColor = Util.randomizeColor(requireContext(), holidayDay.getSeed());
+			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(context, R.color.tile_other_month);
+		} else if (colorized) {
+			holidayDayViewModel.cardBackgroundColor = Util.randomizeColor(context, holidayDay.getSeed());
 		} else {
-			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(requireContext(), R.color.background_accent);
+			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(context, R.color.tile_current_month);
 		}
 
 		final LocalDate now = LocalDate.now();
-		holidayDayViewModel.strokeColor = Color.RED;
+		holidayDayViewModel.strokeColor = ContextCompat.getColor(context, R.color.today_outline);
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
 			holidayDayViewModel.strokeWidth = 4;
 		}
-		final boolean includeUsual = preferences.getBoolean(requireContext().getString(R.string.settings_key_usual_holidays), false);
-		final boolean displayShortcuts = preferences.getBoolean(requireContext().getString(R.string.settings_key_display_shortcuts), true);
 		final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual);
 
-		holidayDayViewModel.smallDate = String.valueOf(holidayDay.getDay());
+		holidayDayViewModel.date = String.valueOf(holidayDay.getDay());
+		holidayDayViewModel.holidayCount = holidaysList.size();
 		if (holidaysList.isEmpty()) {
 			holidayDayViewModel.sadImageVisibility = View.VISIBLE;
-			return holidayDayViewModel;
-		}
-		if (!displayShortcuts) {
-			holidayDayViewModel.bigDate = String.valueOf(holidayDay.getDay());
-			holidayDayViewModel.smallDate = null;
 			return holidayDayViewModel;
 		}
 
@@ -124,32 +151,38 @@ public class MonthFragment extends Fragment {
 			holidaysCountIndicator--;
 			holidayDayViewModel.holidayText = result;
 		} else {
-			holidayDayViewModel.holidayText = requireContext().getString(R.string.ellipsis_text, result);
+			holidayDayViewModel.holidayText = context.getString(R.string.ellipsis_text, result);
 		}
 
 		if (holidaysCountIndicator > 0) {
-			holidayDayViewModel.moreText = requireContext().getString(R.string.see_more, holidaysCountIndicator);
+			holidayDayViewModel.moreText = context.getString(R.string.see_more, holidaysCountIndicator);
 		}
 
 		return holidayDayViewModel;
 	}
 
 	public static class HolidayDayViewModel {
+		private final String id;
 		private final int day;
 		private final int month;
 		private int cardBackgroundColor;
 		private int strokeColor;
 		private int strokeWidth;
 		private int sadImageVisibility = View.INVISIBLE;
-		private String smallDate;
-		private String bigDate;
+		private String date;
+		private int holidayCount;
 		private int typeFace;
 		private String holidayText;
 		private String moreText;
 
-		public HolidayDayViewModel(final int day, final int month) {
+		public HolidayDayViewModel(final String id, final int day, final int month) {
+			this.id = id;
 			this.day = day;
 			this.month = month;
+		}
+
+		public HolidayDayViewModel(@NonNull final HolidayDay holidayDay) {
+			this(holidayDay.getId(), holidayDay.getDay(), holidayDay.getMonth());
 		}
 
 		public int getDay() {
@@ -176,12 +209,12 @@ public class MonthFragment extends Fragment {
 			return sadImageVisibility;
 		}
 
-		public String getSmallDate() {
-			return smallDate;
+		public String getDate() {
+			return date;
 		}
 
-		public String getBigDate() {
-			return bigDate;
+		public int getHolidayCount() {
+			return holidayCount;
 		}
 
 		public int getTypeFace() {
@@ -194,6 +227,10 @@ public class MonthFragment extends Fragment {
 
 		public String getMoreText() {
 			return moreText;
+		}
+
+		public String getId() {
+			return id;
 		}
 	}
 }

@@ -3,10 +3,8 @@
 
 	<string name="banner_ad_unit_id" translatable="false">ca-app-pub-3410450408196791/4823111464</string>
 	<string name="admob_app_id" translatable="false">ca-app-pub-3410450408196791~3872850665</string>
-	<string name="default_web_client_id" translatable="false">124787310112-q2pkvuo39bfp75mlcaue3adpvgs7jsfa.apps.googleusercontent.com</string>
-	<string name="app_name">Ferrio</string>
+	<string name="app_name" translatable="false">Ferrio</string>
 	<string name="unusual_holiday">Unusual holiday</string>
-	<string name="share_message">%1$s:\n%2$s\n\nCheck it!\nhttps://play.google.com/store/apps/details?id=eu.andret.kalendarzswiatnietypowych</string>
 	<string name="share_via">Share via</string>
 	<string name="today_is">Today is:</string>
 	<string name="share">Share</string>
@@ -30,25 +28,26 @@
 	<string name="about_calendar">About calendar</string>
 	<string name="about_holidays_text">All holidays - even those most unusual - are an opportunity to look in a different way at people, and appreciate phenomena we usually ignore.</string>
 	<string name="pointed_text" translatable="false">\u00B7 %s</string>
+	<string name="date_country" translatable="false">%1$s  \u00B7  %2$s</string>
 	<string name="bullet_point" translatable="false">\u2022</string>
 	<string name="ellipsis_text" translatable="false">%s\u2026</string>
-	<string name="content_description_ad">Ad</string>
-	<string name="content_description_image_sad_face">Sad face</string>
-	<string name="content_description_more">more</string>
-	<string name="content_description_image">image</string>
 	<string name="app_theme">App theme</string>
+	<string name="logout">Logout</string>
 	<string name="read_more">Read more…</string>
 	<string name="report">Report</string>
+	<string name="sign_in_with_google">Sign in with Google</string>
 	<string name="logging_in_anonymously">Continue without logging in</string>
+	<string name="anonymous_login_alert">By logging in anonymously, you won\'t be able to fully utilize the application\'s features, for instance, reporting mistakes.</string>
+	<string name="more_login_options">More login options</string>
 	<string name="dialog_report_title">Report the holiday</string>
 	<string name="holiday_name">Holiday name</string>
 	<string name="holiday_description">Holiday description</string>
 	<string name="reason">Reason</string>
 	<string name="description">Description</string>
-	<string name="report_note">Note: Reports with description are more likely to be checked first.</string>
+	<string name="report_note">Reports and suggestions with a description are more likely to be verified first.</string>
 	<string name="send_report">Send report</string>
 	<string name="application">Application</string>
-	<string name="missing_holiday">Missing holiday?</string>
+	<string name="suggest_holiday">Suggest a holiday</string>
 	<string name="my_reports">My reports</string>
 	<string name="my_suggestions">My suggestions</string>
 	<string name="anonymous_user">Anonymous user</string>
@@ -64,7 +63,42 @@
 	<string name="suggestion_message">The holiday has been recorded and will now be verified. You\'ll be informed when the holiday is verified.</string>
 	<string name="error_title">Error!</string>
 	<string name="error_message">An error occurred. Try again later.</string>
+	<string name="ban_title">Account suspended</string>
+	<string name="ban_message">Your account has been suspended. Reason: %s</string>
 	<string name="report_title">Successfully sent the report</string>
 	<string name="report_message">The holiday has been reported and will be now verified. You\'ll be informed when the report is verified.</string>
+
+	<!-- report states -->
+	<string name="status_reported">Reported</string>
+	<string name="status_applied">Applied</string>
+	<string name="status_declined">Declined</string>
+	<string name="status_on_hold">On hold</string>
+
+	<!-- refresh -->
+	<string name="refresh_error">Failed to refresh holidays</string>
+	<string name="retry">Retry</string>
+
+	<!-- content descriptions -->
+	<string name="content_description_ad">Ad</string>
+	<string name="content_description_icon_sad">Sad icon</string>
+	<string name="content_description_icon_sad_appendix">Sad icon $1%s</string>
+	<string name="content_description_more">more</string>
+	<string name="content_description_image">image</string>
+	<string name="content_description_drawer_open">Open drawer</string>
+	<string name="content_description_drawer_close">Close drawer</string>
+	<string name="content_description_list_holidays">List of holidays</string>
+	<string name="content_description_search_results">Search result</string>
+	<string name="content_description_icon_main">Main icon</string>
+	<string name="international">International</string>
+
+	<string name="loading">Loading…</string>
+	<string name="widget_error">Failed to load holidays. Please wait patiently until the error is resolved on our end.</string>
+	<string name="widget_login_required">Log in to see today\'s holidays</string>
+	<string name="auth_failed">Authentication failed</string>
+	<string name="auth_no_internet">No internet connection</string>
+
+	<!-- widget preview -->
+	<string name="widget_preview_date">Today is:</string>
+	<string name="widget_preview_holidays">\u2022 A perfect day for using the widget!</string>
 
 </resources>

@@ -6,11 +6,26 @@
 	<!-- Titles -->
 	<string name="preference_title_colorized_days">Colorized days</string>
 	<string name="preference_title_include_usual">Include usual holidays</string>
-	<string name="preference_title_holidays_shortcuts">Display holidays\' shortcuts</string>
+	<string name="preference_title_month_view_mode">Month view</string>
 
 	<!-- Descriptions -->
 	<string name="preference_description_colorized_days">Set unique color for every day</string>
 	<string name="preference_description_include_usual">Display regular holidays, i.e. New Year\'s Eve, along with others</string>
-	<string name="preference_description_holidays_shortcuts">Show holidays\' shortcuts on month view.</string>
+
+	<!-- Month view mode dialog -->
+	<string name="dialog_title_month_view_mode">Month view mode</string>
+	<string name="month_view_mode_detailed">Detailed</string>
+	<string name="month_view_mode_detailed_desc">Holiday names on tiles. May affect performance.</string>
+	<string name="month_view_mode_compact">Compact</string>
+	<string name="month_view_mode_compact_desc">Day numbers with holiday count</string>
+	<string name="month_view_mode_simple">Simple</string>
+	<string name="month_view_mode_simple_desc">Day numbers only</string>
+
+	<!-- Month view mode dialog preview samples -->
+	<string name="preview_holiday_1">World Book and…</string>
+	<string name="preview_holiday_2">National Day of…</string>
+	<string name="preview_more">2 more</string>
+	<string name="preview_holidays_count_3">Holidays: 3</string>
+	<string name="preview_holidays_count_5">Holidays: 5</string>
 
 </resources>

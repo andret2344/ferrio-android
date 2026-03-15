@@ -21,121 +21,111 @@
 
 	</com.google.android.material.appbar.AppBarLayout>
 
-	<FrameLayout
+	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/background_primary"
-		android:foregroundGravity="center_vertical"
+		android:background="?android:attr/colorBackground"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-		<ScrollView
+		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="20dp">
 
-			<androidx.constraintlayout.widget.ConstraintLayout
+			<com.google.android.material.card.MaterialCardView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:padding="20dp">
+				android:layout_marginBottom="20dp"
+				app:cardCornerRadius="12dp"
+				app:cardElevation="0dp"
+				app:strokeWidth="0dp">
 
-				<com.google.android.material.textfield.TextInputLayout
-					android:id="@+id/dialog_report_holiday_name_layout"
-					style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/holiday_name"
-					app:layout_constraintBottom_toTopOf="@id/dialog_report_holiday_desc_layout"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toTopOf="parent">
+					android:orientation="vertical">
 
-					<com.google.android.material.textfield.TextInputEditText
+					<TextView
 						android:id="@+id/dialog_report_holiday_name"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:enabled="false" />
+						android:padding="14dp"
+						android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-				</com.google.android.material.textfield.TextInputLayout>
+					<View
+						android:id="@+id/dialog_report_divider"
+						android:layout_width="match_parent"
+						android:layout_height="1dp"
+						android:background="?android:attr/listDivider"
+						android:visibility="gone" />
 
-				<com.google.android.material.textfield.TextInputLayout
-					android:id="@+id/dialog_report_holiday_desc_layout"
-					style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:hint="@string/holiday_description"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/dialog_report_holiday_name_layout">
-
-					<com.google.android.material.textfield.TextInputEditText
+					<TextView
 						android:id="@+id/dialog_report_holiday_desc"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:enabled="false"
-						android:maxLines="5" />
+						android:maxLines="3"
+						android:ellipsize="end"
+						android:padding="14dp"
+						android:textAppearance="?attr/textAppearanceBodyMedium"
+						android:textColor="?android:attr/textColorSecondary"
+						android:visibility="gone" />
 
-				</com.google.android.material.textfield.TextInputLayout>
+				</LinearLayout>
 
-				<com.google.android.material.textfield.TextInputLayout
-					android:id="@+id/dialog_report_text_reason"
-					style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+			</com.google.android.material.card.MaterialCardView>
+
+			<com.google.android.material.textfield.TextInputLayout
+				android:id="@+id/dialog_report_text_reason"
+				style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/reason">
+
+				<AutoCompleteTextView
+					android:id="@+id/dialog_report_text_reason_value"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:hint="@string/reason"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/dialog_report_holiday_desc_layout">
+					android:inputType="none"
+					app:simpleItems="@array/report_values" />
+			</com.google.android.material.textfield.TextInputLayout>
 
-					<AutoCompleteTextView
-						android:hint="@string/reason"
-						android:id="@+id/dialog_report_text_reason_value"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:inputType="none"
-						app:simpleItems="@array/report_values" />
-				</com.google.android.material.textfield.TextInputLayout>
+			<com.google.android.material.textfield.TextInputLayout
+				android:id="@+id/dialog_report_text_description"
+				style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:hint="@string/description">
 
-				<com.google.android.material.textfield.TextInputLayout
-					android:id="@+id/dialog_report_text_description"
-					style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/dialog_report_text_description_value"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:hint="@string/description"
-					app:layout_constraintBottom_toTopOf="@id/dialog_report_text_note"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/dialog_report_text_reason">
+					android:layout_height="wrap_content" />
+			</com.google.android.material.textfield.TextInputLayout>
 
-					<com.google.android.material.textfield.TextInputEditText
-						android:id="@+id/dialog_report_text_description_value"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content" />
-				</com.google.android.material.textfield.TextInputLayout>
+			<TextView
+				android:id="@+id/dialog_report_text_note"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="5dp"
+				android:text="@string/report_note"
+				android:textAppearance="?attr/textAppearanceLabelSmall"
+				android:textColor="?android:attr/textColorSecondary" />
 
-				<TextView
-					android:id="@+id/dialog_report_text_note"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:padding="5dp"
-					android:text="@string/report_note"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/dialog_report_text_description" />
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/dialog_report_button_send"
+				style="@style/Widget.Material3.Button.Icon"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="20dp"
+				android:enabled="false"
+				android:text="@string/send_report"
+				app:icon="@drawable/baseline_send_24" />
 
-				<com.google.android.material.button.MaterialButton
-					android:id="@+id/dialog_report_button_send"
-					style="@style/Widget.Material3.Button.Icon"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="20dp"
-					android:enabled="false"
-					android:text="@string/send_report"
-					android:textColor="@color/foreground_primary"
-					app:icon="@drawable/baseline_send_24"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/dialog_report_text_note" />
-			</androidx.constraintlayout.widget.ConstraintLayout>
-		</ScrollView>
-	</FrameLayout>
+		</LinearLayout>
+
+	</ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

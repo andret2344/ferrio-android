@@ -3,7 +3,8 @@
 
 	<string name="settings_key_theme_colorized" translatable="false">colorized</string>
 	<string name="settings_key_usual_holidays" translatable="false">usual_holidays</string>
-	<string name="settings_key_display_shortcuts" translatable="false">display_shortcuts</string>
+	<string name="settings_key_month_view_mode" translatable="false">month_view_mode</string>
 	<string name="settings_key_app_theme" translatable="false">app_theme</string>
+	<string name="settings_key_logout" translatable="false">logout</string>
 
 </resources>

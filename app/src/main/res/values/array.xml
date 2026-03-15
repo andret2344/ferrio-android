@@ -21,7 +21,7 @@
 		<item>Other</item>
 	</array>
 
-	<array name="report_keys">
+	<array name="report_keys" translatable="false">
 		<item>WRONG_DATE</item>
 		<item>WRONG_NAME</item>
 		<item>WRONG_DESCRIPTION</item>

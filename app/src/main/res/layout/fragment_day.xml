@@ -2,21 +2,20 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/fragment_day_relative_main"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/background_primary">
+	android:layout_height="match_parent">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/fragment_day_list_holidays"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/background_primary"
+		android:contentDescription="@string/content_description_list_holidays"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 	<ImageView
 		android:id="@+id/fragment_day_image_sad"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:contentDescription="@string/content_description_image_sad_face"
+		android:contentDescription="@string/content_description_icon_sad"
 		android:scaleType="centerInside"
 		android:src="@drawable/baseline_emoji_sad"
 		android:visibility="invisible"
@@ -31,7 +30,6 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:text="@string/no_unusual_holidays"
-		android:textColor="@color/foreground_primary"
 		android:textSize="@dimen/fragment_day_empty"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="parent"

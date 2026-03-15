@@ -7,9 +7,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class CustomFragmentAdapter extends FragmentStateAdapter {
-	private final List<Fragment> fragmentList = new ArrayList<>();
+	private final List<Supplier<Fragment>> fragmentFactories = new ArrayList<>();
 
 	public CustomFragmentAdapter(@NonNull final FragmentActivity fragmentActivity) {
 		super(fragmentActivity);
@@ -18,15 +19,15 @@ public class CustomFragmentAdapter extends FragmentStateAdapter {
 	@NonNull
 	@Override
 	public Fragment createFragment(final int position) {
-		return fragmentList.get(position);
+		return fragmentFactories.get(position).get();
 	}
 
 	@Override
 	public int getItemCount() {
-		return fragmentList.size();
+		return fragmentFactories.size();
 	}
 
-	public void addFragment(final Fragment fragment) {
-		fragmentList.add(fragment);
+	public void addFragment(@NonNull final Supplier<Fragment> factory) {
+		fragmentFactories.add(factory);
 	}
 }

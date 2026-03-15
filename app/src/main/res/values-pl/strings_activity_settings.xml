@@ -6,11 +6,26 @@
 	<!-- Titles -->
 	<string name="preference_title_colorized_days">Kolorowe dni</string>
 	<string name="preference_title_include_usual">Dołącz święta typowe</string>
-	<string name="preference_title_holidays_shortcuts">Wyświetlaj skróty świąt</string>
+	<string name="preference_title_month_view_mode">Widok miesiąca</string>
 
 	<!-- Descriptions -->
 	<string name="preference_description_colorized_days">Ustaw unikalny kolor dla każdego dnia</string>
 	<string name="preference_description_include_usual">Wyświetlaj święta typowe, np. Nowy Rok, razem z pozostałymi</string>
-	<string name="preference_description_holidays_shortcuts">Pokazuj skróty świąt w widoku miesiąca</string>
+
+	<!-- Month view mode dialog -->
+	<string name="dialog_title_month_view_mode">Widok miesiąca</string>
+	<string name="month_view_mode_detailed">Szczegółowy</string>
+	<string name="month_view_mode_detailed_desc">Nazwy świąt na kafelkach. Może wpłynąć na wydajność.</string>
+	<string name="month_view_mode_compact">Kompaktowy</string>
+	<string name="month_view_mode_compact_desc">Numery dni z liczbą świąt</string>
+	<string name="month_view_mode_simple">Prosty</string>
+	<string name="month_view_mode_simple_desc">Tylko numery dni</string>
+
+	<!-- Month view mode dialog preview samples -->
+	<string name="preview_holiday_1">Światowy Dzień Książki…</string>
+	<string name="preview_holiday_2">Narodowy Dzień Pamięci…</string>
+	<string name="preview_more">2 więcej</string>
+	<string name="preview_holidays_count_3">Święta: 3</string>
+	<string name="preview_holidays_count_5">Święta: 5</string>
 
 </resources>

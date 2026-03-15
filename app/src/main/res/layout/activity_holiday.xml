@@ -3,7 +3,6 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="@color/background_primary"
 	android:orientation="vertical">
 
 	<com.google.android.material.appbar.MaterialToolbar
@@ -41,10 +40,20 @@
 				app:icon="@drawable/baseline_star_24" />
 		</RelativeLayout>
 
+		<com.google.android.material.progressindicator.CircularProgressIndicator
+			android:id="@+id/activity_holiday_progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_margin="48dp"
+			android:indeterminate="true" />
+
 		<LinearLayout
+			android:id="@+id/activity_holiday_content"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="vertical">
+			android:orientation="vertical"
+			android:visibility="gone">
 
 			<ImageView
 				android:id="@+id/activity_holiday_image"
@@ -71,6 +80,16 @@
 					android:textSize="@dimen/activity_holiday_name" />
 
 				<TextView
+					android:id="@+id/activity_holiday_date"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:gravity="center"
+					android:padding="10dp"
+					android:textAppearance="?attr/textAppearanceBodyMedium"
+					android:textColor="?android:attr/textColorSecondary"
+					android:textSize="@dimen/activity_holiday_description" />
+
+				<TextView
 					android:id="@+id/activity_holiday_description"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
@@ -89,10 +108,11 @@
 
 				<com.google.android.material.button.MaterialButton
 					android:id="@+id/activity_holiday_button_report"
-					style="?attr/borderlessButtonStyle"
+					style="@style/Widget.UnusualHoliday.TextButton.Report"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/report" />
+					android:text="@string/report"
+					app:icon="@drawable/baseline_warning_amber_24" />
 
 				<com.google.android.material.button.MaterialButton
 					android:id="@+id/activity_holiday_button_read_more"

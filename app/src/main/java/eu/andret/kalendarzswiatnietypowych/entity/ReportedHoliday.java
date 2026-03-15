@@ -14,7 +14,9 @@ public class ReportedHoliday {
 	private LocalDateTime datetime;
 	private ReportState reportState;
 
-	public ReportedHoliday(final int id, final String languageCode, final int metadataId, final String reportType, final String description, final LocalDateTime datetime, final ReportState reportState) {
+	public ReportedHoliday(final int id, final String languageCode, final int metadataId,
+			final String reportType, final String description, final LocalDateTime datetime,
+			final ReportState reportState) {
 		this.id = id;
 		this.languageCode = languageCode;
 		this.metadataId = metadataId;
@@ -106,7 +108,7 @@ public class ReportedHoliday {
 	@NonNull
 	@Override
 	public String toString() {
-		return "ReportedFixedHoliday{" +
+		return "ReportedHoliday{" +
 				"id=" + id +
 				", languageCode='" + languageCode + '\'' +
 				", metadataId=" + metadataId +

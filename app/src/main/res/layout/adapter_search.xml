@@ -1,28 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	style="?attr/materialCardViewOutlinedStyle"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_marginBottom="1dp"
-	android:background="@color/background_primary"
-	android:gravity="center_horizontal"
-	android:orientation="horizontal">
+	android:layout_marginHorizontal="16dp"
+	android:layout_marginVertical="6dp"
+	app:cardBackgroundColor="@color/surface_container_low"
+	app:cardCornerRadius="12dp"
+	app:cardElevation="0dp">
 
-	<TextView
-		android:id="@+id/adapter_search_text_date"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center|center"
-		android:layout_marginStart="5dp"
-		android:layout_marginEnd="10dp"
-		android:textSize="@dimen/adapter_search_main" />
-
-	<TextView
-		android:id="@+id/adapter_search_text_content"
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="2dp"
-		android:layout_marginBottom="2dp"
-		android:gravity="center_vertical"
-		android:textSize="@dimen/adapter_search_main" />
+		android:orientation="horizontal">
 
-</LinearLayout>
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical"
+			android:padding="16dp">
+
+			<TextView
+				android:id="@+id/adapter_search_text_content"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textAppearance="?attr/textAppearanceBodyMedium"
+				android:textColor="?android:attr/textColorPrimary" />
+
+			<TextView
+				android:id="@+id/adapter_search_text_date"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:textAppearance="?attr/textAppearanceLabelSmall"
+				android:textColor="?android:attr/textColorTertiary" />
+		</LinearLayout>
+
+		<ImageView
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_gravity="center_vertical"
+			android:layout_marginEnd="12dp"
+			android:contentDescription="@null"
+			android:src="@drawable/baseline_chevron_right_48"
+			app:tint="?android:attr/textColorTertiary" />
+	</LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

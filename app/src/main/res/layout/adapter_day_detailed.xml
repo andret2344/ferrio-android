@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/adapter_day_card_view"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_margin="4dp"
+	app:cardCornerRadius="8dp">
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<TextView
+			android:id="@+id/adapter_day_text_number"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="top"
+			android:padding="2dp"
+			android:textSize="@dimen/adapter_day_date" />
+
+		<ImageView
+			android:id="@+id/adapter_day_image_sad"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="centerInside"
+			android:src="@drawable/baseline_emoji_sad"
+			android:visibility="invisible" />
+
+		<TextView
+			android:id="@+id/adapter_day_text_holiday"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:textSize="@dimen/adapter_day_holiday" />
+
+		<TextView
+			android:id="@+id/adapter_day_text_more"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:layout_marginBottom="2dp"
+			android:gravity="center_horizontal"
+			android:textSize="@dimen/adapter_day_more" />
+
+	</FrameLayout>
+</com.google.android.material.card.MaterialCardView>
