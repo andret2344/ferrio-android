@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -14,6 +15,7 @@ import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.AuthHelper;
 
 public abstract class AuthenticatedFragment extends Fragment {
+	private final List<CompletableFuture<?>> pendingFutures = new ArrayList<>();
 
 	@NonNull
 	protected String getFirebaseToken() {
@@ -30,7 +32,7 @@ public abstract class AuthenticatedFragment extends Fragment {
 			@NonNull final Consumer<List<T>> onSuccess,
 			@NonNull final Consumer<ApiException> onError) {
 		final Activity activity = requireActivity();
-		CompletableFuture.supplyAsync(() -> {
+		final CompletableFuture<?> future = CompletableFuture.supplyAsync(() -> {
 			try {
 				return fetcher.apply(getFirebaseToken());
 			} catch (final ApiException ex) {
@@ -41,6 +43,9 @@ public abstract class AuthenticatedFragment extends Fragment {
 				return;
 			}
 			activity.runOnUiThread(() -> {
+				if (!isAdded()) {
+					return;
+				}
 				if (throwable != null) {
 					final Throwable cause = throwable.getCause();
 					if (cause instanceof ApiException) {
@@ -53,6 +58,16 @@ public abstract class AuthenticatedFragment extends Fragment {
 				}
 			});
 		});
+		pendingFutures.add(future);
+	}
+
+	@Override
+	public void onDestroyView() {
+		for (final CompletableFuture<?> future : pendingFutures) {
+			future.cancel(true);
+		}
+		pendingFutures.clear();
+		super.onDestroyView();
 	}
 
 	protected void handleApiError(@NonNull final ApiException ex) {

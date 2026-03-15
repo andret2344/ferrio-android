@@ -117,6 +117,7 @@ public class ApiClient {
 			}
 			return sb.toString();
 		} catch (final Exception ex) {
+			Log.w(TAG, "Failed to read error stream", ex);
 			return null;
 		}
 	}

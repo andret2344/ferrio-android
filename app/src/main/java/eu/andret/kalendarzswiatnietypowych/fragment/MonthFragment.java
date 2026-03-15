@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.DayOfWeek;
@@ -25,7 +27,9 @@ import java.util.stream.Collectors;
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
-import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapter;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterCompact;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterDetailed;
+import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterSimple;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayClickListener;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
@@ -65,23 +69,38 @@ public class MonthFragment extends Fragment {
 		recyclerView.setHasFixedSize(true);
 		final AppRepository repository = ((FerrioApplication) requireActivity().getApplication()).getAppRepository();
 		final DayClickListener listener = (DayClickListener) requireActivity();
-		final DayAdapter dayAdapter = new DayAdapter(listener);
-		recyclerView.setAdapter(dayAdapter);
 
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-		final boolean colorized = preferences.getBoolean(requireContext().getString(R.string.settings_key_theme_colorized), false);
-		final boolean includeUsual = preferences.getBoolean(requireContext().getString(R.string.settings_key_usual_holidays), false);
-		final boolean displayShortcuts = preferences.getBoolean(requireContext().getString(R.string.settings_key_display_shortcuts), true);
+		final Context context = requireContext();
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		final boolean colorized = preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false);
+		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
+		final String mode = preferences.getString(context.getString(R.string.settings_key_month_view_mode), "compact");
+
+		final ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> dayAdapter = getHolidayDayAdapter(mode, listener);
+		recyclerView.setAdapter(dayAdapter);
 
 		holidayViewModel.getHolidayDayMap()
 				.observe(getViewLifecycleOwner(), dayMap -> {
 					final List<HolidayDayViewModel> dataSet = repository.getHolidayDaysInDateRange(dayMap, before, after)
 							.stream()
-							.map(holidayDay -> convert(holidayDay, colorized, includeUsual, displayShortcuts))
+							.map(holidayDay -> convert(holidayDay, colorized, includeUsual))
 							.collect(Collectors.toList());
 					dayAdapter.submitList(dataSet);
 				});
 		return month;
+	}
+
+	@NonNull
+	private static ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> getHolidayDayAdapter(
+			@NonNull final String mode, @NonNull final DayClickListener listener) {
+		switch (mode) {
+			case "compact":
+				return new DayAdapterCompact(listener);
+			case "simple":
+				return new DayAdapterSimple(listener);
+			default:
+				return new DayAdapterDetailed(listener);
+		}
 	}
 
 	private LocalDate getBefore() {
@@ -94,31 +113,28 @@ public class MonthFragment extends Fragment {
 
 	@NonNull
 	private HolidayDayViewModel convert(@NonNull final HolidayDay holidayDay,
-			final boolean colorized, final boolean includeUsual, final boolean displayShortcuts) {
+			final boolean colorized, final boolean includeUsual) {
+		final Context context = requireContext();
 		final HolidayDayViewModel holidayDayViewModel = new HolidayDayViewModel(holidayDay);
 		if (holidayDay.getMonth() != currentMonth) {
-			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(requireContext(), R.color.tile_other_month);
+			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(context, R.color.tile_other_month);
 		} else if (colorized) {
-			holidayDayViewModel.cardBackgroundColor = Util.randomizeColor(requireContext(), holidayDay.getSeed());
+			holidayDayViewModel.cardBackgroundColor = Util.randomizeColor(context, holidayDay.getSeed());
 		} else {
-			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(requireContext(), R.color.tile_current_month);
+			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(context, R.color.tile_current_month);
 		}
 
 		final LocalDate now = LocalDate.now();
-		holidayDayViewModel.strokeColor = ContextCompat.getColor(requireContext(), R.color.today_outline);
+		holidayDayViewModel.strokeColor = ContextCompat.getColor(context, R.color.today_outline);
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
 			holidayDayViewModel.strokeWidth = 4;
 		}
 		final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual);
 
-		holidayDayViewModel.smallDate = String.valueOf(holidayDay.getDay());
+		holidayDayViewModel.date = String.valueOf(holidayDay.getDay());
+		holidayDayViewModel.holidayCount = holidaysList.size();
 		if (holidaysList.isEmpty()) {
 			holidayDayViewModel.sadImageVisibility = View.VISIBLE;
-			return holidayDayViewModel;
-		}
-		if (!displayShortcuts) {
-			holidayDayViewModel.bigDate = String.valueOf(holidayDay.getDay());
-			holidayDayViewModel.smallDate = null;
 			return holidayDayViewModel;
 		}
 
@@ -135,11 +151,11 @@ public class MonthFragment extends Fragment {
 			holidaysCountIndicator--;
 			holidayDayViewModel.holidayText = result;
 		} else {
-			holidayDayViewModel.holidayText = requireContext().getString(R.string.ellipsis_text, result);
+			holidayDayViewModel.holidayText = context.getString(R.string.ellipsis_text, result);
 		}
 
 		if (holidaysCountIndicator > 0) {
-			holidayDayViewModel.moreText = requireContext().getString(R.string.see_more, holidaysCountIndicator);
+			holidayDayViewModel.moreText = context.getString(R.string.see_more, holidaysCountIndicator);
 		}
 
 		return holidayDayViewModel;
@@ -153,8 +169,8 @@ public class MonthFragment extends Fragment {
 		private int strokeColor;
 		private int strokeWidth;
 		private int sadImageVisibility = View.INVISIBLE;
-		private String smallDate;
-		private String bigDate;
+		private String date;
+		private int holidayCount;
 		private int typeFace;
 		private String holidayText;
 		private String moreText;
@@ -193,12 +209,12 @@ public class MonthFragment extends Fragment {
 			return sadImageVisibility;
 		}
 
-		public String getSmallDate() {
-			return smallDate;
+		public String getDate() {
+			return date;
 		}
 
-		public String getBigDate() {
-			return bigDate;
+		public int getHolidayCount() {
+			return holidayCount;
 		}
 
 		public int getTypeFace() {

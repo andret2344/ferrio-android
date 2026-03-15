@@ -8,31 +8,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.Month;
-
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
-import eu.andret.kalendarzswiatnietypowych.entity.FixedHolidaySuggestion;
+import eu.andret.kalendarzswiatnietypowych.entity.HolidaySuggestion;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
-public class SuggestionFixedAdapter extends ListAdapter<FixedHolidaySuggestion, SuggestionFixedAdapter.ViewHolder> {
-	private static final DiffUtil.ItemCallback<FixedHolidaySuggestion> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<T, SuggestionAdapter.ViewHolder> {
+	private static final DiffUtil.ItemCallback<HolidaySuggestion> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
 		@Override
-		public boolean areItemsTheSame(@NonNull final FixedHolidaySuggestion oldItem,
-				@NonNull final FixedHolidaySuggestion newItem) {
+		public boolean areItemsTheSame(@NonNull final HolidaySuggestion oldItem,
+				@NonNull final HolidaySuggestion newItem) {
 			return oldItem.getId() == newItem.getId();
 		}
 
 		@Override
-		public boolean areContentsTheSame(@NonNull final FixedHolidaySuggestion oldItem,
-				@NonNull final FixedHolidaySuggestion newItem) {
+		public boolean areContentsTheSame(@NonNull final HolidaySuggestion oldItem,
+				@NonNull final HolidaySuggestion newItem) {
 			return oldItem.equals(newItem);
 		}
 	};
@@ -48,36 +45,36 @@ public class SuggestionFixedAdapter extends ListAdapter<FixedHolidaySuggestion, 
 
 		public ViewHolder(final View view) {
 			super(view);
-			textViewDatetime = view.findViewById(R.id.adapter_suggestion_fixed_text_datetime);
-			textViewCountry = view.findViewById(R.id.adapter_suggestion_fixed_text_country);
-			textViewDate = view.findViewById(R.id.adapter_suggestion_fixed_text_date);
-			textViewStatus = view.findViewById(R.id.adapter_suggestion_fixed_chip);
-			textViewName = view.findViewById(R.id.adapter_suggestion_fixed_text_name);
-			textViewDescription = view.findViewById(R.id.adapter_suggestion_fixed_text_description);
-			chevron = view.findViewById(R.id.adapter_suggestion_fixed_chevron);
+			textViewDatetime = view.findViewById(R.id.adapter_suggestion_text_datetime);
+			textViewCountry = view.findViewById(R.id.adapter_suggestion_text_country);
+			textViewDate = view.findViewById(R.id.adapter_suggestion_text_date);
+			textViewStatus = view.findViewById(R.id.adapter_suggestion_chip);
+			textViewName = view.findViewById(R.id.adapter_suggestion_text_name);
+			textViewDescription = view.findViewById(R.id.adapter_suggestion_text_description);
+			chevron = view.findViewById(R.id.adapter_suggestion_chevron);
 		}
 	}
 
-	public SuggestionFixedAdapter() {
-		super(DIFF_CALLBACK);
+	@SuppressWarnings("unchecked")
+	public SuggestionAdapter() {
+		super((DiffUtil.ItemCallback<T>) DIFF_CALLBACK);
 	}
 
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
 		final View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(R.layout.adapter_suggestion_fixed, viewGroup, false);
+				.inflate(R.layout.adapter_suggestion, viewGroup, false);
 		return new ViewHolder(view);
 	}
 
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-		final FixedHolidaySuggestion holiday = getItem(position);
-		final Pair<Month, Integer> datePair = Pair.create(Month.of(holiday.getMonth()), holiday.getDay());
+		final T holiday = getItem(position);
 
 		viewHolder.textViewDatetime.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
 		viewHolder.textViewCountry.setText(holiday.getCountry() != null ? Util.countryCodeToFlag(holiday.getCountry()) : "");
-		viewHolder.textViewDate.setText(Util.getFormattedDate(datePair));
+		viewHolder.textViewDate.setText(holiday.getDisplayDate());
 		viewHolder.textViewName.setText(holiday.getName());
 		viewHolder.textViewDescription.setText(holiday.getDescription());
 		Util.applyStatusBadge(viewHolder.textViewStatus, holiday.getReportState());

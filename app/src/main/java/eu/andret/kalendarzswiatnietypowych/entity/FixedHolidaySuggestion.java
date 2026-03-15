@@ -2,11 +2,15 @@ package eu.andret.kalendarzswiatnietypowych.entity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Objects;
 
-public class FixedHolidaySuggestion {
+import eu.andret.kalendarzswiatnietypowych.util.Util;
+
+public class FixedHolidaySuggestion implements HolidaySuggestion {
 	private int id;
 	private int day;
 	private int month;
@@ -55,6 +59,7 @@ public class FixedHolidaySuggestion {
 		this.month = month;
 	}
 
+	@NonNull
 	public String getName() {
 		return name;
 	}
@@ -63,6 +68,7 @@ public class FixedHolidaySuggestion {
 		this.name = name;
 	}
 
+	@NonNull
 	public String getDescription() {
 		return description;
 	}
@@ -71,6 +77,7 @@ public class FixedHolidaySuggestion {
 		this.description = description;
 	}
 
+	@NonNull
 	public LocalDateTime getDatetime() {
 		return datetime;
 	}
@@ -87,6 +94,7 @@ public class FixedHolidaySuggestion {
 		this.country = country;
 	}
 
+	@NonNull
 	public ReportState getReportState() {
 		return reportState;
 	}
@@ -95,11 +103,18 @@ public class FixedHolidaySuggestion {
 		this.reportState = reportState;
 	}
 
+	@NonNull
+	@Override
+	public String getDisplayDate() {
+		return Util.getFormattedDate(Pair.create(Month.of(month), day));
+	}
+
 	public Integer getHolidayId() {
 		return holidayId;
 	}
 
 	@Nullable
+	@Override
 	public String getFullHolidayId() {
 		if (holidayId == null) {
 			return null;

@@ -6,9 +6,10 @@
 	<dimen name="activity_holiday_date">17sp</dimen>
 	<dimen name="activity_holiday_description">13sp</dimen>
 	<dimen name="adapter_day_holiday">9sp</dimen>
-	<dimen name="adapter_day_more">11sp</dimen>
-	<dimen name="adapter_day_small_date">12sp</dimen>
+	<dimen name="adapter_day_more">10sp</dimen>
+	<dimen name="adapter_day_date">12sp</dimen>
 	<dimen name="adapter_holiday_main">18sp</dimen>
+	<dimen name="adapter_day_number_big">26sp</dimen>
 	<dimen name="adapter_holiday_country">15sp</dimen>
 	<dimen name="adapter_search_main">18sp</dimen>
 	<dimen name="fragment_day_empty">20sp</dimen>

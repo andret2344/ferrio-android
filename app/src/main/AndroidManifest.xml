@@ -39,10 +39,7 @@
 			android:name=".activity.SuggestionActivity"
 			android:exported="false" />
 		<activity
-			android:name=".activity.ReportsActivity"
-			android:exported="false" />
-		<activity
-			android:name=".activity.SuggestionsActivity"
+			android:name=".activity.TabbedListActivity"
 			android:exported="false" />
 		<activity
 			android:name=".activity.DayActivity" />

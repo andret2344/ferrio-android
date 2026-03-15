@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,6 +14,7 @@ import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.LoadState;
 
 public class HolidayRemoteMediator {
+	private static final String TAG = "HolidayRemoteMediator";
 	private final AppDao appDao;
 	private final ApiClient apiClient;
 	private final MutableLiveData<LoadState> loadState = new MutableLiveData<>();
@@ -31,6 +34,7 @@ public class HolidayRemoteMediator {
 				}
 				loadState.postValue(LoadState.SUCCESS);
 			} catch (final Exception ex) {
+				Log.e(TAG, "Failed to refresh holidays", ex);
 				loadState.postValue(LoadState.ERROR);
 			}
 		});

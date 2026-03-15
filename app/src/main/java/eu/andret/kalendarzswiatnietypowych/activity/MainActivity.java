@@ -45,6 +45,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayClickListener;
 import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
@@ -130,9 +131,11 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 			if (state == LoadState.ERROR) {
 				progressIndicator.setVisibility(View.GONE);
 				swipeRefreshLayout.setVisibility(View.VISIBLE);
-				Snackbar.make(viewPager2, R.string.refresh_error, Snackbar.LENGTH_LONG)
-						.setAction(R.string.retry, v -> getFerrioApplication().getAppRepository().refresh())
-						.show();
+				if (holidayDays.isEmpty()) {
+					Snackbar.make(viewPager2, R.string.refresh_error, Snackbar.LENGTH_LONG)
+							.setAction(R.string.retry, v -> getFerrioApplication().getAppRepository().refresh())
+							.show();
+				}
 			}
 		});
 
@@ -260,10 +263,10 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 				startActivity(new Intent(this, SuggestionActivity.class));
 				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_suggestions) {
-				startActivity(new Intent(this, SuggestionsActivity.class));
+				startActivity(TabbedListActivity.createIntent(this, ApiClient.REPORT_TYPE_SUGGESTION));
 				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_reports) {
-				startActivity(new Intent(this, ReportsActivity.class));
+				startActivity(TabbedListActivity.createIntent(this, ApiClient.REPORT_TYPE_ERROR));
 				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));

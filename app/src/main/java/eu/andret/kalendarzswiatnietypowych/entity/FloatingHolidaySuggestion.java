@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class FloatingHolidaySuggestion {
+public class FloatingHolidaySuggestion implements HolidaySuggestion {
 	private int id;
 	private String date;
 	private String name;
@@ -41,10 +41,17 @@ public class FloatingHolidaySuggestion {
 		return date;
 	}
 
+	@NonNull
+	@Override
+	public String getDisplayDate() {
+		return date != null ? date : "";
+	}
+
 	public void setDate(final String date) {
 		this.date = date;
 	}
 
+	@NonNull
 	public String getName() {
 		return name;
 	}
@@ -53,6 +60,7 @@ public class FloatingHolidaySuggestion {
 		this.name = name;
 	}
 
+	@NonNull
 	public String getDescription() {
 		return description;
 	}
@@ -61,6 +69,7 @@ public class FloatingHolidaySuggestion {
 		this.description = description;
 	}
 
+	@NonNull
 	public LocalDateTime getDatetime() {
 		return datetime;
 	}
@@ -77,6 +86,7 @@ public class FloatingHolidaySuggestion {
 		this.country = country;
 	}
 
+	@NonNull
 	public ReportState getReportState() {
 		return reportState;
 	}

@@ -12,19 +12,11 @@
 		android:layout_height="match_parent">
 
 		<TextView
-			android:id="@+id/adapter_day_text_number_small"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="top"
-			android:padding="2dp"
-			android:textSize="@dimen/adapter_day_small_date" />
-
-		<TextView
-			android:id="@+id/adapter_day_text_number_big"
+			android:id="@+id/adapter_day_text_number"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:gravity="center"
-			android:textSize="@dimen/adapter_holiday_main" />
+			android:textSize="@dimen/adapter_day_number_big" />
 
 		<ImageView
 			android:id="@+id/adapter_day_image_sad"
@@ -35,21 +27,14 @@
 			android:visibility="invisible" />
 
 		<TextView
-			android:id="@+id/adapter_day_text_holiday"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:gravity="center"
-			android:textSize="@dimen/adapter_day_holiday" />
-
-		<TextView
-			android:id="@+id/adapter_day_text_more"
+			android:id="@+id/adapter_day_text_count"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom"
 			android:layout_marginBottom="2dp"
 			android:gravity="center_horizontal"
-			android:textSize="@dimen/adapter_day_more" />
+			android:textSize="@dimen/adapter_day_more"
+			android:visibility="gone" />
 
 	</FrameLayout>
 </com.google.android.material.card.MaterialCardView>

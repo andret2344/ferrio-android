@@ -52,12 +52,18 @@ public final class AuthRepository {
 			Tasks.await(t);
 			return Result.success(auth.getCurrentUser());
 		} catch (final Throwable e) {
+			if (isNetworkError(e)) {
+				return Result.success(current);
+			}
 			return Result.error(e);
 		}
 	}
 
 	public boolean isNetworkError(@Nullable final Throwable e) {
-		return e instanceof FirebaseNetworkException;
+		if (e instanceof FirebaseNetworkException) {
+			return true;
+		}
+		return e != null && e.getCause() instanceof FirebaseNetworkException;
 	}
 
 	@Nullable

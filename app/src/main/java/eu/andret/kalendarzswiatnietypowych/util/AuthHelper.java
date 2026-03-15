@@ -23,7 +23,11 @@ public final class AuthHelper {
 			throw new IllegalStateException("getFirebaseToken() must not be called on the main thread");
 		}
 		try {
-			final String token = Tasks.await(FirebaseAuth.getInstance().getCurrentUser().getIdToken(false)).getToken();
+			final com.google.firebase.auth.FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+			if (user == null) {
+				throw new IllegalStateException("No authenticated user");
+			}
+			final String token = Tasks.await(user.getIdToken(false)).getToken();
 			if (token == null) {
 				throw new IllegalStateException("Firebase token is null");
 			}

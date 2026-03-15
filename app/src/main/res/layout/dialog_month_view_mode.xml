@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:paddingHorizontal="8dp"
+		android:paddingBottom="16dp">
+
+		<!-- Simple -->
+		<LinearLayout
+			android:id="@+id/option_simple"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="?attr/selectableItemBackground"
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:padding="12dp">
+
+			<RadioButton
+				android:id="@+id/radio_simple"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="8dp"
+				android:layout_weight="1"
+				android:orientation="vertical">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/month_view_mode_simple"
+					android:textSize="16sp"
+					android:textStyle="bold" />
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="2dp"
+					android:text="@string/month_view_mode_simple_desc"
+					android:textColor="?android:attr/textColorSecondary"
+					android:textSize="13sp" />
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="8dp"
+					android:orientation="horizontal">
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<TextView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:gravity="center"
+							android:text="5"
+							android:textSize="20sp" />
+					</com.google.android.material.card.MaterialCardView>
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginHorizontal="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<ImageView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:scaleType="centerInside"
+							android:src="@drawable/baseline_emoji_sad" />
+					</com.google.android.material.card.MaterialCardView>
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginStart="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<TextView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:gravity="center"
+							android:text="7"
+							android:textSize="20sp" />
+					</com.google.android.material.card.MaterialCardView>
+
+				</LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+
+		<!-- Compact -->
+		<LinearLayout
+			android:id="@+id/option_compact"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="?attr/selectableItemBackground"
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:padding="12dp">
+
+			<RadioButton
+				android:id="@+id/radio_compact"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="8dp"
+				android:layout_weight="1"
+				android:orientation="vertical">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/month_view_mode_compact"
+					android:textSize="16sp"
+					android:textStyle="bold" />
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="2dp"
+					android:text="@string/month_view_mode_compact_desc"
+					android:textColor="?android:attr/textColorSecondary"
+					android:textSize="13sp" />
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="8dp"
+					android:orientation="horizontal">
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<FrameLayout
+							android:layout_width="match_parent"
+							android:layout_height="match_parent">
+
+							<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="5"
+								android:textSize="20sp" />
+
+							<TextView
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_gravity="bottom"
+								android:gravity="center"
+								android:text="@string/preview_holidays_count_3"
+								android:textSize="8sp" />
+						</FrameLayout>
+					</com.google.android.material.card.MaterialCardView>
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginHorizontal="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<ImageView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:scaleType="centerInside"
+							android:src="@drawable/baseline_emoji_sad" />
+					</com.google.android.material.card.MaterialCardView>
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginStart="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<FrameLayout
+							android:layout_width="match_parent"
+							android:layout_height="match_parent">
+
+							<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="7"
+								android:textSize="20sp" />
+
+							<TextView
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_gravity="bottom"
+								android:gravity="center"
+								android:text="@string/preview_holidays_count_5"
+								android:textSize="8sp" />
+						</FrameLayout>
+					</com.google.android.material.card.MaterialCardView>
+
+				</LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+
+		<!-- Detailed -->
+		<LinearLayout
+			android:id="@+id/option_detailed"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="?attr/selectableItemBackground"
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:padding="12dp">
+
+			<RadioButton
+				android:id="@+id/radio_detailed"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="8dp"
+				android:layout_weight="1"
+				android:orientation="vertical">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/month_view_mode_detailed"
+					android:textSize="16sp"
+					android:textStyle="bold" />
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="2dp"
+					android:text="@string/month_view_mode_detailed_desc"
+					android:textColor="?android:attr/textColorSecondary"
+					android:textSize="13sp" />
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="8dp"
+					android:orientation="horizontal">
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<FrameLayout
+							android:layout_width="match_parent"
+							android:layout_height="match_parent">
+
+							<TextView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:layout_gravity="top|start"
+								android:padding="3dp"
+								android:text="5"
+								android:textSize="9sp" />
+
+							<TextView
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_gravity="center"
+								android:gravity="center"
+								android:text="@string/preview_holiday_1"
+								android:textSize="8sp" />
+
+							<TextView
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_gravity="bottom"
+								android:gravity="center"
+								android:text="@string/preview_more"
+								android:textSize="7sp" />
+						</FrameLayout>
+					</com.google.android.material.card.MaterialCardView>
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginHorizontal="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<FrameLayout
+							android:layout_width="match_parent"
+							android:layout_height="match_parent">
+
+							<TextView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:layout_gravity="top|start"
+								android:padding="3dp"
+								android:text="6"
+								android:textSize="9sp" />
+
+							<ImageView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:scaleType="centerInside"
+								android:src="@drawable/baseline_emoji_sad" />
+						</FrameLayout>
+					</com.google.android.material.card.MaterialCardView>
+
+					<com.google.android.material.card.MaterialCardView
+						android:layout_width="0dp"
+						android:layout_height="56dp"
+						android:layout_marginStart="4dp"
+						android:layout_weight="1"
+						app:cardBackgroundColor="@color/tile_current_month"
+						app:cardCornerRadius="6dp">
+
+						<FrameLayout
+							android:layout_width="match_parent"
+							android:layout_height="match_parent">
+
+							<TextView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:layout_gravity="top|start"
+								android:padding="3dp"
+								android:text="7"
+								android:textSize="9sp" />
+
+							<TextView
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_gravity="center"
+								android:gravity="center"
+								android:text="@string/preview_holiday_2"
+								android:textSize="8sp" />
+						</FrameLayout>
+					</com.google.android.material.card.MaterialCardView>
+
+				</LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+
+	</LinearLayout>
+</ScrollView>

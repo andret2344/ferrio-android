@@ -1,23 +1,28 @@
 package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioButton;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Optional;
-
-import androidx.appcompat.app.AppCompatDelegate;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 
@@ -81,6 +86,15 @@ public class SettingsActivity extends BaseActivity {
 						return true;
 					}));
 
+			Optional.ofNullable(this.<Preference>findPreference(getContext().getString(R.string.settings_key_month_view_mode)))
+					.ifPresent(o -> {
+						updateMonthViewModeSummary(o);
+						o.setOnPreferenceClickListener(preference -> {
+							showMonthViewModeDialog(preference);
+							return true;
+						});
+					});
+
 			Optional.ofNullable(this.<Preference>findPreference(getContext().getString(R.string.settings_key_logout)))
 					.ifPresent(o -> o.setOnPreferenceClickListener(preference -> {
 						requireActivity().finishAffinity();
@@ -90,6 +104,72 @@ public class SettingsActivity extends BaseActivity {
 						startActivity(intent);
 						return true;
 					}));
+		}
+
+		private void updateMonthViewModeSummary(@NonNull final Preference preference) {
+			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+			final String mode = prefs.getString(requireContext().getString(R.string.settings_key_month_view_mode), "compact");
+			switch (mode) {
+				case "compact":
+					preference.setSummary(R.string.month_view_mode_compact);
+					break;
+				case "simple":
+					preference.setSummary(R.string.month_view_mode_simple);
+					break;
+				default:
+					preference.setSummary(R.string.month_view_mode_detailed);
+					break;
+			}
+		}
+
+		private void showMonthViewModeDialog(@NonNull final Preference preference) {
+			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+			final String currentMode = prefs.getString(requireContext().getString(R.string.settings_key_month_view_mode), "compact");
+
+			final View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_month_view_mode, null);
+
+			final RadioButton radioDetailed = dialogView.findViewById(R.id.radio_detailed);
+			final RadioButton radioCompact = dialogView.findViewById(R.id.radio_compact);
+			final RadioButton radioSimple = dialogView.findViewById(R.id.radio_simple);
+
+			switch (currentMode) {
+				case "compact":
+					radioCompact.setChecked(true);
+					break;
+				case "simple":
+					radioSimple.setChecked(true);
+					break;
+				default:
+					radioDetailed.setChecked(true);
+					break;
+			}
+
+			final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext())
+					.setTitle(R.string.dialog_title_month_view_mode)
+					.setView(dialogView);
+
+			final androidx.appcompat.app.AlertDialog dialog = builder.show();
+
+			final View.OnClickListener clickListener = v -> {
+				final String selected;
+				if (v.getId() == R.id.option_compact || v.getId() == R.id.radio_compact) {
+					selected = "compact";
+				} else if (v.getId() == R.id.option_simple || v.getId() == R.id.radio_simple) {
+					selected = "simple";
+				} else {
+					selected = "detailed";
+				}
+				prefs.edit().putString(requireContext().getString(R.string.settings_key_month_view_mode), selected).apply();
+				updateMonthViewModeSummary(preference);
+				dialog.dismiss();
+			};
+
+			dialogView.findViewById(R.id.option_detailed).setOnClickListener(clickListener);
+			dialogView.findViewById(R.id.option_compact).setOnClickListener(clickListener);
+			dialogView.findViewById(R.id.option_simple).setOnClickListener(clickListener);
+			radioDetailed.setOnClickListener(clickListener);
+			radioCompact.setOnClickListener(clickListener);
+			radioSimple.setOnClickListener(clickListener);
 		}
 	}
 }

@@ -18,12 +18,10 @@
 			android:summary="@string/preference_description_include_usual"
 			android:title="@string/preference_title_include_usual" />
 
-		<SwitchPreference
-			android:defaultValue="true"
-			android:icon="@drawable/baseline_feed_24"
-			android:key="@string/settings_key_display_shortcuts"
-			android:summary="@string/preference_description_holidays_shortcuts"
-			android:title="@string/preference_title_holidays_shortcuts" />
+		<Preference
+			android:icon="@drawable/baseline_edit_calendar_24"
+			android:key="@string/settings_key_month_view_mode"
+			android:title="@string/preference_title_month_view_mode" />
 
 		<ListPreference
 			android:defaultValue="system"

@@ -51,7 +51,7 @@
 	<!-- Legacy references -->
 	<color name="background_secondary">#E0E0E0</color>
 	<color name="background_accent">#FFF1EC</color>
-	<color name="today_outline">#C6400A</color>
+	<color name="today_outline">#D32F2F</color>
 
 	<!-- Semantic colors -->
 	<color name="error">#BA1A1A</color>

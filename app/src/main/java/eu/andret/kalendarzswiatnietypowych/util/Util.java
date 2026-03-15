@@ -130,9 +130,11 @@ public final class Util {
 	private static String formatDate(@NonNull final Pair<Month, Integer> pair, @NonNull final String skeleton) {
 		final Locale locale = Locale.getDefault();
 		final String pattern = DateFormat.getBestDateTimePattern(locale, skeleton);
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, locale);
-		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 19);
-		return localDate.format(formatter).replace("19", String.valueOf(pair.second));
+		final String dayPlaceholder = "DAY_PLACEHOLDER";
+		final String patternWithPlaceholder = pattern.replaceAll("d+", "'" + dayPlaceholder + "'");
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternWithPlaceholder, locale);
+		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 1);
+		return localDate.format(formatter).replace(dayPlaceholder, String.valueOf(pair.second));
 	}
 
 	public static void applyStatusBadge(@NonNull final TextView textView,

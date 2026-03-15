@@ -192,18 +192,13 @@ public class LoginActivity extends AppCompatActivity {
 		if (credential instanceof CustomCredential) {
 			final CustomCredential custom = (CustomCredential) credential;
 			if (GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(custom.getType())) {
-				try {
-					final GoogleIdTokenCredential googleCred = GoogleIdTokenCredential.createFrom(custom.getData());
-					final String idToken = googleCred.getIdToken();
-					if (idToken.isEmpty()) {
-						throw new IllegalStateException("Missing Google ID token");
-					}
+				final GoogleIdTokenCredential googleCred = GoogleIdTokenCredential.createFrom(custom.getData());
+				final String idToken = googleCred.getIdToken();
+				if (!idToken.isEmpty()) {
 					authViewModel.handleGoogleIdToken(idToken);
 					return;
-				} catch (final Throwable e) {
-					Log.e(TAG, "Failed to process Google credential", e);
-					authViewModel.reportError(e.getMessage() != null ? e.getMessage() : getString(R.string.auth_failed));
 				}
+				authViewModel.reportError(getString(R.string.auth_failed));
 			} else {
 				authViewModel.reportError(getString(R.string.auth_failed));
 			}
