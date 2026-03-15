@@ -17,6 +17,9 @@ import eu.andret.kalendarzswiatnietypowych.fragment.FloatingSuggestionFragment;
 
 public class SuggestionActivity extends BaseActivity implements FormResultHandler {
 
+	private static final String TAG_FIXED = "fixed";
+	private static final String TAG_FLOATING = "floating";
+
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,12 +30,21 @@ public class SuggestionActivity extends BaseActivity implements FormResultHandle
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
+		if (savedInstanceState == null) {
+			final Fragment floatingFragment = FloatingSuggestionFragment.newInstance();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.add(R.id.activity_suggestion_frame_layout, FixedSuggestionFragment.newInstance(), TAG_FIXED)
+					.add(R.id.activity_suggestion_frame_layout, floatingFragment, TAG_FLOATING)
+					.hide(floatingFragment)
+					.commit();
+		}
+
 		final TabLayout tabLayout = findViewById(R.id.activity_suggestion_bottom_navigation);
 		tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(final TabLayout.Tab tab) {
-				final Fragment selectedFragment = getFragment(tab.getPosition());
-				showFragment(selectedFragment);
+				showFragment(tab.getPosition());
 			}
 
 			@Override
@@ -52,30 +64,26 @@ public class SuggestionActivity extends BaseActivity implements FormResultHandle
 				finish();
 			}
 		});
-
-		showFragment(FixedSuggestionFragment.newInstance());
 	}
 
-	private void showFragment(@Nullable final Fragment selectedFragment) {
-		if (selectedFragment == null) {
-			return;
+	private void showFragment(final int position) {
+		final Fragment fixed = getFixedFragment();
+		final Fragment floating = getFloatingFragment();
+		if (position == 0) {
+			getSupportFragmentManager().beginTransaction().hide(floating).show(fixed).commit();
+		} else {
+			getSupportFragmentManager().beginTransaction().hide(fixed).show(floating).commit();
 		}
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.activity_suggestion_frame_layout, selectedFragment)
-				.commit();
 	}
 
-	@Nullable
-	private Fragment getFragment(final int itemId) {
-		switch (itemId) {
-			case 0:
-				return FixedSuggestionFragment.newInstance();
-			case 1:
-				return FloatingSuggestionFragment.newInstance();
-			default:
-				return null;
-		}
+	@NonNull
+	private Fragment getFixedFragment() {
+		return getSupportFragmentManager().findFragmentByTag(TAG_FIXED);
+	}
+
+	@NonNull
+	private Fragment getFloatingFragment() {
+		return getSupportFragmentManager().findFragmentByTag(TAG_FLOATING);
 	}
 
 	@Override

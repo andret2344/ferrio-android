@@ -31,18 +31,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 	private void setupTheme() {
 		final String[] themeValues = getResources().getStringArray(R.array.preference_theme_values);
 		final String themeSetting = getSharedPreferences().getString(getResources().getString(R.string.settings_key_app_theme), themeValues[0]);
-		switch (themeSetting) {
-			case "system":
-				AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-				break;
-			case "light":
-				AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-				break;
-			case "dark":
-				AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-				break;
-			default:
-				break;
+		if (themeSetting.equals(themeValues[0])) {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+		} else if (themeSetting.equals(themeValues[1])) {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+		} else if (themeSetting.equals(themeValues[2])) {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 		}
 	}
 

@@ -19,6 +19,9 @@ public interface AppDao {
 	@Query("SELECT * FROM holiday WHERE id = :id LIMIT 1")
 	LiveData<Holiday> getHolidayById(String id);
 
+	@Query("SELECT * FROM holiday WHERE month = :month AND day = :day")
+	List<Holiday> getHolidaysByDay(int month, int day);
+
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertAll(List<Holiday> holidays);
 

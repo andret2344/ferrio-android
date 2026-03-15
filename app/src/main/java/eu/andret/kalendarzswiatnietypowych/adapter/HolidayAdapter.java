@@ -24,20 +24,19 @@ import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
 public class HolidayAdapter extends ListAdapter<Holiday, HolidayAdapter.ViewHolder> {
-	private static final DiffUtil.ItemCallback<Holiday> DIFF_CALLBACK =
-			new DiffUtil.ItemCallback<>() {
-				@Override
-				public boolean areItemsTheSame(@NonNull final Holiday oldItem,
-						@NonNull final Holiday newItem) {
-					return oldItem.getId().equals(newItem.getId());
-				}
+	private static final DiffUtil.ItemCallback<Holiday> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+		@Override
+		public boolean areItemsTheSame(@NonNull final Holiday oldItem,
+				@NonNull final Holiday newItem) {
+			return oldItem.getId().equals(newItem.getId());
+		}
 
-				@Override
-				public boolean areContentsTheSame(@NonNull final Holiday oldItem,
-						@NonNull final Holiday newItem) {
-					return oldItem.equals(newItem);
-				}
-			};
+		@Override
+		public boolean areContentsTheSame(@NonNull final Holiday oldItem,
+				@NonNull final Holiday newItem) {
+			return oldItem.equals(newItem);
+		}
+	};
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView nameTextView;

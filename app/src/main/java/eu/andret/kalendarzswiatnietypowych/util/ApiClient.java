@@ -49,7 +49,6 @@ public class ApiClient {
 	public void post(@NonNull final String path, @NonNull final String authToken,
 			@NonNull final String jsonBody) throws ApiException {
 		HttpsURLConnection connection = null;
-		OutputStream outputStream = null;
 		try {
 			final URL url = new URL(String.format("%s/%s", BASE_URL, path));
 			connection = (HttpsURLConnection) url.openConnection();
@@ -59,8 +58,9 @@ public class ApiClient {
 			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setRequestProperty("Authorization", "Bearer " + authToken);
 			connection.setDoOutput(true);
-			outputStream = connection.getOutputStream();
-			outputStream.write(jsonBody.getBytes(StandardCharsets.UTF_8));
+			try (final OutputStream outputStream = connection.getOutputStream()) {
+				outputStream.write(jsonBody.getBytes(StandardCharsets.UTF_8));
+			}
 			final int code = connection.getResponseCode();
 			if (code < 200 || code >= 300) {
 				throw new ApiException(code, readErrorStream(connection));
@@ -69,12 +69,6 @@ public class ApiClient {
 			Log.e(TAG, "POST request failed: " + path, ex);
 			throw new ApiException(0, ex.getMessage());
 		} finally {
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (final IOException ignored) {
-				}
-			}
 			if (connection != null) {
 				connection.disconnect();
 			}
@@ -85,7 +79,6 @@ public class ApiClient {
 	private <T> List<T> executeGet(@NonNull final String path, @Nullable final String authToken,
 			@NonNull final Class<T> clazz) throws ApiException {
 		HttpsURLConnection connection = null;
-		InputStreamReader reader = null;
 		try {
 			final URL url = new URL(String.format("%s/%s", BASE_URL, path));
 			connection = (HttpsURLConnection) url.openConnection();
@@ -98,20 +91,15 @@ public class ApiClient {
 			if (code < 200 || code >= 300) {
 				throw new ApiException(code, readErrorStream(connection));
 			}
-			reader = new InputStreamReader(connection.getInputStream());
-			final Type type = TypeToken.getParameterized(List.class, clazz).getType();
-			final List<T> result = Util.GSON.fromJson(reader, type);
-			return result != null ? result : Collections.emptyList();
+			try (final InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
+				final Type type = TypeToken.getParameterized(List.class, clazz).getType();
+				final List<T> result = Util.GSON.fromJson(reader, type);
+				return result != null ? result : Collections.emptyList();
+			}
 		} catch (final IOException ex) {
 			Log.e(TAG, "GET request failed: " + path, ex);
 			throw new ApiException(0, ex.getMessage());
 		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (final IOException ignored) {
-				}
-			}
 			if (connection != null) {
 				connection.disconnect();
 			}

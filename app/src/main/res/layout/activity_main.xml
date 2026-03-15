@@ -23,7 +23,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_below="@id/activity_main_toolbar"
-			android:layout_marginBottom="50dp">
+			android:layout_marginBottom="50dp"
+			android:visibility="invisible">
 
 			<androidx.viewpager2.widget.ViewPager2
 				android:id="@+id/main_pager_months"
@@ -32,6 +33,13 @@
 				android:saveEnabled="false" />
 
 		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+		<com.google.android.material.progressindicator.CircularProgressIndicator
+			android:id="@+id/activity_main_progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:indeterminate="true" />
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/main_list_results"

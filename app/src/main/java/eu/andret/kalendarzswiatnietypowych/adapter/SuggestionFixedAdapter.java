@@ -23,15 +23,16 @@ import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class SuggestionFixedAdapter extends ListAdapter<FixedHolidaySuggestion, SuggestionFixedAdapter.ViewHolder> {
-
 	private static final DiffUtil.ItemCallback<FixedHolidaySuggestion> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
 		@Override
-		public boolean areItemsTheSame(@NonNull final FixedHolidaySuggestion oldItem, @NonNull final FixedHolidaySuggestion newItem) {
+		public boolean areItemsTheSame(@NonNull final FixedHolidaySuggestion oldItem,
+				@NonNull final FixedHolidaySuggestion newItem) {
 			return oldItem.getId() == newItem.getId();
 		}
 
 		@Override
-		public boolean areContentsTheSame(@NonNull final FixedHolidaySuggestion oldItem, @NonNull final FixedHolidaySuggestion newItem) {
+		public boolean areContentsTheSame(@NonNull final FixedHolidaySuggestion oldItem,
+				@NonNull final FixedHolidaySuggestion newItem) {
 			return oldItem.equals(newItem);
 		}
 	};

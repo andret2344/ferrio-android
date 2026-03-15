@@ -30,7 +30,7 @@ import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
-import eu.andret.kalendarzswiatnietypowych.fragment.ReportFragment;
+import eu.andret.kalendarzswiatnietypowych.fragment.ReportDialogFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.ShareCardRenderer;
 
@@ -71,14 +71,7 @@ public class HolidayActivity extends BaseActivity {
 			holidayNameTextView.setText(holiday.getName());
 
 			final String dateText = formatter.format(date);
-			final String countryLabel;
-			if (holiday.getCountry() != null && !holiday.getCountry().isBlank()) {
-				final Emoji emoji = EmojiManager.getForAlias(holiday.getCountry().toLowerCase(Locale.ROOT));
-				final String flag = emoji != null ? emoji.getUnicode() : "";
-				countryLabel = flag + " " + holiday.getCountryName();
-			} else {
-				countryLabel = "\uD83C\uDF10 " + getString(R.string.international);
-			}
+			final String countryLabel = getCountryLabel(holiday);
 			holidayDateTextView.setText(getString(R.string.date_country, dateText, countryLabel));
 
 			if (holiday.getDescription().isBlank()) {
@@ -101,11 +94,23 @@ public class HolidayActivity extends BaseActivity {
 			final ReportViewModel reportViewModel = new ViewModelProvider(this).get(ReportViewModel.class);
 			findViewById(R.id.activity_holiday_button_report).setOnClickListener(v -> {
 				reportViewModel.setHoliday(holiday);
-				final ReportFragment newFragment = new ReportFragment();
+				final ReportDialogFragment newFragment = new ReportDialogFragment();
 				newFragment.setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_NoActionBar);
 				newFragment.show(getSupportFragmentManager(), "report");
 			});
 		}));
+	}
+
+	@NonNull
+	private String getCountryLabel(@NonNull final Holiday holiday) {
+		if (holiday.getCountry() == null || holiday.getCountry().isBlank()) {
+			return String.format("\uD83C\uDF10 %s", getString(R.string.international));
+		}
+		final Emoji emoji = EmojiManager.getForAlias(holiday.getCountry().toLowerCase(Locale.ROOT));
+		if (emoji == null) {
+			return "";
+		}
+		return String.format("%s %s", emoji.getUnicode(), holiday.getCountryName());
 	}
 
 	@Override

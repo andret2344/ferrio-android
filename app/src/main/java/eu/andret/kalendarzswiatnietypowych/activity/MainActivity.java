@@ -121,18 +121,28 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		});
 		swipeRefreshLayout.setOnRefreshListener(() -> getFerrioApplication().getAppRepository().refresh());
 
+		final View progressIndicator = findViewById(R.id.activity_main_progress);
+
 		holidayViewModel.getLoadState().observe(this, state -> {
 			if (state != LoadState.LOADING) {
 				swipeRefreshLayout.setRefreshing(false);
 			}
 			if (state == LoadState.ERROR) {
+				progressIndicator.setVisibility(View.GONE);
+				swipeRefreshLayout.setVisibility(View.VISIBLE);
 				Snackbar.make(viewPager2, R.string.refresh_error, Snackbar.LENGTH_LONG)
 						.setAction(R.string.retry, v -> getFerrioApplication().getAppRepository().refresh())
 						.show();
 			}
 		});
 
-		getFerrioApplication().getAppRepository().getAllHolidayDays().observe(this, days -> holidayDays = days);
+		getFerrioApplication().getAppRepository().getAllHolidayDays().observe(this, days -> {
+			holidayDays = days;
+			if (!days.isEmpty()) {
+				progressIndicator.setVisibility(View.GONE);
+				swipeRefreshLayout.setVisibility(View.VISIBLE);
+			}
+		});
 
 		getFerrioApplication().getAppRepository().refresh();
 	}
@@ -282,6 +292,12 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		intent.putExtra(DAY, day);
 		intent.putExtra(MONTH, month);
 		activityResult.launch(intent);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		searchHandler.removeCallbacksAndMessages(null);
 	}
 
 	public AlertDialog createAboutCalendarAlert() {

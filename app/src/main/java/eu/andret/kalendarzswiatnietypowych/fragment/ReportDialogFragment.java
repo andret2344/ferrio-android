@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,23 +17,24 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import android.widget.TextView;
-
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayError;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
-import java.util.concurrent.CompletableFuture;
 
-public class ReportFragment extends AuthenticatedDialogFragment {
+public class ReportDialogFragment extends AuthenticatedDialogFragment {
 	private int selectedReason = -1;
 
 	@Nullable
 	@Override
-	public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+	public View onCreateView(@NonNull final LayoutInflater inflater,
+			@Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.dialog_report, container, false);
 	}
 
@@ -56,7 +59,7 @@ public class ReportFragment extends AuthenticatedDialogFragment {
 			selectedReason = position;
 		});
 
-		reportViewModel.getHoliday().observe(requireActivity(), holiday -> {
+		reportViewModel.getHoliday().observe(getViewLifecycleOwner(), holiday -> {
 			holidayNameTextView.setText(holiday.getName());
 			if (!holiday.getDescription().isEmpty()) {
 				divider.setVisibility(View.VISIBLE);
@@ -65,14 +68,12 @@ public class ReportFragment extends AuthenticatedDialogFragment {
 			}
 
 			send.setOnClickListener(v -> {
-				final android.app.Activity activity = requireActivity();
+				final Activity activity = requireActivity();
 				final String language = Util.getLanguageCode();
-				final boolean floating = holiday.getId().startsWith("floating");
-				final String holidayType = floating ? ApiClient.HOLIDAY_TYPE_FLOATING : ApiClient.HOLIDAY_TYPE_FIXED;
-				final String numericId = holiday.getId().replaceAll("[^0-9]", "");
-				final int metadata = Integer.parseInt(numericId);
+				final String holidayType = holiday.isFloating() ? ApiClient.HOLIDAY_TYPE_FLOATING : ApiClient.HOLIDAY_TYPE_FIXED;
+				final int metadata = holiday.getNumericId();
 				final String reportType = activity.getResources().getStringArray(R.array.report_keys)[selectedReason];
-				final String description = descriptionEditText.getEditText().getText().toString();
+				final String description = Objects.requireNonNull(descriptionEditText.getEditText()).getText().toString();
 				final HolidayError holidayReport = new HolidayError(metadata, language, reportType, description);
 				CompletableFuture.runAsync(() -> {
 					try {

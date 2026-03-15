@@ -26,20 +26,19 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class SearchHolidayAdapter extends ListAdapter<HolidayDay, SearchHolidayAdapter.ViewHolder> {
-	private static final DiffUtil.ItemCallback<HolidayDay> DIFF_CALLBACK =
-			new DiffUtil.ItemCallback<>() {
-				@Override
-				public boolean areItemsTheSame(@NonNull final HolidayDay oldItem,
-						@NonNull final HolidayDay newItem) {
-					return oldItem.getMonth() == newItem.getMonth() && oldItem.getDay() == newItem.getDay();
-				}
+	private static final DiffUtil.ItemCallback<HolidayDay> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+		@Override
+		public boolean areItemsTheSame(@NonNull final HolidayDay oldItem,
+				@NonNull final HolidayDay newItem) {
+			return oldItem.getMonth() == newItem.getMonth() && oldItem.getDay() == newItem.getDay();
+		}
 
-				@Override
-				public boolean areContentsTheSame(@NonNull final HolidayDay oldItem,
-						@NonNull final HolidayDay newItem) {
-					return oldItem.equals(newItem);
-				}
-			};
+		@Override
+		public boolean areContentsTheSame(@NonNull final HolidayDay oldItem,
+				@NonNull final HolidayDay newItem) {
+			return oldItem.equals(newItem);
+		}
+	};
 
 	private final boolean colorized;
 	private final boolean includeUsual;

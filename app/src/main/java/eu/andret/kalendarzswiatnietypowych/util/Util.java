@@ -3,8 +3,6 @@ package eu.andret.kalendarzswiatnietypowych.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.text.format.DateFormat;
 import android.widget.TextView;
 
@@ -29,7 +27,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
@@ -39,10 +36,6 @@ public final class Util {
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 			.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
 			.create();
-	public static final List<Integer> NETWORK_CAPABILITIES = List.of(
-			NetworkCapabilities.TRANSPORT_WIFI,
-			NetworkCapabilities.TRANSPORT_CELLULAR,
-			NetworkCapabilities.TRANSPORT_ETHERNET);
 	private static final List<String> LANGUAGE_CODES = List.of("pl");
 
 	private static final DateTimeFormatter DATE_TIME_FORMATTER =
@@ -112,14 +105,6 @@ public final class Util {
 	private static boolean isDarkTheme(@NonNull final Context context) {
 		return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
 				== Configuration.UI_MODE_NIGHT_YES;
-	}
-
-	public static boolean isNetworkAvailable(@NonNull final Context context) {
-		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		return Optional.ofNullable(connectivityManager.getActiveNetwork())
-				.map(connectivityManager::getNetworkCapabilities)
-				.filter(capabilities -> NETWORK_CAPABILITIES.stream().anyMatch(capabilities::hasTransport))
-				.isPresent();
 	}
 
 	@NonNull

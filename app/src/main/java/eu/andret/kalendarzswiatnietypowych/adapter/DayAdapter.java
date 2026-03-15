@@ -14,32 +14,33 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.Objects;
+
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 
 public class DayAdapter extends ListAdapter<MonthFragment.HolidayDayViewModel, DayAdapter.ViewHolder> {
-	private static final DiffUtil.ItemCallback<MonthFragment.HolidayDayViewModel> DIFF_CALLBACK =
-			new DiffUtil.ItemCallback<>() {
-				@Override
-				public boolean areItemsTheSame(@NonNull final MonthFragment.HolidayDayViewModel oldItem,
-						@NonNull final MonthFragment.HolidayDayViewModel newItem) {
-					return oldItem.getMonth() == newItem.getMonth() && oldItem.getDay() == newItem.getDay();
-				}
+	private static final DiffUtil.ItemCallback<MonthFragment.HolidayDayViewModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+		@Override
+		public boolean areItemsTheSame(@NonNull final MonthFragment.HolidayDayViewModel oldItem,
+				@NonNull final MonthFragment.HolidayDayViewModel newItem) {
+			return oldItem.getMonth() == newItem.getMonth() && oldItem.getDay() == newItem.getDay();
+		}
 
-				@Override
-				public boolean areContentsTheSame(@NonNull final MonthFragment.HolidayDayViewModel oldItem,
-						@NonNull final MonthFragment.HolidayDayViewModel newItem) {
-					return oldItem.getCardBackgroundColor() == newItem.getCardBackgroundColor()
-							&& oldItem.getStrokeColor() == newItem.getStrokeColor()
-							&& oldItem.getStrokeWidth() == newItem.getStrokeWidth()
-							&& oldItem.getSadImageVisibility() == newItem.getSadImageVisibility()
-							&& oldItem.getTypeFace() == newItem.getTypeFace()
-							&& java.util.Objects.equals(oldItem.getSmallDate(), newItem.getSmallDate())
-							&& java.util.Objects.equals(oldItem.getBigDate(), newItem.getBigDate())
-							&& java.util.Objects.equals(oldItem.getHolidayText(), newItem.getHolidayText())
-							&& java.util.Objects.equals(oldItem.getMoreText(), newItem.getMoreText());
-				}
-			};
+		@Override
+		public boolean areContentsTheSame(@NonNull final MonthFragment.HolidayDayViewModel oldItem,
+				@NonNull final MonthFragment.HolidayDayViewModel newItem) {
+			return oldItem.getCardBackgroundColor() == newItem.getCardBackgroundColor()
+					&& oldItem.getStrokeColor() == newItem.getStrokeColor()
+					&& oldItem.getStrokeWidth() == newItem.getStrokeWidth()
+					&& oldItem.getSadImageVisibility() == newItem.getSadImageVisibility()
+					&& oldItem.getTypeFace() == newItem.getTypeFace()
+					&& Objects.equals(oldItem.getSmallDate(), newItem.getSmallDate())
+					&& Objects.equals(oldItem.getBigDate(), newItem.getBigDate())
+					&& Objects.equals(oldItem.getHolidayText(), newItem.getHolidayText())
+					&& Objects.equals(oldItem.getMoreText(), newItem.getMoreText());
+		}
+	};
 
 	private final DayClickListener dayClickListener;
 

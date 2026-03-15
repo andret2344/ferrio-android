@@ -1,7 +1,5 @@
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
--ignorewarnings
-
 -keep class javax.net.ssl.** { *; }
 -keep class java.net.** { *; }
 -keep class sun.net.** { *; }

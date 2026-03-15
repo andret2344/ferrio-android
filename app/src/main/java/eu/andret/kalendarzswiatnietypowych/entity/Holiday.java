@@ -86,6 +86,18 @@ public class Holiday implements Comparable<Holiday> {
 		return matureContent;
 	}
 
+	public boolean isFloating() {
+		return id.startsWith("floating-");
+	}
+
+	public boolean isFixed() {
+		return id.startsWith("fixed-");
+	}
+
+	public int getNumericId() {
+		return Integer.parseInt(id.substring(id.indexOf('-') + 1));
+	}
+
 	@Override
 	public boolean equals(@Nullable final Object o) {
 		if (this == o) {

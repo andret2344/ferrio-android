@@ -18,6 +18,8 @@ import com.vdurmont.emoji.EmojiManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import android.text.format.DateFormat;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,8 +30,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
 public final class ShareCardRenderer {
 	private static final int MAX_HOLIDAYS_DISPLAYED = 6;
-	private static final DateTimeFormatter SHARE_DATE_FORMATTER =
-			DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault());
+	private static final String SHARE_DATE_SKELETON = "yMMMMd";
 
 	private ShareCardRenderer() {
 	}
@@ -42,7 +43,7 @@ public final class ShareCardRenderer {
 		final TextView nameView = card.findViewById(R.id.share_card_name);
 		final TextView descView = card.findViewById(R.id.share_card_description);
 
-		dateView.setText(SHARE_DATE_FORMATTER.format(date));
+		dateView.setText(formatShareDate(date));
 		nameView.setText(getNameWithFlag(holiday));
 
 		if (!holiday.getDescription().isBlank()) {
@@ -62,7 +63,7 @@ public final class ShareCardRenderer {
 		final LinearLayout listLayout = card.findViewById(R.id.share_card_holidays_list);
 		final TextView moreView = card.findViewById(R.id.share_card_more);
 
-		dateView.setText(SHARE_DATE_FORMATTER.format(date));
+		dateView.setText(formatShareDate(date));
 
 		final int displayCount = Math.min(holidays.size(), MAX_HOLIDAYS_DISPLAYED);
 		for (int i = 0; i < displayCount; i++) {
@@ -113,6 +114,13 @@ public final class ShareCardRenderer {
 		canvas.scale(scale, scale);
 		view.draw(canvas);
 		return bitmap;
+	}
+
+	@NonNull
+	private static String formatShareDate(@NonNull final LocalDate date) {
+		final Locale locale = Locale.getDefault();
+		final String pattern = DateFormat.getBestDateTimePattern(locale, SHARE_DATE_SKELETON);
+		return date.format(DateTimeFormatter.ofPattern(pattern, locale));
 	}
 
 	private static void shareImage(@NonNull final Context context, @NonNull final Bitmap bitmap) {

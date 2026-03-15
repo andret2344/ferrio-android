@@ -86,6 +86,7 @@
 
 	<string name="loading">Ładowanie…</string>
 	<string name="widget_error">Nie udało się załadować świąt. Prosimy o cierpliwość do chwili, gdy problem zostanie rozwiązany.</string>
+	<string name="widget_login_required">Zaloguj się, aby zobaczyć dzisiejsze święta</string>
 	<string name="auth_failed">Uwierzytelnianie nie powiodło się</string>
 	<string name="auth_no_internet">Brak połączenia z internetem</string>
 

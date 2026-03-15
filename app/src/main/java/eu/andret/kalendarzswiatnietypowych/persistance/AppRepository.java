@@ -78,6 +78,11 @@ public class AppRepository {
 		return allHolidayDays;
 	}
 
+	@NonNull
+	public List<Holiday> getHolidaysByDaySync(final int month, final int day) {
+		return appDao.getHolidaysByDay(month, day);
+	}
+
 	public LiveData<Holiday> getHoliday(@NonNull final String id) {
 		return appDao.getHolidayById(id);
 	}

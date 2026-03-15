@@ -32,8 +32,8 @@ public class SuggestionsActivity extends BaseActivity {
 		final ViewPager2 viewPager2 = findViewById(R.id.activity_suggestions_view_pager);
 
 		final CustomFragmentAdapter adapter = new CustomFragmentAdapter(this);
-		adapter.addFragment(SuggestionsFixedFragment.newInstance());
-		adapter.addFragment(SuggestionsFloatingFragment.newInstance());
+		adapter.addFragment(SuggestionsFixedFragment::newInstance);
+		adapter.addFragment(SuggestionsFloatingFragment::newInstance);
 		viewPager2.setAdapter(adapter);
 
 		new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {

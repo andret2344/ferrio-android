@@ -32,8 +32,8 @@ public class ReportsActivity extends BaseActivity {
 		final ViewPager2 viewPager2 = findViewById(R.id.activity_reports_view_pager);
 
 		final CustomFragmentAdapter adapter = new CustomFragmentAdapter(this);
-		adapter.addFragment(ReportsFixedFragment.newInstance());
-		adapter.addFragment(ReportsFloatingFragment.newInstance());
+		adapter.addFragment(ReportsFixedFragment::newInstance);
+		adapter.addFragment(ReportsFloatingFragment::newInstance);
 		viewPager2.setAdapter(adapter);
 
 		new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
