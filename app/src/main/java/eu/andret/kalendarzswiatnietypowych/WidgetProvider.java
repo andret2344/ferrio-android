@@ -66,6 +66,8 @@ public class WidgetProvider extends AppWidgetProvider {
 			final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
 			views.setTextViewText(R.id.widget_text_date, dateText);
 			views.setTextViewText(R.id.widget_text_holidays, context.getString(R.string.loading));
+			views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+			views.setViewVisibility(R.id.widget_layout_login, View.GONE);
 			views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 			appWidgetManager.updateAppWidget(appWidgetId, views);
 		}
@@ -91,6 +93,8 @@ public class WidgetProvider extends AppWidgetProvider {
 				final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
 				views.setTextViewText(R.id.widget_text_date, dateText);
 				views.setTextViewText(R.id.widget_text_holidays, content);
+				views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+				views.setViewVisibility(R.id.widget_layout_login, View.GONE);
 				views.setViewVisibility(R.id.widget_image_empty, empty ? View.VISIBLE : View.GONE);
 				views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 				appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -101,6 +105,8 @@ public class WidgetProvider extends AppWidgetProvider {
 				final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
 				views.setTextViewText(R.id.widget_text_date, dateText);
 				views.setTextViewText(R.id.widget_text_holidays, context.getString(R.string.widget_error));
+				views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+				views.setViewVisibility(R.id.widget_layout_login, View.GONE);
 				views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 				appWidgetManager.updateAppWidget(appWidgetId, views);
 			}

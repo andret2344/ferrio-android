@@ -108,6 +108,7 @@ public class SettingsActivity extends BaseActivity {
 					.ifPresent(o -> o.setOnPreferenceClickListener(preference -> {
 						requireActivity().finishAffinity();
 						firebaseAuth.signOut();
+						FerrioApplication.refreshWidgets(requireContext());
 						final Intent intent = new Intent(getContext(), LoginActivity.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
