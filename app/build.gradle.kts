@@ -11,8 +11,8 @@ configure<ApplicationExtension> {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 29
         targetSdk = 36
-        versionCode = 96
-        versionName = "3.0.0-build.20"
+        versionCode = 97
+        versionName = "3.0.1"
     }
     buildTypes {
         release {
@@ -24,7 +24,7 @@ configure<ApplicationExtension> {
                 "proguard-rules.pro"
             )
             ndk {
-                debugSymbolLevel = "SYMBOL_TABLE"
+                debugSymbolLevel = "FULL"
             }
         }
         debug {

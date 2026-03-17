@@ -74,9 +74,10 @@ public class MonthFragment extends Fragment {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		final boolean colorized = preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false);
 		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
-		final String mode = preferences.getString(context.getString(R.string.settings_key_month_view_mode), "compact");
+		final String defaultMode = context.getString(R.string.month_view_mode_value_compact);
+		final String mode = preferences.getString(context.getString(R.string.settings_key_month_view_mode), defaultMode);
 
-		final ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> dayAdapter = getHolidayDayAdapter(mode, listener);
+		final ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> dayAdapter = getHolidayDayAdapter(context, mode, listener);
 		recyclerView.setAdapter(dayAdapter);
 
 		holidayViewModel.getHolidayDayMap()
@@ -92,15 +93,15 @@ public class MonthFragment extends Fragment {
 
 	@NonNull
 	private static ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> getHolidayDayAdapter(
-			@NonNull final String mode, @NonNull final DayClickListener listener) {
-		switch (mode) {
-			case "compact":
-				return new DayAdapterCompact(listener);
-			case "simple":
-				return new DayAdapterSimple(listener);
-			default:
-				return new DayAdapterDetailed(listener);
+			@NonNull final Context context, @NonNull final String mode,
+			@NonNull final DayClickListener listener) {
+		if (mode.equals(context.getString(R.string.month_view_mode_value_compact))) {
+			return new DayAdapterCompact(listener);
 		}
+		if (mode.equals(context.getString(R.string.month_view_mode_value_simple))) {
+			return new DayAdapterSimple(listener);
+		}
+		return new DayAdapterDetailed(listener);
 	}
 
 	private LocalDate getBefore() {

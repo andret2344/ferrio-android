@@ -30,6 +30,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.util.auth.AuthUiState;
 import eu.andret.kalendarzswiatnietypowych.util.auth.AuthViewModel;
@@ -214,6 +215,7 @@ public class LoginActivity extends AppCompatActivity {
 			Toast.makeText(this, s.errorMessage, Toast.LENGTH_SHORT).show();
 		}
 		if (!s.loading && s.user != null) {
+			FerrioApplication.refreshWidgets(this);
 			startActivity(new Intent(this, MainActivity.class));
 			finish();
 		}

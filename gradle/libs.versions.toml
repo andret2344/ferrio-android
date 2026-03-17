@@ -1,7 +1,7 @@
 [versions]
 # dependencies
 firebase = "34.10.0"
-play-services = "25.0.0"
+play-services = "25.1.0"
 material = "1.13.0"
 play-services-auth = "21.5.1"
 google-id = "1.2.0"

@@ -7,4 +7,8 @@
 	<string name="settings_key_app_theme" translatable="false">app_theme</string>
 	<string name="settings_key_logout" translatable="false">logout</string>
 
+	<string name="month_view_mode_value_detailed" translatable="false">detailed</string>
+	<string name="month_view_mode_value_compact" translatable="false">compact</string>
+	<string name="month_view_mode_value_simple" translatable="false">simple</string>
+
 </resources>

@@ -55,6 +55,9 @@ app's identifier.
 - `@NonNull` / `@Nullable` annotations throughout.
 - Layout XML IDs: `activity_*`, `fragment_*`, `adapter_*` prefixes.
 - String resource keys: `snake_case` (e.g., `settings_key_theme_colorized`).
+- **Date/time:** Always use `java.time` (`LocalDate`, `LocalTime`, `LocalDateTime`, `ZonedDateTime`)
+  — never `java.util.Calendar` or `java.util.Date`. The `java.time` classes are thread-safe and
+  available via core library desugaring.
 - Locale: `Locale.ROOT` for machine-readable formatting, `Locale.getDefault()` for UI strings.
 - Languages: English (default) + Polish (`values-pl/`).
 

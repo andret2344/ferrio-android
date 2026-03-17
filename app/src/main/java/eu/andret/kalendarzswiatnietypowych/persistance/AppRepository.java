@@ -40,7 +40,7 @@ public class AppRepository {
 			final Map<Integer, HolidayDay> grouped = groupByDayMap(holidays);
 			return new ArrayList<>(grouped.values());
 		});
-		remoteMediator = new HolidayRemoteMediator(appDao, apiClient);
+		remoteMediator = new HolidayRemoteMediator(application, appDao, apiClient);
 	}
 
 	public void refresh() {
