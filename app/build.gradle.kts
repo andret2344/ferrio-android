@@ -11,7 +11,7 @@ configure<ApplicationExtension> {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 29
         targetSdk = 36
-        versionCode = 97
+        versionCode = 98
         versionName = "3.0.1"
     }
     buildTypes {
