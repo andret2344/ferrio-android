@@ -47,6 +47,9 @@
 			android:name=".activity.HolidayActivity"
 			android:windowSoftInputMode="stateVisible|adjustResize" />
 		<activity
+			android:name=".widget.WidgetConfigActivity"
+			android:exported="false" />
+		<activity
 			android:name=".activity.SettingsActivity"
 			android:label="@string/menu_main_settings">
 			<meta-data
@@ -65,7 +68,7 @@
 		</provider>
 
 		<receiver
-			android:name=".WidgetProvider"
+			android:name=".widget.WidgetProvider"
 			android:exported="true">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -76,6 +79,21 @@
 			<meta-data
 				android:name="android.appwidget.provider"
 				android:resource="@xml/widget_provider" />
+		</receiver>
+
+		<receiver
+			android:name=".widget.TransparentWidgetProvider"
+			android:exported="true"
+			android:label="Ferrio (Transparent)">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+				<action android:name="ACTION_AUTO_UPDATE_WIDGET" />
+				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+			</intent-filter>
+
+			<meta-data
+				android:name="android.appwidget.provider"
+				android:resource="@xml/widget_provider_transparent" />
 		</receiver>
 	</application>
 

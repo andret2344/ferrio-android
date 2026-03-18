@@ -60,6 +60,13 @@
 	<color name="warning">#FFD54F</color>
 	<color name="info">#64B5F6</color>
 
+	<!-- Transparent widget -->
+	<color name="widget_transparent_background">#48000000</color>
+	<color name="widget_transparent_stroke">#48777777</color>
+	<color name="widget_transparent_text">#FFFFFF</color>
+	<color name="widget_transparent_divider">#88FFFFFF</color>
+	<color name="widget_transparent_shadow">#80000000</color>
+
 	<!-- Statuses -->
 	<color name="status_reported">#0A84FF</color>
 	<color name="status_applied">#30D158</color>

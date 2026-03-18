@@ -97,6 +97,16 @@
 	<string name="auth_failed">Authentication failed</string>
 	<string name="auth_no_internet">No internet connection</string>
 
+	<!-- widget -->
+	<string name="widget_description">Widget showing today\'s holidays</string>
+	<string name="widget_transparent_description">Transparent widget showing today\'s holidays</string>
+
+	<!-- widget config -->
+	<string name="widget_config_title">Widget settings</string>
+	<string name="widget_config_days_offset">Days offset</string>
+	<string name="widget_config_colorized">Colorized background</string>
+	<string name="widget_config_save">Save</string>
+
 	<!-- widget preview -->
 	<string name="widget_preview_date">Today is:</string>
 	<string name="widget_preview_holidays">\u2022 A perfect day for using the widget!</string>

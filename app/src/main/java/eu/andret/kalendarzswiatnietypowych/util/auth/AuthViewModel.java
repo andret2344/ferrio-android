@@ -17,7 +17,7 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.util.NetworkMonitor;
 
 public final class AuthViewModel extends AndroidViewModel {
-	private static final String TAG = "AuthViewModel";
+	private static final String TAG = "Ferrio-AuthViewModel";
 
 	private final AuthRepository repo;
 	private final NetworkMonitor network;

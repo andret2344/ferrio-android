@@ -60,6 +60,13 @@
 	<color name="warning">#F9A825</color>
 	<color name="info">#1976D2</color>
 
+	<!-- Transparent widget -->
+	<color name="widget_transparent_background">#48EEEEEE</color>
+	<color name="widget_transparent_stroke">#88777777</color>
+	<color name="widget_transparent_text">#FFFFFF</color>
+	<color name="widget_transparent_divider">#88FFFFFF</color>
+	<color name="widget_transparent_shadow">#80000000</color>
+
 	<!-- Share card (fixed, not theme-dependent) -->
 	<color name="share_card_background">#1E1E2E</color>
 	<color name="share_card_text">#FFFFFF</color>

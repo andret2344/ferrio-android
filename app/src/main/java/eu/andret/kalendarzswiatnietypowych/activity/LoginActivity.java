@@ -37,7 +37,7 @@ import eu.andret.kalendarzswiatnietypowych.util.auth.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {
 
-	private static final String TAG = "LoginActivity";
+	private static final String TAG = "Ferrio-LoginActivity";
 
 
 	private AuthViewModel authViewModel;
