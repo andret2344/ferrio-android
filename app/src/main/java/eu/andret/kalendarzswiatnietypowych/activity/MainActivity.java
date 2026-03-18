@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -226,12 +229,24 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 
 	private void setUpNavDrawer() {
 		final DrawerLayout drawer = findViewById(R.id.activity_main_layout_drawer);
+		final View content = findViewById(R.id.activity_main_content);
+		ViewCompat.setOnApplyWindowInsetsListener(content, (v, windowInsets) -> {
+			final Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+			v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+			return WindowInsetsCompat.CONSUMED;
+		});
 		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, materialToolbar, R.string.content_description_drawer_open, R.string.content_description_drawer_close);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 
 		final NavigationView navigationView = findViewById(R.id.activity_main_navigation);
 		final View headerView = navigationView.getHeaderView(0);
+		ViewCompat.setOnApplyWindowInsetsListener(navigationView, (v, windowInsets) -> {
+			final Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+			headerView.setPadding(headerView.getPaddingLeft(), insets.top,
+					headerView.getPaddingRight(), headerView.getPaddingBottom());
+			return WindowInsetsCompat.CONSUMED;
+		});
 		final MenuItem suggest = navigationView.getMenu().findItem(R.id.menu_drawer_suggest);
 		final MenuItem suggestions = navigationView.getMenu().findItem(R.id.menu_drawer_suggestions);
 		final MenuItem reports = navigationView.getMenu().findItem(R.id.menu_drawer_reports);
