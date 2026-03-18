@@ -3,6 +3,7 @@
 	android:id="@+id/day_relative_main"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:fitsSystemWindows="true"
 	android:orientation="vertical">
 
 	<com.google.android.material.appbar.MaterialToolbar
@@ -16,8 +17,8 @@
 		android:id="@+id/day_pager_days"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@id/activity_day_toolbar"
 		android:layout_above="@+id/day_adview_bottom"
+		android:layout_below="@id/activity_day_toolbar"
 		android:saveEnabled="false" />
 
 	<com.google.android.gms.ads.AdView

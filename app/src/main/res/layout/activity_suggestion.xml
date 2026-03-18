@@ -5,6 +5,7 @@
 	android:id="@+id/main"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:fitsSystemWindows="true"
 	tools:context=".activity.SuggestionActivity">
 
 	<com.google.android.material.appbar.MaterialToolbar
@@ -14,20 +15,20 @@
 		android:paddingStart="6dp"
 		android:paddingEnd="16dp"
 		app:contentInsetStartWithNavigation="0dp"
+		app:layout_constraintBottom_toTopOf="@id/activity_suggestion_bottom_navigation"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintBottom_toTopOf="@id/activity_suggestion_bottom_navigation"
 		app:title="@string/suggest_holiday" />
 
 	<com.google.android.material.tabs.TabLayout
 		android:id="@+id/activity_suggestion_bottom_navigation"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
 		app:layout_constraintBottom_toTopOf="@id/activity_suggestion_frame_layout"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_toolbar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_toolbar">
 
 		<com.google.android.material.tabs.TabItem
 			android:id="@+id/activity_suggestion_tab_fixed"
@@ -46,7 +47,7 @@
 		android:id="@+id/activity_suggestion_frame_layout"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_bottom_navigation"
-		app:layout_constraintBottom_toBottomOf="parent" />
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

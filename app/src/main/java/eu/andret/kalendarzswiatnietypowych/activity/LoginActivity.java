@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
+		EdgeToEdge.enable(this);
 		final AlertDialog offlineDialog;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
