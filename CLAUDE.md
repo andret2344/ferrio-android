@@ -60,6 +60,8 @@ app's identifier.
   available via core library desugaring.
 - Locale: `Locale.ROOT` for machine-readable formatting, `Locale.getDefault()` for UI strings.
 - Languages: English (default) + Polish (`values-pl/`).
+- **Logcat tags:** Must start with `Ferrio-` prefix (e.g., `Ferrio-Widget`, `Ferrio-Api`) for easier
+  filtering.
 
 ## Database
 

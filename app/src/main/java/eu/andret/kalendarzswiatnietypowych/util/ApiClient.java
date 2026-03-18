@@ -20,7 +20,7 @@ import java.util.Locale;
 import javax.net.ssl.HttpsURLConnection;
 
 public class ApiClient {
-	private static final String TAG = "ApiClient";
+	private static final String TAG = "Ferrio-ApiClient";
 	private static final String BASE_URL = "https://api.ferrio.app/v3";
 	private static final int CONNECT_TIMEOUT_MS = 15_000;
 	private static final int READ_TIMEOUT_MS = 30_000;

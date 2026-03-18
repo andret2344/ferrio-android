@@ -37,7 +37,7 @@ import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
-	private static final String TAG = "BaseWidgetProvider";
+	private static final String TAG = "Ferrio-BaseWidgetProvider";
 
 	@LayoutRes
 	protected abstract int getLayoutResId();
@@ -162,7 +162,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
 
-	private static void applyColorized(@NonNull final RemoteViews views, @NonNull final Context context,
+	private static void applyColorized(@NonNull final RemoteViews views,
+			@NonNull final Context context,
 			final boolean colorized, @NonNull final LocalDate date,
 			@LayoutRes final int layoutResId) {
 		if (colorized) {
