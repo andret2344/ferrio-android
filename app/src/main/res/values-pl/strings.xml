@@ -90,6 +90,16 @@
 	<string name="auth_failed">Uwierzytelnianie nie powiodło się</string>
 	<string name="auth_no_internet">Brak połączenia z internetem</string>
 
+	<!-- widget -->
+	<string name="widget_description">Widżet pokazujący dzisiejsze święta</string>
+	<string name="widget_transparent_description">Przezroczysty widżet pokazujący dzisiejsze święta</string>
+
+	<!-- widget config -->
+	<string name="widget_config_title">Ustawienia widżetu</string>
+	<string name="widget_config_days_offset">Przesunięcie dni</string>
+	<string name="widget_config_colorized">Kolorowe tło</string>
+	<string name="widget_config_save">Zapisz</string>
+
 	<!-- widget preview -->
 	<string name="widget_preview_date">Dzisiaj jest:</string>
 	<string name="widget_preview_holidays">\u2022 Świetny dzień, by użyć widgetu!</string>

@@ -18,6 +18,8 @@ import java.time.ZoneId;
 
 import eu.andret.kalendarzswiatnietypowych.persistance.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
+import eu.andret.kalendarzswiatnietypowych.widget.TransparentWidgetProvider;
+import eu.andret.kalendarzswiatnietypowych.widget.WidgetProvider;
 
 public class FerrioApplication extends Application {
 	private AppRepository appRepository;
@@ -43,12 +45,21 @@ public class FerrioApplication extends Application {
 
 	public static void refreshWidgets(@NonNull final Context context) {
 		final AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
 		final int[] ids = manager.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
 		if (ids.length > 0) {
 			final Intent intent = new Intent(context, WidgetProvider.class);
 			intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 			context.sendBroadcast(intent);
+		}
+
+		final int[] transparentIds = manager.getAppWidgetIds(new ComponentName(context, TransparentWidgetProvider.class));
+		if (transparentIds.length > 0) {
+			final Intent transparentIntent = new Intent(context, TransparentWidgetProvider.class);
+			transparentIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+			transparentIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, transparentIds);
+			context.sendBroadcast(transparentIntent);
 		}
 	}
 
@@ -60,17 +71,25 @@ public class FerrioApplication extends Application {
 				.toInstant()
 				.toEpochMilli();
 
+		final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		final AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+
 		final Intent intent = new Intent(this, WidgetProvider.class);
 		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		final int[] ids = AppWidgetManager.getInstance(this)
-				.getAppWidgetIds(new ComponentName(this, WidgetProvider.class));
-		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
+				widgetManager.getAppWidgetIds(new ComponentName(this, WidgetProvider.class)));
 		final PendingIntent pendingIntent = PendingIntent.getBroadcast(
 				this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-		final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.setInexactRepeating(AlarmManager.RTC,
 				midnightMillis, AlarmManager.INTERVAL_DAY, pendingIntent);
+
+		final Intent transparentIntent = new Intent(this, TransparentWidgetProvider.class);
+		transparentIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		transparentIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
+				widgetManager.getAppWidgetIds(new ComponentName(this, TransparentWidgetProvider.class)));
+		final PendingIntent transparentPendingIntent = PendingIntent.getBroadcast(
+				this, 1, transparentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+		alarmManager.setInexactRepeating(AlarmManager.RTC,
+				midnightMillis, AlarmManager.INTERVAL_DAY, transparentPendingIntent);
 	}
 }
