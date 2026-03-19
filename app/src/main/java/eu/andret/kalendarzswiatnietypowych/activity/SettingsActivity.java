@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Optional;
 
@@ -106,8 +107,18 @@ public class SettingsActivity extends BaseActivity {
 
 			Optional.ofNullable(this.<Preference>findPreference(getContext().getString(R.string.settings_key_logout)))
 					.ifPresent(o -> o.setOnPreferenceClickListener(preference -> {
+						final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+						if (currentUser != null && currentUser.isAnonymous()) {
+							currentUser.getIdToken(true)
+									.addOnCompleteListener(task -> {
+										if (task.isSuccessful()) {
+											currentUser.delete();
+										}
+									});
+						} else {
+							firebaseAuth.signOut();
+						}
 						requireActivity().finishAffinity();
-						firebaseAuth.signOut();
 						FerrioApplication.refreshWidgets(requireContext());
 						final Intent intent = new Intent(getContext(), LoginActivity.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
