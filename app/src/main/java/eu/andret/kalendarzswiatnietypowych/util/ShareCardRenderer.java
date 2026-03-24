@@ -14,15 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.core.util.Pair;
 
-import com.vdurmont.emoji.Emoji;
-import com.vdurmont.emoji.EmojiManager;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Month;
 import java.util.List;
-import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -88,9 +84,9 @@ public final class ShareCardRenderer {
 	@NonNull
 	private static String getNameWithFlag(@NonNull final Holiday holiday) {
 		if (holiday.getCountry() != null && !holiday.getCountry().isBlank()) {
-			final Emoji emoji = EmojiManager.getForAlias(holiday.getCountry().toLowerCase(Locale.ROOT));
-			if (emoji != null) {
-				return holiday.getName() + " " + emoji.getUnicode();
+			final String flag = Util.getCountryFlag(holiday.getCountry());
+			if (flag != null) {
+				return holiday.getName() + " " + flag;
 			}
 		}
 		return holiday.getName();

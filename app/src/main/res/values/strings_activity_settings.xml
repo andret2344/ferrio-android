@@ -25,7 +25,7 @@
 	<string name="preview_holiday_1">World Book and…</string>
 	<string name="preview_holiday_2">National Day of…</string>
 	<string name="preview_more">2 more</string>
-	<string name="preview_holidays_count_3">Holidays: 3</string>
-	<string name="preview_holidays_count_5">Holidays: 5</string>
+	<string name="preview_holidays_count_3" translatable="false">– 3 –</string>
+	<string name="preview_holidays_count_5" translatable="false">– 5 –</string>
 
 </resources>

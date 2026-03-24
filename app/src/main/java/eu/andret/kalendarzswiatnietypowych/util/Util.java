@@ -2,18 +2,22 @@ package eu.andret.kalendarzswiatnietypowych.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.gson.FieldNamingPolicy;
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -155,12 +159,18 @@ public final class Util {
 		textView.setBackground(background);
 	}
 
-	@NonNull
-	public static String countryCodeToFlag(@NonNull final String countryCode) {
-		final String upper = countryCode.toUpperCase(Locale.ROOT);
-		final int firstChar = Character.codePointAt(upper, 0) - 0x41 + 0x1F1E6;
-		final int secondChar = Character.codePointAt(upper, 1) - 0x41 + 0x1F1E6;
-		return new String(Character.toChars(firstChar)) + new String(Character.toChars(secondChar));
+	@Nullable
+	public static String getCountryFlag(@NonNull final String countryCode) {
+		final Emoji emoji = EmojiManager.getForAlias(countryCode.toLowerCase(Locale.ROOT));
+		return emoji != null ? emoji.getUnicode() : null;
+	}
+
+	@ColorInt
+	public static int getThemeColor(@NonNull final Context context, final int attr) {
+		final TypedArray a = context.obtainStyledAttributes(new int[]{attr});
+		final int color = a.getColor(0, Color.GRAY);
+		a.recycle();
+		return color;
 	}
 
 	@NonNull

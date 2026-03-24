@@ -215,8 +215,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 					.append(' ')
 					.append(holiday.getName());
 			final String country = holiday.getCountry();
-			if (country != null && !country.isEmpty()) {
-				sb.append(' ').append(Util.countryCodeToFlag(country));
+			if (country != null && !country.isBlank()) {
+				final String flag = Util.getCountryFlag(country);
+				if (flag != null) {
+					sb.append(' ').append(flag);
+				}
 			}
 		}
 		return sb.substring(1);

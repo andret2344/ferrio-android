@@ -74,7 +74,7 @@ public class Holiday implements Comparable<Holiday> {
 		if (country == null) {
 			return null;
 		}
-		return Locale.forLanguageTag(country).getDisplayCountry(Locale.getDefault());
+		return new Locale("", country).getDisplayCountry(Locale.getDefault());
 	}
 
 	@NonNull

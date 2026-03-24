@@ -13,15 +13,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.vdurmont.emoji.Emoji;
-import com.vdurmont.emoji.EmojiManager;
-
-import java.util.Locale;
-
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class HolidayAdapter extends ListAdapter<Holiday, HolidayAdapter.ViewHolder> {
 	private static final DiffUtil.ItemCallback<Holiday> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
@@ -78,15 +74,13 @@ public class HolidayAdapter extends ListAdapter<Holiday, HolidayAdapter.ViewHold
 			viewHolder.descriptionTextView.setVisibility(View.VISIBLE);
 		}
 
-		if (holiday.getCountry() != null && !holiday.getCountry().isBlank()) {
-			final Emoji emoji = EmojiManager.getForAlias(holiday.getCountry().toLowerCase(Locale.ROOT));
-			if (emoji != null) {
-				viewHolder.countryTextView.setText(emoji.getUnicode());
-				viewHolder.countryTextView.setTooltipText(holiday.getCountryName());
-				viewHolder.countryTextView.setVisibility(View.VISIBLE);
-			} else {
-				viewHolder.countryTextView.setVisibility(View.GONE);
-			}
+		final String flag = holiday.getCountry() != null && !holiday.getCountry().isBlank()
+				? Util.getCountryFlag(holiday.getCountry()) : null;
+		if (flag != null) {
+			viewHolder.countryTextView.setText(flag);
+			viewHolder.countryTextView.setTooltipText(holiday.getCountryName());
+			viewHolder.countryTextView.setOnLongClickListener(v -> true);
+			viewHolder.countryTextView.setVisibility(View.VISIBLE);
 		} else {
 			viewHolder.countryTextView.setVisibility(View.GONE);
 		}

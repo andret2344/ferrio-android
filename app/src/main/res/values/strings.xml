@@ -14,7 +14,7 @@
 	<string name="caution">Caution!</string>
 	<string name="see_more">%d more</string>
 	<string name="calendar">Calendar</string>
-	<string name="holidays_count">Holidays: %d</string>
+	<string name="holidays_count" translatable="false">– %d –</string>
 	<string name="menu_today">Today</string>
 	<string name="menu_main_settings">Settings</string>
 	<string name="menu_main_search">Search</string>

@@ -73,7 +73,7 @@ public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<
 		final T holiday = getItem(position);
 
 		viewHolder.textViewDatetime.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
-		viewHolder.textViewCountry.setText(holiday.getCountry() != null ? Util.countryCodeToFlag(holiday.getCountry()) : "");
+		viewHolder.textViewCountry.setText(holiday.getCountry() != null ? Util.getCountryFlag(holiday.getCountry()) : "");
 		viewHolder.textViewDate.setText(holiday.getDisplayDate());
 		viewHolder.textViewName.setText(holiday.getName());
 		viewHolder.textViewDescription.setText(holiday.getDescription());

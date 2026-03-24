@@ -116,6 +116,8 @@ public class SettingsActivity extends BaseActivity {
 										}
 									});
 						}
+						final FerrioApplication app = (FerrioApplication) requireActivity().getApplicationContext();
+						app.getAppRepository().clearAll();
 						firebaseAuth.signOut();
 						requireActivity().finishAffinity();
 						FerrioApplication.refreshWidgets(requireContext());

@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
@@ -45,6 +46,10 @@ public class AppRepository {
 
 	public void refresh() {
 		remoteMediator.refresh();
+	}
+
+	public void clearAll() {
+		CompletableFuture.runAsync(appDao::deleteAll);
 	}
 
 	@NonNull

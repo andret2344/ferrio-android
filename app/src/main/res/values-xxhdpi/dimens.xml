@@ -5,8 +5,9 @@
 	<dimen name="activity_holiday_name">30sp</dimen>
 	<dimen name="activity_holiday_date">20sp</dimen>
 	<dimen name="activity_holiday_description">15sp</dimen>
+	<dimen name="activity_holiday_description_body">17sp</dimen>
 	<dimen name="adapter_day_holiday">10sp</dimen>
-	<dimen name="adapter_day_more">10sp</dimen>
+	<dimen name="adapter_day_more">12sp</dimen>
 	<dimen name="adapter_day_date">13sp</dimen>
 	<dimen name="adapter_holiday_main">20sp</dimen>
 	<dimen name="adapter_day_number_big">28sp</dimen>
@@ -14,5 +15,18 @@
 	<dimen name="adapter_search_main">20sp</dimen>
 	<dimen name="fragment_day_empty">25sp</dimen>
 	<dimen name="activity_login_text_name">34sp</dimen>
+
+	<dimen name="activity_holiday_card_margin">16dp</dimen>
+	<dimen name="activity_holiday_card_elevation">4dp</dimen>
+	<dimen name="activity_holiday_content_padding_horizontal">16dp</dimen>
+	<dimen name="activity_holiday_name_padding_horizontal">10dp</dimen>
+	<dimen name="activity_holiday_name_padding_top">16dp</dimen>
+	<dimen name="activity_holiday_name_padding_bottom">10dp</dimen>
+	<dimen name="activity_holiday_date_padding_horizontal">10dp</dimen>
+	<dimen name="activity_holiday_date_padding_bottom">10dp</dimen>
+	<dimen name="activity_holiday_scroll_margin_top">8dp</dimen>
+	<dimen name="activity_holiday_scroll_fading_edge">16dp</dimen>
+	<dimen name="activity_holiday_paragraph_spacing">12dp</dimen>
+	<dimen name="activity_holiday_buttons_padding_bottom">8dp</dimen>
 
 </resources>

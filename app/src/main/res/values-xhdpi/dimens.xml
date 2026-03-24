@@ -2,17 +2,31 @@
 <resources>
 
 	<!-- XHigh DPI ~320dpi -->
-	<dimen name="activity_holiday_name">26sp</dimen>
-	<dimen name="activity_holiday_date">17sp</dimen>
-	<dimen name="activity_holiday_description">13sp</dimen>
-	<dimen name="adapter_day_holiday">9sp</dimen>
+	<dimen name="activity_holiday_name">20sp</dimen>
+	<dimen name="activity_holiday_date">13sp</dimen>
+	<dimen name="activity_holiday_description">11sp</dimen>
+	<dimen name="activity_holiday_description_body">13sp</dimen>
+	<dimen name="adapter_day_holiday">8sp</dimen>
 	<dimen name="adapter_day_more">10sp</dimen>
-	<dimen name="adapter_day_date">12sp</dimen>
-	<dimen name="adapter_holiday_main">18sp</dimen>
-	<dimen name="adapter_day_number_big">26sp</dimen>
-	<dimen name="adapter_holiday_country">15sp</dimen>
-	<dimen name="adapter_search_main">18sp</dimen>
-	<dimen name="fragment_day_empty">20sp</dimen>
-	<dimen name="activity_login_text_name">29sp</dimen>
+	<dimen name="adapter_day_date">10sp</dimen>
+	<dimen name="adapter_holiday_main">15sp</dimen>
+	<dimen name="adapter_day_number_big">22sp</dimen>
+	<dimen name="adapter_holiday_country">13sp</dimen>
+	<dimen name="adapter_search_main">15sp</dimen>
+	<dimen name="fragment_day_empty">17sp</dimen>
+	<dimen name="activity_login_text_name">24sp</dimen>
+
+	<dimen name="activity_holiday_card_margin">12dp</dimen>
+	<dimen name="activity_holiday_card_elevation">3dp</dimen>
+	<dimen name="activity_holiday_content_padding_horizontal">14dp</dimen>
+	<dimen name="activity_holiday_name_padding_horizontal">8dp</dimen>
+	<dimen name="activity_holiday_name_padding_top">12dp</dimen>
+	<dimen name="activity_holiday_name_padding_bottom">8dp</dimen>
+	<dimen name="activity_holiday_date_padding_horizontal">8dp</dimen>
+	<dimen name="activity_holiday_date_padding_bottom">8dp</dimen>
+	<dimen name="activity_holiday_scroll_margin_top">6dp</dimen>
+	<dimen name="activity_holiday_scroll_fading_edge">14dp</dimen>
+	<dimen name="activity_holiday_paragraph_spacing">10dp</dimen>
+	<dimen name="activity_holiday_buttons_padding_bottom">6dp</dimen>
 
 </resources>

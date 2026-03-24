@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,11 +21,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.vdurmont.emoji.Emoji;
-import com.vdurmont.emoji.EmojiManager;
-
 import java.time.Month;
-import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -63,20 +60,38 @@ public class HolidayActivity extends BaseActivity {
 
 			final TextView holidayNameTextView = findViewById(R.id.activity_holiday_name);
 			final TextView holidayDateTextView = findViewById(R.id.activity_holiday_date);
-			final TextView holidayDescTextView = findViewById(R.id.activity_holiday_description);
+			final LinearLayout descContainer = findViewById(R.id.activity_holiday_description_container);
 
 			holidayNameTextView.setText(holiday.getName());
 
 			final String dateText = Util.getFormattedDate(new Pair<>(Month.of(holiday.getMonth()), holiday.getDay()));
 			final String countryLabel = getCountryLabel(holiday);
 			holidayDateTextView.setText(getString(R.string.date_country, dateText, countryLabel));
+			final String countryName = holiday.getCountry() != null && !holiday.getCountry().isBlank()
+					? holiday.getCountryName()
+					: getString(R.string.international);
+			holidayDateTextView.setTooltipText(countryName);
 
 			if (holiday.getDescription().isBlank()) {
-				holidayDescTextView.setText(R.string.no_description);
-				holidayDescTextView.setTypeface(null, Typeface.ITALIC);
-				holidayDescTextView.setGravity(Gravity.CENTER);
+				final TextView placeholder = new TextView(this);
+				placeholder.setText(R.string.no_description);
+				placeholder.setTypeface(null, Typeface.ITALIC);
+				placeholder.setGravity(Gravity.CENTER);
+				placeholder.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
+				placeholder.setTextColor(Util.getThemeColor(this, android.R.attr.textColorSecondary));
+				descContainer.addView(placeholder);
 			} else {
-				holidayDescTextView.setText(holiday.getDescription());
+				final String[] paragraphs = holiday.getDescription().split("\n\n");
+				for (final String paragraph : paragraphs) {
+					final TextView tv = new TextView(this);
+					tv.setText(paragraph.trim());
+					tv.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
+					tv.setTextSize(getResources().getDimension(R.dimen.activity_holiday_description_body)
+							/ getResources().getDisplayMetrics().scaledDensity);
+					tv.setTextColor(holidayDateTextView.getCurrentTextColor());
+					tv.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.activity_holiday_paragraph_spacing));
+					descContainer.addView(tv);
+				}
 			}
 			if (!holiday.getUrl().isBlank()) {
 				final Uri targetUri = Uri.parse(holiday.getUrl());
@@ -103,11 +118,11 @@ public class HolidayActivity extends BaseActivity {
 		if (holiday.getCountry() == null || holiday.getCountry().isBlank()) {
 			return String.format("\uD83C\uDF10 %s", getString(R.string.international));
 		}
-		final Emoji emoji = EmojiManager.getForAlias(holiday.getCountry().toLowerCase(Locale.ROOT));
-		if (emoji == null) {
+		final String flag = Util.getCountryFlag(holiday.getCountry());
+		if (flag == null) {
 			return "";
 		}
-		return String.format("%s %s", emoji.getUnicode(), holiday.getCountryName());
+		return String.format("%s %s", flag, holiday.getCountryName());
 	}
 
 	@Override
