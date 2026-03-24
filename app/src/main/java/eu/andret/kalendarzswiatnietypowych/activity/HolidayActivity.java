@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,10 +23,7 @@ import com.google.android.material.button.MaterialButton;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 
-import java.time.LocalDate;
 import java.time.Month;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -33,9 +31,9 @@ import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportDialogFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.ShareCardRenderer;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class HolidayActivity extends BaseActivity {
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM", Locale.getDefault());
 	private Holiday currentHoliday;
 
 	@Override
@@ -62,7 +60,6 @@ public class HolidayActivity extends BaseActivity {
 			findViewById(R.id.activity_holiday_content).setVisibility(View.VISIBLE);
 
 			currentHoliday = holiday;
-			final LocalDate date = LocalDate.of(Year.now().getValue(), Month.of(holiday.getMonth()), holiday.getDay());
 
 			final TextView holidayNameTextView = findViewById(R.id.activity_holiday_name);
 			final TextView holidayDateTextView = findViewById(R.id.activity_holiday_date);
@@ -70,7 +67,7 @@ public class HolidayActivity extends BaseActivity {
 
 			holidayNameTextView.setText(holiday.getName());
 
-			final String dateText = formatter.format(date);
+			final String dateText = Util.getFormattedDate(new Pair<>(Month.of(holiday.getMonth()), holiday.getDay()));
 			final String countryLabel = getCountryLabel(holiday);
 			holidayDateTextView.setText(getString(R.string.date_country, dateText, countryLabel));
 

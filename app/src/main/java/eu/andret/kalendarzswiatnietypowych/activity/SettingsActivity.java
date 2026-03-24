@@ -115,9 +115,8 @@ public class SettingsActivity extends BaseActivity {
 											currentUser.delete();
 										}
 									});
-						} else {
-							firebaseAuth.signOut();
 						}
+						firebaseAuth.signOut();
 						requireActivity().finishAffinity();
 						FerrioApplication.refreshWidgets(requireContext());
 						final Intent intent = new Intent(getContext(), LoginActivity.class);

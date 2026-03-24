@@ -81,6 +81,12 @@ public final class Util {
 	}
 
 	public static int calculateIndex(final int month, final int day) {
+		if (month == Month.FEBRUARY.getValue() && day == 30) {
+			return FEB_30_INDEX - 1;
+		}
+		if (month == Month.FEBRUARY.getValue() && day == 29) {
+			return FEB_29_NON_LEAP_INDEX - 1;
+		}
 		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
 		final boolean leap = date.isLeapYear();
 		int id = date.getDayOfYear();

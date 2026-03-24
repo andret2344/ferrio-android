@@ -46,13 +46,13 @@ public class DayActivity extends BaseActivity {
 		}
 
 		pager.setAdapter(new DayFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
-		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
+		final Pair<Month, Integer> initialPair = new Pair<>(Month.of(month), day);
 		pager.setCurrentItem(Util.calculateIndex(month, day), false);
 
 		final MaterialToolbar materialToolbar = findViewById(R.id.activity_day_toolbar);
 		setSupportActionBar(materialToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar -> {
-			actionBar.setTitle(date.format(Util.getDateTimeFormatter()));
+			actionBar.setTitle(Util.getFormattedDateWithYear(initialPair));
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		});
 
@@ -103,14 +103,13 @@ public class DayActivity extends BaseActivity {
 		}
 		if (item.getItemId() == R.id.menu_day_share) {
 			final Pair<Month, Integer> pair = Util.calculateDates(pager.getCurrentItem() + 1);
-			final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, pair.second);
 			final boolean usualHolidays = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
 			final LiveData<HolidayDay> liveData = holidayViewModel.getHolidayDay(pair.first.getValue(), pair.second);
 			liveData.observe(this, new Observer<>() {
 				@Override
 				public void onChanged(final HolidayDay holidayDay) {
 					liveData.removeObserver(this);
-					ShareCardRenderer.shareDay(DayActivity.this, localDate, holidayDay.getHolidaysList(usualHolidays));
+					ShareCardRenderer.shareDay(DayActivity.this, pair, holidayDay.getHolidaysList(usualHolidays));
 				}
 			});
 			return true;

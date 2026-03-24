@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
+import androidx.core.util.Pair;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
@@ -18,10 +20,7 @@ import com.vdurmont.emoji.EmojiManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import android.text.format.DateFormat;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.Month;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,20 +29,20 @@ import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 
 public final class ShareCardRenderer {
 	private static final int MAX_HOLIDAYS_DISPLAYED = 6;
-	private static final String SHARE_DATE_SKELETON = "yMMMMd";
 
 	private ShareCardRenderer() {
 	}
 
-	public static void shareHoliday(@NonNull final Context context, @NonNull final Holiday holiday) {
+	public static void shareHoliday(@NonNull final Context context,
+			@NonNull final Holiday holiday) {
 		final View card = LayoutInflater.from(context).inflate(R.layout.share_card_holiday, null);
-		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), holiday.getMonth(), holiday.getDay());
+		final Pair<Month, Integer> pair = new Pair<>(Month.of(holiday.getMonth()), holiday.getDay());
 
 		final TextView dateView = card.findViewById(R.id.share_card_date);
 		final TextView nameView = card.findViewById(R.id.share_card_name);
 		final TextView descView = card.findViewById(R.id.share_card_description);
 
-		dateView.setText(formatShareDate(date));
+		dateView.setText(Util.getFormattedDateWithYear(pair));
 		nameView.setText(getNameWithFlag(holiday));
 
 		if (!holiday.getDescription().isBlank()) {
@@ -55,7 +54,8 @@ public final class ShareCardRenderer {
 		shareImage(context, bitmap);
 	}
 
-	public static void shareDay(@NonNull final Context context, @NonNull final LocalDate date,
+	public static void shareDay(@NonNull final Context context,
+			@NonNull final Pair<Month, Integer> pair,
 			@NonNull final List<Holiday> holidays) {
 		final View card = LayoutInflater.from(context).inflate(R.layout.share_card_day, null);
 
@@ -63,7 +63,7 @@ public final class ShareCardRenderer {
 		final LinearLayout listLayout = card.findViewById(R.id.share_card_holidays_list);
 		final TextView moreView = card.findViewById(R.id.share_card_more);
 
-		dateView.setText(formatShareDate(date));
+		dateView.setText(Util.getFormattedDateWithYear(pair));
 
 		final int displayCount = Math.min(holidays.size(), MAX_HOLIDAYS_DISPLAYED);
 		for (int i = 0; i < displayCount; i++) {
@@ -116,20 +116,13 @@ public final class ShareCardRenderer {
 		return bitmap;
 	}
 
-	@NonNull
-	private static String formatShareDate(@NonNull final LocalDate date) {
-		final Locale locale = Locale.getDefault();
-		final String pattern = DateFormat.getBestDateTimePattern(locale, SHARE_DATE_SKELETON);
-		return date.format(DateTimeFormatter.ofPattern(pattern, locale));
-	}
-
 	private static void shareImage(@NonNull final Context context, @NonNull final Bitmap bitmap) {
 		final File dir = new File(context.getCacheDir(), "share_cards");
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
 		final File file = new File(dir, "share.png");
-		try (FileOutputStream out = new FileOutputStream(file)) {
+		try (final FileOutputStream out = new FileOutputStream(file)) {
 			bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
 		} catch (final IOException e) {
 			return;
@@ -137,7 +130,7 @@ public final class ShareCardRenderer {
 			bitmap.recycle();
 		}
 
-		final android.net.Uri uri = FileProvider.getUriForFile(
+		final Uri uri = FileProvider.getUriForFile(
 				context, context.getPackageName() + ".fileprovider", file);
 		final Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("image/png");
