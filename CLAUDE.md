@@ -65,6 +65,9 @@ app's identifier.
 
 ## Code Conventions
 
+- **Line endings:** CRLF (`\r\n`) for every file you write or edit. The repo is on Windows and
+  mixing LF into existing CRLF files causes noisy diffs and git `LF will be replaced by CRLF`
+  warnings. If a tool or template emits LF, fix it before saving.
 - **Tabs** for indentation (not spaces).
 - Aggressive use of `final` on all parameters, local variables, and fields.
 - `@NonNull` / `@Nullable` annotations throughout.

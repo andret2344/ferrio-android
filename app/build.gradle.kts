@@ -1,11 +1,15 @@
-import com.android.build.api.dsl.ApplicationExtension
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
 }
 
-configure<ApplicationExtension> {
+repositories {
+    google()
+    mavenCentral()
+}
+
+android {
+    namespace = "eu.andret.kalendarzswiatnietypowych"
     compileSdk = 37
     defaultConfig {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
@@ -18,23 +22,10 @@ configure<ApplicationExtension> {
         release {
             isShrinkResources = true
             isMinifyEnabled = true
-            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            ndk {
-                debugSymbolLevel = "FULL"
-            }
-        }
-        debug {
-            isShrinkResources = false
-            isMinifyEnabled = false
-            isDebuggable = true
-            signingConfig = signingConfigs.getByName("debug")
-            ndk {
-                debugSymbolLevel = "FULL"
-            }
         }
     }
     compileOptions {
@@ -42,7 +33,6 @@ configure<ApplicationExtension> {
         sourceCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
-    namespace = "eu.andret.kalendarzswiatnietypowych"
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
@@ -54,34 +44,31 @@ configure<ApplicationExtension> {
 
 dependencies {
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-
-    implementation(libs.play.services.ads)
-    implementation(libs.material)
-    implementation(libs.play.services.auth)
-    implementation(libs.googleid)
-
-    implementation(libs.gson)
-    implementation(libs.glide)
+    implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.cardview)
+    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.androidx.preference)
-    implementation(libs.androidx.viewpager2)
-    implementation(libs.androidx.cardview)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room)
     implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.play.integrity)
-    implementation(libs.okhttp)
-
+    implementation(libs.androidx.viewpager2)
     implementation(libs.emoji.java)
+    implementation(libs.firebase.auth)
+    implementation(libs.glide)
+    implementation(libs.googleid)
+    implementation(libs.gson)
+    implementation(libs.material)
+    implementation(libs.okhttp)
+    implementation(libs.play.integrity)
+    implementation(libs.play.services.ads)
+    implementation(libs.play.services.auth)
 
     annotationProcessor(libs.room.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    testImplementation(libs.junit)
     testImplementation(libs.assertj)
+    testImplementation(libs.junit)
 }
