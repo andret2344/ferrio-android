@@ -1,15 +1,16 @@
 [versions]
 # dependencies
-firebase = "34.10.0"
-play-services = "25.1.0"
+firebase = "34.12.0"
+integrity = "1.6.0"
+play-services = "25.2.0"
 material = "1.13.0"
 play-services-auth = "21.5.1"
 google-id = "1.2.0"
 gson = "2.13.2"
-picasso = "2.71828"
+glide = "5.0.5"
 androidx-appcompat = "1.7.1"
-androidx-credentials = "1.5.0"
-androidx-credentials-play-services-auth = "1.5.0"
+androidx-credentials = "1.6.0"
+androidx-credentials-play-services-auth = "1.6.0"
 androidx-preference = "1.2.1"
 androidx-viewpager2 = "1.1.0"
 androidx-cardview = "1.0.0"
@@ -19,20 +20,24 @@ androidx-room = "2.8.4"
 androidx-swiperefreshlayout = "1.2.0"
 desugar-jdk-libs = "2.1.5"
 emoji-java = "5.1.1"
+okhttp = "5.3.2"
+assertj = "3.27.7"
+junit = "4.13.2"
 
 # plugins
-plugin-application = "9.1.0"
+plugin-application = "9.1.1"
 plugin-android-services = "4.4.4"
 
 [libraries]
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
+play-integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "play-services" }
-material = { module = "com.google.android.material:material", version.ref = "material" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-id" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials-play-services-auth" }
@@ -46,6 +51,9 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 emoji-java = { module = "com.vdurmont:emoji-java", version.ref = "emoji-java" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "plugin-application" }

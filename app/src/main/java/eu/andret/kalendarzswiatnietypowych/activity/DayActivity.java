@@ -11,8 +11,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
@@ -65,8 +63,7 @@ public class DayActivity extends BaseActivity {
 						actionBar.setTitle(format));
 			}
 		});
-		final AdView adView = findViewById(R.id.day_adview_bottom);
-		adView.loadAd(new AdRequest.Builder().build());
+		registerAdView(findViewById(R.id.day_adview_bottom));
 
 		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
 			@Override

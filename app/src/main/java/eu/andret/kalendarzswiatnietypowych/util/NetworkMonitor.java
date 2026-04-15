@@ -1,17 +1,18 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
 import android.content.Context;
-import android.util.Log;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.util.Log;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 public final class NetworkMonitor extends LiveData<Boolean> {
+	private static final String TAG = "Ferrio-NetworkMonitor";
 	private final ConnectivityManager connectivityManager;
 	private final ConnectivityManager.NetworkCallback networkCallback;
 
@@ -55,7 +56,7 @@ public final class NetworkMonitor extends LiveData<Boolean> {
 		try {
 			connectivityManager.unregisterNetworkCallback(networkCallback);
 		} catch (final Exception ex) {
-			Log.w("NetworkMonitor", "Failed to unregister network callback", ex);
+			Log.w(TAG, "Failed to unregister network callback", ex);
 		}
 	}
 

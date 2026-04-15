@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,14 +14,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+
 import java.time.Month;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -29,6 +30,7 @@ import eu.andret.kalendarzswiatnietypowych.fragment.ReportDialogFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.ShareCardRenderer;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
+import eu.andret.kalendarzswiatnietypowych.util.auth.AuthSession;
 
 public class HolidayActivity extends BaseActivity {
 	private Holiday currentHoliday;
@@ -43,8 +45,7 @@ public class HolidayActivity extends BaseActivity {
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		this.<AdView>findViewById(R.id.activity_holiday_adview_bottom)
-				.loadAd(new AdRequest.Builder().build());
+		registerAdView(findViewById(R.id.activity_holiday_adview_bottom));
 
 		final String holidayId = getIntent().getStringExtra(MainActivity.HOLIDAY);
 		if (holidayId == null) {
@@ -70,7 +71,7 @@ public class HolidayActivity extends BaseActivity {
 			final String countryName = holiday.getCountry() != null && !holiday.getCountry().isBlank()
 					? holiday.getCountryName()
 					: getString(R.string.international);
-			holidayDateTextView.setTooltipText(countryName);
+			TooltipCompat.setTooltipText(holidayDateTextView, countryName);
 
 			if (holiday.getDescription().isBlank()) {
 				final TextView placeholder = new TextView(this);
@@ -86,15 +87,15 @@ public class HolidayActivity extends BaseActivity {
 					final TextView tv = new TextView(this);
 					tv.setText(paragraph.trim());
 					tv.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
-					tv.setTextSize(getResources().getDimension(R.dimen.activity_holiday_description_body)
-							/ getResources().getDisplayMetrics().scaledDensity);
+					tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.activity_holiday_description_body));
 					tv.setTextColor(holidayDateTextView.getCurrentTextColor());
 					tv.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.activity_holiday_paragraph_spacing));
 					descContainer.addView(tv);
 				}
 			}
-			if (!holiday.getUrl().isBlank()) {
-				final Uri targetUri = Uri.parse(holiday.getUrl());
+			final String url = holiday.getUrl();
+			if (url != null && !url.isBlank()) {
+				final Uri targetUri = Uri.parse(url);
 				final String scheme = targetUri.getScheme();
 				if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) {
 					final MaterialButton buttonReadMore = findViewById(R.id.activity_holiday_button_read_more);
@@ -104,10 +105,12 @@ public class HolidayActivity extends BaseActivity {
 				}
 			}
 			final ReportViewModel reportViewModel = new ViewModelProvider(this).get(ReportViewModel.class);
-			findViewById(R.id.activity_holiday_button_report).setOnClickListener(v -> {
+			final View reportButton = findViewById(R.id.activity_holiday_button_report);
+			reportButton.setEnabled(AuthSession.canSubmitUserContent());
+			reportButton.setOnClickListener(v -> {
 				reportViewModel.setHoliday(holiday);
 				final ReportDialogFragment newFragment = new ReportDialogFragment();
-				newFragment.setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_NoActionBar);
+				newFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
 				newFragment.show(getSupportFragmentManager(), "report");
 			});
 		}));

@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.TimeUnit;
 
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -23,11 +26,11 @@ public final class AuthHelper {
 			throw new IllegalStateException("getFirebaseToken() must not be called on the main thread");
 		}
 		try {
-			final com.google.firebase.auth.FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+			final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 			if (user == null) {
 				throw new IllegalStateException("No authenticated user");
 			}
-			final String token = Tasks.await(user.getIdToken(false)).getToken();
+			final String token = Tasks.await(user.getIdToken(false), 10, TimeUnit.SECONDS).getToken();
 			if (token == null) {
 				throw new IllegalStateException("Firebase token is null");
 			}

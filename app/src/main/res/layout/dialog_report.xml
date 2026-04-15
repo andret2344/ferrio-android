@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:fitsSystemWindows="true">
@@ -64,8 +65,8 @@
 						android:id="@+id/dialog_report_holiday_desc"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:maxLines="3"
 						android:ellipsize="end"
+						android:maxLines="3"
 						android:padding="14dp"
 						android:textAppearance="?attr/textAppearanceBodyMedium"
 						android:textColor="?android:attr/textColorSecondary"
@@ -86,9 +87,9 @@
 					android:id="@+id/dialog_report_text_reason_value"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/reason"
 					android:inputType="none"
-					app:simpleItems="@array/report_values" />
+					app:simpleItems="@array/report_values"
+					tools:ignore="LabelFor" />
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.textfield.TextInputLayout
@@ -102,7 +103,8 @@
 				<com.google.android.material.textfield.TextInputEditText
 					android:id="@+id/dialog_report_text_description_value"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
+					android:layout_height="wrap_content"
+					android:lines="4" />
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<TextView

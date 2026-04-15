@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
-
 import com.google.gson.JsonObject;
 
 import java.util.function.BooleanSupplier;
@@ -18,13 +17,12 @@ import java.util.function.BooleanSupplier;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.FormResultHandler;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
-import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
-import java.util.concurrent.CompletableFuture;
 
 public class FloatingSuggestionFragment extends AuthenticatedFragment {
 	@Override
-	public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+	public View onCreateView(@NonNull final LayoutInflater inflater,
+			@Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_suggestion_floating, container, false);
 	}
 
@@ -42,36 +40,26 @@ public class FloatingSuggestionFragment extends AuthenticatedFragment {
 
 		final MaterialButton button = view.findViewById(R.id.fragment_suggestion_floating_button_send);
 		button.setOnClickListener(v -> {
-			final android.app.Activity activity = requireActivity();
-			final FormResultHandler handler = (FormResultHandler) activity;
+			final FormResultHandler handler = (FormResultHandler) requireActivity();
 			final String date = textViewDate.getText().toString();
 			final String name = editTextName.getText().toString();
 			final String description = editTextDescription.getText().toString();
-			CompletableFuture.runAsync(() -> {
-				try {
-					final String authToken = getFirebaseToken();
-					final JsonObject jsonObject = new JsonObject();
-					jsonObject.addProperty("date", date);
-					jsonObject.addProperty("name", name);
-					jsonObject.addProperty("description", description);
-					getApiClient().post(
-							getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FLOATING),
-							authToken, jsonObject.toString());
-					if (isAdded()) {
-						activity.runOnUiThread(handler::showSuccessDialog);
-					}
-				} catch (final ApiException ex) {
-					if (isAdded()) {
-						activity.runOnUiThread(() -> {
-							if (ex.isBanned()) {
-								handler.showBanDialog(ex.getBanReason());
-							} else {
-								handler.showErrorDialog();
-							}
-						});
-					}
-				}
-			});
+			final JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("date", date);
+			jsonObject.addProperty("name", name);
+			jsonObject.addProperty("description", description);
+			submitAuthenticated(
+					(token, cancel) -> getApiClient().post(
+							getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FLOATING),
+							token, jsonObject.toString(), cancel),
+					handler::showSuccessDialog,
+					ex -> {
+						if (ex.isBanned()) {
+							handler.showBanDialog(ex.getBanReason());
+						} else {
+							handler.showErrorDialog();
+						}
+					});
 		});
 
 		editTextName.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));

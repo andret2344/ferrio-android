@@ -33,8 +33,8 @@ import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterSimple;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayClickListener;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.persistance.AppRepository;
-import eu.andret.kalendarzswiatnietypowych.persistance.HolidayViewModel;
+import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
+import eu.andret.kalendarzswiatnietypowych.persistence.HolidayViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class MonthFragment extends Fragment {

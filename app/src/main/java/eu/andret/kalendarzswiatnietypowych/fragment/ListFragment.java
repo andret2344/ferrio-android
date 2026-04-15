@@ -55,15 +55,16 @@ public class ListFragment extends AuthenticatedFragment {
 		}
 	}
 
-	private <T extends HolidaySuggestion> void loadSuggestions(@NonNull final RecyclerView recyclerView,
+	private <T extends HolidaySuggestion> void loadSuggestions(
+			@NonNull final RecyclerView recyclerView,
 			@NonNull final View indicator, @NonNull final String holidayType,
 			@NonNull final Class<T> clazz) {
 		final SuggestionAdapter<T> adapter = new SuggestionAdapter<>();
 		recyclerView.setAdapter(adapter);
 		fetchAuthenticated(
-				token -> getApiClient().getList(getApiClient().buildReportsPath(
+				(token, cancel) -> getApiClient().getList(getApiClient().buildReportsUrl(
 								ApiClient.REPORT_TYPE_SUGGESTION, holidayType),
-						token, clazz),
+						token, clazz, cancel),
 				result -> {
 					adapter.submitList(result);
 					indicator.setVisibility(View.GONE);
@@ -79,9 +80,9 @@ public class ListFragment extends AuthenticatedFragment {
 		final ReportedHolidayAdapter adapter = new ReportedHolidayAdapter(requireContext());
 		recyclerView.setAdapter(adapter);
 		fetchAuthenticated(
-				token -> getApiClient().getList(getApiClient().buildReportsPath(
+				(token, cancel) -> getApiClient().getList(getApiClient().buildReportsUrl(
 								ApiClient.REPORT_TYPE_ERROR, holidayType),
-						token, ReportedHoliday.class),
+						token, ReportedHoliday.class, cancel),
 				result -> {
 					adapter.submitList(result);
 					indicator.setVisibility(View.GONE);

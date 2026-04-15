@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.persistance;
+package eu.andret.kalendarzswiatnietypowych.persistence;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;

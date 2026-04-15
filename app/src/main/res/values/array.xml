@@ -16,6 +16,7 @@
 	<array name="report_values">
 		<item>Wrong date</item>
 		<item>Wrong name</item>
+		<item>Wrong country</item>
 		<item>Wrong description</item>
 		<item>Not exists</item>
 		<item>Other</item>
@@ -24,6 +25,7 @@
 	<array name="report_keys" translatable="false">
 		<item>WRONG_DATE</item>
 		<item>WRONG_NAME</item>
+		<item>WRONG_COUNTRY</item>
 		<item>WRONG_DESCRIPTION</item>
 		<item>NOT_EXISTS</item>
 		<item>OTHER</item>

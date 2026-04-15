@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,10 +79,10 @@ public class HolidayAdapter extends ListAdapter<Holiday, HolidayAdapter.ViewHold
 				? Util.getCountryFlag(holiday.getCountry()) : null;
 		if (flag != null) {
 			viewHolder.countryTextView.setText(flag);
-			viewHolder.countryTextView.setTooltipText(holiday.getCountryName());
-			viewHolder.countryTextView.setOnLongClickListener(v -> true);
+			TooltipCompat.setTooltipText(viewHolder.countryTextView, holiday.getCountryName());
 			viewHolder.countryTextView.setVisibility(View.VISIBLE);
 		} else {
+			TooltipCompat.setTooltipText(viewHolder.countryTextView, null);
 			viewHolder.countryTextView.setVisibility(View.GONE);
 		}
 

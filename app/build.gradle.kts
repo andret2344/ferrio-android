@@ -6,13 +6,13 @@ plugins {
 }
 
 configure<ApplicationExtension> {
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
-        minSdk = 29
-        targetSdk = 36
-        versionCode = 100
-        versionName = "3.1.1"
+        minSdk = 24
+        targetSdk = 37
+        versionCode = 101
+        versionName = "3.1.2"
     }
     buildTypes {
         release {
@@ -43,6 +43,9 @@ configure<ApplicationExtension> {
         isCoreLibraryDesugaringEnabled = true
     }
     namespace = "eu.andret.kalendarzswiatnietypowych"
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
@@ -59,7 +62,7 @@ dependencies {
     implementation(libs.googleid)
 
     implementation(libs.gson)
-    implementation(libs.picasso)
+    implementation(libs.glide)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
@@ -70,10 +73,15 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.play.integrity)
+    implementation(libs.okhttp)
 
     implementation(libs.emoji.java)
 
     annotationProcessor(libs.room.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj)
 }

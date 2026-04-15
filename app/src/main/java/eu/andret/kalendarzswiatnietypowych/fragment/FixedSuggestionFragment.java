@@ -1,6 +1,5 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,7 +26,6 @@ import java.util.stream.Stream;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.FormResultHandler;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
-import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 
 public class FixedSuggestionFragment extends AuthenticatedFragment {
@@ -76,38 +73,28 @@ public class FixedSuggestionFragment extends AuthenticatedFragment {
 		editTextDescription.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
 
 		button.setOnClickListener(v -> {
-			final Activity activity = requireActivity();
-			final FormResultHandler handler = (FormResultHandler) activity;
+			final FormResultHandler handler = (FormResultHandler) requireActivity();
 			final Month month = selectedMonth;
 			final int day = Integer.parseInt(textViewDay.getText().toString());
 			final String name = editTextName.getText().toString();
 			final String description = editTextDescription.getText().toString();
-			CompletableFuture.runAsync(() -> {
-				try {
-					final String authToken = getFirebaseToken();
-					final JsonObject jsonObject = new JsonObject();
-					jsonObject.addProperty("month", month.getValue());
-					jsonObject.addProperty("day", day);
-					jsonObject.addProperty("name", name);
-					jsonObject.addProperty("description", description);
-					getApiClient().post(
-							getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FIXED),
-							authToken, jsonObject.toString());
-					if (isAdded()) {
-						activity.runOnUiThread(handler::showSuccessDialog);
-					}
-				} catch (final ApiException ex) {
-					if (isAdded()) {
-						activity.runOnUiThread(() -> {
-							if (ex.isBanned()) {
-								handler.showBanDialog(ex.getBanReason());
-							} else {
-								handler.showErrorDialog();
-							}
-						});
-					}
-				}
-			});
+			final JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("month", month.getValue());
+			jsonObject.addProperty("day", day);
+			jsonObject.addProperty("name", name);
+			jsonObject.addProperty("description", description);
+			submitAuthenticated(
+					(token, cancel) -> getApiClient().post(
+							getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FIXED),
+							token, jsonObject.toString(), cancel),
+					handler::showSuccessDialog,
+					ex -> {
+						if (ex.isBanned()) {
+							handler.showBanDialog(ex.getBanReason());
+						} else {
+							handler.showErrorDialog();
+						}
+					});
 		});
 	}
 

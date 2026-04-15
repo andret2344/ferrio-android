@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.persistance;
+package eu.andret.kalendarzswiatnietypowych.persistence;
 
 import android.app.Application;
 
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
@@ -29,6 +30,10 @@ public class AppRepository {
 
 	public AppRepository(@NonNull final Application application,
 			@NonNull final ApiClient apiClient) {
+		// Destructive fallback from v1-v3 is safe: the Holiday table is a server-sourced cache,
+		// not user-authored data. Wiping it just forces a refetch from api.ferrio.app on next
+		// HolidayRemoteMediator.refresh(). Any schema change beyond v4 that adds user-authored
+		// tables MUST be accompanied by a real Migration.
 		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "ferrio")
 				.fallbackToDestructiveMigrationFrom(true, 1, 2, 3)
 				.enableMultiInstanceInvalidation()
@@ -49,7 +54,7 @@ public class AppRepository {
 	}
 
 	public void clearAll() {
-		CompletableFuture.runAsync(appDao::deleteAll);
+		CompletableFuture.runAsync(appDao::deleteAll, FerrioApplication.IO_EXECUTOR);
 	}
 
 	@NonNull

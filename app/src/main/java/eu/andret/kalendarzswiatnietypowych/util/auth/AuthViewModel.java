@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.CompletableFuture;
 
+import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.util.NetworkMonitor;
 
@@ -64,7 +65,7 @@ public final class AuthViewModel extends AndroidViewModel {
 			return;
 		}
 		ui.postValue(AuthUiState.progress(isOffline()));
-		CompletableFuture.supplyAsync(repo::reloadAndGetCurrentUserBlocking)
+		CompletableFuture.supplyAsync(repo::reloadAndGetCurrentUserBlocking, FerrioApplication.IO_EXECUTOR)
 				.thenAccept(this::handleResult);
 	}
 
@@ -78,13 +79,13 @@ public final class AuthViewModel extends AndroidViewModel {
 
 	public void handleGoogleIdToken(@NonNull final String idToken) {
 		ui.postValue(AuthUiState.progress(isOffline()));
-		CompletableFuture.supplyAsync(() -> repo.exchangeGoogleIdTokenBlocking(idToken))
+		CompletableFuture.supplyAsync(() -> repo.exchangeGoogleIdTokenBlocking(idToken), FerrioApplication.IO_EXECUTOR)
 				.thenAccept(this::handleResult);
 	}
 
 	public void signInAnonymously() {
 		ui.postValue(AuthUiState.progress(isOffline()));
-		CompletableFuture.supplyAsync(repo::signInAnonymouslyBlocking)
+		CompletableFuture.supplyAsync(repo::signInAnonymouslyBlocking, FerrioApplication.IO_EXECUTOR)
 				.thenAccept(this::handleResult);
 	}
 

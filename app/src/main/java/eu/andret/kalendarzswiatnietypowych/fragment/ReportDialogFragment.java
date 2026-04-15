@@ -20,12 +20,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayError;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
-import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class ReportDialogFragment extends AuthenticatedDialogFragment {
@@ -75,27 +73,18 @@ public class ReportDialogFragment extends AuthenticatedDialogFragment {
 				final String reportType = activity.getResources().getStringArray(R.array.report_keys)[selectedReason];
 				final String description = Objects.requireNonNull(descriptionEditText.getEditText()).getText().toString();
 				final HolidayError holidayReport = new HolidayError(metadata, language, reportType, description);
-				CompletableFuture.runAsync(() -> {
-					try {
-						getApiClient().post(
-								getApiClient().buildReportsPath(ApiClient.REPORT_TYPE_ERROR, holidayType),
-								getFirebaseToken(),
-								Util.GSON.toJson(holidayReport));
-						if (isAdded()) {
-							activity.runOnUiThread(() ->
-									new MaterialAlertDialogBuilder(activity)
-											.setTitle(R.string.report_title)
-											.setMessage(R.string.report_message)
-											.setPositiveButton(R.string.ok, (dialog, which) -> activity.finish())
-											.create()
-											.show());
-						}
-					} catch (final ApiException ex) {
-						if (isAdded()) {
-							activity.runOnUiThread(() -> handleApiError(ex));
-						}
-					}
-				});
+				final String body = Util.GSON.toJson(holidayReport);
+				submitAuthenticated(
+						(token, cancel) -> getApiClient().post(
+								getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_ERROR, holidayType),
+								token, body, cancel),
+						() -> new MaterialAlertDialogBuilder(activity)
+								.setTitle(R.string.report_title)
+								.setMessage(R.string.report_message)
+								.setPositiveButton(R.string.ok, (dialog, which) -> activity.finish())
+								.create()
+								.show(),
+						this::handleApiError);
 			});
 		});
 	}

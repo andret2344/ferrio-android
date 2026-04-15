@@ -33,19 +33,17 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity
-			android:name=".activity.MainActivity" />
+		<activity android:name=".activity.MainActivity" />
 		<activity
 			android:name=".activity.SuggestionActivity"
 			android:exported="false" />
 		<activity
 			android:name=".activity.TabbedListActivity"
 			android:exported="false" />
-		<activity
-			android:name=".activity.DayActivity" />
+		<activity android:name=".activity.DayActivity" />
 		<activity
 			android:name=".activity.HolidayActivity"
-			android:windowSoftInputMode="stateVisible|adjustResize" />
+			android:windowSoftInputMode="stateHidden|adjustResize" />
 		<activity
 			android:name=".widget.WidgetConfigActivity"
 			android:exported="false" />

@@ -26,15 +26,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -48,14 +44,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.R;
-import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayClickListener;
 import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
+import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.LoadState;
-import eu.andret.kalendarzswiatnietypowych.util.Util;
+import eu.andret.kalendarzswiatnietypowych.util.auth.AuthSession;
 
 public class MainActivity extends BaseActivity implements DayClickListener {
 	public static final String WIDGET = "widget";
@@ -72,7 +68,6 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	private volatile List<HolidayDay> holidayDays = Collections.emptyList();
 	private SearchHolidayAdapter searchAdapter;
 	private final Handler searchHandler = new Handler(Looper.getMainLooper());
-	private FirebaseAuth firebaseAuth;
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		if (result.getResultCode() == RESULT_OK) {
 			final Intent data = result.getData();
@@ -102,18 +97,18 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		searchAdapter = new SearchHolidayAdapter(colorized, includeUsual);
 		searchListView.setAdapter(searchAdapter);
 		viewPager2 = findViewById(R.id.main_pager_months);
-		firebaseAuth = FirebaseAuth.getInstance();
 		materialToolbar = findViewById(R.id.activity_main_toolbar);
 		setSupportActionBar(materialToolbar);
 
-		final AdView adView = findViewById(R.id.main_adview_bottom);
-		adView.loadAd(new AdRequest.Builder().build());
+		registerAdView(findViewById(R.id.main_adview_bottom));
 
 		setUpNavDrawer();
 
 		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
+		// Keep all 12 months pre-inflated so swiping to a non-adjacent month doesn't
+		// trigger a fresh layout + data bind on the UI thread.
+		viewPager2.setOffscreenPageLimit(11);
 		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		viewPager2.setOffscreenPageLimit(12);
 		final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.activity_main_swipe_refresh);
 		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 			@Override
@@ -251,25 +246,21 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		final MenuItem suggestions = navigationView.getMenu().findItem(R.id.menu_drawer_suggestions);
 		final MenuItem reports = navigationView.getMenu().findItem(R.id.menu_drawer_reports);
 
-		final FirebaseUser user = firebaseAuth.getCurrentUser();
-		if (user != null && headerView != null) {
+		final boolean canSubmit = AuthSession.canSubmitUserContent();
+		suggest.setEnabled(canSubmit);
+		suggestions.setEnabled(canSubmit);
+		reports.setEnabled(canSubmit);
+		if (AuthSession.isSignedIn() && headerView != null) {
 			final ImageView imageViewAvatar = headerView.findViewById(R.id.navigation_drawer_image);
 			final TextView textViewHeading = headerView.findViewById(R.id.navigation_drawer_heading);
 			final TextView textViewSubtitle = headerView.findViewById(R.id.navigation_drawer_subtitle);
-			suggest.setEnabled(!user.isAnonymous());
-			suggestions.setEnabled(!user.isAnonymous());
-			reports.setEnabled(!user.isAnonymous());
-			final Picasso picasso = Picasso.get();
-			if (user.isAnonymous()) {
-				picasso.load(String.format("https://gravatar.com/avatar/%s?d=identicon", Util.sha256(user.getUid())))
-						.into(imageViewAvatar);
+			Glide.with(this).load(AuthSession.avatarUrl()).into(imageViewAvatar);
+			if (AuthSession.isAnonymous()) {
 				textViewHeading.setText(R.string.anonymous_user);
 				textViewSubtitle.setVisibility(View.GONE);
 			} else {
-				picasso.load(user.getPhotoUrl())
-						.into(imageViewAvatar);
-				textViewHeading.setText(user.getDisplayName());
-				textViewSubtitle.setText(user.getEmail());
+				textViewHeading.setText(AuthSession.displayName());
+				textViewSubtitle.setText(AuthSession.email());
 			}
 		}
 

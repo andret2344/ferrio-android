@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.persistance;
+package eu.andret.kalendarzswiatnietypowych.persistence;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

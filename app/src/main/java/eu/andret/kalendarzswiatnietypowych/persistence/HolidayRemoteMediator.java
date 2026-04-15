@@ -1,4 +1,4 @@
-package eu.andret.kalendarzswiatnietypowych.persistance;
+package eu.andret.kalendarzswiatnietypowych.persistence;
 
 import android.content.Context;
 import android.util.Log;
@@ -33,7 +33,7 @@ public class HolidayRemoteMediator {
 		loadState.postValue(LoadState.LOADING);
 		CompletableFuture.runAsync(() -> {
 			try {
-				final List<Holiday> holidays = apiClient.getList(apiClient.buildHolidaysPath(), Holiday.class);
+				final List<Holiday> holidays = apiClient.getList(apiClient.buildHolidaysUrl(), Holiday.class);
 				if (!holidays.isEmpty()) {
 					appDao.replaceAll(holidays);
 					FerrioApplication.refreshWidgets(applicationContext);
@@ -43,7 +43,7 @@ public class HolidayRemoteMediator {
 				Log.e(TAG, "Failed to refresh holidays", ex);
 				loadState.postValue(LoadState.ERROR);
 			}
-		});
+		}, FerrioApplication.IO_EXECUTOR);
 	}
 
 	@NonNull

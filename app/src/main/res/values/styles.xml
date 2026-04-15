@@ -19,8 +19,8 @@
 	</style>
 
 	<style name="Widget.UnusualHoliday.TextButton.Report" parent="Widget.Material3.Button.TextButton.Icon">
-		<item name="iconTint">@color/report_text</item>
-		<item name="android:textColor">@color/report_text</item>
+		<item name="iconTint">@color/report_button_tint</item>
+		<item name="android:textColor">@color/report_button_tint</item>
 	</style>
 
 	<style name="Widget.UnusualHoliday.ProgressBar.White" parent="Widget.Material3.CircularProgressIndicator">

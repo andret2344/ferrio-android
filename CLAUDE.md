@@ -3,14 +3,19 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this
 repository.
 
+**Keep this file in sync with the code.** Whenever you change something this file describes —
+package names, architecture, conventions, SDK levels, dependencies, auth flow, etc. — update the
+corresponding section here in the same change. If a statement here becomes false, fix it.
+
 ## Build Commands
 
 ```bash
 ./gradlew assembleDebug       # Debug build
 ./gradlew assembleRelease     # Release build (minified, obfuscated, shrunk)
+./gradlew test                # Run unit tests
 ```
 
-No tests exist yet.
+Unit tests live under `app/src/test/` (currently only `UtilTest`).
 
 ## Project Overview
 
@@ -18,7 +23,7 @@ Ferrio is an Android calendar app for unusual holidays. Package:
 `eu.andret.kalendarzswiatnietypowych`. This package can never be changed because it acts like the
 app's identifier.
 
-- **Java 11** with core library desugaring, **minSdk 29**, **targetSdk 36**.
+- **Java 11** with core library desugaring, **minSdk 23**, **targetSdk 37**, **compileSdk 37**.
 - Gradle Kotlin DSL with version catalog (`gradle/libs.versions.toml`).
 - No Kotlin code — pure Java.
 
@@ -29,9 +34,13 @@ app's identifier.
 - **FerrioApplication** holds singleton `AppRepository` and `ApiClient` — no DI framework.
 - **BaseActivity** provides shared `HolidayViewModel` and theme/preferences access.
 - **AuthenticatedFragment** / **AuthenticatedDialogFragment** — base classes for screens requiring
-  Firebase Auth; handle async API calls via `CompletableFuture` with lifecycle-aware cancellation.
+  Firebase Auth. Expose `fetchAuthenticated(FetchFunction, onSuccess, onError)` and
+  `submitAuthenticated(SubmitFunction, onSuccess, onError)` helpers. Both functional interfaces
+  receive `(token, CancellableRequest)`; call sites forward the `CancellableRequest` to
+  `ApiClient` so that `onDestroyView` triggers real OkHttp `Call.cancel()` on in-flight requests.
 - **HolidayRemoteMediator** syncs API → Room on refresh; posts `LoadState` (LOADING/SUCCESS/ERROR).
-- **ApiClient** — custom `HttpsURLConnection` client (no Retrofit); Gson with
+- **ApiClient** — thin wrapper over OkHttp (no Retrofit). All methods are synchronous and throw
+  `ApiException` on failure. Accepts an optional `CancellableRequest` for cancellation. Gson with
   `LOWER_CASE_WITH_UNDERSCORES` field naming.
 - **API base URL:** `https://api.ferrio.app/v3`
 
@@ -41,12 +50,18 @@ app's identifier.
   `DayAdapterSimple` — three calendar grid display modes selectable in settings.
 - **Suggestion adapters:** unified `SuggestionAdapter<T extends HolidaySuggestion>` handles both
   fixed and floating holiday suggestions.
-- **ListFragment** with `newInstance(reportType, holidayType)` — replaces separate suggestion/report
-  fragments.
-- **TabbedListActivity** with `createIntent(context, reportType)` — replaces separate
-  suggestion/report activities.
+- **ListFragment** with `newInstance(reportType, holidayType)` — used by the reports flow.
+- **TabbedListActivity** with `createIntent(context, reportType)` — hosts the reports flow.
+  The suggestion flow still uses the older `SuggestionActivity` +
+  `FixedSuggestionFragment`/`FloatingSuggestionFragment`; migration is not complete.
 - All adapters use `ListAdapter` with `DiffUtil.ItemCallback`; no View Binding — uses
   `findViewById`.
+- **MainActivity month pager:** `viewPager2.setOffscreenPageLimit(11)` is **required** and must
+  stay at `11`. There are exactly 12 `MonthFragment`s and inflating one on the UI thread when the
+  user jumps to a non-adjacent month is visibly laggy, so all 12 must be kept resident. Do not
+  lower this value, do not replace it with `OFFSCREEN_PAGE_LIMIT_DEFAULT`, and if `getItemCount()`
+  ever changes from 12, update the limit to `count - 1` in the same change. This rule applies
+  only to the month pager — `DayActivity`'s 367-page day pager must keep the default.
 
 ## Code Conventions
 

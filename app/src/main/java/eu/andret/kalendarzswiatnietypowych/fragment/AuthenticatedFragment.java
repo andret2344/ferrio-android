@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.AuthHelper;
+import eu.andret.kalendarzswiatnietypowych.util.CancellableRequest;
 
 public abstract class AuthenticatedFragment extends Fragment {
-	private final List<CompletableFuture<?>> pendingFutures = new ArrayList<>();
+	private final List<CancellableRequest> pendingRequests = new ArrayList<>();
 
 	@NonNull
 	protected String getFirebaseToken() {
@@ -32,13 +34,15 @@ public abstract class AuthenticatedFragment extends Fragment {
 			@NonNull final Consumer<List<T>> onSuccess,
 			@NonNull final Consumer<ApiException> onError) {
 		final Activity activity = requireActivity();
-		final CompletableFuture<?> future = CompletableFuture.supplyAsync(() -> {
+		final CancellableRequest cancel = new CancellableRequest();
+		pendingRequests.add(cancel);
+		CompletableFuture.supplyAsync(() -> {
 			try {
-				return fetcher.apply(getFirebaseToken());
+				return fetcher.apply(getFirebaseToken(), cancel);
 			} catch (final ApiException ex) {
 				throw new RuntimeException(ex);
 			}
-		}).whenComplete((result, throwable) -> {
+		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> {
 			if (!isAdded()) {
 				return;
 			}
@@ -46,27 +50,65 @@ public abstract class AuthenticatedFragment extends Fragment {
 				if (!isAdded()) {
 					return;
 				}
+				pendingRequests.remove(cancel);
 				if (throwable != null) {
-					final Throwable cause = throwable.getCause();
-					if (cause instanceof ApiException) {
-						onError.accept((ApiException) cause);
-					} else {
-						onError.accept(new ApiException(0, null));
-					}
+					onError.accept(unwrapApiException(throwable));
 				} else {
 					onSuccess.accept(result);
 				}
 			});
 		});
-		pendingFutures.add(future);
+	}
+
+	protected void submitAuthenticated(
+			@NonNull final SubmitFunction submitter,
+			@NonNull final Runnable onSuccess,
+			@NonNull final Consumer<ApiException> onError) {
+		final Activity activity = requireActivity();
+		final CancellableRequest cancel = new CancellableRequest();
+		pendingRequests.add(cancel);
+		CompletableFuture.runAsync(() -> {
+			try {
+				submitter.apply(getFirebaseToken(), cancel);
+			} catch (final ApiException ex) {
+				throw new RuntimeException(ex);
+			}
+		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> {
+			if (!isAdded()) {
+				return;
+			}
+			activity.runOnUiThread(() -> {
+				if (!isAdded()) {
+					return;
+				}
+				pendingRequests.remove(cancel);
+				if (throwable != null) {
+					onError.accept(unwrapApiException(throwable));
+				} else {
+					onSuccess.run();
+				}
+			});
+		});
+	}
+
+	@NonNull
+	static ApiException unwrapApiException(@NonNull final Throwable throwable) {
+		Throwable cause = throwable;
+		while (cause != null) {
+			if (cause instanceof ApiException) {
+				return (ApiException) cause;
+			}
+			cause = cause.getCause();
+		}
+		return new ApiException(0, null);
 	}
 
 	@Override
 	public void onDestroyView() {
-		for (final CompletableFuture<?> future : pendingFutures) {
-			future.cancel(true);
+		for (final CancellableRequest cancel : pendingRequests) {
+			cancel.cancel();
 		}
-		pendingFutures.clear();
+		pendingRequests.clear();
 		super.onDestroyView();
 	}
 
@@ -76,6 +118,11 @@ public abstract class AuthenticatedFragment extends Fragment {
 
 	@FunctionalInterface
 	protected interface FetchFunction<T> {
-		List<T> apply(String token) throws ApiException;
+		List<T> apply(String token, CancellableRequest cancel) throws ApiException;
+	}
+
+	@FunctionalInterface
+	protected interface SubmitFunction {
+		void apply(String token, CancellableRequest cancel) throws ApiException;
 	}
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Material 3 disabled-state alpha. Shared by every color-state-list that greys out
+		 a disabled control, so tinted buttons like Widget.UnusualHoliday.TextButton.Report
+		 fade consistently. -->
+	<item name="disabled_alpha" format="float" type="dimen">0.38</item>
+
+</resources>

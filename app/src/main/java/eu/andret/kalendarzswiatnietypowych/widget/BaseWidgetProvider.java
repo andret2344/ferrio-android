@@ -32,8 +32,9 @@ import eu.andret.kalendarzswiatnietypowych.activity.LoginActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
-import eu.andret.kalendarzswiatnietypowych.persistance.AppRepository;
+import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
+import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
@@ -101,10 +102,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		CompletableFuture.supplyAsync(() -> {
 			final List<Holiday> holidays = repository.getHolidaysByDaySync(monthValue, dayOfMonth);
 			if (holidays.isEmpty()) {
-				return apiClient.getList(apiClient.buildHolidaysPath(monthValue, dayOfMonth), Holiday.class);
+				try {
+					return apiClient.getList(apiClient.buildHolidaysUrl(monthValue, dayOfMonth), Holiday.class);
+				} catch (final ApiException ex) {
+					throw new RuntimeException(ex);
+				}
 			}
 			return holidays;
-		}).thenAccept(holidays -> {
+		}, FerrioApplication.IO_EXECUTOR).thenAccept(holidays -> {
 			final HolidayDay holidayDay = new HolidayDay(monthValue, dayOfMonth, new ArrayList<>(holidays));
 			final String content = getContent(context, holidayDay);
 			final boolean empty = isHolidayListEmpty(context, holidayDay);

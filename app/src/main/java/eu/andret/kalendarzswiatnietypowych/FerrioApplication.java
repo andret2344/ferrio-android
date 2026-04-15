@@ -10,29 +10,41 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.ads.MobileAds;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import eu.andret.kalendarzswiatnietypowych.persistance.AppRepository;
+import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.widget.TransparentWidgetProvider;
 import eu.andret.kalendarzswiatnietypowych.widget.WidgetProvider;
 
 public class FerrioApplication extends Application {
+	/**
+	 * Shared bounded pool for IO-bound work (network, Room writes). Using a dedicated pool avoids
+	 * starving the common ForkJoinPool, which is sized for CPU-bound work and is also shared with
+	 * parallel streams across the process.
+	 */
+	public static final ExecutorService IO_EXECUTOR = Executors.newFixedThreadPool(4);
+
 	private AppRepository appRepository;
 	private ApiClient apiClient;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		MobileAds.initialize(this);
 		apiClient = new ApiClient();
 		appRepository = new AppRepository(this, apiClient);
-		refreshWidgets(this);
-		scheduleMidnightWidgetRefresh();
+		// scheduleMidnightWidgetRefresh issues binder calls (AppWidgetManager, AlarmManager).
+		// Keeping it off Application.onCreate avoids an ANR when the process is cold-started
+		// by APPWIDGET_ENABLED or similar system broadcasts on a loaded system_server.
+		// MobileAds.initialize is intentionally NOT called here: it posts setup work back to
+		// the main Looper and triggers a first-time WebView classloader load, which blocks
+		// the main thread during cold starts from widget broadcasts. Ads are initialized
+		// lazily from BaseActivity.registerAdView instead.
+		IO_EXECUTOR.execute(this::scheduleMidnightWidgetRefresh);
 	}
 
 	public AppRepository getAppRepository() {

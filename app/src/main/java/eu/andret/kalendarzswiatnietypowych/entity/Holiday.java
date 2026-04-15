@@ -77,7 +77,7 @@ public class Holiday implements Comparable<Holiday> {
 		return new Locale("", country).getDisplayCountry(Locale.getDefault());
 	}
 
-	@NonNull
+	@Nullable
 	public String getUrl() {
 		return url;
 	}
