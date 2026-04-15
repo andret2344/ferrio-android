@@ -104,6 +104,7 @@
 					android:id="@+id/dialog_report_text_description_value"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:gravity="top|start"
 					android:lines="4" />
 			</com.google.android.material.textfield.TextInputLayout>
 
