@@ -15,8 +15,8 @@ android {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 24
         targetSdk = 37
-        versionCode = 102
-        versionName = "3.1.3"
+        versionCode = 103
+        versionName = "3.1.4"
     }
     buildTypes {
         release {
