@@ -106,6 +106,8 @@
 	<string name="widget_config_title">Widget settings</string>
 	<string name="widget_config_days_offset">Days offset</string>
 	<string name="widget_config_colorized">Colorized background</string>
+	<string name="widget_config_font_size">Font size</string>
+	<string name="widget_config_font_size_system">System</string>
 	<string name="widget_config_save">Save</string>
 
 	<!-- widget preview -->

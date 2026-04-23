@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -126,6 +127,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
 		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
 		final boolean colorized = WidgetPrefs.isColorized(context, appWidgetId);
+		final int fontSize = WidgetPrefs.getFontSize(context, appWidgetId);
 
 		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
 		final Pair<Month, Integer> datePair = new Pair<>(targetDate.getMonth(), targetDate.getDayOfMonth());
@@ -140,6 +142,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		loadingViews.setViewVisibility(R.id.widget_layout_login, View.GONE);
 		loadingViews.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 		applyColorized(loadingViews, context, colorized, targetDate, layoutResId);
+		applyFontSize(context, loadingViews, fontSize);
 		appWidgetManager.updateAppWidget(appWidgetId, loadingViews);
 
 		final int monthValue = targetDate.getMonthValue();
@@ -171,6 +174,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 			views.setViewVisibility(R.id.widget_image_empty, empty ? View.VISIBLE : View.GONE);
 			views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 			applyColorized(views, context, colorized, targetDate, layoutResId);
+			applyFontSize(context, views, fontSize);
 			appWidgetManager.updateAppWidget(appWidgetId, views);
 		}).exceptionally(ex -> {
 			Log.e(TAG, "Failed to update widget", ex);
@@ -256,6 +260,23 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final boolean includeUsual = PreferenceManager.getDefaultSharedPreferences(context)
 				.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
 		return holidayDay.countHolidays(includeUsual) == 0;
+	}
+
+	private static void applyFontSize(@NonNull final Context context,
+			@NonNull final RemoteViews views, final int fontSize) {
+		if (fontSize > 0) {
+			final float defaultDateSize = context.getResources().getDimension(R.dimen.widget_text_date_size);
+			final float defaultHolidaysSize = context.getResources().getDimension(R.dimen.widget_text_holidays_size);
+			final float ratio = defaultDateSize / defaultHolidaysSize;
+			views.setTextViewTextSize(R.id.widget_text_date, TypedValue.COMPLEX_UNIT_SP,
+					fontSize * ratio);
+			views.setTextViewTextSize(R.id.widget_text_holidays, TypedValue.COMPLEX_UNIT_SP, fontSize);
+		} else {
+			final float dateSize = context.getResources().getDimension(R.dimen.widget_text_date_size);
+			final float holidaysSize = context.getResources().getDimension(R.dimen.widget_text_holidays_size);
+			views.setTextViewTextSize(R.id.widget_text_date, TypedValue.COMPLEX_UNIT_PX, dateSize);
+			views.setTextViewTextSize(R.id.widget_text_holidays, TypedValue.COMPLEX_UNIT_PX, holidaysSize);
+		}
 	}
 
 	@NonNull

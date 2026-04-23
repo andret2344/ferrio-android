@@ -22,7 +22,7 @@ play-services-auth = "21.5.1"
 # third-party
 desugar-jdk-libs = "2.1.5"
 emoji-java = "5.1.1"
-glide = "5.0.5"
+glide = "5.0.7"
 gson = "2.13.2"
 okhttp = "5.3.2"
 
@@ -31,7 +31,7 @@ assertj = "3.27.7"
 junit = "4.13.2"
 
 # plugins
-plugin-application = "9.1.1"
+plugin-application = "9.2.0"
 plugin-google-services = "4.4.4"
 
 [libraries]

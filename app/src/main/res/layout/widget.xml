@@ -14,7 +14,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:textColor="@color/on_surface"
-		android:textSize="20sp"
+		android:textSize="@dimen/widget_text_date_size"
 		android:textStyle="bold" />
 
 	<FrameLayout
@@ -40,7 +40,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="8dp"
 		android:textColor="@color/on_surface"
-		android:textSize="14sp" />
+		android:textSize="@dimen/widget_text_holidays_size" />
 
 	<LinearLayout
 		android:id="@+id/widget_layout_login"
@@ -57,7 +57,7 @@
 			android:gravity="center"
 			android:text="@string/widget_login_required"
 			android:textColor="@color/on_surface"
-			android:textSize="14sp" />
+			android:textSize="@dimen/widget_text_holidays_size" />
 
 		<ImageView
 			android:layout_width="48dp"

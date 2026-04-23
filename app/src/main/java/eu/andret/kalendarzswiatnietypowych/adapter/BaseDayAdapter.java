@@ -52,6 +52,8 @@ public abstract class BaseDayAdapter<H extends BaseDayAdapter.BaseViewHolder>
 				.inflate(layoutResId, viewGroup, false);
 		final int parentHeight = viewGroup.getMeasuredHeight();
 		if (parentHeight > 0) {
+			// Subtract the ad banner height (50dp) because the RecyclerView's measured height
+			// includes space that is visually occupied by the ad at the bottom of the activity.
 			final int adHeight = (int) (50 * viewGroup.getResources().getDisplayMetrics().density);
 			view.getLayoutParams().height = (parentHeight - adHeight) / 6;
 		}

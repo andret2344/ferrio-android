@@ -15,6 +15,8 @@
 	<dimen name="adapter_search_main">16sp</dimen>
 	<dimen name="fragment_day_empty">22sp</dimen>
 	<dimen name="activity_login_text_name">30sp</dimen>
+	<dimen name="widget_text_date_size">22sp</dimen>
+	<dimen name="widget_text_holidays_size">15sp</dimen>
 
 	<dimen name="activity_holiday_card_margin">16dp</dimen>
 	<dimen name="activity_holiday_card_elevation">4dp</dimen>

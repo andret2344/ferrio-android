@@ -99,6 +99,8 @@
 	<string name="widget_config_title">Ustawienia widżetu</string>
 	<string name="widget_config_days_offset">Przesunięcie dni</string>
 	<string name="widget_config_colorized">Kolorowe tło</string>
+	<string name="widget_config_font_size">Rozmiar czcionki</string>
+	<string name="widget_config_font_size_system">Systemowy</string>
 	<string name="widget_config_save">Zapisz</string>
 
 	<!-- widget preview -->

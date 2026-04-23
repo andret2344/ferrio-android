@@ -26,30 +26,40 @@
 
 		<activity
 			android:name=".activity.LoginActivity"
-			android:exported="true">
+			android:exported="true"
+			android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activity.MainActivity" />
+		<activity
+			android:name=".activity.MainActivity"
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".activity.SuggestionActivity"
-			android:exported="false" />
+			android:exported="false"
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".activity.TabbedListActivity"
-			android:exported="false" />
-		<activity android:name=".activity.DayActivity" />
+			android:exported="false"
+			android:screenOrientation="portrait" />
+		<activity
+			android:name=".activity.DayActivity"
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".activity.HolidayActivity"
+			android:screenOrientation="portrait"
 			android:windowSoftInputMode="stateHidden|adjustResize" />
 		<activity
 			android:name=".widget.WidgetConfigActivity"
-			android:exported="false" />
+			android:exported="false"
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".activity.SettingsActivity"
-			android:label="@string/menu_main_settings">
+			android:label="@string/menu_main_settings"
+			android:screenOrientation="portrait">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="eu.andret.kalendarzswiatnietypowych.activity.MainActivity" />

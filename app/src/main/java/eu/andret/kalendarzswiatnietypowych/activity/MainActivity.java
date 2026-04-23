@@ -15,6 +15,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -67,6 +68,8 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	private MaterialToolbar materialToolbar;
 	private volatile List<HolidayDay> holidayDays = Collections.emptyList();
 	private SearchHolidayAdapter searchAdapter;
+	@Nullable
+	private SearchView searchView;
 	private final Handler searchHandler = new Handler(Looper.getMainLooper());
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		if (result.getResultCode() == RESULT_OK) {
@@ -143,6 +146,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 				progressIndicator.setVisibility(View.GONE);
 				swipeRefreshLayout.setVisibility(View.VISIBLE);
 			}
+			updateSearchHint();
 		});
 
 		getFerrioApplication().getAppRepository().refresh();
@@ -155,19 +159,20 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		updateSearchHint();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		final MenuItem searchItem = menu.findItem(R.id.menu_main_search);
-		final SearchView searchView = (SearchView) searchItem.getActionView();
+		searchView = (SearchView) searchItem.getActionView();
 		if (searchView == null) {
 			return true;
 		}
-		final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
-		final long holidaysCount = holidayDays.stream()
-				.map(holidayDay -> holidayDay.getHolidaysList(includeUsual))
-				.mapToLong(Collection::size)
-				.sum();
-		searchView.setQueryHint(getString(R.string.search_placeholder, holidaysCount));
+		updateSearchHint();
 		searchView.setIconified(false);
 		searchView.setIconifiedByDefault(false);
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -189,6 +194,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 						viewPager2.setVisibility(View.INVISIBLE);
 						final String query = newText.toLowerCase(Locale.ROOT);
 						final List<HolidayDay> snapshot = holidayDays;
+						final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
 						CompletableFuture.supplyAsync(() -> snapshot.stream()
 								.map(holidayDay -> {
 									final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
@@ -220,6 +226,18 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void updateSearchHint() {
+		if (searchView == null) {
+			return;
+		}
+		final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
+		final long holidaysCount = holidayDays.stream()
+				.map(holidayDay -> holidayDay.getHolidaysList(includeUsual))
+				.mapToLong(Collection::size)
+				.sum();
+		searchView.setQueryHint(getString(R.string.search_placeholder, holidaysCount));
 	}
 
 	private void setUpNavDrawer() {
