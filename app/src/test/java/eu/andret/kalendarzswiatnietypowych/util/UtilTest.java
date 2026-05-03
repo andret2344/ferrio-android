@@ -176,4 +176,87 @@ public class UtilTest {
 		Locale.setDefault(Locale.JAPANESE);
 		assertThat(Util.getLanguageCode()).isEqualTo("en");
 	}
+
+	@Test
+	public void replaceDayFields_simplePattern() {
+		assertThat(Util.replaceDayFieldsOutsideQuotes("d MMMM y", "X"))
+				.isEqualTo("'X' MMMM y");
+	}
+
+	@Test
+	public void replaceDayFields_consecutiveDsCollapseToOnePlaceholder() {
+		assertThat(Util.replaceDayFieldsOutsideQuotes("dd MMMM", "X"))
+				.isEqualTo("'X' MMMM");
+	}
+
+	@Test
+	public void replaceDayFields_doesNotTouchDInsideQuotes() {
+		// Regression: pt/es patterns like "d 'de' MMMM" must keep the literal 'de' intact.
+		assertThat(Util.replaceDayFieldsOutsideQuotes("d 'de' MMMM", "X"))
+				.isEqualTo("'X' 'de' MMMM");
+	}
+
+	@Test
+	public void replaceDayFields_polishYearLiteralIsUnaffected() {
+		assertThat(Util.replaceDayFieldsOutsideQuotes("d MMMM y 'r.'", "X"))
+				.isEqualTo("'X' MMMM y 'r.'");
+	}
+
+	@Test
+	public void replaceDayFields_resultParsesAsValidPattern() {
+		// The whole point of the placeholder is to feed the result into DateTimeFormatter.ofPattern.
+		final String pattern = Util.replaceDayFieldsOutsideQuotes("d 'de' MMMM 'de' y", "DAY_PLACEHOLDER");
+		assertThatCode(() -> java.time.format.DateTimeFormatter.ofPattern(pattern, Locale.ROOT))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	public void stripYearTokens_trailingYear() {
+		assertThat(Util.stripYearTokens("MMMM d, y")).isEqualTo("MMMM d");
+	}
+
+	@Test
+	public void stripYearTokens_trailingYearSimple() {
+		assertThat(Util.stripYearTokens("d MMMM y")).isEqualTo("d MMMM");
+	}
+
+	@Test
+	public void stripYearTokens_polishTrailingYearLiteral() {
+		// Polish: " y 'r.'" should be removed in full — the 'r.' literal is the year suffix.
+		assertThat(Util.stripYearTokens("d MMMM y 'r.'")).isEqualTo("d MMMM");
+	}
+
+	@Test
+	public void stripYearTokens_spanishWithDeLiterals() {
+		assertThat(Util.stripYearTokens("d 'de' MMMM 'de' y")).isEqualTo("d 'de' MMMM");
+	}
+
+	@Test
+	public void stripYearTokens_leadingYear() {
+		// Korean-style: leading year + suffix literal must both go.
+		assertThat(Util.stripYearTokens("y년 M월 d일")).isEqualTo("M월 d일");
+	}
+
+	@Test
+	public void stripYearTokens_yearInMiddle_collapsesSeparators() {
+		// Synthetic case — real locales don't put year between month and day, but verify no crash.
+		assertThat(Util.stripYearTokens("MMMM y d")).contains("MMMM").contains("d");
+	}
+
+	@Test
+	public void stripYearTokens_uppercaseYTreatedAsYear() {
+		assertThat(Util.stripYearTokens("d MMMM Y")).isEqualTo("d MMMM");
+	}
+
+	@Test
+	public void stripYearTokens_uYearTreatedAsYear() {
+		assertThat(Util.stripYearTokens("d MMMM u")).isEqualTo("d MMMM");
+	}
+
+	@Test
+	public void stripYearTokens_resultParsesAsValidPattern() {
+		final String stripped = Util.stripYearTokens("d 'de' MMMM 'de' y");
+		assertThatCode(() -> java.time.format.DateTimeFormatter.ofPattern(stripped, Locale.ROOT))
+				.doesNotThrowAnyException();
+	}
 }

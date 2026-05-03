@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.text.format.DateFormat;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -16,10 +15,10 @@ import androidx.core.util.Pair;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.gson.FieldNamingPolicy;
-import com.vdurmont.emoji.Emoji;
-import com.vdurmont.emoji.EmojiManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiManager;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -27,8 +26,12 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DecimalStyle;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -44,9 +47,6 @@ public final class Util {
 
 	private static final DateTimeFormatter DATE_TIME_FORMATTER =
 			DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-
-	private static final String MONTH_DAY_SKELETON = "MMMMd";
-	private static final String YEAR_MONTH_DAY_SKELETON = "yMMMMd";
 
 	private static final int FEB_29_NON_LEAP_INDEX = 60;
 	private static final int FEB_30_INDEX = 61;
@@ -128,23 +128,162 @@ public final class Util {
 
 	@NonNull
 	public static String getFormattedDateWithYear(@NonNull final Pair<Month, Integer> pair) {
-		return formatDate(pair, YEAR_MONTH_DAY_SKELETON);
+		return formatDate(pair, true);
 	}
 
 	@NonNull
 	public static String getFormattedDate(@NonNull final Pair<Month, Integer> pair) {
-		return formatDate(pair, MONTH_DAY_SKELETON);
+		return formatDate(pair, false);
+	}
+
+	// Drives both getFormattedDate and getFormattedDateWithYear off java.time's own locale data,
+	// so the pattern fed to ofPattern is guaranteed to use only letters that DateTimeFormatter
+	// understands. The day field is replaced with a placeholder so that synthetic Feb 30 (and
+	// Feb 29 in non-leap years) can be rendered without constructing an invalid LocalDate.
+	@NonNull
+	private static String formatDate(@NonNull final Pair<Month, Integer> pair,
+			final boolean withYear) {
+		final Locale locale = Locale.getDefault();
+		final String longPattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
+				FormatStyle.LONG, null, IsoChronology.INSTANCE, locale);
+		final String pattern = withYear ? longPattern : stripYearTokens(longPattern);
+		final String dayPlaceholder = "DAY_PLACEHOLDER";
+		final String patternWithPlaceholder = replaceDayFieldsOutsideQuotes(pattern, dayPlaceholder);
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternWithPlaceholder, locale);
+		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 1);
+		return localDate.format(formatter).replace(dayPlaceholder, localizeDigits(pair.second, locale));
+	}
+
+	// Replaces runs of 'd' that are NOT inside a single-quoted literal with a quoted placeholder.
+	// Locales like pt/es return patterns with literals such as `'de'` whose 'd' must be left alone.
+	@NonNull
+	static String replaceDayFieldsOutsideQuotes(@NonNull final String pattern,
+			@NonNull final String placeholder) {
+		final StringBuilder sb = new StringBuilder(pattern.length() + placeholder.length());
+		boolean inQuote = false;
+		boolean inDayRun = false;
+		for (int i = 0; i < pattern.length(); i++) {
+			final char c = pattern.charAt(i);
+			if (c == '\'') {
+				inQuote = !inQuote;
+				sb.append(c);
+				inDayRun = false;
+			} else if (c == 'd' && !inQuote) {
+				if (!inDayRun) {
+					sb.append('\'').append(placeholder).append('\'');
+					inDayRun = true;
+				}
+			} else {
+				sb.append(c);
+				inDayRun = false;
+			}
+		}
+		return sb.toString();
+	}
+
+	// Removes year fields from a date pattern. For each year token: always drops the immediately
+	// following separator (the year suffix in patterns like "y년 M월 d일" or ", " in "MMMM d, y");
+	// also drops the immediately preceding separator if no non-year field remains afterwards
+	// (handles trailing-year patterns and Polish-style "y 'r.'").
+	@NonNull
+	static String stripYearTokens(@NonNull final String pattern) {
+		final List<String> tokens = new ArrayList<>();
+		final List<Boolean> isField = new ArrayList<>();
+		final StringBuilder current = new StringBuilder();
+		boolean inField = false;
+		char fieldLetter = 0;
+		boolean inQuote = false;
+		for (int i = 0; i < pattern.length(); i++) {
+			final char c = pattern.charAt(i);
+			final boolean isLetter = !inQuote && (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z');
+			if (c == '\'') {
+				if (inField) {
+					tokens.add(current.toString());
+					isField.add(true);
+					current.setLength(0);
+					inField = false;
+				}
+				current.append(c);
+				inQuote = !inQuote;
+			} else if (inQuote) {
+				current.append(c);
+			} else if (isLetter) {
+				if (inField && c == fieldLetter) {
+					current.append(c);
+				} else {
+					if (current.length() > 0) {
+						tokens.add(current.toString());
+						isField.add(inField);
+						current.setLength(0);
+					}
+					inField = true;
+					fieldLetter = c;
+					current.append(c);
+				}
+			} else {
+				if (inField) {
+					tokens.add(current.toString());
+					isField.add(true);
+					current.setLength(0);
+					inField = false;
+				}
+				current.append(c);
+			}
+		}
+		if (current.length() > 0) {
+			tokens.add(current.toString());
+			isField.add(inField);
+		}
+		int i = 0;
+		while (i < tokens.size()) {
+			if (!isField.get(i) || !isYearLetter(tokens.get(i).charAt(0))) {
+				i++;
+				continue;
+			}
+			boolean nonYearFieldAfter = false;
+			for (int j = i + 1; j < tokens.size(); j++) {
+				if (isField.get(j) && !isYearLetter(tokens.get(j).charAt(0))) {
+					nonYearFieldAfter = true;
+					break;
+				}
+			}
+			int removeStart = i;
+			int removeEnd = i;
+			if (i + 1 < tokens.size() && !isField.get(i + 1)) {
+				removeEnd = i + 1;
+			}
+			if (!nonYearFieldAfter && i > 0 && !isField.get(i - 1)) {
+				removeStart = i - 1;
+			}
+			for (int k = removeEnd; k >= removeStart; k--) {
+				tokens.remove(k);
+				isField.remove(k);
+			}
+			i = removeStart;
+		}
+		final StringBuilder out = new StringBuilder();
+		for (final String t : tokens) {
+			out.append(t);
+		}
+		return out.toString();
+	}
+
+	private static boolean isYearLetter(final char c) {
+		return c == 'y' || c == 'Y' || c == 'u' || c == 'r' || c == 'U';
 	}
 
 	@NonNull
-	private static String formatDate(@NonNull final Pair<Month, Integer> pair, @NonNull final String skeleton) {
-		final Locale locale = Locale.getDefault();
-		final String pattern = DateFormat.getBestDateTimePattern(locale, skeleton);
-		final String dayPlaceholder = "DAY_PLACEHOLDER";
-		final String patternWithPlaceholder = pattern.replaceAll("d+", "'" + dayPlaceholder + "'");
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternWithPlaceholder, locale);
-		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 1);
-		return localDate.format(formatter).replace(dayPlaceholder, String.valueOf(pair.second));
+	private static String localizeDigits(final int value, @NonNull final Locale locale) {
+		final char zero = DecimalStyle.of(locale).getZeroDigit();
+		final String ascii = String.valueOf(value);
+		if (zero == '0') {
+			return ascii;
+		}
+		final StringBuilder sb = new StringBuilder(ascii.length());
+		for (int i = 0; i < ascii.length(); i++) {
+			sb.append((char) (zero + ascii.charAt(i) - '0'));
+		}
+		return sb.toString();
 	}
 
 	public static void applyStatusBadge(@NonNull final TextView textView,
