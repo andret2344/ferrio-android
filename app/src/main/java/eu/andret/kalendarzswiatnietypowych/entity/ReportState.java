@@ -9,7 +9,9 @@ public enum ReportState {
 	REPORTED,
 	APPLIED,
 	DECLINED,
-	ON_HOLD;
+	ON_HOLD,
+	DUPLICATE,
+	ALREADY_EXISTS;
 
 	@StringRes
 	public int getLabelResId() {
@@ -22,6 +24,10 @@ public enum ReportState {
 				return R.string.status_declined;
 			case ON_HOLD:
 				return R.string.status_on_hold;
+			case DUPLICATE:
+				return R.string.status_duplicate;
+			case ALREADY_EXISTS:
+				return R.string.status_already_exists;
 			default:
 				throw new IllegalStateException("Unknown report state: " + this);
 		}
@@ -38,6 +44,10 @@ public enum ReportState {
 				return R.color.status_declined;
 			case ON_HOLD:
 				return R.color.status_on_hold;
+			case DUPLICATE:
+				return R.color.status_duplicate;
+			case ALREADY_EXISTS:
+				return R.color.status_already_exists;
 			default:
 				throw new IllegalStateException("Unknown report state: " + this);
 		}

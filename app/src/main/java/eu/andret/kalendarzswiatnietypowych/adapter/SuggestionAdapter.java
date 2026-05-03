@@ -17,6 +17,7 @@ import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidaySuggestion;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
+import eu.andret.kalendarzswiatnietypowych.util.ReportDetailsDialog;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<T, SuggestionAdapter.ViewHolder> {
@@ -42,6 +43,7 @@ public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<
 		private final TextView textViewName;
 		private final TextView textViewDescription;
 		private final ImageView chevron;
+		private final ImageView commentIndicator;
 
 		public ViewHolder(final View view) {
 			super(view);
@@ -52,6 +54,7 @@ public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<
 			textViewName = view.findViewById(R.id.adapter_suggestion_text_name);
 			textViewDescription = view.findViewById(R.id.adapter_suggestion_text_description);
 			chevron = view.findViewById(R.id.adapter_suggestion_chevron);
+			commentIndicator = view.findViewById(R.id.adapter_suggestion_comment_indicator);
 		}
 	}
 
@@ -71,24 +74,35 @@ public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final T holiday = getItem(position);
+		final String formattedDatetime = holiday.getDatetime().format(Util.getDateTimeFormatter());
 
-		viewHolder.textViewDatetime.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
+		viewHolder.textViewDatetime.setText(formattedDatetime);
 		viewHolder.textViewCountry.setText(holiday.getCountry() != null ? Util.getCountryFlag(holiday.getCountry()) : "");
 		viewHolder.textViewDate.setText(holiday.getDisplayDate());
 		viewHolder.textViewName.setText(holiday.getName());
 		viewHolder.textViewDescription.setText(holiday.getDescription());
 		Util.applyStatusBadge(viewHolder.textViewStatus, holiday.getReportState());
 
+		final boolean hasComment = holiday.getComment() != null && !holiday.getComment().isEmpty();
+		viewHolder.commentIndicator.setVisibility(hasComment ? View.VISIBLE : View.GONE);
+
+		viewHolder.itemView.setOnClickListener(view -> ReportDetailsDialog.show(
+				view.getContext(),
+				formattedDatetime,
+				holiday.getName(),
+				holiday.getDescription(),
+				holiday.getComment()));
+
 		if (holiday.getReportState() == ReportState.APPLIED && holiday.getHolidayId() != null) {
 			viewHolder.chevron.setVisibility(View.VISIBLE);
-			viewHolder.itemView.setOnClickListener(view -> {
+			viewHolder.chevron.setOnClickListener(view -> {
 				final Intent intent = new Intent(view.getContext(), HolidayActivity.class);
 				intent.putExtra(MainActivity.HOLIDAY, holiday.getFullHolidayId());
 				view.getContext().startActivity(intent);
 			});
 		} else {
 			viewHolder.chevron.setVisibility(View.GONE);
-			viewHolder.itemView.setOnClickListener(null);
+			viewHolder.chevron.setOnClickListener(null);
 		}
 	}
 }

@@ -27,6 +27,9 @@ public interface HolidaySuggestion {
 	ReportState getReportState();
 
 	@Nullable
+	String getComment();
+
+	@Nullable
 	Integer getHolidayId();
 
 	@Nullable

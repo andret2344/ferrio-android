@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportedHoliday;
+import eu.andret.kalendarzswiatnietypowych.util.ReportDetailsDialog;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class ReportedHolidayAdapter extends ListAdapter<ReportedHoliday, ReportedHolidayAdapter.ViewHolder> {
@@ -40,6 +42,7 @@ public class ReportedHolidayAdapter extends ListAdapter<ReportedHoliday, Reporte
 		private final TextView textViewStatus;
 		private final TextView textViewName;
 		private final TextView textViewDescription;
+		private final ImageView commentIndicator;
 
 		public ViewHolder(final View view) {
 			super(view);
@@ -47,6 +50,7 @@ public class ReportedHolidayAdapter extends ListAdapter<ReportedHoliday, Reporte
 			textViewStatus = view.findViewById(R.id.adapter_reported_holiday_chip);
 			textViewName = view.findViewById(R.id.adapter_reported_holiday_text_name);
 			textViewDescription = view.findViewById(R.id.adapter_reported_holiday_text_description);
+			commentIndicator = view.findViewById(R.id.adapter_reported_holiday_comment_indicator);
 		}
 	}
 
@@ -72,11 +76,23 @@ public class ReportedHolidayAdapter extends ListAdapter<ReportedHoliday, Reporte
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 		final ReportedHoliday holiday = getItem(position);
+		final String reason = mapReason(holiday.getReportType());
+		final String formattedDate = holiday.getDatetime().format(Util.getDateTimeFormatter());
 
-		viewHolder.textViewDate.setText(holiday.getDatetime().format(Util.getDateTimeFormatter()));
-		viewHolder.textViewName.setText(mapReason(holiday.getReportType()));
+		viewHolder.textViewDate.setText(formattedDate);
+		viewHolder.textViewName.setText(reason);
 		viewHolder.textViewDescription.setText(holiday.getDescription());
 		Util.applyStatusBadge(viewHolder.textViewStatus, holiday.getReportState());
+
+		final boolean hasComment = holiday.getComment() != null && !holiday.getComment().isEmpty();
+		viewHolder.commentIndicator.setVisibility(hasComment ? View.VISIBLE : View.GONE);
+
+		viewHolder.itemView.setOnClickListener(view -> ReportDetailsDialog.show(
+				view.getContext(),
+				formattedDate,
+				reason,
+				holiday.getDescription(),
+				holiday.getComment()));
 	}
 
 	private String mapReason(final String reportType) {

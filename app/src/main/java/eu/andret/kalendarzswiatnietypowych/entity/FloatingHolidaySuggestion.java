@@ -15,10 +15,11 @@ public class FloatingHolidaySuggestion implements HolidaySuggestion {
 	private String country;
 	private ReportState reportState;
 	private Integer holidayId;
+	private String comment;
 
 	public FloatingHolidaySuggestion(final int id, final String date, final String name,
 			final String description, final LocalDateTime datetime, final String country,
-			final ReportState reportState, final Integer holidayId) {
+			final ReportState reportState, final Integer holidayId, @Nullable final String comment) {
 		this.id = id;
 		this.date = date;
 		this.name = name;
@@ -27,6 +28,7 @@ public class FloatingHolidaySuggestion implements HolidaySuggestion {
 		this.country = country;
 		this.reportState = reportState;
 		this.holidayId = holidayId;
+		this.comment = comment;
 	}
 
 	public int getId() {
@@ -111,6 +113,16 @@ public class FloatingHolidaySuggestion implements HolidaySuggestion {
 		this.holidayId = holidayId;
 	}
 
+	@Nullable
+	@Override
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(@Nullable final String comment) {
+		this.comment = comment;
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		if (this == o) {
@@ -127,12 +139,13 @@ public class FloatingHolidaySuggestion implements HolidaySuggestion {
 				&& Objects.equals(datetime, that.datetime)
 				&& Objects.equals(country, that.country)
 				&& reportState == that.reportState
-				&& Objects.equals(holidayId, that.holidayId);
+				&& Objects.equals(holidayId, that.holidayId)
+				&& Objects.equals(comment, that.comment);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, date, name, description, datetime, country, reportState, holidayId);
+		return Objects.hash(id, date, name, description, datetime, country, reportState, holidayId, comment);
 	}
 
 	@NonNull
@@ -147,6 +160,7 @@ public class FloatingHolidaySuggestion implements HolidaySuggestion {
 				", country='" + country + '\'' +
 				", reportState=" + reportState +
 				", holidayId=" + holidayId +
+				", comment='" + comment + '\'' +
 				'}';
 	}
 }

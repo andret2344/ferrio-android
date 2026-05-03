@@ -1,6 +1,7 @@
 package eu.andret.kalendarzswiatnietypowych.entity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,10 +14,11 @@ public class ReportedHoliday {
 	private String description;
 	private LocalDateTime datetime;
 	private ReportState reportState;
+	private String comment;
 
 	public ReportedHoliday(final int id, final String languageCode, final int metadataId,
 			final String reportType, final String description, final LocalDateTime datetime,
-			final ReportState reportState) {
+			final ReportState reportState, @Nullable final String comment) {
 		this.id = id;
 		this.languageCode = languageCode;
 		this.metadataId = metadataId;
@@ -24,6 +26,7 @@ public class ReportedHoliday {
 		this.description = description;
 		this.datetime = datetime;
 		this.reportState = reportState;
+		this.comment = comment;
 	}
 
 	public int getId() {
@@ -82,6 +85,15 @@ public class ReportedHoliday {
 		this.reportState = reportState;
 	}
 
+	@Nullable
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(@Nullable final String comment) {
+		this.comment = comment;
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		if (this == o) {
@@ -97,12 +109,13 @@ public class ReportedHoliday {
 				&& Objects.equals(reportType, that.reportType)
 				&& Objects.equals(description, that.description)
 				&& Objects.equals(datetime, that.datetime)
-				&& reportState == that.reportState;
+				&& reportState == that.reportState
+				&& Objects.equals(comment, that.comment);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, languageCode, metadataId, reportType, description, datetime, reportState);
+		return Objects.hash(id, languageCode, metadataId, reportType, description, datetime, reportState, comment);
 	}
 
 	@NonNull
@@ -116,6 +129,7 @@ public class ReportedHoliday {
 				", description='" + description + '\'' +
 				", datetime=" + datetime +
 				", reportState=" + reportState +
+				", comment='" + comment + '\'' +
 				'}';
 	}
 }

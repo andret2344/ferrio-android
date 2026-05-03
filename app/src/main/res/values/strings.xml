@@ -73,6 +73,15 @@
 	<string name="status_applied">Applied</string>
 	<string name="status_declined">Declined</string>
 	<string name="status_on_hold">On hold</string>
+	<string name="status_duplicate">Duplicate</string>
+	<string name="status_already_exists">Already exists</string>
+
+	<!-- report details dialog -->
+	<string name="report_details_title">Report details</string>
+	<string name="report_details_comment">Moderator note</string>
+	<string name="report_details_no_description">No description provided.</string>
+	<string name="close">Close</string>
+	<string name="content_description_has_comment">Has moderator note</string>
 
 	<!-- refresh -->
 	<string name="refresh_error">Failed to refresh holidays</string>

@@ -79,5 +79,7 @@
 	<color name="status_applied">#34C759</color>
 	<color name="status_declined">#FF3B30</color>
 	<color name="status_on_hold">#FFCC00</color>
+	<color name="status_duplicate">#AF52DE</color>
+	<color name="status_already_exists">#30B0C7</color>
 
 </resources>
