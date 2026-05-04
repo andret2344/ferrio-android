@@ -74,5 +74,6 @@
 	<color name="status_on_hold">#FFD60A</color>
 	<color name="status_duplicate">#BF5AF2</color>
 	<color name="status_already_exists">#40C8E0</color>
+	<color name="status_unknown">#98989D</color>
 
 </resources>

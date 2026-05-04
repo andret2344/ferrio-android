@@ -68,6 +68,7 @@
 	<string name="status_on_hold">Wstrzymane</string>
 	<string name="status_duplicate">Duplikat</string>
 	<string name="status_already_exists">Już istnieje</string>
+	<string name="status_unknown">Nieznane</string>
 
 	<!-- report details dialog -->
 	<string name="report_details_title">Szczegóły zgłoszenia</string>

@@ -42,6 +42,7 @@ public final class Util {
 	public static final Gson GSON = new GsonBuilder()
 			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 			.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+			.registerTypeAdapter(ReportState.class, new ReportStateAdapter())
 			.create();
 	private static final List<String> LANGUAGE_CODES = List.of("pl");
 

@@ -75,6 +75,7 @@
 	<string name="status_on_hold">On hold</string>
 	<string name="status_duplicate">Duplicate</string>
 	<string name="status_already_exists">Already exists</string>
+	<string name="status_unknown">Unknown</string>
 
 	<!-- report details dialog -->
 	<string name="report_details_title">Report details</string>
