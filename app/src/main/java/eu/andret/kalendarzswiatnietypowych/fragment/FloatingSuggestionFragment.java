@@ -4,46 +4,47 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.gson.JsonObject;
 
 import java.util.function.BooleanSupplier;
 
-import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.FormResultHandler;
+import eu.andret.kalendarzswiatnietypowych.databinding.FragmentSuggestionFloatingBinding;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 
 public class FloatingSuggestionFragment extends AuthenticatedFragment {
+	@Nullable
+	private FragmentSuggestionFloatingBinding binding;
+
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater,
 			@Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_suggestion_floating, container, false);
+		binding = FragmentSuggestionFloatingBinding.inflate(inflater, container, false);
+		return binding.getRoot();
 	}
 
 	@Override
 	public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		final TextView textViewDate = view.findViewById(R.id.fragment_suggestion_floating_date_value);
-		final TextView editTextName = view.findViewById(R.id.fragment_suggestion_floating_name_value);
-		final TextView editTextDescription = view.findViewById(R.id.fragment_suggestion_floating_description_value);
+		final FragmentSuggestionFloatingBinding b = binding;
+		if (b == null) {
+			return;
+		}
 
-		final BooleanSupplier condition = () -> !textViewDate.getText().toString().isBlank()
-				&& !editTextName.getText().toString().isBlank()
-				&& !editTextDescription.getText().toString().isBlank();
+		final BooleanSupplier condition = () -> !b.fragmentSuggestionFloatingDateValue.getText().toString().isBlank()
+				&& !b.fragmentSuggestionFloatingNameValue.getText().toString().isBlank()
+				&& !b.fragmentSuggestionFloatingDescriptionValue.getText().toString().isBlank();
 
-		final MaterialButton button = view.findViewById(R.id.fragment_suggestion_floating_button_send);
-		button.setOnClickListener(v -> {
+		b.fragmentSuggestionFloatingButtonSend.setOnClickListener(v -> {
 			final FormResultHandler handler = (FormResultHandler) requireActivity();
-			final String date = textViewDate.getText().toString();
-			final String name = editTextName.getText().toString();
-			final String description = editTextDescription.getText().toString();
+			final String date = b.fragmentSuggestionFloatingDateValue.getText().toString();
+			final String name = b.fragmentSuggestionFloatingNameValue.getText().toString();
+			final String description = b.fragmentSuggestionFloatingDescriptionValue.getText().toString();
 			final JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("date", date);
 			jsonObject.addProperty("name", name);
@@ -62,8 +63,14 @@ public class FloatingSuggestionFragment extends AuthenticatedFragment {
 					});
 		});
 
-		editTextName.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
-		editTextDescription.addTextChangedListener((SimpleTextWatcher) () -> button.setEnabled(condition.getAsBoolean()));
+		b.fragmentSuggestionFloatingNameValue.addTextChangedListener((SimpleTextWatcher) () -> b.fragmentSuggestionFloatingButtonSend.setEnabled(condition.getAsBoolean()));
+		b.fragmentSuggestionFloatingDescriptionValue.addTextChangedListener((SimpleTextWatcher) () -> b.fragmentSuggestionFloatingButtonSend.setEnabled(condition.getAsBoolean()));
+	}
+
+	@Override
+	public void onDestroyView() {
+		binding = null;
+		super.onDestroyView();
 	}
 
 	@NonNull

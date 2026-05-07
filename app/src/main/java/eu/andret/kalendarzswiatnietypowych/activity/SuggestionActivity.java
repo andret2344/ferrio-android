@@ -6,57 +6,35 @@ import android.view.MenuItem;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.adapter.CustomFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.databinding.ActivitySuggestionBinding;
 import eu.andret.kalendarzswiatnietypowych.fragment.FixedSuggestionFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.FloatingSuggestionFragment;
 
 public class SuggestionActivity extends BaseActivity implements FormResultHandler {
 
-	private static final String TAG_FIXED = "fixed";
-	private static final String TAG_FLOATING = "floating";
-
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_suggestion);
+		final ActivitySuggestionBinding binding = ActivitySuggestionBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
 
-		final MaterialToolbar materialToolbar = findViewById(R.id.activity_suggestion_toolbar);
-		setSupportActionBar(materialToolbar);
+		setSupportActionBar(binding.activitySuggestionToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		if (savedInstanceState == null) {
-			final Fragment floatingFragment = FloatingSuggestionFragment.newInstance();
-			getSupportFragmentManager()
-					.beginTransaction()
-					.add(R.id.activity_suggestion_frame_layout, FixedSuggestionFragment.newInstance(), TAG_FIXED)
-					.add(R.id.activity_suggestion_frame_layout, floatingFragment, TAG_FLOATING)
-					.hide(floatingFragment)
-					.commit();
-		}
+		final CustomFragmentAdapter adapter = new CustomFragmentAdapter(this);
+		adapter.addFragment(FixedSuggestionFragment::newInstance);
+		adapter.addFragment(FloatingSuggestionFragment::newInstance);
+		binding.activitySuggestionViewPager.setAdapter(adapter);
 
-		final TabLayout tabLayout = findViewById(R.id.activity_suggestion_bottom_navigation);
-		tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-			@Override
-			public void onTabSelected(final TabLayout.Tab tab) {
-				showFragment(tab.getPosition());
-			}
-
-			@Override
-			public void onTabUnselected(final TabLayout.Tab tab) {
-				// empty
-			}
-
-			@Override
-			public void onTabReselected(final TabLayout.Tab tab) {
-				// empty
-			}
-		});
+		new TabLayoutMediator(binding.activitySuggestionTabLayout, binding.activitySuggestionViewPager, (tab, position) ->
+				tab.setText(position == 0 ? R.string.fixed : R.string.floating)).attach();
 
 		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
 			@Override
@@ -64,26 +42,6 @@ public class SuggestionActivity extends BaseActivity implements FormResultHandle
 				finish();
 			}
 		});
-	}
-
-	private void showFragment(final int position) {
-		final Fragment fixed = getFixedFragment();
-		final Fragment floating = getFloatingFragment();
-		if (position == 0) {
-			getSupportFragmentManager().beginTransaction().hide(floating).show(fixed).commit();
-		} else {
-			getSupportFragmentManager().beginTransaction().hide(fixed).show(floating).commit();
-		}
-	}
-
-	@NonNull
-	private Fragment getFixedFragment() {
-		return getSupportFragmentManager().findFragmentByTag(TAG_FIXED);
-	}
-
-	@NonNull
-	private Fragment getFloatingFragment() {
-		return getSupportFragmentManager().findFragmentByTag(TAG_FLOATING);
 	}
 
 	@Override

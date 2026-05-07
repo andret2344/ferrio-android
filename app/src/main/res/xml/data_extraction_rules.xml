@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+	Restrict cloud backup and device-to-device transfer to user-authored settings only. The
+	Room "ferrio" database is a server-sourced holiday cache, and Firebase Auth / Play Services
+	keep credential stores under sharedpref/* that must not be carried across devices.
+-->
 <data-extraction-rules>
 	<cloud-backup>
 		<include
 			domain="sharedpref"
-			path="." />
+			path="widget_prefs.xml" />
 		<include
-			domain="database"
-			path="." />
+			domain="sharedpref"
+			path="eu.andret.kalendarzswiatnietypowych_preferences.xml" />
 	</cloud-backup>
 	<device-transfer>
 		<include
 			domain="sharedpref"
-			path="." />
+			path="widget_prefs.xml" />
 		<include
-			domain="database"
-			path="." />
+			domain="sharedpref"
+			path="eu.andret.kalendarzswiatnietypowych_preferences.xml" />
 	</device-transfer>
 </data-extraction-rules>

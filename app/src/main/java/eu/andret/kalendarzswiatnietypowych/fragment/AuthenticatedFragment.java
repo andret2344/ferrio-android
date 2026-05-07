@@ -1,6 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
-import android.app.Activity;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -33,7 +33,6 @@ public abstract class AuthenticatedFragment extends Fragment {
 			@NonNull final FetchFunction<T> fetcher,
 			@NonNull final Consumer<List<T>> onSuccess,
 			@NonNull final Consumer<ApiException> onError) {
-		final Activity activity = requireActivity();
 		final CancellableRequest cancel = new CancellableRequest();
 		pendingRequests.add(cancel);
 		CompletableFuture.supplyAsync(() -> {
@@ -42,29 +41,20 @@ public abstract class AuthenticatedFragment extends Fragment {
 			} catch (final ApiException ex) {
 				throw new RuntimeException(ex);
 			}
-		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> {
-			if (!isAdded()) {
-				return;
+		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> postToView(() -> {
+			pendingRequests.remove(cancel);
+			if (throwable != null) {
+				onError.accept(unwrapApiException(throwable));
+			} else {
+				onSuccess.accept(result);
 			}
-			activity.runOnUiThread(() -> {
-				if (!isAdded()) {
-					return;
-				}
-				pendingRequests.remove(cancel);
-				if (throwable != null) {
-					onError.accept(unwrapApiException(throwable));
-				} else {
-					onSuccess.accept(result);
-				}
-			});
-		});
+		}));
 	}
 
 	protected void submitAuthenticated(
 			@NonNull final SubmitFunction submitter,
 			@NonNull final Runnable onSuccess,
 			@NonNull final Consumer<ApiException> onError) {
-		final Activity activity = requireActivity();
 		final CancellableRequest cancel = new CancellableRequest();
 		pendingRequests.add(cancel);
 		CompletableFuture.runAsync(() -> {
@@ -73,21 +63,26 @@ public abstract class AuthenticatedFragment extends Fragment {
 			} catch (final ApiException ex) {
 				throw new RuntimeException(ex);
 			}
-		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> {
-			if (!isAdded()) {
+		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> postToView(() -> {
+			pendingRequests.remove(cancel);
+			if (throwable != null) {
+				onError.accept(unwrapApiException(throwable));
+			} else {
+				onSuccess.run();
+			}
+		}));
+	}
+
+	private void postToView(@NonNull final Runnable runnable) {
+		final View view = getView();
+		if (view == null) {
+			return;
+		}
+		view.post(() -> {
+			if (!isAdded() || getView() == null) {
 				return;
 			}
-			activity.runOnUiThread(() -> {
-				if (!isAdded()) {
-					return;
-				}
-				pendingRequests.remove(cancel);
-				if (throwable != null) {
-					onError.accept(unwrapApiException(throwable));
-				} else {
-					onSuccess.run();
-				}
-			});
+			runnable.run();
 		});
 	}
 

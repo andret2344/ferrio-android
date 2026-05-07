@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.databinding.AdapterSuggestionBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidaySuggestion;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
 import eu.andret.kalendarzswiatnietypowych.util.ReportDetailsDialog;
@@ -45,16 +45,16 @@ public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<
 		private final ImageView chevron;
 		private final ImageView commentIndicator;
 
-		public ViewHolder(final View view) {
-			super(view);
-			textViewDatetime = view.findViewById(R.id.adapter_suggestion_text_datetime);
-			textViewCountry = view.findViewById(R.id.adapter_suggestion_text_country);
-			textViewDate = view.findViewById(R.id.adapter_suggestion_text_date);
-			textViewStatus = view.findViewById(R.id.adapter_suggestion_chip);
-			textViewName = view.findViewById(R.id.adapter_suggestion_text_name);
-			textViewDescription = view.findViewById(R.id.adapter_suggestion_text_description);
-			chevron = view.findViewById(R.id.adapter_suggestion_chevron);
-			commentIndicator = view.findViewById(R.id.adapter_suggestion_comment_indicator);
+		public ViewHolder(@NonNull final AdapterSuggestionBinding binding) {
+			super(binding.getRoot());
+			textViewDatetime = binding.adapterSuggestionTextDatetime;
+			textViewCountry = binding.adapterSuggestionTextCountry;
+			textViewDate = binding.adapterSuggestionTextDate;
+			textViewStatus = binding.adapterSuggestionChip;
+			textViewName = binding.adapterSuggestionTextName;
+			textViewDescription = binding.adapterSuggestionTextDescription;
+			chevron = binding.adapterSuggestionChevron;
+			commentIndicator = binding.adapterSuggestionCommentIndicator;
 		}
 	}
 
@@ -66,9 +66,9 @@ public class SuggestionAdapter<T extends HolidaySuggestion> extends ListAdapter<
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
-		final View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(R.layout.adapter_suggestion, viewGroup, false);
-		return new ViewHolder(view);
+		final AdapterSuggestionBinding binding = AdapterSuggestionBinding.inflate(
+				LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+		return new ViewHolder(binding);
 	}
 
 	@Override

@@ -4,10 +4,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.viewbinding.ViewBinding;
 
 import java.util.Objects;
 
-import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.databinding.AdapterDaySimpleBinding;
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 
 public class DayAdapterSimple extends BaseDayAdapter<BaseDayAdapter.BaseViewHolder> {
@@ -30,13 +31,14 @@ public class DayAdapterSimple extends BaseDayAdapter<BaseDayAdapter.BaseViewHold
 	};
 
 	public DayAdapterSimple(@NonNull final DayClickListener dayClickListener) {
-		super(DIFF_CALLBACK, dayClickListener, R.layout.adapter_day_simple);
+		super(DIFF_CALLBACK, dayClickListener, AdapterDaySimpleBinding::inflate);
 	}
 
 	@NonNull
 	@Override
-	protected BaseViewHolder createViewHolder(@NonNull final View view) {
-		return new BaseViewHolder(view);
+	protected BaseViewHolder createViewHolder(@NonNull final ViewBinding binding) {
+		final AdapterDaySimpleBinding b = (AdapterDaySimpleBinding) binding;
+		return new BaseViewHolder(b.adapterDayCardView, b.adapterDayImageSad, b.adapterDayTextNumber);
 	}
 
 	@Override

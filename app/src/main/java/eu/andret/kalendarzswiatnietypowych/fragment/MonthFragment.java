@@ -1,7 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +19,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
@@ -31,10 +31,12 @@ import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterCompact;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterDetailed;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayAdapterSimple;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayClickListener;
+import eu.andret.kalendarzswiatnietypowych.databinding.FragmentMonthBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.persistence.HolidayViewModel;
+import eu.andret.kalendarzswiatnietypowych.util.PreferenceHelper;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class MonthFragment extends Fragment {
@@ -43,6 +45,15 @@ public class MonthFragment extends Fragment {
 	private int currentMonth;
 	private LocalDate before;
 	private LocalDate after;
+
+	@Nullable
+	private FragmentMonthBinding binding;
+	@Nullable
+	private ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> dayAdapter;
+	@Nullable
+	private String currentMode;
+	@NonNull
+	private Map<Integer, HolidayDay> latestDayMap = Collections.emptyMap();
 
 	@Override
 	public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -63,42 +74,78 @@ public class MonthFragment extends Fragment {
 	@Override
 	public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup parent,
 			final Bundle savedInstanceState) {
-		final View month = inflater.inflate(R.layout.fragment_month, parent, false);
+		binding = FragmentMonthBinding.inflate(inflater, parent, false);
+		binding.fragmentMonthGridDays.setHasFixedSize(true);
 
-		final RecyclerView recyclerView = month.findViewById(R.id.fragment_month_grid_days);
-		recyclerView.setHasFixedSize(true);
-		final AppRepository repository = ((FerrioApplication) requireActivity().getApplication()).getAppRepository();
-		final DayClickListener listener = (DayClickListener) requireActivity();
-
-		final Context context = requireContext();
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		final boolean colorized = preferences.getBoolean(context.getString(R.string.settings_key_theme_colorized), false);
-		final boolean includeUsual = preferences.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
-		final String defaultMode = context.getString(R.string.month_view_mode_value_compact);
-		final String mode = preferences.getString(context.getString(R.string.settings_key_month_view_mode), defaultMode);
-
-		final ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> dayAdapter = getHolidayDayAdapter(context, mode, listener);
-		recyclerView.setAdapter(dayAdapter);
+		rebuildAdapter();
 
 		holidayViewModel.getHolidayDayMap()
 				.observe(getViewLifecycleOwner(), dayMap -> {
-					final List<HolidayDayViewModel> dataSet = repository.getHolidayDaysInDateRange(dayMap, before, after)
-							.stream()
-							.map(holidayDay -> convert(holidayDay, colorized, includeUsual))
-							.collect(Collectors.toList());
-					dayAdapter.submitList(dataSet);
+					latestDayMap = dayMap;
+					submitDataset();
 				});
-		return month;
+		return binding.getRoot();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		final Context context = getContext();
+		if (context == null) {
+			return;
+		}
+		final String mode = new PreferenceHelper(context).getMonthViewMode();
+		if (!mode.equals(currentMode)) {
+			rebuildAdapter();
+		}
+		submitDataset();
+	}
+
+	@Override
+	public void onDestroyView() {
+		binding = null;
+		dayAdapter = null;
+		super.onDestroyView();
+	}
+
+	private void rebuildAdapter() {
+		final Context context = requireContext();
+		final PreferenceHelper preferences = new PreferenceHelper(context);
+		currentMode = preferences.getMonthViewMode();
+		dayAdapter = getHolidayDayAdapter(preferences, currentMode, (DayClickListener) requireActivity());
+		if (binding != null) {
+			binding.fragmentMonthGridDays.setAdapter(dayAdapter);
+		}
+	}
+
+	private void submitDataset() {
+		final ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> adapter = dayAdapter;
+		if (adapter == null) {
+			return;
+		}
+		final Context context = getContext();
+		if (context == null) {
+			return;
+		}
+		final AppRepository repository = ((FerrioApplication) requireActivity().getApplication()).getAppRepository();
+		final PreferenceHelper preferences = new PreferenceHelper(context);
+		final boolean colorized = preferences.isThemeColorized();
+		final boolean includeUsual = preferences.includeUsualHolidays();
+		final List<HolidayDayViewModel> dataSet = repository.getHolidayDaysInDateRange(latestDayMap, before, after)
+				.stream()
+				.map(holidayDay -> convert(holidayDay, colorized, includeUsual))
+				.collect(Collectors.toList());
+		adapter.submitList(dataSet);
 	}
 
 	@NonNull
 	private static ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> getHolidayDayAdapter(
-			@NonNull final Context context, @NonNull final String mode,
+			@NonNull final PreferenceHelper preferences, @NonNull final String mode,
 			@NonNull final DayClickListener listener) {
-		if (mode.equals(context.getString(R.string.month_view_mode_value_compact))) {
+		if (mode.equals(preferences.monthViewModeValueCompact())) {
 			return new DayAdapterCompact(listener);
 		}
-		if (mode.equals(context.getString(R.string.month_view_mode_value_simple))) {
+		if (mode.equals(preferences.monthViewModeValueSimple())) {
 			return new DayAdapterSimple(listener);
 		}
 		return new DayAdapterDetailed(listener);

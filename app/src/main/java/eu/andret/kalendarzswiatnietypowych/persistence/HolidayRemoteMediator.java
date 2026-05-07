@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
@@ -21,6 +22,7 @@ public class HolidayRemoteMediator {
 	private final AppDao appDao;
 	private final ApiClient apiClient;
 	private final MutableLiveData<LoadState> loadState = new MutableLiveData<>();
+	private final AtomicBoolean inFlight = new AtomicBoolean(false);
 
 	public HolidayRemoteMediator(@NonNull final Context context, @NonNull final AppDao appDao,
 			@NonNull final ApiClient apiClient) {
@@ -30,6 +32,9 @@ public class HolidayRemoteMediator {
 	}
 
 	public void refresh() {
+		if (!inFlight.compareAndSet(false, true)) {
+			return;
+		}
 		loadState.postValue(LoadState.LOADING);
 		CompletableFuture.runAsync(() -> {
 			try {
@@ -42,6 +47,8 @@ public class HolidayRemoteMediator {
 			} catch (final Exception ex) {
 				Log.e(TAG, "Failed to refresh holidays", ex);
 				loadState.postValue(LoadState.ERROR);
+			} finally {
+				inFlight.set(false);
 			}
 		}, FerrioApplication.IO_EXECUTOR);
 	}

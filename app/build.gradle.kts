@@ -15,8 +15,12 @@ android {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 24
         targetSdk = 37
-        versionCode = 106
+        versionCode = 107
         versionName = "3.1.6"
+    }
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
     }
     buildTypes {
         release {
@@ -54,7 +58,7 @@ dependencies {
     implementation(libs.androidx.room)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.viewpager2)
-    implementation(libs.emoji.java)
+    implementation(libs.androidx.work)
     implementation(libs.firebase.auth)
     implementation(libs.glide)
     implementation(libs.googleid)

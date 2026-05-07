@@ -2,14 +2,9 @@ package eu.andret.kalendarzswiatnietypowych.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,12 +18,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,6 +39,9 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.DayClickListener;
 import eu.andret.kalendarzswiatnietypowych.adapter.MonthFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.adapter.SearchHolidayAdapter;
+import eu.andret.kalendarzswiatnietypowych.databinding.ActivityMainBinding;
+import eu.andret.kalendarzswiatnietypowych.databinding.ImageAlertBinding;
+import eu.andret.kalendarzswiatnietypowych.databinding.NavigationDrawerHeaderBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
@@ -63,20 +57,19 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 
 	private static final long SEARCH_DEBOUNCE_MS = 300;
 
-	private ViewPager2 viewPager2;
-	private RecyclerView searchListView;
-	private MaterialToolbar materialToolbar;
+	private ActivityMainBinding binding;
 	private volatile List<HolidayDay> holidayDays = Collections.emptyList();
 	private SearchHolidayAdapter searchAdapter;
 	@Nullable
 	private SearchView searchView;
-	private final Handler searchHandler = new Handler(Looper.getMainLooper());
+	@Nullable
+	private Runnable pendingSearch;
 	private final ActivityResultLauncher<Intent> activityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 		if (result.getResultCode() == RESULT_OK) {
 			final Intent data = result.getData();
 			if (data != null) {
 				final int currentMonthValue = LocalDate.now().getMonthValue();
-				viewPager2.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
+				binding.mainPagerMonths.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
 			}
 		}
 	});
@@ -84,7 +77,22 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		binding = ActivityMainBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
+		handleWidgetLaunchIntent();
+
+		setSupportActionBar(binding.activityMainToolbar);
+
+		setUpSearchAdapter();
+		registerAdView(binding.mainAdviewBottom);
+		setUpNavDrawer();
+		setUpMonthPager();
+		setUpDataObservers();
+
+		getFerrioApplication().getAppRepository().refresh();
+	}
+
+	private void handleWidgetLaunchIntent() {
 		final String stringFrom = getIntent().getStringExtra(FROM);
 		if (stringFrom != null && stringFrom.equals(WIDGET)) {
 			final Intent intent = new Intent(this, DayActivity.class);
@@ -92,48 +100,43 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 			intent.putExtra(MONTH, getIntent().getIntExtra(MONTH, 1));
 			activityResult.launch(intent);
 		}
+	}
 
-		final int currentMonthValue = LocalDate.now().getMonthValue();
-		searchListView = findViewById(R.id.main_list_results);
-		final boolean colorized = getSharedPreferences().getBoolean(getString(R.string.settings_key_theme_colorized), false);
-		final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
-		searchAdapter = new SearchHolidayAdapter(colorized, includeUsual);
-		searchListView.setAdapter(searchAdapter);
-		viewPager2 = findViewById(R.id.main_pager_months);
-		materialToolbar = findViewById(R.id.activity_main_toolbar);
-		setSupportActionBar(materialToolbar);
+	private void setUpSearchAdapter() {
+		searchAdapter = new SearchHolidayAdapter(
+				getPreferences().isThemeColorized(),
+				getPreferences().includeUsualHolidays());
+		binding.mainListResults.setAdapter(searchAdapter);
+	}
 
-		registerAdView(findViewById(R.id.main_adview_bottom));
-
-		setUpNavDrawer();
-
-		viewPager2.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
+	private void setUpMonthPager() {
+		binding.mainPagerMonths.setAdapter(new MonthFragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 		// Keep all 12 months pre-inflated so swiping to a non-adjacent month doesn't
 		// trigger a fresh layout + data bind on the UI thread.
-		viewPager2.setOffscreenPageLimit(11);
-		viewPager2.setCurrentItem(currentMonthValue - 1, false);
-		final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.activity_main_swipe_refresh);
-		viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+		binding.mainPagerMonths.setOffscreenPageLimit(11);
+		binding.mainPagerMonths.setCurrentItem(LocalDate.now().getMonthValue() - 1, false);
+
+		binding.mainPagerMonths.registerOnPageChangeCallback(new androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
 			@Override
 			public void onPageScrolled(final int position, final float positionOffset,
 					final int positionOffsetPixels) {
-				materialToolbar.setTitle(getMonthName(position + 1));
-				swipeRefreshLayout.setEnabled(positionOffset == 0);
+				binding.activityMainToolbar.setTitle(getMonthName(position + 1));
+				binding.activityMainSwipeRefresh.setEnabled(positionOffset == 0);
 			}
 		});
-		swipeRefreshLayout.setOnRefreshListener(() -> getFerrioApplication().getAppRepository().refresh());
+		binding.activityMainSwipeRefresh.setOnRefreshListener(() -> getFerrioApplication().getAppRepository().refresh());
+	}
 
-		final View progressIndicator = findViewById(R.id.activity_main_progress);
-
+	private void setUpDataObservers() {
 		holidayViewModel.getLoadState().observe(this, state -> {
 			if (state != LoadState.LOADING) {
-				swipeRefreshLayout.setRefreshing(false);
+				binding.activityMainSwipeRefresh.setRefreshing(false);
 			}
 			if (state == LoadState.ERROR) {
-				progressIndicator.setVisibility(View.GONE);
-				swipeRefreshLayout.setVisibility(View.VISIBLE);
+				binding.activityMainProgress.setVisibility(View.GONE);
+				binding.activityMainSwipeRefresh.setVisibility(View.VISIBLE);
 				if (holidayDays.isEmpty()) {
-					Snackbar.make(viewPager2, R.string.refresh_error, Snackbar.LENGTH_LONG)
+					Snackbar.make(binding.mainPagerMonths, R.string.refresh_error, Snackbar.LENGTH_LONG)
 							.setAction(R.string.retry, v -> getFerrioApplication().getAppRepository().refresh())
 							.show();
 				}
@@ -143,13 +146,11 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		getFerrioApplication().getAppRepository().getAllHolidayDays().observe(this, days -> {
 			holidayDays = days;
 			if (!days.isEmpty()) {
-				progressIndicator.setVisibility(View.GONE);
-				swipeRefreshLayout.setVisibility(View.VISIBLE);
+				binding.activityMainProgress.setVisibility(View.GONE);
+				binding.activityMainSwipeRefresh.setVisibility(View.VISIBLE);
 			}
 			updateSearchHint();
 		});
-
-		getFerrioApplication().getAppRepository().refresh();
 	}
 
 	@NonNull
@@ -183,18 +184,21 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 
 			@Override
 			public boolean onQueryTextChange(final String newText) {
-				searchHandler.removeCallbacksAndMessages(null);
+				if (pendingSearch != null) {
+					binding.mainListResults.removeCallbacks(pendingSearch);
+					pendingSearch = null;
+				}
 				if (newText == null || newText.isEmpty()) {
-					searchListView.setVisibility(View.INVISIBLE);
-					viewPager2.setVisibility(View.VISIBLE);
+					binding.mainListResults.setVisibility(View.INVISIBLE);
+					binding.mainPagerMonths.setVisibility(View.VISIBLE);
 					searchAdapter.submitList(Collections.emptyList());
 				} else {
-					searchHandler.postDelayed(() -> {
-						searchListView.setVisibility(View.VISIBLE);
-						viewPager2.setVisibility(View.INVISIBLE);
+					pendingSearch = () -> {
+						binding.mainListResults.setVisibility(View.VISIBLE);
+						binding.mainPagerMonths.setVisibility(View.INVISIBLE);
 						final String query = newText.toLowerCase(Locale.ROOT);
 						final List<HolidayDay> snapshot = holidayDays;
-						final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
+						final boolean includeUsual = getPreferences().includeUsualHolidays();
 						CompletableFuture.supplyAsync(() -> snapshot.stream()
 								.map(holidayDay -> {
 									final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
@@ -209,8 +213,9 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 								.filter(Objects::nonNull)
 								.sorted()
 								.collect(Collectors.toList())
-						).thenAccept(results -> runOnUiThread(() -> searchAdapter.submitList(results)));
-					}, SEARCH_DEBOUNCE_MS);
+						).thenAccept(results -> binding.mainListResults.post(() -> searchAdapter.submitList(results)));
+					};
+					binding.mainListResults.postDelayed(pendingSearch, SEARCH_DEBOUNCE_MS);
 				}
 				return false;
 			}
@@ -222,7 +227,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	@Override
 	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 		if (item.getItemId() == R.id.menu_main_today) {
-			viewPager2.setCurrentItem(LocalDate.now().getMonthValue() - 1);
+			binding.mainPagerMonths.setCurrentItem(LocalDate.now().getMonthValue() - 1);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -232,7 +237,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		if (searchView == null) {
 			return;
 		}
-		final boolean includeUsual = getSharedPreferences().getBoolean(getString(R.string.settings_key_usual_holidays), false);
+		final boolean includeUsual = getPreferences().includeUsualHolidays();
 		final long holidaysCount = holidayDays.stream()
 				.map(holidayDay -> holidayDay.getHolidaysList(includeUsual))
 				.mapToLong(Collection::size)
@@ -241,18 +246,17 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	}
 
 	private void setUpNavDrawer() {
-		final DrawerLayout drawer = findViewById(R.id.activity_main_layout_drawer);
-		final View content = findViewById(R.id.activity_main_content);
-		ViewCompat.setOnApplyWindowInsetsListener(content, (v, windowInsets) -> {
+		final DrawerLayout drawer = binding.activityMainLayoutDrawer;
+		ViewCompat.setOnApplyWindowInsetsListener(binding.activityMainContent, (v, windowInsets) -> {
 			final Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
 			v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
 			return WindowInsetsCompat.CONSUMED;
 		});
-		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, materialToolbar, R.string.content_description_drawer_open, R.string.content_description_drawer_close);
+		final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, binding.activityMainToolbar, R.string.content_description_drawer_open, R.string.content_description_drawer_close);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 
-		final NavigationView navigationView = findViewById(R.id.activity_main_navigation);
+		final NavigationView navigationView = binding.activityMainNavigation;
 		final View headerView = navigationView.getHeaderView(0);
 		ViewCompat.setOnApplyWindowInsetsListener(navigationView, (v, windowInsets) -> {
 			final Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -269,16 +273,14 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		suggestions.setEnabled(canSubmit);
 		reports.setEnabled(canSubmit);
 		if (AuthSession.isSignedIn() && headerView != null) {
-			final ImageView imageViewAvatar = headerView.findViewById(R.id.navigation_drawer_image);
-			final TextView textViewHeading = headerView.findViewById(R.id.navigation_drawer_heading);
-			final TextView textViewSubtitle = headerView.findViewById(R.id.navigation_drawer_subtitle);
-			Glide.with(this).load(AuthSession.avatarUrl()).into(imageViewAvatar);
+			final NavigationDrawerHeaderBinding headerBinding = NavigationDrawerHeaderBinding.bind(headerView);
+			Glide.with(this).load(AuthSession.avatarUrl()).into(headerBinding.navigationDrawerImage);
 			if (AuthSession.isAnonymous()) {
-				textViewHeading.setText(R.string.anonymous_user);
-				textViewSubtitle.setVisibility(View.GONE);
+				headerBinding.navigationDrawerHeading.setText(R.string.anonymous_user);
+				headerBinding.navigationDrawerSubtitle.setVisibility(View.GONE);
 			} else {
-				textViewHeading.setText(AuthSession.displayName());
-				textViewSubtitle.setText(AuthSession.email());
+				headerBinding.navigationDrawerHeading.setText(AuthSession.displayName());
+				headerBinding.navigationDrawerSubtitle.setText(AuthSession.email());
 			}
 		}
 
@@ -324,16 +326,17 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		searchHandler.removeCallbacksAndMessages(null);
+		if (pendingSearch != null) {
+			binding.mainListResults.removeCallbacks(pendingSearch);
+			pendingSearch = null;
+		}
 	}
 
 	public AlertDialog createAboutCalendarAlert() {
-		final View view = LayoutInflater.from(this)
-				.inflate(R.layout.image_alert, null);
-
+		final ImageAlertBinding alertBinding = ImageAlertBinding.inflate(getLayoutInflater());
 		return new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.about_calendar)
-				.setView(view)
+				.setView(alertBinding.getRoot())
 				.setPositiveButton(R.string.ok, null)
 				.create();
 	}

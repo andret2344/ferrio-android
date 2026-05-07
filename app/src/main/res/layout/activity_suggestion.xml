@@ -15,39 +15,28 @@
 		android:paddingStart="6dp"
 		android:paddingEnd="16dp"
 		app:contentInsetStartWithNavigation="0dp"
-		app:layout_constraintBottom_toTopOf="@id/activity_suggestion_bottom_navigation"
+		app:layout_constraintBottom_toTopOf="@id/activity_suggestion_tab_layout"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:title="@string/suggest_holiday" />
 
 	<com.google.android.material.tabs.TabLayout
-		android:id="@+id/activity_suggestion_bottom_navigation"
+		android:id="@+id/activity_suggestion_tab_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:layout_constraintBottom_toTopOf="@id/activity_suggestion_frame_layout"
+		app:layout_constraintBottom_toTopOf="@id/activity_suggestion_view_pager"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_toolbar">
+		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_toolbar" />
 
-		<com.google.android.material.tabs.TabItem
-			android:id="@+id/activity_suggestion_tab_fixed"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/fixed" />
-
-		<com.google.android.material.tabs.TabItem
-			android:id="@+id/activity_suggestion_tab_floating"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/floating" />
-	</com.google.android.material.tabs.TabLayout>
-
-	<FrameLayout
-		android:id="@+id/activity_suggestion_frame_layout"
+	<androidx.viewpager2.widget.ViewPager2
+		android:id="@+id/activity_suggestion_view_pager"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_bottom_navigation" />
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/activity_suggestion_tab_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

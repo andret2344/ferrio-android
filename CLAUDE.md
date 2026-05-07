@@ -7,6 +7,48 @@ repository.
 package names, architecture, conventions, SDK levels, dependencies, auth flow, etc. — update the
 corresponding section here in the same change. If a statement here becomes false, fix it.
 
+**Codex will review the code afterwards.** Assume an external reviewer (Codex) will read every
+change you make. Write code and PR descriptions that stand up to that review: clear intent,
+no dead/speculative code, no unexplained reverts of prior decisions, no "best practice" rewrites
+that ignore the reasoning encoded in the existing code.
+
+## Before suggesting refactors
+
+Before recommending a change to existing code (especially in audits, reviews, or "should we
+refactor?" answers), check the history of the area you're touching:
+
+```bash
+git log -p -- <file>                  # what has this file been through?
+git log -S "<symbol or pattern>"      # when was this pattern introduced/removed?
+```
+
+If the current pattern is the result of a deliberate prior refactor *away from* what you're
+about to suggest, do not propose reverting without strong evidence the new approach is broken.
+The codebase's current state encodes decisions; respect them. Best-practice suggestions are
+welcome, but frame them against the *specific* code in front of you, not generic advice — and
+if generic advice contradicts a deliberate local choice, the local choice wins unless you can
+show concretely why it fails here.
+
+## Intentional non-defaults — do not "fix" these
+
+These choices are deliberate. Do not suggest adopting the alternative without an explicit
+request from the user:
+
+- **No Kotlin, no Compose, no Retrofit, no Hilt/Dagger, no RxJava.** Pure Java + Android Views
+  + manual singletons in `FerrioApplication` + custom `ApiClient` over OkHttp.
+- **`ApiClient` is synchronous by design.** Callers route through `AuthHelper.getFirebaseToken()`
+  off the main thread; the synchronous API is correct, not a smell.
+- **UI-thread delayed work bound to a View** uses `view.postDelayed(runnable, ms)` and
+  `view.removeCallbacks(runnable)`. Do not replace this with `Handler(Looper.getMainLooper())`
+  fields — the View's attached-window handler already provides lifecycle-bound dispatch and
+  per-Runnable cancellation. `Handler` is fine for non-View-bound delays (services, app-scope
+  scheduling).
+- **Manual singletons in `FerrioApplication`** (`AppRepository`, `ApiClient`) are deliberate
+  while test coverage is limited to `UtilTest`. Do not propose Hilt/Dagger unless the user
+  explicitly asks.
+- **No Retrofit.** The custom OkHttp wrapper is intentional and tightly scoped; don't suggest
+  migrating.
+
 ## Build Commands
 
 ```bash
@@ -23,7 +65,7 @@ Ferrio is an Android calendar app for unusual holidays. Package:
 `eu.andret.kalendarzswiatnietypowych`. This package can never be changed because it acts like the
 app's identifier.
 
-- **Java 11** with core library desugaring, **minSdk 23**, **targetSdk 37**, **compileSdk 37**.
+- **Java 11** with core library desugaring, **minSdk 24**, **targetSdk 37**, **compileSdk 37**.
 - Gradle Kotlin DSL with version catalog (`gradle/libs.versions.toml`).
 - No Kotlin code — pure Java.
 
@@ -52,10 +94,12 @@ app's identifier.
   fixed and floating holiday suggestions.
 - **ListFragment** with `newInstance(reportType, holidayType)` — used by the reports flow.
 - **TabbedListActivity** with `createIntent(context, reportType)` — hosts the reports flow.
-  The suggestion flow still uses the older `SuggestionActivity` +
-  `FixedSuggestionFragment`/`FloatingSuggestionFragment`; migration is not complete.
-- All adapters use `ListAdapter` with `DiffUtil.ItemCallback`; no View Binding — uses
-  `findViewById`.
+- **SuggestionActivity** hosts the suggestion entry form via ViewPager2 +
+  `CustomFragmentAdapter` + `TabLayoutMediator`, with
+  `FixedSuggestionFragment`/`FloatingSuggestionFragment` as the two pages.
+- All adapters use `ListAdapter` with `DiffUtil.ItemCallback`. View Binding is enabled
+  (`buildFeatures.viewBinding = true`); use generated `*Binding` classes (e.g.,
+  `ActivityMainBinding`, `FragmentMonthBinding`) — do not introduce new `findViewById` calls.
 - **MainActivity month pager:** `viewPager2.setOffscreenPageLimit(11)` is **required** and must
   stay at `11`. There are exactly 12 `MonthFragment`s and inflating one on the UI thread when the
   user jumps to a non-adjacent month is visibly laggy, so all 12 must be kept resident. Do not

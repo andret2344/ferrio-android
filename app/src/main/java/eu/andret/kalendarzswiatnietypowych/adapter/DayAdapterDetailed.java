@@ -1,14 +1,14 @@
 package eu.andret.kalendarzswiatnietypowych.adapter;
 
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.viewbinding.ViewBinding;
 
 import java.util.Objects;
 
-import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.databinding.AdapterDayDetailedBinding;
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 
 public class DayAdapterDetailed extends BaseDayAdapter<DayAdapterDetailed.ViewHolder> {
@@ -34,13 +34,13 @@ public class DayAdapterDetailed extends BaseDayAdapter<DayAdapterDetailed.ViewHo
 	};
 
 	public DayAdapterDetailed(@NonNull final DayClickListener dayClickListener) {
-		super(DIFF_CALLBACK, dayClickListener, R.layout.adapter_day_detailed);
+		super(DIFF_CALLBACK, dayClickListener, AdapterDayDetailedBinding::inflate);
 	}
 
 	@NonNull
 	@Override
-	protected ViewHolder createViewHolder(@NonNull final View view) {
-		return new ViewHolder(view);
+	protected ViewHolder createViewHolder(@NonNull final ViewBinding binding) {
+		return new ViewHolder((AdapterDayDetailedBinding) binding);
 	}
 
 	@Override
@@ -55,10 +55,10 @@ public class DayAdapterDetailed extends BaseDayAdapter<DayAdapterDetailed.ViewHo
 		private final TextView holidayTextView;
 		private final TextView moreTextView;
 
-		public ViewHolder(@NonNull final View view) {
-			super(view);
-			holidayTextView = view.findViewById(R.id.adapter_day_text_holiday);
-			moreTextView = view.findViewById(R.id.adapter_day_text_more);
+		public ViewHolder(@NonNull final AdapterDayDetailedBinding binding) {
+			super(binding.adapterDayCardView, binding.adapterDayImageSad, binding.adapterDayTextNumber);
+			holidayTextView = binding.adapterDayTextHoliday;
+			moreTextView = binding.adapterDayTextMore;
 		}
 	}
 }

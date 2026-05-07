@@ -5,10 +5,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.viewbinding.ViewBinding;
 
 import java.util.Objects;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.databinding.AdapterDayCompactBinding;
 import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 
 public class DayAdapterCompact extends BaseDayAdapter<DayAdapterCompact.ViewHolder> {
@@ -32,13 +34,13 @@ public class DayAdapterCompact extends BaseDayAdapter<DayAdapterCompact.ViewHold
 	};
 
 	public DayAdapterCompact(@NonNull final DayClickListener dayClickListener) {
-		super(DIFF_CALLBACK, dayClickListener, R.layout.adapter_day_compact);
+		super(DIFF_CALLBACK, dayClickListener, AdapterDayCompactBinding::inflate);
 	}
 
 	@NonNull
 	@Override
-	protected ViewHolder createViewHolder(@NonNull final View view) {
-		return new ViewHolder(view);
+	protected ViewHolder createViewHolder(@NonNull final ViewBinding binding) {
+		return new ViewHolder((AdapterDayCompactBinding) binding);
 	}
 
 	@Override
@@ -58,9 +60,9 @@ public class DayAdapterCompact extends BaseDayAdapter<DayAdapterCompact.ViewHold
 	public static class ViewHolder extends BaseDayAdapter.BaseViewHolder {
 		private final TextView countTextView;
 
-		public ViewHolder(@NonNull final View view) {
-			super(view);
-			countTextView = view.findViewById(R.id.adapter_day_text_count);
+		public ViewHolder(@NonNull final AdapterDayCompactBinding binding) {
+			super(binding.adapterDayCardView, binding.adapterDayImageSad, binding.adapterDayTextNumber);
+			countTextView = binding.adapterDayTextCount;
 		}
 	}
 }

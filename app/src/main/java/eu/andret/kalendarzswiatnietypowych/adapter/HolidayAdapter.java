@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.HolidayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.databinding.AdapterHolidayBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
@@ -40,11 +40,11 @@ public class HolidayAdapter extends ListAdapter<Holiday, HolidayAdapter.ViewHold
 		private final TextView descriptionTextView;
 		private final TextView countryTextView;
 
-		public ViewHolder(final View view) {
-			super(view);
-			nameTextView = view.findViewById(R.id.adapter_holiday_name);
-			descriptionTextView = view.findViewById(R.id.adapter_holiday_description);
-			countryTextView = view.findViewById(R.id.adapter_holiday_text_country);
+		public ViewHolder(@NonNull final AdapterHolidayBinding binding) {
+			super(binding.getRoot());
+			nameTextView = binding.adapterHolidayName;
+			descriptionTextView = binding.adapterHolidayDescription;
+			countryTextView = binding.adapterHolidayTextCountry;
 		}
 	}
 
@@ -55,9 +55,9 @@ public class HolidayAdapter extends ListAdapter<Holiday, HolidayAdapter.ViewHold
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
-		final View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(R.layout.adapter_holiday, viewGroup, false);
-		return new ViewHolder(view);
+		final AdapterHolidayBinding binding = AdapterHolidayBinding.inflate(
+				LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+		return new ViewHolder(binding);
 	}
 
 	@Override

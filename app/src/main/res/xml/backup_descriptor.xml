@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+	Restrict backup to user-authored settings only. The Room "ferrio" database is a
+	server-sourced holiday cache that gets refetched on first launch, so backing it up wastes
+	quota. Firebase Auth and Google Play Services keep their own credential stores under
+	sharedpref/* — those are deliberately excluded so a restored device does not inherit a
+	previous user's auth tokens.
+-->
 <full-backup-content>
 	<include
 		domain="sharedpref"
-		path="." />
+		path="widget_prefs.xml" />
 	<include
-		domain="database"
-		path="." />
+		domain="sharedpref"
+		path="eu.andret.kalendarzswiatnietypowych_preferences.xml" />
 </full-backup-content>

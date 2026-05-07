@@ -1,6 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.fragment;
 
-import android.app.Activity;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -33,7 +33,6 @@ public abstract class AuthenticatedDialogFragment extends DialogFragment {
 			@NonNull final AuthenticatedFragment.SubmitFunction submitter,
 			@NonNull final Runnable onSuccess,
 			@NonNull final Consumer<ApiException> onError) {
-		final Activity activity = requireActivity();
 		final CancellableRequest cancel = new CancellableRequest();
 		pendingRequests.add(cancel);
 		CompletableFuture.runAsync(() -> {
@@ -42,21 +41,26 @@ public abstract class AuthenticatedDialogFragment extends DialogFragment {
 			} catch (final ApiException ex) {
 				throw new RuntimeException(ex);
 			}
-		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> {
-			if (!isAdded()) {
+		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> postToView(() -> {
+			pendingRequests.remove(cancel);
+			if (throwable != null) {
+				onError.accept(AuthenticatedFragment.unwrapApiException(throwable));
+			} else {
+				onSuccess.run();
+			}
+		}));
+	}
+
+	private void postToView(@NonNull final Runnable runnable) {
+		final View view = getView();
+		if (view == null) {
+			return;
+		}
+		view.post(() -> {
+			if (!isAdded() || getView() == null) {
 				return;
 			}
-			activity.runOnUiThread(() -> {
-				if (!isAdded()) {
-					return;
-				}
-				pendingRequests.remove(cancel);
-				if (throwable != null) {
-					onError.accept(AuthenticatedFragment.unwrapApiException(throwable));
-				} else {
-					onSuccess.run();
-				}
-			});
+			runnable.run();
 		});
 	}
 

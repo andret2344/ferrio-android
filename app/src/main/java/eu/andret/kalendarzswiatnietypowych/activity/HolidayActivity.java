@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,12 +18,10 @@ import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.button.MaterialButton;
-
 import java.time.Month;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.databinding.ActivityHolidayBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportDialogFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.ReportViewModel;
@@ -34,18 +31,19 @@ import eu.andret.kalendarzswiatnietypowych.util.auth.AuthSession;
 
 public class HolidayActivity extends BaseActivity {
 	private Holiday currentHoliday;
+	private ActivityHolidayBinding binding;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_holiday);
+		binding = ActivityHolidayBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
 
-		final MaterialToolbar materialToolbar = findViewById(R.id.activity_holiday_toolbar);
-		setSupportActionBar(materialToolbar);
+		setSupportActionBar(binding.activityHolidayToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
 
-		registerAdView(findViewById(R.id.activity_holiday_adview_bottom));
+		registerAdView(binding.activityHolidayAdviewBottom);
 
 		final String holidayId = getIntent().getStringExtra(MainActivity.HOLIDAY);
 		if (holidayId == null) {
@@ -54,24 +52,20 @@ public class HolidayActivity extends BaseActivity {
 		}
 
 		holidayViewModel.getHoliday(holidayId).observe(this, optionalHoliday -> optionalHoliday.ifPresent(holiday -> {
-			findViewById(R.id.activity_holiday_progress).setVisibility(View.GONE);
-			findViewById(R.id.activity_holiday_content).setVisibility(View.VISIBLE);
+			binding.activityHolidayProgress.setVisibility(View.GONE);
+			binding.activityHolidayContent.setVisibility(View.VISIBLE);
 
 			currentHoliday = holiday;
 
-			final TextView holidayNameTextView = findViewById(R.id.activity_holiday_name);
-			final TextView holidayDateTextView = findViewById(R.id.activity_holiday_date);
-			final LinearLayout descContainer = findViewById(R.id.activity_holiday_description_container);
-
-			holidayNameTextView.setText(holiday.getName());
+			binding.activityHolidayName.setText(holiday.getName());
 
 			final String dateText = Util.getFormattedDate(new Pair<>(Month.of(holiday.getMonth()), holiday.getDay()));
 			final String countryLabel = getCountryLabel(holiday);
-			holidayDateTextView.setText(getString(R.string.date_country, dateText, countryLabel));
+			binding.activityHolidayDate.setText(getString(R.string.date_country, dateText, countryLabel));
 			final String countryName = holiday.getCountry() != null && !holiday.getCountry().isBlank()
 					? holiday.getCountryName()
 					: getString(R.string.international);
-			TooltipCompat.setTooltipText(holidayDateTextView, countryName);
+			TooltipCompat.setTooltipText(binding.activityHolidayDate, countryName);
 
 			if (holiday.getDescription().isBlank()) {
 				final TextView placeholder = new TextView(this);
@@ -80,7 +74,7 @@ public class HolidayActivity extends BaseActivity {
 				placeholder.setGravity(Gravity.CENTER);
 				placeholder.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
 				placeholder.setTextColor(Util.getThemeColor(this, android.R.attr.textColorSecondary));
-				descContainer.addView(placeholder);
+				binding.activityHolidayDescriptionContainer.addView(placeholder);
 			} else {
 				final String[] paragraphs = holiday.getDescription().split("\n\n");
 				for (final String paragraph : paragraphs) {
@@ -88,9 +82,9 @@ public class HolidayActivity extends BaseActivity {
 					tv.setText(paragraph.trim());
 					tv.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
 					tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.activity_holiday_description_body));
-					tv.setTextColor(holidayDateTextView.getCurrentTextColor());
+					tv.setTextColor(binding.activityHolidayDate.getCurrentTextColor());
 					tv.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.activity_holiday_paragraph_spacing));
-					descContainer.addView(tv);
+					binding.activityHolidayDescriptionContainer.addView(tv);
 				}
 			}
 			final String url = holiday.getUrl();
@@ -98,16 +92,14 @@ public class HolidayActivity extends BaseActivity {
 				final Uri targetUri = Uri.parse(url);
 				final String scheme = targetUri.getScheme();
 				if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) {
-					final MaterialButton buttonReadMore = findViewById(R.id.activity_holiday_button_read_more);
-					buttonReadMore.setVisibility(View.VISIBLE);
-					buttonReadMore.setOnClickListener(v ->
+					binding.activityHolidayButtonReadMore.setVisibility(View.VISIBLE);
+					binding.activityHolidayButtonReadMore.setOnClickListener(v ->
 							startActivity(new Intent(Intent.ACTION_VIEW).setData(targetUri)));
 				}
 			}
 			final ReportViewModel reportViewModel = new ViewModelProvider(this).get(ReportViewModel.class);
-			final View reportButton = findViewById(R.id.activity_holiday_button_report);
-			reportButton.setEnabled(AuthSession.canSubmitUserContent());
-			reportButton.setOnClickListener(v -> {
+			binding.activityHolidayButtonReport.setEnabled(AuthSession.canSubmitUserContent());
+			binding.activityHolidayButtonReport.setOnClickListener(v -> {
 				reportViewModel.setHoliday(holiday);
 				final ReportDialogFragment newFragment = new ReportDialogFragment();
 				newFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);

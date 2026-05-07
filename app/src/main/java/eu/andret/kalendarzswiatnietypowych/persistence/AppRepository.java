@@ -53,8 +53,9 @@ public class AppRepository {
 		remoteMediator.refresh();
 	}
 
-	public void clearAll() {
-		CompletableFuture.runAsync(appDao::deleteAll, FerrioApplication.IO_EXECUTOR);
+	@NonNull
+	public CompletableFuture<Void> clearAll() {
+		return CompletableFuture.runAsync(appDao::deleteAll, FerrioApplication.IO_EXECUTOR);
 	}
 
 	@NonNull

@@ -8,14 +8,12 @@ import android.view.MenuItem;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.adapter.CustomFragmentAdapter;
+import eu.andret.kalendarzswiatnietypowych.databinding.ActivityTabbedListBinding;
 import eu.andret.kalendarzswiatnietypowych.fragment.ListFragment;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 
@@ -33,7 +31,8 @@ public class TabbedListActivity extends BaseActivity {
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tabbed_list);
+		final ActivityTabbedListBinding binding = ActivityTabbedListBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
 
 		final String reportType = getIntent().getStringExtra(EXTRA_REPORT_TYPE);
 		if (reportType == null) {
@@ -42,21 +41,17 @@ public class TabbedListActivity extends BaseActivity {
 		}
 		final boolean isSuggestion = ApiClient.REPORT_TYPE_SUGGESTION.equals(reportType);
 
-		final MaterialToolbar toolbar = findViewById(R.id.activity_tabbed_list_toolbar);
-		toolbar.setTitle(isSuggestion ? R.string.my_suggestions : R.string.my_reports);
-		setSupportActionBar(toolbar);
+		binding.activityTabbedListToolbar.setTitle(isSuggestion ? R.string.my_suggestions : R.string.my_reports);
+		setSupportActionBar(binding.activityTabbedListToolbar);
 		retrieveSupportActionBar().ifPresent(actionBar ->
 				actionBar.setDisplayHomeAsUpEnabled(true));
-
-		final TabLayout tabLayout = findViewById(R.id.activity_tabbed_list_tab_layout);
-		final ViewPager2 viewPager2 = findViewById(R.id.activity_tabbed_list_view_pager);
 
 		final CustomFragmentAdapter adapter = new CustomFragmentAdapter(this);
 		adapter.addFragment(() -> ListFragment.newInstance(reportType, ApiClient.HOLIDAY_TYPE_FIXED));
 		adapter.addFragment(() -> ListFragment.newInstance(reportType, ApiClient.HOLIDAY_TYPE_FLOATING));
-		viewPager2.setAdapter(adapter);
+		binding.activityTabbedListViewPager.setAdapter(adapter);
 
-		new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+		new TabLayoutMediator(binding.activityTabbedListTabLayout, binding.activityTabbedListViewPager, (tab, position) -> {
 			switch (position) {
 				case 0:
 					tab.setText(R.string.fixed);

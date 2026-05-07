@@ -1,34 +1,30 @@
 package eu.andret.kalendarzswiatnietypowych.widget;
 
 import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
-import android.widget.NumberPicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.materialswitch.MaterialSwitch;
-
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.databinding.ActivityWidgetConfigBinding;
 
 public class WidgetConfigActivity extends AppCompatActivity {
-	private static final int FONT_SIZE_MIN = 8;
-	private static final int FONT_SIZE_MAX = 24;
+	private static final int FONT_SIZE_OFFSET_RANGE = 8;
 
 	private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-	private NumberPicker pickerOffset;
-	private NumberPicker pickerFontSize;
-	private MaterialSwitch switchColorized;
+	private ActivityWidgetConfigBinding binding;
 
 	@Override
 	protected void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setResult(RESULT_CANCELED);
-		setContentView(R.layout.activity_widget_config);
+		binding = ActivityWidgetConfigBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
 
 		final Intent intent = getIntent();
 		if (intent != null && intent.getExtras() != null) {
@@ -41,59 +37,63 @@ public class WidgetConfigActivity extends AppCompatActivity {
 			return;
 		}
 
-		pickerOffset = findViewById(R.id.activity_widget_config_picker_offset);
-		pickerFontSize = findViewById(R.id.activity_widget_config_picker_font_size);
-		switchColorized = findViewById(R.id.activity_widget_config_switch_colorized);
-		final MaterialButton buttonSave = findViewById(R.id.activity_widget_config_button_save);
-
-		pickerOffset.setMinValue(0);
-		pickerOffset.setMaxValue(60);
-		pickerOffset.setWrapSelectorWheel(false);
-		pickerOffset.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+		binding.activityWidgetConfigPickerOffset.setMinValue(0);
+		binding.activityWidgetConfigPickerOffset.setMaxValue(60);
+		binding.activityWidgetConfigPickerOffset.setWrapSelectorWheel(false);
+		binding.activityWidgetConfigPickerOffset.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
 		final String[] displayValues = new String[61];
 		for (int i = 0; i <= 60; i++) {
 			displayValues[i] = String.valueOf(i - 30);
 		}
-		pickerOffset.setDisplayedValues(displayValues);
+		binding.activityWidgetConfigPickerOffset.setDisplayedValues(displayValues);
 
-		final int fontSizeCount = FONT_SIZE_MAX - FONT_SIZE_MIN + 1;
-		pickerFontSize.setMinValue(0);
-		pickerFontSize.setMaxValue(fontSizeCount);
-		pickerFontSize.setWrapSelectorWheel(false);
-		pickerFontSize.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+		final int fontSizeCount = FONT_SIZE_OFFSET_RANGE * 2 + 1;
+		binding.activityWidgetConfigPickerFontSize.setMinValue(0);
+		binding.activityWidgetConfigPickerFontSize.setMaxValue(fontSizeCount - 1);
+		binding.activityWidgetConfigPickerFontSize.setWrapSelectorWheel(false);
+		binding.activityWidgetConfigPickerFontSize.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
 
-		final String[] fontSizeValues = new String[fontSizeCount + 1];
-		fontSizeValues[0] = getString(R.string.widget_config_font_size_system);
-		for (int i = 1; i <= fontSizeCount; i++) {
-			fontSizeValues[i] = (FONT_SIZE_MIN + i - 1) + "sp";
+		final String[] fontSizeValues = new String[fontSizeCount];
+		for (int i = 0; i < fontSizeCount; i++) {
+			final int delta = i - FONT_SIZE_OFFSET_RANGE;
+			if (delta == 0) {
+				fontSizeValues[i] = getString(R.string.widget_config_font_size_system);
+			} else if (delta > 0) {
+				fontSizeValues[i] = "+" + delta;
+			} else {
+				fontSizeValues[i] = String.valueOf(delta);
+			}
 		}
-		pickerFontSize.setDisplayedValues(fontSizeValues);
+		binding.activityWidgetConfigPickerFontSize.setDisplayedValues(fontSizeValues);
 
 		// Load existing prefs for reconfiguration
 		final int savedOffset = WidgetPrefs.getDaysOffset(this, appWidgetId);
 		final boolean savedColorized = WidgetPrefs.isColorized(this, appWidgetId);
-		final int savedFontSize = WidgetPrefs.getFontSize(this, appWidgetId);
+		final int savedFontSizeOffset = WidgetPrefs.getFontSizeOffset(this, appWidgetId);
 
-		pickerOffset.setValue(savedOffset + 30);
-		switchColorized.setChecked(savedColorized);
-		pickerFontSize.setValue(savedFontSize == 0 ? 0 : savedFontSize - FONT_SIZE_MIN + 1);
+		binding.activityWidgetConfigPickerOffset.setValue(savedOffset + 30);
+		binding.activityWidgetConfigSwitchColorized.setChecked(savedColorized);
+		final int clampedFontSizeOffset = Math.max(-FONT_SIZE_OFFSET_RANGE,
+				Math.min(FONT_SIZE_OFFSET_RANGE, savedFontSizeOffset));
+		binding.activityWidgetConfigPickerFontSize.setValue(clampedFontSizeOffset + FONT_SIZE_OFFSET_RANGE);
 
-		buttonSave.setOnClickListener(v -> saveAndFinish());
+		binding.activityWidgetConfigButtonSave.setOnClickListener(v -> saveAndFinish());
 	}
 
 	private void saveAndFinish() {
-		final int daysOffset = pickerOffset.getValue() - 30;
-		final boolean colorized = switchColorized.isChecked();
-		final int fontSizeIndex = pickerFontSize.getValue();
-		final int fontSize = fontSizeIndex == 0 ? 0 : FONT_SIZE_MIN + fontSizeIndex - 1;
+		final int daysOffset = binding.activityWidgetConfigPickerOffset.getValue() - 30;
+		final boolean colorized = binding.activityWidgetConfigSwitchColorized.isChecked();
+		final int fontSizeOffset = binding.activityWidgetConfigPickerFontSize.getValue() - FONT_SIZE_OFFSET_RANGE;
 
-		WidgetPrefs.save(this, appWidgetId, daysOffset, colorized, fontSize);
+		WidgetPrefs.save(this, appWidgetId, daysOffset, colorized, fontSizeOffset);
 
 		final Context appContext = getApplicationContext();
 		final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(appContext);
-		final int layoutResId = appWidgetManager.getAppWidgetInfo(appWidgetId).initialLayout;
-		BaseWidgetProvider.updateSingleWidget(appContext, appWidgetManager, appWidgetId, layoutResId);
+		final AppWidgetProviderInfo info = appWidgetManager.getAppWidgetInfo(appWidgetId);
+		if (info != null) {
+			BaseWidgetProvider.updateSingleWidget(appContext, appWidgetManager, appWidgetId, info.initialLayout);
+		}
 
 		final Intent resultIntent = new Intent();
 		resultIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewbinding.ViewBinding;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -21,6 +21,12 @@ import eu.andret.kalendarzswiatnietypowych.fragment.MonthFragment;
 public abstract class BaseDayAdapter<H extends BaseDayAdapter.BaseViewHolder>
 		extends ListAdapter<MonthFragment.HolidayDayViewModel, H> {
 
+	@FunctionalInterface
+	protected interface BindingInflater<VB extends ViewBinding> {
+		@NonNull
+		VB inflate(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, boolean attachToParent);
+	}
+
 	protected static boolean areItemsTheSame(
 			@NonNull final MonthFragment.HolidayDayViewModel oldItem,
 			@NonNull final MonthFragment.HolidayDayViewModel newItem) {
@@ -28,19 +34,19 @@ public abstract class BaseDayAdapter<H extends BaseDayAdapter.BaseViewHolder>
 	}
 
 	private final DayClickListener dayClickListener;
-	@LayoutRes
-	private final int layoutResId;
+	private final BindingInflater<? extends ViewBinding> bindingInflater;
 
 	protected BaseDayAdapter(
 			@NonNull final DiffUtil.ItemCallback<MonthFragment.HolidayDayViewModel> diffCallback,
-			@NonNull final DayClickListener dayClickListener, @LayoutRes final int layoutResId) {
+			@NonNull final DayClickListener dayClickListener,
+			@NonNull final BindingInflater<? extends ViewBinding> bindingInflater) {
 		super(diffCallback);
 		this.dayClickListener = dayClickListener;
-		this.layoutResId = layoutResId;
+		this.bindingInflater = bindingInflater;
 	}
 
 	@NonNull
-	protected abstract H createViewHolder(@NonNull View view);
+	protected abstract H createViewHolder(@NonNull ViewBinding binding);
 
 	protected abstract void bindExtra(@NonNull H holder,
 			@NonNull MonthFragment.HolidayDayViewModel item);
@@ -48,8 +54,8 @@ public abstract class BaseDayAdapter<H extends BaseDayAdapter.BaseViewHolder>
 	@NonNull
 	@Override
 	public H onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
-		final View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(layoutResId, viewGroup, false);
+		final ViewBinding binding = bindingInflater.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+		final View view = binding.getRoot();
 		final int parentHeight = viewGroup.getMeasuredHeight();
 		if (parentHeight > 0) {
 			// Subtract the ad banner height (50dp) because the RecyclerView's measured height
@@ -57,7 +63,7 @@ public abstract class BaseDayAdapter<H extends BaseDayAdapter.BaseViewHolder>
 			final int adHeight = (int) (50 * viewGroup.getResources().getDisplayMetrics().density);
 			view.getLayoutParams().height = (parentHeight - adHeight) / 6;
 		}
-		return createViewHolder(view);
+		return createViewHolder(binding);
 	}
 
 	@Override
@@ -84,11 +90,12 @@ public abstract class BaseDayAdapter<H extends BaseDayAdapter.BaseViewHolder>
 		final ImageView sadImageView;
 		final TextView dateTextView;
 
-		public BaseViewHolder(@NonNull final View view) {
-			super(view);
-			cardView = view.findViewById(R.id.adapter_day_card_view);
-			sadImageView = view.findViewById(R.id.adapter_day_image_sad);
-			dateTextView = view.findViewById(R.id.adapter_day_text_number);
+		public BaseViewHolder(@NonNull final MaterialCardView cardView,
+				@NonNull final ImageView sadImageView, @NonNull final TextView dateTextView) {
+			super(cardView);
+			this.cardView = cardView;
+			this.sadImageView = sadImageView;
+			this.dateTextView = dateTextView;
 		}
 	}
 }

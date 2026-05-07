@@ -17,8 +17,6 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.vdurmont.emoji.Emoji;
-import com.vdurmont.emoji.EmojiManager;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -34,7 +32,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
+import java.util.SplittableRandom;
 
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
 
@@ -101,16 +99,14 @@ public final class Util {
 		return id - 1;
 	}
 
-	private static final Random COLOR_RANDOM = new Random();
-
 	public static int randomizeColor(@NonNull final Context context, final long seed) {
-		COLOR_RANDOM.setSeed(seed);
+		final SplittableRandom random = new SplittableRandom(seed);
 		final boolean dark = isDarkTheme(context);
-		return Color.rgb(randomize(dark), randomize(dark), randomize(dark));
+		return Color.rgb(randomize(random, dark), randomize(random, dark), randomize(random, dark));
 	}
 
-	private static int randomize(final boolean dark) {
-		return COLOR_RANDOM.nextInt(127) + (dark ? 0 : 127);
+	private static int randomize(@NonNull final SplittableRandom random, final boolean dark) {
+		return random.nextInt(127) + (dark ? 0 : 127);
 	}
 
 	private static boolean isDarkTheme(@NonNull final Context context) {
@@ -299,10 +295,27 @@ public final class Util {
 		textView.setBackground(background);
 	}
 
+	private static final int REGIONAL_INDICATOR_BASE = 0x1F1E6;
+
+	/**
+	 * Builds a flag emoji from an ISO 3166-1 alpha-2 country code by composing the two
+	 * regional-indicator code points. Returns {@code null} for anything that isn't a pair of
+	 * ASCII letters — the server contract is to send valid two-letter codes, but real responses
+	 * sometimes carry empty strings or legacy values, and we'd rather render no flag than
+	 * mojibake.
+	 */
 	@Nullable
 	public static String getCountryFlag(@NonNull final String countryCode) {
-		final Emoji emoji = EmojiManager.getForAlias(countryCode.toLowerCase(Locale.ROOT));
-		return emoji != null ? emoji.getUnicode() : null;
+		if (countryCode.length() != 2) {
+			return null;
+		}
+		final char first = Character.toUpperCase(countryCode.charAt(0));
+		final char second = Character.toUpperCase(countryCode.charAt(1));
+		if (first < 'A' || first > 'Z' || second < 'A' || second > 'Z') {
+			return null;
+		}
+		return new String(Character.toChars(REGIONAL_INDICATOR_BASE + (first - 'A')))
+				+ new String(Character.toChars(REGIONAL_INDICATOR_BASE + (second - 'A')));
 	}
 
 	@ColorInt

@@ -1,23 +1,26 @@
 package eu.andret.kalendarzswiatnietypowych;
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.google.android.gms.ads.MobileAds;
 
 import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
+import eu.andret.kalendarzswiatnietypowych.util.PreferenceHelper;
+import eu.andret.kalendarzswiatnietypowych.widget.MidnightWidgetRefreshWorker;
 import eu.andret.kalendarzswiatnietypowych.widget.TransparentWidgetProvider;
 import eu.andret.kalendarzswiatnietypowych.widget.WidgetProvider;
 
@@ -25,9 +28,12 @@ public class FerrioApplication extends Application {
 	/**
 	 * Shared bounded pool for IO-bound work (network, Room writes). Using a dedicated pool avoids
 	 * starving the common ForkJoinPool, which is sized for CPU-bound work and is also shared with
-	 * parallel streams across the process.
+	 * parallel streams across the process. Threads are daemon + named so they don't keep the JVM
+	 * alive in tests and show up clearly in logcat / thread dumps.
 	 */
-	public static final ExecutorService IO_EXECUTOR = Executors.newFixedThreadPool(4);
+	public static final ExecutorService IO_EXECUTOR = Executors.newFixedThreadPool(4, new IoThreadFactory());
+
+	private final AtomicBoolean adsInitialized = new AtomicBoolean(false);
 
 	private AppRepository appRepository;
 	private ApiClient apiClient;
@@ -35,16 +41,26 @@ public class FerrioApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		apiClient = new ApiClient();
+		applyNightMode();
+		apiClient = new ApiClient(this);
 		appRepository = new AppRepository(this, apiClient);
-		// scheduleMidnightWidgetRefresh issues binder calls (AppWidgetManager, AlarmManager).
-		// Keeping it off Application.onCreate avoids an ANR when the process is cold-started
-		// by APPWIDGET_ENABLED or similar system broadcasts on a loaded system_server.
 		// MobileAds.initialize is intentionally NOT called here: it posts setup work back to
 		// the main Looper and triggers a first-time WebView classloader load, which blocks
 		// the main thread during cold starts from widget broadcasts. Ads are initialized
 		// lazily from BaseActivity.registerAdView instead.
-		IO_EXECUTOR.execute(this::scheduleMidnightWidgetRefresh);
+		MidnightWidgetRefreshWorker.schedule(this);
+	}
+
+	private void applyNightMode() {
+		final String[] themeValues = getResources().getStringArray(R.array.preference_theme_values);
+		final String themeSetting = new PreferenceHelper(this).getAppTheme(themeValues[0]);
+		if (themeSetting.equals(themeValues[1])) {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+		} else if (themeSetting.equals(themeValues[2])) {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+		} else {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+		}
 	}
 
 	public AppRepository getAppRepository() {
@@ -53,6 +69,17 @@ public class FerrioApplication extends Application {
 
 	public ApiClient getApiClient() {
 		return apiClient;
+	}
+
+	/**
+	 * Lazily initializes the Google Mobile Ads SDK on the first ad-bearing screen. Posted to
+	 * {@link #IO_EXECUTOR} because MobileAds.initialize() triggers a first-time WebView classloader
+	 * load and posts setup back to the main Looper, which would jank cold starts.
+	 */
+	public void ensureAdsInitialized() {
+		if (adsInitialized.compareAndSet(false, true)) {
+			IO_EXECUTOR.execute(() -> MobileAds.initialize(this));
+		}
 	}
 
 	public static void refreshWidgets(@NonNull final Context context) {
@@ -75,33 +102,14 @@ public class FerrioApplication extends Application {
 		}
 	}
 
-	private void scheduleMidnightWidgetRefresh() {
-		final long midnightMillis = LocalDate.now()
-				.plusDays(1)
-				.atTime(LocalTime.MIDNIGHT)
-				.atZone(ZoneId.systemDefault())
-				.toInstant()
-				.toEpochMilli();
+	private static final class IoThreadFactory implements ThreadFactory {
+		private final AtomicInteger counter = new AtomicInteger(1);
 
-		final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-		final AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
-
-		final Intent intent = new Intent(this, WidgetProvider.class);
-		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
-				widgetManager.getAppWidgetIds(new ComponentName(this, WidgetProvider.class)));
-		final PendingIntent pendingIntent = PendingIntent.getBroadcast(
-				this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-		alarmManager.setInexactRepeating(AlarmManager.RTC,
-				midnightMillis, AlarmManager.INTERVAL_DAY, pendingIntent);
-
-		final Intent transparentIntent = new Intent(this, TransparentWidgetProvider.class);
-		transparentIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		transparentIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
-				widgetManager.getAppWidgetIds(new ComponentName(this, TransparentWidgetProvider.class)));
-		final PendingIntent transparentPendingIntent = PendingIntent.getBroadcast(
-				this, 1, transparentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-		alarmManager.setInexactRepeating(AlarmManager.RTC,
-				midnightMillis, AlarmManager.INTERVAL_DAY, transparentPendingIntent);
+		@Override
+		public Thread newThread(@NonNull final Runnable r) {
+			final Thread t = new Thread(r, "ferrio-io-" + counter.getAndIncrement());
+			t.setDaemon(true);
+			return t;
+		}
 	}
 }

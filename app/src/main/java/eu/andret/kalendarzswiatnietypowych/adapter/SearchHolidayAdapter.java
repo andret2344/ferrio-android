@@ -3,7 +3,6 @@ package eu.andret.kalendarzswiatnietypowych.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -21,6 +20,7 @@ import java.util.List;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
+import eu.andret.kalendarzswiatnietypowych.databinding.AdapterSearchBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
@@ -47,10 +47,10 @@ public class SearchHolidayAdapter extends ListAdapter<HolidayDay, SearchHolidayA
 		private final TextView dateTextView;
 		private final TextView holidaysTextView;
 
-		public ViewHolder(final View view) {
-			super(view);
-			dateTextView = view.findViewById(R.id.adapter_search_text_date);
-			holidaysTextView = view.findViewById(R.id.adapter_search_text_content);
+		public ViewHolder(@NonNull final AdapterSearchBinding binding) {
+			super(binding.getRoot());
+			dateTextView = binding.adapterSearchTextDate;
+			holidaysTextView = binding.adapterSearchTextContent;
 		}
 	}
 
@@ -63,9 +63,9 @@ public class SearchHolidayAdapter extends ListAdapter<HolidayDay, SearchHolidayA
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
-		final View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(R.layout.adapter_search, viewGroup, false);
-		return new ViewHolder(view);
+		final AdapterSearchBinding binding = AdapterSearchBinding.inflate(
+				LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+		return new ViewHolder(binding);
 	}
 
 	@Override

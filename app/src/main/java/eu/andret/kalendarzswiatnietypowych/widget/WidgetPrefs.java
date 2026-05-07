@@ -5,13 +5,12 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import java.util.Locale;
-
 public final class WidgetPrefs {
 	private static final String PREFS_NAME = "widget_prefs";
-	private static final String KEY_DAYS_OFFSET = "widget_%d_days_offset";
-	private static final String KEY_COLORIZED = "widget_%d_colorized";
-	private static final String KEY_FONT_SIZE = "widget_%d_font_size";
+	private static final String KEY_PREFIX = "widget_";
+	private static final String SUFFIX_DAYS_OFFSET = "_days_offset";
+	private static final String SUFFIX_COLORIZED = "_colorized";
+	private static final String SUFFIX_FONT_SIZE_OFFSET = "_font_size_offset";
 
 	private WidgetPrefs() {
 	}
@@ -21,32 +20,37 @@ public final class WidgetPrefs {
 		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 	}
 
+	@NonNull
+	private static String key(final int appWidgetId, @NonNull final String suffix) {
+		return KEY_PREFIX + appWidgetId + suffix;
+	}
+
 	public static int getDaysOffset(@NonNull final Context context, final int appWidgetId) {
-		return getPrefs(context).getInt(String.format(Locale.ROOT, KEY_DAYS_OFFSET, appWidgetId), 0);
+		return getPrefs(context).getInt(key(appWidgetId, SUFFIX_DAYS_OFFSET), 0);
 	}
 
 	public static boolean isColorized(@NonNull final Context context, final int appWidgetId) {
-		return getPrefs(context).getBoolean(String.format(Locale.ROOT, KEY_COLORIZED, appWidgetId), false);
+		return getPrefs(context).getBoolean(key(appWidgetId, SUFFIX_COLORIZED), false);
 	}
 
-	public static int getFontSize(@NonNull final Context context, final int appWidgetId) {
-		return getPrefs(context).getInt(String.format(Locale.ROOT, KEY_FONT_SIZE, appWidgetId), 0);
+	public static int getFontSizeOffset(@NonNull final Context context, final int appWidgetId) {
+		return getPrefs(context).getInt(key(appWidgetId, SUFFIX_FONT_SIZE_OFFSET), 0);
 	}
 
 	public static void save(@NonNull final Context context, final int appWidgetId,
-			final int daysOffset, final boolean colorized, final int fontSize) {
+			final int daysOffset, final boolean colorized, final int fontSizeOffset) {
 		getPrefs(context).edit()
-				.putInt(String.format(Locale.ROOT, KEY_DAYS_OFFSET, appWidgetId), daysOffset)
-				.putBoolean(String.format(Locale.ROOT, KEY_COLORIZED, appWidgetId), colorized)
-				.putInt(String.format(Locale.ROOT, KEY_FONT_SIZE, appWidgetId), fontSize)
-				.commit();
+				.putInt(key(appWidgetId, SUFFIX_DAYS_OFFSET), daysOffset)
+				.putBoolean(key(appWidgetId, SUFFIX_COLORIZED), colorized)
+				.putInt(key(appWidgetId, SUFFIX_FONT_SIZE_OFFSET), fontSizeOffset)
+				.apply();
 	}
 
 	public static void delete(@NonNull final Context context, final int appWidgetId) {
 		getPrefs(context).edit()
-				.remove(String.format(Locale.ROOT, KEY_DAYS_OFFSET, appWidgetId))
-				.remove(String.format(Locale.ROOT, KEY_COLORIZED, appWidgetId))
-				.remove(String.format(Locale.ROOT, KEY_FONT_SIZE, appWidgetId))
+				.remove(key(appWidgetId, SUFFIX_DAYS_OFFSET))
+				.remove(key(appWidgetId, SUFFIX_COLORIZED))
+				.remove(key(appWidgetId, SUFFIX_FONT_SIZE_OFFSET))
 				.apply();
 	}
 }

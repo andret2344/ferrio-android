@@ -1,5 +1,6 @@
 package eu.andret.kalendarzswiatnietypowych.util;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -16,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -29,18 +32,25 @@ public class ApiClient {
 	private static final String TAG = "Ferrio-ApiClient";
 	private static final HttpUrl BASE_URL = HttpUrl.get("https://api.ferrio.app/v3/");
 	private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
+	private static final long HTTP_CACHE_BYTES = 1024L * 1024L;
 
 	public static final String REPORT_TYPE_ERROR = "error";
 	public static final String REPORT_TYPE_SUGGESTION = "suggestion";
 	public static final String HOLIDAY_TYPE_FIXED = "fixed";
 	public static final String HOLIDAY_TYPE_FLOATING = "floating";
 
-	private final OkHttpClient httpClient = new OkHttpClient.Builder()
-			.connectTimeout(15, TimeUnit.SECONDS)
-			.readTimeout(30, TimeUnit.SECONDS)
-			.writeTimeout(30, TimeUnit.SECONDS)
-			.retryOnConnectionFailure(true)
-			.build();
+	private final OkHttpClient httpClient;
+
+	public ApiClient(@NonNull final Context context) {
+		final File cacheDir = new File(context.getCacheDir(), "http");
+		this.httpClient = new OkHttpClient.Builder()
+				.connectTimeout(15, TimeUnit.SECONDS)
+				.readTimeout(30, TimeUnit.SECONDS)
+				.writeTimeout(30, TimeUnit.SECONDS)
+				.retryOnConnectionFailure(true)
+				.cache(new Cache(cacheDir, HTTP_CACHE_BYTES))
+				.build();
+	}
 
 	/**
 	 * Unauthenticated GET returning a typed list. Throws on any failure; callers that need a

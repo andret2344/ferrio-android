@@ -99,6 +99,7 @@
 	<string name="content_description_list_holidays">List of holidays</string>
 	<string name="content_description_search_results">Search result</string>
 	<string name="content_description_icon_main">Main icon</string>
+	<string name="content_description_open_holiday">Open holiday details</string>
 	<string name="international">International</string>
 
 	<string name="loading">Loading…</string>
@@ -117,7 +118,7 @@
 	<string name="widget_config_days_offset">Days offset</string>
 	<string name="widget_config_colorized">Colorized background</string>
 	<string name="widget_config_font_size">Font size</string>
-	<string name="widget_config_font_size_system">System</string>
+	<string name="widget_config_font_size_system">System default</string>
 	<string name="widget_config_save">Save</string>
 
 	<!-- widget preview -->

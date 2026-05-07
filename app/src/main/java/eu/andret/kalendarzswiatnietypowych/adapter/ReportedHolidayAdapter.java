@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.andret.kalendarzswiatnietypowych.R;
+import eu.andret.kalendarzswiatnietypowych.databinding.AdapterReportedHolidayBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportedHoliday;
 import eu.andret.kalendarzswiatnietypowych.util.ReportDetailsDialog;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
@@ -44,13 +45,13 @@ public class ReportedHolidayAdapter extends ListAdapter<ReportedHoliday, Reporte
 		private final TextView textViewDescription;
 		private final ImageView commentIndicator;
 
-		public ViewHolder(final View view) {
-			super(view);
-			textViewDate = view.findViewById(R.id.adapter_reported_holiday_text_date);
-			textViewStatus = view.findViewById(R.id.adapter_reported_holiday_chip);
-			textViewName = view.findViewById(R.id.adapter_reported_holiday_text_name);
-			textViewDescription = view.findViewById(R.id.adapter_reported_holiday_text_description);
-			commentIndicator = view.findViewById(R.id.adapter_reported_holiday_comment_indicator);
+		public ViewHolder(@NonNull final AdapterReportedHolidayBinding binding) {
+			super(binding.getRoot());
+			textViewDate = binding.adapterReportedHolidayTextDate;
+			textViewStatus = binding.adapterReportedHolidayChip;
+			textViewName = binding.adapterReportedHolidayTextName;
+			textViewDescription = binding.adapterReportedHolidayTextDescription;
+			commentIndicator = binding.adapterReportedHolidayCommentIndicator;
 		}
 	}
 
@@ -68,9 +69,9 @@ public class ReportedHolidayAdapter extends ListAdapter<ReportedHoliday, Reporte
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int viewType) {
-		final View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(R.layout.adapter_reported_holiday, viewGroup, false);
-		return new ViewHolder(view);
+		final AdapterReportedHolidayBinding binding = AdapterReportedHolidayBinding.inflate(
+				LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+		return new ViewHolder(binding);
 	}
 
 	@Override

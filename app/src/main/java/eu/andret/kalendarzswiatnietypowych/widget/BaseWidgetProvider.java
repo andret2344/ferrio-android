@@ -3,11 +3,10 @@ package eu.andret.kalendarzswiatnietypowych.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.Log;
 import android.util.TypedValue;
@@ -17,7 +16,6 @@ import android.widget.RemoteViews;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
-import androidx.preference.PreferenceManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,9 +23,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import eu.andret.kalendarzswiatnietypowych.BuildConfig;
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
@@ -38,13 +35,17 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.ApiException;
+import eu.andret.kalendarzswiatnietypowych.util.PreferenceHelper;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
 	private static final String TAG = "Ferrio-BaseWidgetProvider";
 
+	private static final float MIN_FONT_SIZE_SP = 8f;
+
 	// Set to "W2" or "W3" to simulate that error path, empty to disable.
-	private static final String DEBUG_FORCE_ERROR = "";
+	// Gated by BuildConfig.DEBUG so release builds can never carry forced-error logic.
+	static final String DEBUG_FORCE_ERROR = "";
 
 	@LayoutRes
 	protected abstract int getLayoutResId();
@@ -67,123 +68,133 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onUpdate(@NonNull final Context context,
 			@NonNull final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
-		final BroadcastReceiver.PendingResult pendingResult = goAsync();
-		final int layoutResId = getLayoutResId();
-		final int totalWidgets = appWidgetIds.length;
-		final AtomicInteger remaining = new AtomicInteger(totalWidgets);
-		for (final int appWidgetId : appWidgetIds) {
-			updateSingleWidget(context, appWidgetManager, appWidgetId, layoutResId, () -> {
-				if (remaining.decrementAndGet() == 0) {
-					pendingResult.finish();
-				}
-			});
-		}
+		updateWidgets(context, appWidgetManager, appWidgetIds, getLayoutResId());
 	}
 
-	static void updateSingleWidget(@NonNull final Context context,
-			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
-			@LayoutRes final int layoutResId, @NonNull final Runnable onFinished) {
-		try {
-			if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-				showLoginRequired(context, appWidgetManager, appWidgetId, layoutResId);
-				onFinished.run();
-				return;
+	/**
+	 * Synchronously renders an immediate placeholder for each widget, then enqueues a
+	 * {@link WidgetUpdateWorker} to fetch data and render the final state. Used by
+	 * {@link #onUpdate} and {@link WidgetConfigActivity} after a config change.
+	 */
+	static void updateWidgets(@NonNull final Context context,
+			@NonNull final AppWidgetManager appWidgetManager,
+			@NonNull final int[] appWidgetIds, @LayoutRes final int layoutResId) {
+		final boolean signedIn = isSignedIn();
+		for (final int appWidgetId : appWidgetIds) {
+			try {
+				if (BuildConfig.DEBUG && "W2".equals(DEBUG_FORCE_ERROR)) {
+					throw new RuntimeException("Debug: forced W2 error");
+				}
+				if (!signedIn) {
+					renderLoginRequired(context, appWidgetManager, appWidgetId, layoutResId);
+				} else {
+					renderLoadingState(context, appWidgetManager, appWidgetId, layoutResId);
+				}
+			} catch (final Exception ex) {
+				Log.e(TAG, "Failed to initialize widget", ex);
+				renderErrorState(context, appWidgetManager, appWidgetId, layoutResId, "W2");
 			}
-		} catch (final Exception ex) {
-			Log.e(TAG, "Firebase unavailable, showing login prompt", ex);
-			showLoginRequired(context, appWidgetManager, appWidgetId, layoutResId);
-			onFinished.run();
-			return;
 		}
-
-		try {
-			updateSingleWidgetInner(context, appWidgetManager, appWidgetId, layoutResId, onFinished);
-		} catch (final Exception ex) {
-			Log.e(TAG, "Failed to initialize widget", ex);
-			showError(context, appWidgetManager, appWidgetId, layoutResId, "W2");
-			onFinished.run();
+		if (signedIn) {
+			WidgetUpdateWorker.enqueue(context, appWidgetIds, layoutResId);
 		}
 	}
 
 	/**
-	 * Overload used by {@link WidgetConfigActivity} where no {@code goAsync()} is available.
+	 * Overload used by {@link WidgetConfigActivity} after a save.
 	 */
 	static void updateSingleWidget(@NonNull final Context context,
 			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
 			@LayoutRes final int layoutResId) {
-		updateSingleWidget(context, appWidgetManager, appWidgetId, layoutResId, () -> {
-		});
+		updateWidgets(context, appWidgetManager, new int[]{appWidgetId}, layoutResId);
 	}
 
-	private static void updateSingleWidgetInner(@NonNull final Context context,
-			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
-			@LayoutRes final int layoutResId, @NonNull final Runnable onFinished) {
-		if ("W2".equals(DEBUG_FORCE_ERROR)) {
-			throw new RuntimeException("Debug: forced W2 error");
+	private static boolean isSignedIn() {
+		try {
+			return FirebaseAuth.getInstance().getCurrentUser() != null;
+		} catch (final Exception ex) {
+			Log.e(TAG, "Firebase unavailable, treating as signed-out", ex);
+			return false;
 		}
-		final FerrioApplication app = (FerrioApplication) context.getApplicationContext();
-		final AppRepository repository = app.getAppRepository();
-		final ApiClient apiClient = app.getApiClient();
+	}
 
+	private static void renderLoadingState(@NonNull final Context context,
+			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
+			@LayoutRes final int layoutResId) {
 		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
 		final boolean colorized = WidgetPrefs.isColorized(context, appWidgetId);
-		final int fontSize = WidgetPrefs.getFontSize(context, appWidgetId);
+		final int fontSizeOffset = WidgetPrefs.getFontSizeOffset(context, appWidgetId);
 
 		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
 		final Pair<Month, Integer> datePair = new Pair<>(targetDate.getMonth(), targetDate.getDayOfMonth());
 		final String dateText = Util.getFormattedDate(datePair);
 		final PendingIntent pendingIntent = buildDayPendingIntent(context, targetDate, appWidgetId);
 
-		// Show date and click handler immediately so widget is never blank
-		final RemoteViews loadingViews = new RemoteViews(context.getPackageName(), layoutResId);
-		loadingViews.setTextViewText(R.id.widget_text_date, dateText);
-		loadingViews.setTextViewText(R.id.widget_text_holidays, context.getString(R.string.loading));
-		loadingViews.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
-		loadingViews.setViewVisibility(R.id.widget_layout_login, View.GONE);
-		loadingViews.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
-		applyColorized(loadingViews, context, colorized, targetDate, layoutResId);
-		applyFontSize(context, loadingViews, fontSize);
-		appWidgetManager.updateAppWidget(appWidgetId, loadingViews);
+		final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
+		views.setTextViewText(R.id.widget_text_date, dateText);
+		views.setTextViewText(R.id.widget_text_holidays, context.getString(R.string.loading));
+		views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+		views.setViewVisibility(R.id.widget_layout_login, View.GONE);
+		views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
+		applyColorized(views, context, colorized, targetDate, layoutResId);
+		applyFontSize(context, views, fontSizeOffset);
+		appWidgetManager.updateAppWidget(appWidgetId, views);
+	}
+
+	/**
+	 * Synchronous data fetch + final render. Called from {@link WidgetUpdateWorker}; must
+	 * never run on the main thread.
+	 */
+	static void renderDataState(@NonNull final Context context,
+			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
+			@LayoutRes final int layoutResId) {
+		if (!isSignedIn()) {
+			renderLoginRequired(context, appWidgetManager, appWidgetId, layoutResId);
+			return;
+		}
+
+		final FerrioApplication app = (FerrioApplication) context.getApplicationContext();
+		final AppRepository repository = app.getAppRepository();
+		final ApiClient apiClient = app.getApiClient();
+
+		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
+		final boolean colorized = WidgetPrefs.isColorized(context, appWidgetId);
+		final int fontSizeOffset = WidgetPrefs.getFontSizeOffset(context, appWidgetId);
+
+		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
+		final Pair<Month, Integer> datePair = new Pair<>(targetDate.getMonth(), targetDate.getDayOfMonth());
+		final String dateText = Util.getFormattedDate(datePair);
+		final PendingIntent pendingIntent = buildDayPendingIntent(context, targetDate, appWidgetId);
 
 		final int monthValue = targetDate.getMonthValue();
 		final int dayOfMonth = targetDate.getDayOfMonth();
 
-		CompletableFuture.supplyAsync(() -> {
-			if ("W3".equals(DEBUG_FORCE_ERROR)) {
-				throw new RuntimeException("Debug: forced W3 error");
+		List<Holiday> holidays = repository.getHolidaysByDaySync(monthValue, dayOfMonth);
+		if (holidays.isEmpty()) {
+			try {
+				holidays = apiClient.getList(apiClient.buildHolidaysUrl(monthValue, dayOfMonth), Holiday.class);
+			} catch (final ApiException ex) {
+				throw new RuntimeException(ex);
 			}
-			final List<Holiday> holidays = repository.getHolidaysByDaySync(monthValue, dayOfMonth);
-			if (holidays.isEmpty()) {
-				try {
-					return apiClient.getList(apiClient.buildHolidaysUrl(monthValue, dayOfMonth), Holiday.class);
-				} catch (final ApiException ex) {
-					throw new RuntimeException(ex);
-				}
-			}
-			return holidays;
-		}, FerrioApplication.IO_EXECUTOR).thenAccept(holidays -> {
-			final HolidayDay holidayDay = new HolidayDay(monthValue, dayOfMonth, new ArrayList<>(holidays));
-			final String content = getContent(context, holidayDay);
-			final boolean empty = isHolidayListEmpty(context, holidayDay);
+		}
 
-			final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
-			views.setTextViewText(R.id.widget_text_date, dateText);
-			views.setTextViewText(R.id.widget_text_holidays, content);
-			views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
-			views.setViewVisibility(R.id.widget_layout_login, View.GONE);
-			views.setViewVisibility(R.id.widget_image_empty, empty ? View.VISIBLE : View.GONE);
-			views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
-			applyColorized(views, context, colorized, targetDate, layoutResId);
-			applyFontSize(context, views, fontSize);
-			appWidgetManager.updateAppWidget(appWidgetId, views);
-		}).exceptionally(ex -> {
-			Log.e(TAG, "Failed to update widget", ex);
-			showError(context, appWidgetManager, appWidgetId, layoutResId, "W3");
-			return null;
-		}).whenComplete((result, ex) -> onFinished.run());
+		final HolidayDay holidayDay = new HolidayDay(monthValue, dayOfMonth, new ArrayList<>(holidays));
+		final String content = getContent(context, holidayDay);
+		final boolean empty = isHolidayListEmpty(context, holidayDay);
+
+		final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
+		views.setTextViewText(R.id.widget_text_date, dateText);
+		views.setTextViewText(R.id.widget_text_holidays, content);
+		views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+		views.setViewVisibility(R.id.widget_layout_login, View.GONE);
+		views.setViewVisibility(R.id.widget_image_empty, empty ? View.VISIBLE : View.GONE);
+		views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
+		applyColorized(views, context, colorized, targetDate, layoutResId);
+		applyFontSize(context, views, fontSizeOffset);
+		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
 
-	private static void showError(@NonNull final Context context,
+	static void renderErrorState(@NonNull final Context context,
 			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
 			@LayoutRes final int layoutResId, @NonNull final String errorCode) {
 		final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
@@ -203,7 +214,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		}
 	}
 
-	private static void showLoginRequired(@NonNull final Context context,
+	private static void renderLoginRequired(@NonNull final Context context,
 			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
 			@LayoutRes final int layoutResId) {
 		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
@@ -257,34 +268,31 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
 	private static boolean isHolidayListEmpty(@NonNull final Context context,
 			@NonNull final HolidayDay holidayDay) {
-		final boolean includeUsual = PreferenceManager.getDefaultSharedPreferences(context)
-				.getBoolean(context.getString(R.string.settings_key_usual_holidays), false);
+		final boolean includeUsual = new PreferenceHelper(context).includeUsualHolidays();
 		return holidayDay.countHolidays(includeUsual) == 0;
 	}
 
 	private static void applyFontSize(@NonNull final Context context,
-			@NonNull final RemoteViews views, final int fontSize) {
-		if (fontSize > 0) {
-			final float defaultDateSize = context.getResources().getDimension(R.dimen.widget_text_date_size);
-			final float defaultHolidaysSize = context.getResources().getDimension(R.dimen.widget_text_holidays_size);
-			final float ratio = defaultDateSize / defaultHolidaysSize;
-			views.setTextViewTextSize(R.id.widget_text_date, TypedValue.COMPLEX_UNIT_SP,
-					fontSize * ratio);
-			views.setTextViewTextSize(R.id.widget_text_holidays, TypedValue.COMPLEX_UNIT_SP, fontSize);
-		} else {
-			final float dateSize = context.getResources().getDimension(R.dimen.widget_text_date_size);
-			final float holidaysSize = context.getResources().getDimension(R.dimen.widget_text_holidays_size);
-			views.setTextViewTextSize(R.id.widget_text_date, TypedValue.COMPLEX_UNIT_PX, dateSize);
-			views.setTextViewTextSize(R.id.widget_text_holidays, TypedValue.COMPLEX_UNIT_PX, holidaysSize);
-		}
+			@NonNull final RemoteViews views, final int fontSizeOffset) {
+		final Resources res = context.getResources();
+		final float dateSp = Math.max(MIN_FONT_SIZE_SP,
+				readSpDimen(res, R.dimen.widget_text_date_size) + fontSizeOffset);
+		final float holidaysSp = Math.max(MIN_FONT_SIZE_SP,
+				readSpDimen(res, R.dimen.widget_text_holidays_size) + fontSizeOffset);
+		views.setTextViewTextSize(R.id.widget_text_date, TypedValue.COMPLEX_UNIT_SP, dateSp);
+		views.setTextViewTextSize(R.id.widget_text_holidays, TypedValue.COMPLEX_UNIT_SP, holidaysSp);
+	}
+
+	private static float readSpDimen(@NonNull final Resources res, final int dimenResId) {
+		final TypedValue tv = new TypedValue();
+		res.getValue(dimenResId, tv, true);
+		return TypedValue.complexToFloat(tv.data);
 	}
 
 	@NonNull
 	private static String getContent(@NonNull final Context context,
 			@NonNull final HolidayDay holidayDay) {
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		final boolean includeUsual = preferences.getBoolean(
-				context.getString(R.string.settings_key_usual_holidays), false);
+		final boolean includeUsual = new PreferenceHelper(context).includeUsualHolidays();
 		if (holidayDay.countHolidays(includeUsual) == 0) {
 			return context.getString(R.string.no_unusual_holidays);
 		}
