@@ -24,16 +24,6 @@
 		android:layout_marginTop="10dp"
 		android:background="@color/outline_variant" />
 
-	<ImageView
-		android:id="@+id/widget_image_empty"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:layout_gravity="center_horizontal"
-		android:layout_marginTop="8dp"
-		android:contentDescription="@string/content_description_icon_sad"
-		android:src="@drawable/baseline_emoji_sad"
-		android:visibility="gone" />
-
 	<TextView
 		android:id="@+id/widget_text_holidays"
 		android:layout_width="match_parent"
@@ -41,6 +31,48 @@
 		android:layout_marginTop="8dp"
 		android:textColor="@color/on_surface"
 		android:textSize="@dimen/widget_text_holidays_size" />
+
+	<FrameLayout
+		android:id="@+id/widget_layout_holidays"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginTop="8dp"
+		android:visibility="gone">
+
+		<ListView
+			android:id="@+id/widget_list_holidays"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:divider="@null"
+			android:dividerHeight="0dp"
+			android:listSelector="@android:color/transparent" />
+
+		<LinearLayout
+			android:id="@+id/widget_empty_holidays"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:orientation="vertical"
+			tools:ignore="UseCompoundDrawables">
+
+			<ImageView
+				android:layout_width="32dp"
+				android:layout_height="32dp"
+				android:contentDescription="@string/content_description_icon_sad"
+				android:src="@drawable/baseline_emoji_sad" />
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="4dp"
+				android:gravity="center"
+				android:text="@string/no_unusual_holidays"
+				android:textColor="@color/on_surface"
+				android:textSize="@dimen/widget_text_holidays_size" />
+
+		</LinearLayout>
+
+	</FrameLayout>
 
 	<LinearLayout
 		android:id="@+id/widget_layout_login"

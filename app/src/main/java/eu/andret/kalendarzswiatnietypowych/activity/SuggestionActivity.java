@@ -15,6 +15,7 @@ import eu.andret.kalendarzswiatnietypowych.adapter.CustomFragmentAdapter;
 import eu.andret.kalendarzswiatnietypowych.databinding.ActivitySuggestionBinding;
 import eu.andret.kalendarzswiatnietypowych.fragment.FixedSuggestionFragment;
 import eu.andret.kalendarzswiatnietypowych.fragment.FloatingSuggestionFragment;
+import eu.andret.kalendarzswiatnietypowych.util.ReviewHelper;
 
 public class SuggestionActivity extends BaseActivity implements FormResultHandler {
 
@@ -58,7 +59,8 @@ public class SuggestionActivity extends BaseActivity implements FormResultHandle
 		new MaterialAlertDialogBuilder(this)
 				.setTitle(R.string.suggestion_title)
 				.setMessage(R.string.suggestion_message)
-				.setPositiveButton(R.string.ok, (dialog, which) -> finish())
+				.setPositiveButton(R.string.ok, (dialog, which) ->
+						ReviewHelper.requestReview(this, this::finish))
 				.create()
 				.show();
 	}

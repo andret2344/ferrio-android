@@ -15,8 +15,8 @@ android {
         applicationId = "eu.andret.kalendarzswiatnietypowych"
         minSdk = 24
         targetSdk = 37
-        versionCode = 107
-        versionName = "3.1.6"
+        versionCode = 108
+        versionName = "3.1.7"
     }
     buildFeatures {
         buildConfig = true
@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.remoteviews)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.androidx.preference)
@@ -66,6 +67,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.okhttp)
     implementation(libs.play.integrity)
+    implementation(libs.play.review)
     implementation(libs.play.services.ads)
     implementation(libs.play.services.auth)
 

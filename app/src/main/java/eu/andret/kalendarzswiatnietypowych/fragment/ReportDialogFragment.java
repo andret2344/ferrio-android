@@ -20,6 +20,7 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.databinding.DialogReportBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayError;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
+import eu.andret.kalendarzswiatnietypowych.util.ReviewHelper;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class ReportDialogFragment extends AuthenticatedDialogFragment {
@@ -78,7 +79,8 @@ public class ReportDialogFragment extends AuthenticatedDialogFragment {
 						() -> new MaterialAlertDialogBuilder(activity)
 								.setTitle(R.string.report_title)
 								.setMessage(R.string.report_message)
-								.setPositiveButton(R.string.ok, (dialog, which) -> activity.finish())
+								.setPositiveButton(R.string.ok, (dialog, which) ->
+										ReviewHelper.requestReview(activity, activity::finish))
 								.create()
 								.show(),
 						this::handleApiError);

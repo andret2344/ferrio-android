@@ -6,17 +6,19 @@ androidx-cardview = "1.0.0"
 androidx-constraintlayout = "2.2.1"
 androidx-credentials = "1.6.0"
 androidx-credentials-play-services-auth = "1.6.0"
+androidx-core-remoteviews = "1.1.0"
 androidx-preference = "1.2.1"
 androidx-room = "2.8.4"
 androidx-swiperefreshlayout = "1.2.0"
 androidx-viewpager2 = "1.1.0"
-androidx-work = "2.10.0"
+androidx-work = "2.11.2"
 
 # google / firebase
-firebase = "34.12.0"
+firebase = "34.13.0"
 google-id = "1.2.0"
 material = "1.13.0"
 play-integrity = "1.6.0"
+play-review = "2.0.2"
 play-services = "25.2.0"
 play-services-auth = "21.5.1"
 
@@ -40,13 +42,14 @@ androidx-activity = { module = "androidx.activity:activity", version.ref = "andr
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "androidx-cardview" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-core-remoteviews = { module = "androidx.core:core-remoteviews", version.ref = "androidx-core-remoteviews" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials-play-services-auth" }
 androidx-preference = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
 androidx-room = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "androidx-viewpager2" }
-androidx-work = { module = "androidx.work:work-runtime", version = "2.11.2" }
+androidx-work = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 
 # google / firebase
@@ -55,6 +58,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-id" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 play-integrity = { module = "com.google.android.play:integrity", version.ref = "play-integrity" }
+play-review = { module = "com.google.android.play:review", version.ref = "play-review" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "play-services" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
 

@@ -8,6 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -16,12 +20,13 @@ import android.widget.RemoteViews;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
+import androidx.core.widget.RemoteViewsCompat;
+import androidx.core.widget.RemoteViewsCompat.RemoteCollectionItems;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.andret.kalendarzswiatnietypowych.BuildConfig;
@@ -31,7 +36,6 @@ import eu.andret.kalendarzswiatnietypowych.activity.DayActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.LoginActivity;
 import eu.andret.kalendarzswiatnietypowych.activity.MainActivity;
 import eu.andret.kalendarzswiatnietypowych.entity.Holiday;
-import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.ApiException;
@@ -134,16 +138,19 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		views.setTextViewText(R.id.widget_text_date, dateText);
 		views.setTextViewText(R.id.widget_text_holidays, context.getString(R.string.loading));
 		views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+		views.setViewVisibility(R.id.widget_layout_holidays, View.GONE);
 		views.setViewVisibility(R.id.widget_layout_login, View.GONE);
 		views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 		applyColorized(views, context, colorized, targetDate, layoutResId);
-		applyFontSize(context, views, fontSizeOffset);
+		applyDateFontSize(context, views, fontSizeOffset);
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
 
 	/**
-	 * Synchronous data fetch + final render. Called from {@link WidgetUpdateWorker}; must
-	 * never run on the main thread.
+	 * Synchronous data fetch and final render. Called from {@link WidgetUpdateWorker}; must
+	 * never run on the main thread. Builds every row {@link RemoteViews} inline,
+	 * so the list is fully rendered from a single {@code updateAppWidget} call — no
+	 * {@code RemoteViewsService} or factory needed.
 	 */
 	static void renderDataState(@NonNull final Context context,
 			@NonNull final AppWidgetManager appWidgetManager, final int appWidgetId,
@@ -178,19 +185,25 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 			}
 		}
 
-		final HolidayDay holidayDay = new HolidayDay(monthValue, dayOfMonth, new ArrayList<>(holidays));
-		final String content = getContent(context, holidayDay);
-		final boolean empty = isHolidayListEmpty(context, holidayDay);
+		final boolean includeUsual = new PreferenceHelper(context).includeUsualHolidays();
+		final float itemTextSizeSp = Math.max(MIN_FONT_SIZE_SP,
+				readSpDimen(context.getResources(), R.dimen.widget_text_holidays_size)
+						+ fontSizeOffset);
+		final RemoteCollectionItems items = buildCollectionItems(context, layoutResId, holidays,
+				includeUsual, itemTextSizeSp);
 
 		final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
 		views.setTextViewText(R.id.widget_text_date, dateText);
-		views.setTextViewText(R.id.widget_text_holidays, content);
-		views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+		views.setViewVisibility(R.id.widget_text_holidays, View.GONE);
+		views.setViewVisibility(R.id.widget_layout_holidays, View.VISIBLE);
 		views.setViewVisibility(R.id.widget_layout_login, View.GONE);
-		views.setViewVisibility(R.id.widget_image_empty, empty ? View.VISIBLE : View.GONE);
+		views.setEmptyView(R.id.widget_list_holidays, R.id.widget_empty_holidays);
+		views.setPendingIntentTemplate(R.id.widget_list_holidays, pendingIntent);
 		views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 		applyColorized(views, context, colorized, targetDate, layoutResId);
-		applyFontSize(context, views, fontSizeOffset);
+		applyDateFontSize(context, views, fontSizeOffset);
+		RemoteViewsCompat.setRemoteAdapter(context, views, appWidgetId,
+				R.id.widget_list_holidays, items);
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
 
@@ -203,6 +216,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		views.setTextViewText(R.id.widget_text_holidays,
 				context.getString(R.string.widget_error, errorCode));
 		views.setViewVisibility(R.id.widget_text_holidays, View.VISIBLE);
+		views.setViewVisibility(R.id.widget_layout_holidays, View.GONE);
 		views.setViewVisibility(R.id.widget_layout_login, View.GONE);
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
@@ -231,6 +245,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
 		views.setTextViewText(R.id.widget_text_date, dateText);
 		views.setViewVisibility(R.id.widget_text_holidays, View.GONE);
+		views.setViewVisibility(R.id.widget_layout_holidays, View.GONE);
 		views.setViewVisibility(R.id.widget_layout_login, View.VISIBLE);
 		views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
 		applyColorized(views, context, colorized, targetDate, layoutResId);
@@ -266,13 +281,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 				context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 	}
 
-	private static boolean isHolidayListEmpty(@NonNull final Context context,
-			@NonNull final HolidayDay holidayDay) {
-		final boolean includeUsual = new PreferenceHelper(context).includeUsualHolidays();
-		return holidayDay.countHolidays(includeUsual) == 0;
-	}
-
-	private static void applyFontSize(@NonNull final Context context,
+	private static void applyDateFontSize(@NonNull final Context context,
 			@NonNull final RemoteViews views, final int fontSizeOffset) {
 		final Resources res = context.getResources();
 		final float dateSp = Math.max(MIN_FONT_SIZE_SP,
@@ -290,27 +299,49 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 	}
 
 	@NonNull
-	private static String getContent(@NonNull final Context context,
-			@NonNull final HolidayDay holidayDay) {
-		final boolean includeUsual = new PreferenceHelper(context).includeUsualHolidays();
-		if (holidayDay.countHolidays(includeUsual) == 0) {
-			return context.getString(R.string.no_unusual_holidays);
-		}
-		final List<Holiday> holidays = holidayDay.getHolidaysList(includeUsual);
-		final StringBuilder sb = new StringBuilder();
+	private static RemoteCollectionItems buildCollectionItems(@NonNull final Context context,
+			@LayoutRes final int parentLayoutResId, @NonNull final List<Holiday> holidays,
+			final boolean includeUsual, final float itemTextSizeSp) {
+		final int rowLayoutResId = parentLayoutResId == R.layout.widget_transparent
+				? R.layout.adapter_widget_holiday_transparent
+				: R.layout.adapter_widget_holiday;
+		final RemoteCollectionItems.Builder builder = new RemoteCollectionItems.Builder()
+				.setHasStableIds(true)
+				.setViewTypeCount(1);
+		long id = 0;
 		for (final Holiday holiday : holidays) {
-			sb.append("\n");
-			sb.append(context.getString(R.string.bullet_point))
-					.append(' ')
-					.append(holiday.getName());
-			final String country = holiday.getCountry();
-			if (country != null && !country.isBlank()) {
-				final String flag = Util.getCountryFlag(country);
-				if (flag != null) {
-					sb.append(' ').append(flag);
-				}
+			if (!includeUsual && holiday.isUsual()) {
+				continue;
+			}
+			final RemoteViews row = new RemoteViews(context.getPackageName(), rowLayoutResId);
+			row.setTextViewText(R.id.widget_item_text, buildItemText(context, holiday, itemTextSizeSp));
+			row.setTextViewTextSize(R.id.widget_item_text, TypedValue.COMPLEX_UNIT_SP, itemTextSizeSp);
+			row.setOnClickFillInIntent(R.id.widget_item_text, new Intent());
+			builder.addItem(id++, row);
+		}
+		return builder.build();
+	}
+
+	@NonNull
+	private static CharSequence buildItemText(@NonNull final Context context,
+			@NonNull final Holiday holiday, final float itemTextSizeSp) {
+		final String bulletPrefix = context.getString(R.string.bullet_point) + " ";
+		final StringBuilder sb = new StringBuilder(bulletPrefix).append(holiday.getName());
+		final String country = holiday.getCountry();
+		if (country != null && !country.isBlank()) {
+			final String flag = Util.getCountryFlag(country);
+			if (flag != null) {
+				sb.append(' ').append(flag);
 			}
 		}
-		return sb.substring(1);
+		final float textSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+				itemTextSizeSp, context.getResources().getDisplayMetrics());
+		final Paint paint = new Paint();
+		paint.setTextSize(textSizePx);
+		final int indentPx = Math.round(paint.measureText(bulletPrefix));
+		final SpannableString span = new SpannableString(sb);
+		span.setSpan(new LeadingMarginSpan.Standard(0, indentPx), 0, span.length(),
+				Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		return span;
 	}
 }
