@@ -71,9 +71,11 @@ public class WidgetConfigActivity extends AppCompatActivity {
 		final int savedOffset = WidgetPrefs.getDaysOffset(this, appWidgetId);
 		final boolean savedColorized = WidgetPrefs.isColorized(this, appWidgetId);
 		final int savedFontSizeOffset = WidgetPrefs.getFontSizeOffset(this, appWidgetId);
+		final boolean savedShowWeekday = WidgetPrefs.isShowWeekday(this, appWidgetId);
 
 		binding.activityWidgetConfigPickerOffset.setValue(savedOffset + 30);
 		binding.activityWidgetConfigSwitchColorized.setChecked(savedColorized);
+		binding.activityWidgetConfigSwitchShowWeekday.setChecked(savedShowWeekday);
 		final int clampedFontSizeOffset = Math.max(-FONT_SIZE_OFFSET_RANGE,
 				Math.min(FONT_SIZE_OFFSET_RANGE, savedFontSizeOffset));
 		binding.activityWidgetConfigPickerFontSize.setValue(clampedFontSizeOffset + FONT_SIZE_OFFSET_RANGE);
@@ -85,8 +87,9 @@ public class WidgetConfigActivity extends AppCompatActivity {
 		final int daysOffset = binding.activityWidgetConfigPickerOffset.getValue() - 30;
 		final boolean colorized = binding.activityWidgetConfigSwitchColorized.isChecked();
 		final int fontSizeOffset = binding.activityWidgetConfigPickerFontSize.getValue() - FONT_SIZE_OFFSET_RANGE;
+		final boolean showWeekday = binding.activityWidgetConfigSwitchShowWeekday.isChecked();
 
-		WidgetPrefs.save(this, appWidgetId, daysOffset, colorized, fontSizeOffset);
+		WidgetPrefs.save(this, appWidgetId, daysOffset, colorized, fontSizeOffset, showWeekday);
 
 		final Context appContext = getApplicationContext();
 		final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(appContext);

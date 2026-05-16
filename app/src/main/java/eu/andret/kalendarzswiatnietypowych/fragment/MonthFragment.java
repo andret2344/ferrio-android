@@ -3,9 +3,12 @@ package eu.andret.kalendarzswiatnietypowych.fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -77,6 +82,7 @@ public class MonthFragment extends Fragment {
 		binding = FragmentMonthBinding.inflate(inflater, parent, false);
 		binding.fragmentMonthGridDays.setHasFixedSize(true);
 
+		populateWeekdayHeader(binding.fragmentMonthWeekdayHeader);
 		rebuildAdapter();
 
 		holidayViewModel.getHolidayDayMap()
@@ -149,6 +155,23 @@ public class MonthFragment extends Fragment {
 			return new DayAdapterSimple(listener);
 		}
 		return new DayAdapterDetailed(listener);
+	}
+
+	private void populateWeekdayHeader(@NonNull final LinearLayout header) {
+		header.removeAllViews();
+		final Context context = header.getContext();
+		final Locale locale = Locale.getDefault();
+		DayOfWeek day = DayOfWeek.MONDAY;
+		for (int i = 0; i < 7; i++) {
+			final TextView label = new TextView(context);
+			final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+					0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+			label.setLayoutParams(params);
+			label.setGravity(Gravity.CENTER);
+			label.setText(day.getDisplayName(TextStyle.SHORT, locale));
+			header.addView(label);
+			day = day.plus(1);
+		}
 	}
 
 	private LocalDate getBefore() {

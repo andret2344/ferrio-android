@@ -77,6 +77,15 @@
 		android:textColor="@color/on_surface_variant"
 		android:textSize="14sp" />
 
+	<com.google.android.material.materialswitch.MaterialSwitch
+		android:id="@+id/activity_widget_config_switch_show_weekday"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:text="@string/widget_config_show_weekday"
+		android:textColor="@color/on_surface_variant"
+		android:textSize="14sp" />
+
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/activity_widget_config_button_save"
 		android:layout_width="match_parent"

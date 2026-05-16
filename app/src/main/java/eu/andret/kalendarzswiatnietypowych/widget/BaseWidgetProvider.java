@@ -27,7 +27,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 import eu.andret.kalendarzswiatnietypowych.BuildConfig;
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
@@ -128,10 +130,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
 		final boolean colorized = WidgetPrefs.isColorized(context, appWidgetId);
 		final int fontSizeOffset = WidgetPrefs.getFontSizeOffset(context, appWidgetId);
+		final boolean showWeekday = WidgetPrefs.isShowWeekday(context, appWidgetId);
 
 		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
-		final Pair<Month, Integer> datePair = new Pair<>(targetDate.getMonth(), targetDate.getDayOfMonth());
-		final String dateText = Util.getFormattedDate(datePair);
+		final String dateText = buildDateText(targetDate, showWeekday);
 		final PendingIntent pendingIntent = buildDayPendingIntent(context, targetDate, appWidgetId);
 
 		final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
@@ -167,10 +169,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
 		final boolean colorized = WidgetPrefs.isColorized(context, appWidgetId);
 		final int fontSizeOffset = WidgetPrefs.getFontSizeOffset(context, appWidgetId);
+		final boolean showWeekday = WidgetPrefs.isShowWeekday(context, appWidgetId);
 
 		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
-		final Pair<Month, Integer> datePair = new Pair<>(targetDate.getMonth(), targetDate.getDayOfMonth());
-		final String dateText = Util.getFormattedDate(datePair);
+		final String dateText = buildDateText(targetDate, showWeekday);
 		final PendingIntent pendingIntent = buildDayPendingIntent(context, targetDate, appWidgetId);
 
 		final int monthValue = targetDate.getMonthValue();
@@ -233,9 +235,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 			@LayoutRes final int layoutResId) {
 		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
 		final boolean colorized = WidgetPrefs.isColorized(context, appWidgetId);
+		final boolean showWeekday = WidgetPrefs.isShowWeekday(context, appWidgetId);
 		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
-		final Pair<Month, Integer> datePair = new Pair<>(targetDate.getMonth(), targetDate.getDayOfMonth());
-		final String dateText = Util.getFormattedDate(datePair);
+		final String dateText = buildDateText(targetDate, showWeekday);
 
 		final Intent loginIntent = new Intent(context, LoginActivity.class);
 		loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -268,6 +270,17 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 					? R.drawable.rounded_widget_transparent : R.drawable.rounded_widget;
 			views.setInt(R.id.widget_root, "setBackgroundResource", bgRes);
 		}
+	}
+
+	@NonNull
+	private static String buildDateText(@NonNull final LocalDate date, final boolean showWeekday) {
+		final Pair<Month, Integer> datePair = new Pair<>(date.getMonth(), date.getDayOfMonth());
+		final String formattedDate = Util.getFormattedDate(datePair);
+		if (!showWeekday) {
+			return formattedDate;
+		}
+		final String weekday = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+		return weekday + ", " + formattedDate;
 	}
 
 	@NonNull

@@ -11,6 +11,7 @@ public final class WidgetPrefs {
 	private static final String SUFFIX_DAYS_OFFSET = "_days_offset";
 	private static final String SUFFIX_COLORIZED = "_colorized";
 	private static final String SUFFIX_FONT_SIZE_OFFSET = "_font_size_offset";
+	private static final String SUFFIX_SHOW_WEEKDAY = "_show_weekday";
 
 	private WidgetPrefs() {
 	}
@@ -37,12 +38,18 @@ public final class WidgetPrefs {
 		return getPrefs(context).getInt(key(appWidgetId, SUFFIX_FONT_SIZE_OFFSET), 0);
 	}
 
+	public static boolean isShowWeekday(@NonNull final Context context, final int appWidgetId) {
+		return getPrefs(context).getBoolean(key(appWidgetId, SUFFIX_SHOW_WEEKDAY), false);
+	}
+
 	public static void save(@NonNull final Context context, final int appWidgetId,
-			final int daysOffset, final boolean colorized, final int fontSizeOffset) {
+			final int daysOffset, final boolean colorized, final int fontSizeOffset,
+			final boolean showWeekday) {
 		getPrefs(context).edit()
 				.putInt(key(appWidgetId, SUFFIX_DAYS_OFFSET), daysOffset)
 				.putBoolean(key(appWidgetId, SUFFIX_COLORIZED), colorized)
 				.putInt(key(appWidgetId, SUFFIX_FONT_SIZE_OFFSET), fontSizeOffset)
+				.putBoolean(key(appWidgetId, SUFFIX_SHOW_WEEKDAY), showWeekday)
 				.apply();
 	}
 
@@ -51,6 +58,7 @@ public final class WidgetPrefs {
 				.remove(key(appWidgetId, SUFFIX_DAYS_OFFSET))
 				.remove(key(appWidgetId, SUFFIX_COLORIZED))
 				.remove(key(appWidgetId, SUFFIX_FONT_SIZE_OFFSET))
+				.remove(key(appWidgetId, SUFFIX_SHOW_WEEKDAY))
 				.apply();
 	}
 }
