@@ -6,11 +6,19 @@
 	<!-- Titles -->
 	<string name="preference_title_colorized_days">Kolorowe dni</string>
 	<string name="preference_title_include_usual">Dołącz święta typowe</string>
+	<string name="preference_title_show_adult_content">Pokazuj treści dla dorosłych</string>
 	<string name="preference_title_month_view_mode">Widok miesiąca</string>
 
 	<!-- Descriptions -->
 	<string name="preference_description_colorized_days">Ustaw unikalny kolor dla każdego dnia</string>
 	<string name="preference_description_include_usual">Wyświetlaj święta typowe, np. Nowy Rok, razem z pozostałymi</string>
+	<string name="preference_description_show_adult_content">Niektóre święta mogą dotyczyć tematów seksualnych, alkoholu, używek, wulgaryzmów lub innych treści nieodpowiednich dla dzieci. Domyślnie są ukryte.</string>
+
+	<!-- Adult content confirmation dialog -->
+	<string name="dialog_title_adult_content">Włączyć treści dla dorosłych?</string>
+	<string name="dialog_message_adult_content">Ferrio pokaże w kalendarzu, wyszukiwarce i widżetach także święta i opisy przeznaczone dla osób dorosłych. Nie włączaj tej opcji na urządzeniu używanym przez dziecko.</string>
+	<string name="dialog_adult_content_confirm_age">Potwierdzam, że mam co najmniej 18 lat.</string>
+	<string name="dialog_adult_content_enable">Włącz</string>
 
 	<!-- Month view mode dialog -->
 	<string name="dialog_title_month_view_mode">Widok miesiąca</string>

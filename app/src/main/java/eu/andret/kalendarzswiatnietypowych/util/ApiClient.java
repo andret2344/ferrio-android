@@ -151,21 +151,27 @@ public class ApiClient {
 	}
 
 	@NonNull
-	public HttpUrl buildHolidaysUrl() {
-		return BASE_URL.newBuilder()
+	public HttpUrl buildHolidaysUrl(final boolean includeMatureContent) {
+		final HttpUrl.Builder builder = BASE_URL.newBuilder()
 				.addPathSegment("holidays")
-				.addQueryParameter("lang", Util.getLanguageCode())
-				.build();
+				.addQueryParameter("lang", Util.getLanguageCode());
+		if (includeMatureContent) {
+			builder.addQueryParameter("includeMatureContent", "true");
+		}
+		return builder.build();
 	}
 
 	@NonNull
-	public HttpUrl buildHolidaysUrl(final int month, final int day) {
-		return BASE_URL.newBuilder()
+	public HttpUrl buildHolidaysUrl(final int month, final int day, final boolean includeMatureContent) {
+		final HttpUrl.Builder builder = BASE_URL.newBuilder()
 				.addPathSegment("holidays")
 				.addQueryParameter("lang", Util.getLanguageCode())
 				.addQueryParameter("month", Integer.toString(month))
-				.addQueryParameter("day", Integer.toString(day))
-				.build();
+				.addQueryParameter("day", Integer.toString(day));
+		if (includeMatureContent) {
+			builder.addQueryParameter("includeMatureContent", "true");
+		}
+		return builder.build();
 	}
 
 	@NonNull

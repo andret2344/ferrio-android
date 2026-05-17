@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -15,16 +16,21 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
 import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.databinding.ActivitySettingsBinding;
+import eu.andret.kalendarzswiatnietypowych.databinding.DialogAdultContentBinding;
 import eu.andret.kalendarzswiatnietypowych.databinding.DialogMonthViewModeBinding;
 import eu.andret.kalendarzswiatnietypowych.util.PreferenceHelper;
 
@@ -96,6 +102,18 @@ public class SettingsActivity extends BaseActivity {
 						return true;
 					}));
 
+			Optional.ofNullable(this.<SwitchPreference>findPreference(prefs.showAdultContentKey()))
+					.ifPresent(o -> o.setOnPreferenceChangeListener((preference, newValue) -> {
+						if (Boolean.TRUE.equals(newValue)) {
+							showAdultContentConfirmationDialog(o, prefs);
+							return false;
+						}
+						FerrioApplication.refreshWidgets(requireContext());
+						((FerrioApplication) requireActivity().getApplicationContext())
+								.getAppRepository().refresh();
+						return true;
+					}));
+
 			Optional.ofNullable(this.<Preference>findPreference(prefs.monthViewModeKey()))
 					.ifPresent(o -> {
 						updateMonthViewModeSummary(o);
@@ -130,6 +148,39 @@ public class SettingsActivity extends BaseActivity {
 						}, ContextCompat.getMainExecutor(requireContext()));
 						return true;
 					}));
+		}
+
+		private void showAdultContentConfirmationDialog(@NonNull final SwitchPreference preference,
+				@NonNull final PreferenceHelper prefs) {
+			final DialogAdultContentBinding dialogBinding = DialogAdultContentBinding.inflate(getLayoutInflater());
+
+			final AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+					.setTitle(R.string.dialog_title_adult_content)
+					.setMessage(R.string.dialog_message_adult_content)
+					.setView(dialogBinding.getRoot())
+					.setNegativeButton(android.R.string.cancel, null)
+					.setPositiveButton(R.string.dialog_adult_content_enable, (d, which) -> {
+						prefs.setShowAdultContent(true);
+						prefs.setAdultContentConfirmedAt(
+								OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+						final Preference.OnPreferenceChangeListener listener = preference.getOnPreferenceChangeListener();
+						preference.setOnPreferenceChangeListener(null);
+						preference.setChecked(true);
+						preference.setOnPreferenceChangeListener(listener);
+						FerrioApplication.refreshWidgets(requireContext());
+						((FerrioApplication) requireActivity().getApplicationContext())
+								.getAppRepository().refresh();
+					})
+					.create();
+
+			dialog.setOnShowListener(d -> {
+				final Button enableButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				enableButton.setEnabled(false);
+				dialogBinding.dialogAdultContentCheckboxAge.setOnCheckedChangeListener(
+						(buttonView, isChecked) -> enableButton.setEnabled(isChecked));
+			});
+
+			dialog.show();
 		}
 
 		private void updateMonthViewModeSummary(@NonNull final Preference preference) {

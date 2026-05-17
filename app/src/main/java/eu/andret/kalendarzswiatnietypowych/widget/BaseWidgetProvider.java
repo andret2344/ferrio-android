@@ -178,21 +178,23 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final int monthValue = targetDate.getMonthValue();
 		final int dayOfMonth = targetDate.getDayOfMonth();
 
+		final PreferenceHelper preferences = new PreferenceHelper(context);
+		final boolean includeUsual = preferences.includeUsualHolidays();
+		final boolean showAdult = preferences.showAdultContent();
 		List<Holiday> holidays = repository.getHolidaysByDaySync(monthValue, dayOfMonth);
 		if (holidays.isEmpty()) {
 			try {
-				holidays = apiClient.getList(apiClient.buildHolidaysUrl(monthValue, dayOfMonth), Holiday.class);
+				holidays = apiClient.getList(apiClient.buildHolidaysUrl(monthValue, dayOfMonth, showAdult), Holiday.class);
 			} catch (final ApiException ex) {
 				throw new RuntimeException(ex);
 			}
 		}
 
-		final boolean includeUsual = new PreferenceHelper(context).includeUsualHolidays();
 		final float itemTextSizeSp = Math.max(MIN_FONT_SIZE_SP,
 				readSpDimen(context.getResources(), R.dimen.widget_text_holidays_size)
 						+ fontSizeOffset);
 		final RemoteCollectionItems items = buildCollectionItems(context, layoutResId, holidays,
-				includeUsual, itemTextSizeSp);
+				includeUsual, showAdult, itemTextSizeSp);
 
 		final RemoteViews views = new RemoteViews(context.getPackageName(), layoutResId);
 		views.setTextViewText(R.id.widget_text_date, dateText);
@@ -314,7 +316,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 	@NonNull
 	private static RemoteCollectionItems buildCollectionItems(@NonNull final Context context,
 			@LayoutRes final int parentLayoutResId, @NonNull final List<Holiday> holidays,
-			final boolean includeUsual, final float itemTextSizeSp) {
+			final boolean includeUsual, final boolean showAdult, final float itemTextSizeSp) {
 		final int rowLayoutResId = parentLayoutResId == R.layout.widget_transparent
 				? R.layout.adapter_widget_holiday_transparent
 				: R.layout.adapter_widget_holiday;
@@ -324,6 +326,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		long id = 0;
 		for (final Holiday holiday : holidays) {
 			if (!includeUsual && holiday.isUsual()) {
+				continue;
+			}
+			if (!showAdult && holiday.isMatureContent()) {
 				continue;
 			}
 			final RemoteViews row = new RemoteViews(context.getPackageName(), rowLayoutResId);

@@ -16,7 +16,7 @@ androidx-work = "2.11.2"
 # google / firebase
 firebase = "34.13.0"
 google-id = "1.2.0"
-material = "1.13.0"
+material = "1.14.0"
 play-integrity = "1.6.0"
 play-review = "2.0.2"
 play-services = "25.2.0"

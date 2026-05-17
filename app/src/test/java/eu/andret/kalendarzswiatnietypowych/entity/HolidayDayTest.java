@@ -14,7 +14,11 @@ import eu.andret.kalendarzswiatnietypowych.util.Util;
 public class HolidayDayTest {
 
 	private static Holiday holiday(final String id, final boolean usual) {
-		return new Holiday(id, 1, 1, "name-" + id, "desc", usual, "PL", null, false);
+		return holiday(id, usual, false);
+	}
+
+	private static Holiday holiday(final String id, final boolean usual, final boolean adult) {
+		return new Holiday(id, 1, 1, "name-" + id, "desc", usual, "PL", null, adult);
 	}
 
 	@Test
@@ -57,7 +61,7 @@ public class HolidayDayTest {
 		final Holiday unusual = holiday("fixed-2", false);
 		final HolidayDay day = new HolidayDay(1, 1, new ArrayList<>(Arrays.asList(usual, unusual)));
 
-		assertThat(day.getHolidaysList(true)).containsExactly(usual, unusual);
+		assertThat(day.getHolidaysList(true, true)).containsExactly(usual, unusual);
 	}
 
 	@Test
@@ -66,7 +70,17 @@ public class HolidayDayTest {
 		final Holiday unusual = holiday("fixed-2", false);
 		final HolidayDay day = new HolidayDay(1, 1, new ArrayList<>(Arrays.asList(usual, unusual)));
 
-		assertThat(day.getHolidaysList(false)).containsExactly(unusual);
+		assertThat(day.getHolidaysList(false, true)).containsExactly(unusual);
+	}
+
+	@Test
+	public void getHolidaysList_showAdultFalse_filtersOutMature() {
+		final Holiday safe = holiday("fixed-1", false, false);
+		final Holiday adult = holiday("fixed-2", false, true);
+		final HolidayDay day = new HolidayDay(1, 1, new ArrayList<>(Arrays.asList(safe, adult)));
+
+		assertThat(day.getHolidaysList(true, false)).containsExactly(safe);
+		assertThat(day.getHolidaysList(true, true)).containsExactly(safe, adult);
 	}
 
 	@Test
@@ -76,9 +90,9 @@ public class HolidayDayTest {
 				holiday("fixed-2", false),
 				holiday("fixed-3", false))));
 
-		assertThat(day.countHolidays(true)).isEqualTo(day.getHolidaysList(true).size());
-		assertThat(day.countHolidays(false)).isEqualTo(day.getHolidaysList(false).size());
-		assertThat(day.countHolidays(false)).isEqualTo(2);
+		assertThat(day.countHolidays(true, true)).isEqualTo(day.getHolidaysList(true, true).size());
+		assertThat(day.countHolidays(false, true)).isEqualTo(day.getHolidaysList(false, true).size());
+		assertThat(day.countHolidays(false, true)).isEqualTo(2);
 	}
 
 	@Test

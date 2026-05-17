@@ -6,11 +6,19 @@
 	<!-- Titles -->
 	<string name="preference_title_colorized_days">Colorized days</string>
 	<string name="preference_title_include_usual">Include usual holidays</string>
+	<string name="preference_title_show_adult_content">Show adult content</string>
 	<string name="preference_title_month_view_mode">Month view</string>
 
 	<!-- Descriptions -->
 	<string name="preference_description_colorized_days">Set unique color for every day</string>
 	<string name="preference_description_include_usual">Display regular holidays, i.e. New Year\'s Eve, along with others</string>
+	<string name="preference_description_show_adult_content">Some holidays cover sexual themes, alcohol, substance use, profanity, or other content not appropriate for children. Hidden by default.</string>
+
+	<!-- Adult content confirmation dialog -->
+	<string name="dialog_title_adult_content">Enable adult content?</string>
+	<string name="dialog_message_adult_content">Ferrio will also show holidays and descriptions intended for adults in the calendar, search and widgets. Do not enable this on a device used by a child.</string>
+	<string name="dialog_adult_content_confirm_age">I confirm that I am at least 18 years old.</string>
+	<string name="dialog_adult_content_enable">Enable</string>
 
 	<!-- Month view mode dialog -->
 	<string name="dialog_title_month_view_mode">Month view mode</string>

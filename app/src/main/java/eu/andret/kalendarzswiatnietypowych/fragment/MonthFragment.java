@@ -137,9 +137,16 @@ public class MonthFragment extends Fragment {
 		final PreferenceHelper preferences = new PreferenceHelper(context);
 		final boolean colorized = preferences.isThemeColorized();
 		final boolean includeUsual = preferences.includeUsualHolidays();
-		final List<HolidayDayViewModel> dataSet = repository.getHolidayDaysInDateRange(latestDayMap, before, after)
-				.stream()
-				.map(holidayDay -> convert(holidayDay, colorized, includeUsual))
+		final boolean showAdult = preferences.showAdultContent();
+		final List<HolidayDay> daysInRange = repository.getHolidayDaysInDateRange(latestDayMap, before, after);
+		final long matureInRange = daysInRange.stream()
+				.flatMap(d -> d.getHolidays().stream())
+				.filter(Holiday::isMatureContent)
+				.count();
+		android.util.Log.d("Ferrio-MonthFragment", "month=" + currentMonth + " showAdult=" + showAdult
+				+ " matureInRange=" + matureInRange);
+		final List<HolidayDayViewModel> dataSet = daysInRange.stream()
+				.map(holidayDay -> convert(holidayDay, colorized, includeUsual, showAdult))
 				.collect(Collectors.toList());
 		adapter.submitList(dataSet);
 	}
@@ -184,7 +191,7 @@ public class MonthFragment extends Fragment {
 
 	@NonNull
 	private HolidayDayViewModel convert(@NonNull final HolidayDay holidayDay,
-			final boolean colorized, final boolean includeUsual) {
+			final boolean colorized, final boolean includeUsual, final boolean showAdult) {
 		final Context context = requireContext();
 		final HolidayDayViewModel holidayDayViewModel = new HolidayDayViewModel(holidayDay);
 		if (holidayDay.getMonth() != currentMonth) {
@@ -200,7 +207,7 @@ public class MonthFragment extends Fragment {
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
 			holidayDayViewModel.strokeWidth = 4;
 		}
-		final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual);
+		final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual, showAdult);
 
 		holidayDayViewModel.date = String.valueOf(holidayDay.getDay());
 		holidayDayViewModel.holidayCount = holidaysList.size();

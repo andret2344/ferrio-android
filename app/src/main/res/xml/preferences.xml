@@ -18,6 +18,13 @@
 			android:summary="@string/preference_description_include_usual"
 			android:title="@string/preference_title_include_usual" />
 
+		<SwitchPreference
+			android:defaultValue="false"
+			android:icon="@drawable/baseline_warning_amber_24"
+			android:key="@string/settings_key_show_adult_content"
+			android:summary="@string/preference_description_show_adult_content"
+			android:title="@string/preference_title_show_adult_content" />
+
 		<Preference
 			android:icon="@drawable/baseline_edit_calendar_24"
 			android:key="@string/settings_key_month_view_mode"

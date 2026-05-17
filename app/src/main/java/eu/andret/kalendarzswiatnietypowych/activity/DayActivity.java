@@ -100,8 +100,9 @@ public class DayActivity extends BaseActivity {
 		if (item.getItemId() == R.id.menu_day_share) {
 			final Pair<Month, Integer> pair = Util.calculateDates(binding.dayPagerDays.getCurrentItem() + 1);
 			final boolean usualHolidays = getPreferences().includeUsualHolidays();
+			final boolean showAdult = getPreferences().showAdultContent();
 			observeOnce(holidayViewModel.getHolidayDay(pair.first.getValue(), pair.second), this,
-					holidayDay -> ShareCardRenderer.shareDay(DayActivity.this, pair, holidayDay.getHolidaysList(usualHolidays)));
+					holidayDay -> ShareCardRenderer.shareDay(DayActivity.this, pair, holidayDay.getHolidaysList(usualHolidays, showAdult)));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

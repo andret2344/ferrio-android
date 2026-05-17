@@ -105,7 +105,8 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	private void setUpSearchAdapter() {
 		searchAdapter = new SearchHolidayAdapter(
 				getPreferences().isThemeColorized(),
-				getPreferences().includeUsualHolidays());
+				getPreferences().includeUsualHolidays(),
+				getPreferences().showAdultContent());
 		binding.mainListResults.setAdapter(searchAdapter);
 	}
 
@@ -199,9 +200,10 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 						final String query = newText.toLowerCase(Locale.ROOT);
 						final List<HolidayDay> snapshot = holidayDays;
 						final boolean includeUsual = getPreferences().includeUsualHolidays();
+						final boolean showAdult = getPreferences().showAdultContent();
 						CompletableFuture.supplyAsync(() -> snapshot.stream()
 								.map(holidayDay -> {
-									final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual)
+									final List<Holiday> holidayList = holidayDay.getHolidaysList(includeUsual, showAdult)
 											.stream()
 											.filter(holiday -> holiday.getName().toLowerCase(Locale.ROOT).contains(query))
 											.collect(Collectors.toList());
@@ -238,8 +240,9 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 			return;
 		}
 		final boolean includeUsual = getPreferences().includeUsualHolidays();
+		final boolean showAdult = getPreferences().showAdultContent();
 		final long holidaysCount = holidayDays.stream()
-				.map(holidayDay -> holidayDay.getHolidaysList(includeUsual))
+				.map(holidayDay -> holidayDay.getHolidaysList(includeUsual, showAdult))
 				.mapToLong(Collection::size)
 				.sum();
 		searchView.setQueryHint(getString(R.string.search_placeholder, holidaysCount));

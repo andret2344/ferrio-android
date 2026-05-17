@@ -42,6 +42,7 @@ public class SearchHolidayAdapter extends ListAdapter<HolidayDay, SearchHolidayA
 
 	private final boolean colorized;
 	private final boolean includeUsual;
+	private final boolean showAdult;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		private final TextView dateTextView;
@@ -54,10 +55,12 @@ public class SearchHolidayAdapter extends ListAdapter<HolidayDay, SearchHolidayA
 		}
 	}
 
-	public SearchHolidayAdapter(final boolean colorized, final boolean includeUsual) {
+	public SearchHolidayAdapter(final boolean colorized, final boolean includeUsual,
+			final boolean showAdult) {
 		super(DIFF_CALLBACK);
 		this.colorized = colorized;
 		this.includeUsual = includeUsual;
+		this.showAdult = showAdult;
 	}
 
 	@NonNull
@@ -77,7 +80,7 @@ public class SearchHolidayAdapter extends ListAdapter<HolidayDay, SearchHolidayA
 		if (colorized) {
 			((MaterialCardView) viewHolder.itemView).setCardBackgroundColor(Util.randomizeColor(context, day.getSeed()));
 		}
-		final List<Holiday> holidaysList = day.getHolidaysList(includeUsual);
+		final List<Holiday> holidaysList = day.getHolidaysList(includeUsual, showAdult);
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < holidaysList.size(); i++) {
 			if (i > 0) {

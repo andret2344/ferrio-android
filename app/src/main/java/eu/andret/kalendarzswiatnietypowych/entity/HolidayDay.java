@@ -47,15 +47,19 @@ public class HolidayDay implements Comparable<HolidayDay> {
 	}
 
 	@NonNull
-	public List<Holiday> getHolidaysList(final boolean includeUsual) {
-		if (includeUsual) {
+	public List<Holiday> getHolidaysList(final boolean includeUsual, final boolean showAdult) {
+		if (includeUsual && showAdult) {
 			return holidays;
 		}
 		final List<Holiday> filtered = new ArrayList<>();
 		for (final Holiday holiday : holidays) {
-			if (!holiday.isUsual()) {
-				filtered.add(holiday);
+			if (!includeUsual && holiday.isUsual()) {
+				continue;
 			}
+			if (!showAdult && holiday.isMatureContent()) {
+				continue;
+			}
+			filtered.add(holiday);
 		}
 		return filtered;
 	}
@@ -64,15 +68,19 @@ public class HolidayDay implements Comparable<HolidayDay> {
 		holidays.add(holiday);
 	}
 
-	public int countHolidays(final boolean includeUsual) {
-		if (includeUsual) {
+	public int countHolidays(final boolean includeUsual, final boolean showAdult) {
+		if (includeUsual && showAdult) {
 			return holidays.size();
 		}
 		int count = 0;
 		for (final Holiday holiday : holidays) {
-			if (!holiday.isUsual()) {
-				count++;
+			if (!includeUsual && holiday.isUsual()) {
+				continue;
 			}
+			if (!showAdult && holiday.isMatureContent()) {
+				continue;
+			}
+			count++;
 		}
 		return count;
 	}

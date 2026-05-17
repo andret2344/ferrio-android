@@ -34,6 +34,22 @@ public final class PreferenceHelper {
 		return prefs.getBoolean(res.getString(R.string.settings_key_usual_holidays), false);
 	}
 
+	public boolean showAdultContent() {
+		return prefs.getBoolean(res.getString(R.string.settings_key_show_adult_content), false);
+	}
+
+	public void setShowAdultContent(final boolean value) {
+		prefs.edit()
+				.putBoolean(res.getString(R.string.settings_key_show_adult_content), value)
+				.apply();
+	}
+
+	public void setAdultContentConfirmedAt(@NonNull final String iso8601Timestamp) {
+		prefs.edit()
+				.putString(res.getString(R.string.settings_key_adult_content_confirmed_at), iso8601Timestamp)
+				.apply();
+	}
+
 	@NonNull
 	public String getMonthViewMode() {
 		return prefs.getString(
@@ -75,6 +91,11 @@ public final class PreferenceHelper {
 	@NonNull
 	public String usualHolidaysKey() {
 		return res.getString(R.string.settings_key_usual_holidays);
+	}
+
+	@NonNull
+	public String showAdultContentKey() {
+		return res.getString(R.string.settings_key_show_adult_content);
 	}
 
 	@NonNull

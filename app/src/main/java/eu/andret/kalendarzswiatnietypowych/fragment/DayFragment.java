@@ -39,6 +39,7 @@ public class DayFragment extends Fragment {
 		final Pair<Month, Integer> date = Util.calculateDates(position + 1);
 		final PreferenceHelper preferences = new PreferenceHelper(getContext());
 		final boolean includeUsual = preferences.includeUsualHolidays();
+		final boolean showAdult = preferences.showAdultContent();
 
 		final HolidayViewModel holidayViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(HolidayViewModel.INITIALIZER))
 				.get(HolidayViewModel.class);
@@ -54,7 +55,7 @@ public class DayFragment extends Fragment {
 			if (binding == null) {
 				return;
 			}
-			final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual);
+			final List<Holiday> holidaysList = holidayDay.getHolidaysList(includeUsual, showAdult);
 			holidayAdapter.submitList(holidaysList);
 			if (holidaysList.isEmpty()) {
 				binding.fragmentDayImageSad.setVisibility(View.VISIBLE);
