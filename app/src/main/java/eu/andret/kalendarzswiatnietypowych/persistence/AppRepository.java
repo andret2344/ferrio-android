@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.room.Room;
 
@@ -41,11 +42,15 @@ public class AppRepository {
 		appDao = database.appDao();
 
 		final LiveData<List<Holiday>> allHolidays = appDao.getAllHolidays();
-		holidayDayMap = Transformations.map(allHolidays, this::groupByDayMap);
-		allHolidayDays = Transformations.map(allHolidays, holidays -> {
-			final Map<Integer, HolidayDay> grouped = groupByDayMap(holidays);
-			return new ArrayList<>(grouped.values());
-		});
+		// Grouping the full holiday list is O(n) over every holiday of the year and would freeze the
+		// UI (including the indeterminate loading spinner) if run on the main thread, which is what
+		// Transformations.map does. Compute it once off the main thread; every other view derives
+		// cheaply from the already-grouped map.
+		final MediatorLiveData<Map<Integer, HolidayDay>> dayMap = new MediatorLiveData<>();
+		dayMap.addSource(allHolidays, holidays ->
+				FerrioApplication.IO_EXECUTOR.execute(() -> dayMap.postValue(groupByDayMap(holidays))));
+		holidayDayMap = dayMap;
+		allHolidayDays = Transformations.map(holidayDayMap, map -> new ArrayList<>(map.values()));
 		remoteMediator = new HolidayRemoteMediator(application, appDao, apiClient);
 	}
 
@@ -106,7 +111,10 @@ public class AppRepository {
 		final List<HolidayDay> result = new ArrayList<>();
 		for (LocalDate date = begin; date.until(end, ChronoUnit.DAYS) > 0; date = date.plusDays(1)) {
 			final int key = dayKey(date.getMonthValue(), date.getDayOfMonth());
-			result.add(dayMap.getOrDefault(key, new HolidayDay(date.getMonthValue(), date.getDayOfMonth())));
+			final HolidayDay holidayDay = dayMap.get(key);
+			result.add(holidayDay != null
+					? holidayDay
+					: new HolidayDay(date.getMonthValue(), date.getDayOfMonth()));
 		}
 		return result;
 	}

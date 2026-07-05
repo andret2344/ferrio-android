@@ -4,11 +4,17 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
@@ -24,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -34,6 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.SplittableRandom;
 
+import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.entity.ReportState;
 
 public final class Util {
@@ -59,7 +67,7 @@ public final class Util {
 
 	@NonNull
 	public static Pair<Month, Integer> calculateDates(final int id) {
-		final LocalDate now = LocalDate.now();
+		final LocalDate now = LocalDate.now(ZoneId.systemDefault());
 		final int year = now.getYear();
 		if (id == FEB_30_INDEX) {
 			return new Pair<>(Month.FEBRUARY, 30);
@@ -90,7 +98,7 @@ public final class Util {
 		if (month == Month.FEBRUARY.getValue() && day == 29) {
 			return FEB_29_NON_LEAP_INDEX - 1;
 		}
-		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), month, day);
+		final LocalDate date = LocalDate.of(LocalDate.now(ZoneId.systemDefault()).getYear(), month, day);
 		final boolean leap = date.isLeapYear();
 		int id = date.getDayOfYear();
 		if (id > (leap ? 60 : 59)) {
@@ -147,7 +155,7 @@ public final class Util {
 		final String dayPlaceholder = "DAY_PLACEHOLDER";
 		final String patternWithPlaceholder = replaceDayFieldsOutsideQuotes(pattern, dayPlaceholder);
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternWithPlaceholder, locale);
-		final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), pair.first, 1);
+		final LocalDate localDate = LocalDate.of(LocalDate.now(ZoneId.systemDefault()).getYear(), pair.first, 1);
 		return localDate.format(formatter).replace(dayPlaceholder, localizeDigits(pair.second, locale));
 	}
 
@@ -324,6 +332,35 @@ public final class Util {
 		final int color = a.getColor(0, Color.GRAY);
 		a.recycle();
 		return color;
+	}
+
+	/**
+	 * Builds a hint made of {@code labelRes} followed by a red asterisk marking the field as
+	 * required. The asterisk uses the theme's {@code colorError} so it reads correctly in both
+	 * light and dark themes.
+	 */
+	@NonNull
+	public static CharSequence requiredHint(@NonNull final Context context, @StringRes final int labelRes) {
+		final SpannableStringBuilder builder = new SpannableStringBuilder(context.getString(labelRes)).append(" *");
+		final int color = ContextCompat.getColor(context, R.color.error);
+		builder.setSpan(new ForegroundColorSpan(color), builder.length() - 1, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return builder;
+	}
+
+	/**
+	 * Wires {@code header} to show/hide {@code content}, flipping {@code chevron} between the
+	 * expand-more and expand-less icons. Shared by the report/suggestion "submission guidelines"
+	 * sections so the toggle behaves identically everywhere.
+	 */
+	public static void bindExpandable(@NonNull final View header, @NonNull final View content,
+			@NonNull final ImageView chevron) {
+		header.setOnClickListener(v -> {
+			final boolean expanded = content.getVisibility() == View.VISIBLE;
+			content.setVisibility(expanded ? View.GONE : View.VISIBLE);
+			chevron.setImageResource(expanded
+					? R.drawable.baseline_expand_more_24
+					: R.drawable.baseline_expand_less_24);
+		});
 	}
 
 	@NonNull

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.gson.JsonObject;
 
 import java.util.Objects;
 
@@ -20,7 +21,9 @@ import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.databinding.DialogReportBinding;
 import eu.andret.kalendarzswiatnietypowych.entity.HolidayError;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
+import eu.andret.kalendarzswiatnietypowych.util.DeviceMetadata;
 import eu.andret.kalendarzswiatnietypowych.util.ReviewHelper;
+import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class ReportDialogFragment extends AuthenticatedDialogFragment {
@@ -50,10 +53,18 @@ public class ReportDialogFragment extends AuthenticatedDialogFragment {
 		b.fragmentReportToolbar.setNavigationIcon(R.drawable.baseline_close_24);
 		b.fragmentReportToolbar.setNavigationOnClickListener(v -> dismiss());
 
+		b.dialogReportTextReason.setHint(Util.requiredHint(requireContext(), R.string.reason));
+		b.dialogReportTextDescription.setHint(Util.requiredHint(requireContext(), R.string.description));
+
 		b.dialogReportTextReasonValue.setOnItemClickListener((parent, view1, position, id) -> {
-			b.dialogReportButtonSend.setEnabled(true);
 			selectedReason = position;
+			b.dialogReportButtonSend.setEnabled(isFormValid(b));
 		});
+
+		b.dialogReportTextDescriptionValue.addTextChangedListener((SimpleTextWatcher) () ->
+				b.dialogReportButtonSend.setEnabled(isFormValid(b)));
+
+		Util.bindExpandable(b.dialogReportInfo, b.dialogReportTextNote, b.dialogReportChevron);
 
 		reportViewModel.getHoliday().observe(getViewLifecycleOwner(), holiday -> {
 			b.dialogReportHolidayName.setText(holiday.getName());
@@ -71,7 +82,9 @@ public class ReportDialogFragment extends AuthenticatedDialogFragment {
 				final String reportType = activity.getResources().getStringArray(R.array.report_keys)[selectedReason];
 				final String description = Objects.requireNonNull(b.dialogReportTextDescription.getEditText()).getText().toString();
 				final HolidayError holidayReport = new HolidayError(metadata, language, reportType, description);
-				final String body = Util.GSON.toJson(holidayReport);
+				final JsonObject payload = Util.GSON.toJsonTree(holidayReport).getAsJsonObject();
+				DeviceMetadata.addTo(payload, activity);
+				final String body = payload.toString();
 				submitAuthenticated(
 						(token, cancel) -> getApiClient().post(
 								getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_ERROR, holidayType),
@@ -86,6 +99,11 @@ public class ReportDialogFragment extends AuthenticatedDialogFragment {
 						this::handleApiError);
 			});
 		});
+	}
+
+	private boolean isFormValid(@NonNull final DialogReportBinding b) {
+		return selectedReason != -1
+				&& !b.dialogReportTextDescriptionValue.getText().toString().isBlank();
 	}
 
 	@Override

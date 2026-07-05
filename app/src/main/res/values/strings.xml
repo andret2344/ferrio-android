@@ -44,7 +44,8 @@
 	<string name="holiday_description">Holiday description</string>
 	<string name="reason">Reason</string>
 	<string name="description">Description</string>
-	<string name="report_note">Reports and suggestions with a description are more likely to be verified first.</string>
+	<string name="report_note">Thanks for helping the calendar grow! Every submission is reviewed by hand, so please keep it meaningful - spam, submissions without substantive content, and duplicate or repeated submissions may be removed without prior notice. Thank you for your understanding and for making the app better!</string>
+	<string name="report_note_toggle">Submission guidelines</string>
 	<string name="send_report">Send report</string>
 	<string name="application">Application</string>
 	<string name="suggest_holiday">Suggest a holiday</string>

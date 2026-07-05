@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
@@ -132,7 +133,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final int fontSizeOffset = WidgetPrefs.getFontSizeOffset(context, appWidgetId);
 		final boolean showWeekday = WidgetPrefs.isShowWeekday(context, appWidgetId);
 
-		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
+		final LocalDate targetDate = LocalDate.now(ZoneId.systemDefault()).plusDays(daysOffset);
 		final String dateText = buildDateText(targetDate, showWeekday);
 		final PendingIntent pendingIntent = buildDayPendingIntent(context, targetDate, appWidgetId);
 
@@ -171,7 +172,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final int fontSizeOffset = WidgetPrefs.getFontSizeOffset(context, appWidgetId);
 		final boolean showWeekday = WidgetPrefs.isShowWeekday(context, appWidgetId);
 
-		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
+		final LocalDate targetDate = LocalDate.now(ZoneId.systemDefault()).plusDays(daysOffset);
 		final String dateText = buildDateText(targetDate, showWeekday);
 		final PendingIntent pendingIntent = buildDayPendingIntent(context, targetDate, appWidgetId);
 
@@ -238,7 +239,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 		final int daysOffset = WidgetPrefs.getDaysOffset(context, appWidgetId);
 		final boolean colorized = WidgetPrefs.isColorized(context, appWidgetId);
 		final boolean showWeekday = WidgetPrefs.isShowWeekday(context, appWidgetId);
-		final LocalDate targetDate = LocalDate.now().plusDays(daysOffset);
+		final LocalDate targetDate = LocalDate.now(ZoneId.systemDefault()).plusDays(daysOffset);
 		final String dateText = buildDateText(targetDate, showWeekday);
 
 		final Intent loginIntent = new Intent(context, LoginActivity.class);

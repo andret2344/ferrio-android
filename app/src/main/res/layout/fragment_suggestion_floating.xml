@@ -68,17 +68,70 @@
 				android:maxLines="2" />
 		</com.google.android.material.textfield.TextInputLayout>
 
-		<TextView
+		<LinearLayout
+			android:id="@+id/fragment_suggestion_floating_info"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:background="?attr/selectableItemBackground"
+			android:clickable="true"
+			android:focusable="true"
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:paddingTop="8dp"
+			android:paddingBottom="8dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/fragment_suggestion_floating_date">
+
+			<ImageView
+				android:layout_width="20dp"
+				android:layout_height="20dp"
+				android:contentDescription="@null"
+				android:src="@drawable/baseline_info_24"
+				app:tint="?android:attr/textColorSecondary" />
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="8dp"
+				android:layout_weight="1"
+				android:text="@string/report_note_toggle"
+				android:textAppearance="?attr/textAppearanceLabelLarge"
+				android:textColor="?android:attr/textColorSecondary" />
+
+			<ImageView
+				android:id="@+id/fragment_suggestion_floating_chevron"
+				android:layout_width="24dp"
+				android:layout_height="24dp"
+				android:contentDescription="@null"
+				android:src="@drawable/baseline_expand_more_24"
+				app:tint="?android:attr/textColorSecondary" />
+		</LinearLayout>
+
+		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/fragment_suggestion_floating_note"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:padding="5dp"
-			android:text="@string/report_note"
-			android:textAppearance="?attr/textAppearanceLabelSmall"
-			android:textColor="?android:attr/textColorSecondary"
+			android:layout_marginTop="4dp"
+			android:visibility="gone"
+			app:cardBackgroundColor="@color/surface_container_high"
+			app:cardCornerRadius="12dp"
+			app:cardElevation="0dp"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/fragment_suggestion_floating_date" />
+			app:layout_constraintTop_toBottomOf="@id/fragment_suggestion_floating_info"
+			app:strokeColor="@color/outline_variant"
+			app:strokeWidth="1dp">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="14dp"
+				android:text="@string/report_note"
+				android:textAppearance="?attr/textAppearanceBodySmall"
+				android:textColor="?android:attr/textColorSecondary" />
+		</com.google.android.material.card.MaterialCardView>
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/fragment_suggestion_floating_button_send"

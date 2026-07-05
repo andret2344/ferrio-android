@@ -34,12 +34,12 @@ public class MidnightWidgetRefreshWorker extends Worker {
 	}
 
 	public static void schedule(@NonNull final Context context) {
-		final ZonedDateTime nextMidnight = LocalDate.now()
+		final ZonedDateTime nextMidnight = LocalDate.now(ZoneId.systemDefault())
 				.plusDays(1)
 				.atTime(LocalTime.MIDNIGHT)
 				.atZone(ZoneId.systemDefault());
 		final long initialDelayMinutes = Math.max(1,
-				Duration.between(ZonedDateTime.now(), nextMidnight).toMinutes());
+				Duration.between(ZonedDateTime.now(ZoneId.systemDefault()), nextMidnight).toMinutes());
 
 		final PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
 				MidnightWidgetRefreshWorker.class, 1, TimeUnit.DAYS)

@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +69,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		if (result.getResultCode() == RESULT_OK) {
 			final Intent data = result.getData();
 			if (data != null) {
-				final int currentMonthValue = LocalDate.now().getMonthValue();
+				final int currentMonthValue = LocalDate.now(ZoneId.systemDefault()).getMonthValue();
 				binding.mainPagerMonths.setCurrentItem(data.getIntExtra(MONTH, currentMonthValue) - 1);
 			}
 		}
@@ -115,7 +116,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 		// Keep all 12 months pre-inflated so swiping to a non-adjacent month doesn't
 		// trigger a fresh layout + data bind on the UI thread.
 		binding.mainPagerMonths.setOffscreenPageLimit(11);
-		binding.mainPagerMonths.setCurrentItem(LocalDate.now().getMonthValue() - 1, false);
+		binding.mainPagerMonths.setCurrentItem(LocalDate.now(ZoneId.systemDefault()).getMonthValue() - 1, false);
 
 		binding.mainPagerMonths.registerOnPageChangeCallback(new androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
 			@Override
@@ -229,7 +230,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 	@Override
 	public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 		if (item.getItemId() == R.id.menu_main_today) {
-			binding.mainPagerMonths.setCurrentItem(LocalDate.now().getMonthValue() - 1);
+			binding.mainPagerMonths.setCurrentItem(LocalDate.now(ZoneId.systemDefault()).getMonthValue() - 1);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

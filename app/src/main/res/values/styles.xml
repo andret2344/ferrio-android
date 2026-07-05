@@ -6,6 +6,11 @@
 		<item name="cornerFamily">rounded</item>
 	</style>
 
+	<style name="SplashIconShape">
+		<item name="cornerSize">28dp</item>
+		<item name="cornerFamily">rounded</item>
+	</style>
+
 	<style name="Widget.UnusualHoliday.GoogleButton" parent="Widget.Material3.Button.OutlinedButton">
 		<item name="android:textColor">@color/button_text</item>
 		<item name="strokeColor">@color/button_border</item>

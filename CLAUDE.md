@@ -3,9 +3,13 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this
 repository.
 
-**Keep this file in sync with the code.** Whenever you change something this file describes —
-package names, architecture, conventions, SDK levels, dependencies, auth flow, etc. — update the
-corresponding section here in the same change. If a statement here becomes false, fix it.
+**Keep this file in sync with the code — always, in the same change.** This is a hard rule, not a
+suggestion. Whenever a change touches something this file describes — package names, architecture,
+conventions, SDK levels, dependencies, auth flow, patterns, test coverage, etc. — update the
+corresponding section here as part of the same commit. If a statement here becomes false, fix it.
+If a change introduces something new that belongs here (a new pattern, module, convention, or
+intentional non-default), add it — don't leave the file describing only the old state. A change
+that makes this file stale is considered incomplete.
 
 **Codex will review the code afterwards.** Assume an external reviewer (Codex) will read every
 change you make. Write code and PR descriptions that stand up to that review: clear intent,
@@ -44,8 +48,8 @@ request from the user:
   per-Runnable cancellation. `Handler` is fine for non-View-bound delays (services, app-scope
   scheduling).
 - **Manual singletons in `FerrioApplication`** (`AppRepository`, `ApiClient`) are deliberate
-  while test coverage is limited to `UtilTest`. Do not propose Hilt/Dagger unless the user
-  explicitly asks.
+  while test coverage stays limited to the handful of unit tests under `app/src/test/`. Do not
+  propose Hilt/Dagger unless the user explicitly asks.
 - **No Retrofit.** The custom OkHttp wrapper is intentional and tightly scoped; don't suggest
   migrating.
 
@@ -57,7 +61,8 @@ request from the user:
 ./gradlew test                # Run unit tests
 ```
 
-Unit tests live under `app/src/test/` (currently only `UtilTest`).
+Unit tests live under `app/src/test/` (`UtilTest`, `ApiExceptionTest`, `ReportStateAdapterTest`,
+`CancellableRequestTest`, `HolidayDayTest`).
 
 ## Project Overview
 
@@ -119,7 +124,9 @@ app's identifier.
 - String resource keys: `snake_case` (e.g., `settings_key_theme_colorized`).
 - **Date/time:** Always use `java.time` (`LocalDate`, `LocalTime`, `LocalDateTime`, `ZonedDateTime`)
   — never `java.util.Calendar` or `java.util.Date`. The `java.time` classes are thread-safe and
-  available via core library desugaring.
+  available via core library desugaring. Always call `.now(ZoneId.systemDefault())` explicitly
+  (never bare `.now()`): the calendar's "today" is the user's local date, so pass the zone to make
+  that intent explicit and satisfy lint. Bare `.now()` triggers the "specify the time zone" lint.
 - Locale: `Locale.ROOT` for machine-readable formatting, `Locale.getDefault()` for UI strings.
 - Languages: English (default) + Polish (`values-pl/`).
 - **Logcat tags:** Must start with `Ferrio-` prefix (e.g., `Ferrio-Widget`, `Ferrio-Api`) for easier

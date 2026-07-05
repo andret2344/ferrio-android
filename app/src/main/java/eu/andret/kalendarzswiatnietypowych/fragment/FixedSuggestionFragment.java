@@ -14,16 +14,20 @@ import com.google.gson.JsonObject;
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.FormResultHandler;
 import eu.andret.kalendarzswiatnietypowych.databinding.FragmentSuggestionFixedBinding;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
+import eu.andret.kalendarzswiatnietypowych.util.DeviceMetadata;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class FixedSuggestionFragment extends AuthenticatedFragment {
 	private Month selectedMonth;
@@ -53,7 +57,7 @@ public class FixedSuggestionFragment extends AuthenticatedFragment {
 		b.fragmentSuggestionFixedMonthValue.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, Month.values()));
 		b.fragmentSuggestionFixedMonthValue.setOnItemClickListener((parent, v, position, id) -> {
 			selectedMonth = Month.values()[position];
-			final int length = YearMonth.of(Year.now().getValue(), selectedMonth).lengthOfMonth();
+			final int length = YearMonth.of(Year.now(ZoneId.systemDefault()).getValue(), selectedMonth).lengthOfMonth();
 			final List<Integer> items = Stream.iterate(1, i -> i + 1)
 					.limit(length)
 					.collect(Collectors.toList());
@@ -71,6 +75,13 @@ public class FixedSuggestionFragment extends AuthenticatedFragment {
 		b.fragmentSuggestionFixedNameValue.addTextChangedListener((SimpleTextWatcher) () -> b.fragmentSuggestionFixedButtonSend.setEnabled(condition.getAsBoolean()));
 		b.fragmentSuggestionFixedDescriptionValue.addTextChangedListener((SimpleTextWatcher) () -> b.fragmentSuggestionFixedButtonSend.setEnabled(condition.getAsBoolean()));
 
+		b.fragmentSuggestionFixedName.setHint(Util.requiredHint(requireContext(), R.string.holiday_name));
+		b.fragmentSuggestionFixedDescription.setHint(Util.requiredHint(requireContext(), R.string.holiday_description));
+		b.fragmentSuggestionFixedMonth.setHint(Util.requiredHint(requireContext(), R.string.month));
+		b.fragmentSuggestionFixedDay.setHint(Util.requiredHint(requireContext(), R.string.day));
+
+		Util.bindExpandable(b.fragmentSuggestionFixedInfo, b.fragmentSuggestionFixedNote, b.fragmentSuggestionFixedChevron);
+
 		b.fragmentSuggestionFixedButtonSend.setOnClickListener(v -> {
 			final FormResultHandler handler = (FormResultHandler) requireActivity();
 			final Month month = selectedMonth;
@@ -82,18 +93,13 @@ public class FixedSuggestionFragment extends AuthenticatedFragment {
 			jsonObject.addProperty("day", day);
 			jsonObject.addProperty("name", name);
 			jsonObject.addProperty("description", description);
+			DeviceMetadata.addTo(jsonObject, requireActivity());
 			submitAuthenticated(
 					(token, cancel) -> getApiClient().post(
 							getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FIXED),
 							token, jsonObject.toString(), cancel),
 					handler::showSuccessDialog,
-					ex -> {
-						if (ex.isBanned()) {
-							handler.showBanDialog(ex.getBanReason());
-						} else {
-							handler.showErrorDialog();
-						}
-					});
+					handler::showSubmitError);
 		});
 	}
 

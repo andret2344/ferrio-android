@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
@@ -59,6 +60,10 @@ public class MonthFragment extends Fragment {
 	private String currentMode;
 	@NonNull
 	private Map<Integer, HolidayDay> latestDayMap = Collections.emptyMap();
+	// Stays false until the holiday map is delivered for the first time. Prevents binding the grid
+	// against the initial empty map, which would flash a "sad face" placeholder on every tile
+	// before the data has loaded.
+	private boolean dataLoaded;
 
 	@Override
 	public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -88,6 +93,7 @@ public class MonthFragment extends Fragment {
 		holidayViewModel.getHolidayDayMap()
 				.observe(getViewLifecycleOwner(), dayMap -> {
 					latestDayMap = dayMap;
+					dataLoaded = true;
 					submitDataset();
 				});
 		return binding.getRoot();
@@ -125,6 +131,9 @@ public class MonthFragment extends Fragment {
 	}
 
 	private void submitDataset() {
+		if (!dataLoaded) {
+			return;
+		}
 		final ListAdapter<HolidayDayViewModel, ? extends RecyclerView.ViewHolder> adapter = dayAdapter;
 		if (adapter == null) {
 			return;
@@ -139,12 +148,6 @@ public class MonthFragment extends Fragment {
 		final boolean includeUsual = preferences.includeUsualHolidays();
 		final boolean showAdult = preferences.showAdultContent();
 		final List<HolidayDay> daysInRange = repository.getHolidayDaysInDateRange(latestDayMap, before, after);
-		final long matureInRange = daysInRange.stream()
-				.flatMap(d -> d.getHolidays().stream())
-				.filter(Holiday::isMatureContent)
-				.count();
-		android.util.Log.d("Ferrio-MonthFragment", "month=" + currentMonth + " showAdult=" + showAdult
-				+ " matureInRange=" + matureInRange);
 		final List<HolidayDayViewModel> dataSet = daysInRange.stream()
 				.map(holidayDay -> convert(holidayDay, colorized, includeUsual, showAdult))
 				.collect(Collectors.toList());
@@ -182,7 +185,7 @@ public class MonthFragment extends Fragment {
 	}
 
 	private LocalDate getBefore() {
-		final LocalDate date = LocalDate.of(LocalDate.now().getYear(), currentMonth, 1);
+		final LocalDate date = LocalDate.of(LocalDate.now(ZoneId.systemDefault()).getYear(), currentMonth, 1);
 		if (date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
 			return date.minusWeeks(1);
 		}
@@ -202,7 +205,7 @@ public class MonthFragment extends Fragment {
 			holidayDayViewModel.cardBackgroundColor = ContextCompat.getColor(context, R.color.tile_current_month);
 		}
 
-		final LocalDate now = LocalDate.now();
+		final LocalDate now = LocalDate.now(ZoneId.systemDefault());
 		holidayDayViewModel.strokeColor = ContextCompat.getColor(context, R.color.today_outline);
 		if (holidayDay.getDay() == now.getDayOfMonth() && holidayDay.getMonth() == now.getMonthValue()) {
 			holidayDayViewModel.strokeWidth = 4;

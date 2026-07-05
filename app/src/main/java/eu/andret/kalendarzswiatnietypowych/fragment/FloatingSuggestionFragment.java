@@ -11,10 +11,13 @@ import com.google.gson.JsonObject;
 
 import java.util.function.BooleanSupplier;
 
+import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.activity.FormResultHandler;
 import eu.andret.kalendarzswiatnietypowych.databinding.FragmentSuggestionFloatingBinding;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
+import eu.andret.kalendarzswiatnietypowych.util.DeviceMetadata;
 import eu.andret.kalendarzswiatnietypowych.util.SimpleTextWatcher;
+import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class FloatingSuggestionFragment extends AuthenticatedFragment {
 	@Nullable
@@ -49,22 +52,23 @@ public class FloatingSuggestionFragment extends AuthenticatedFragment {
 			jsonObject.addProperty("date", date);
 			jsonObject.addProperty("name", name);
 			jsonObject.addProperty("description", description);
+			DeviceMetadata.addTo(jsonObject, requireActivity());
 			submitAuthenticated(
 					(token, cancel) -> getApiClient().post(
 							getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FLOATING),
 							token, jsonObject.toString(), cancel),
 					handler::showSuccessDialog,
-					ex -> {
-						if (ex.isBanned()) {
-							handler.showBanDialog(ex.getBanReason());
-						} else {
-							handler.showErrorDialog();
-						}
-					});
+					handler::showSubmitError);
 		});
 
 		b.fragmentSuggestionFloatingNameValue.addTextChangedListener((SimpleTextWatcher) () -> b.fragmentSuggestionFloatingButtonSend.setEnabled(condition.getAsBoolean()));
 		b.fragmentSuggestionFloatingDescriptionValue.addTextChangedListener((SimpleTextWatcher) () -> b.fragmentSuggestionFloatingButtonSend.setEnabled(condition.getAsBoolean()));
+
+		b.fragmentSuggestionFloatingName.setHint(Util.requiredHint(requireContext(), R.string.holiday_name));
+		b.fragmentSuggestionFloatingDescription.setHint(Util.requiredHint(requireContext(), R.string.holiday_description));
+		b.fragmentSuggestionFloatingDate.setHint(Util.requiredHint(requireContext(), R.string.date));
+
+		Util.bindExpandable(b.fragmentSuggestionFloatingInfo, b.fragmentSuggestionFloatingNote, b.fragmentSuggestionFloatingChevron);
 	}
 
 	@Override

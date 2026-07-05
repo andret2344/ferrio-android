@@ -37,7 +37,8 @@
 	<string name="holiday_description">Opis święta</string>
 	<string name="reason">Powód</string>
 	<string name="description">Opis</string>
-	<string name="report_note">Zgłoszenia i sugestie zawierające opis będą sprawdzane w pierwszej kolejności.</string>
+	<string name="report_note">Dziękujemy, że pomagasz rozwijać kalendarz! Każde zgłoszenie sprawdzamy ręcznie, dlatego prosimy o wartościowe treści - spam, zgłoszenia niemające merytorycznej treści oraz powtarzające się lub zduplikowane mogą zostać usunięte bez wcześniejszego ostrzeżenia. Dziękujemy za zrozumienie i pomoc w ulepszaniu aplikacji!</string>
+	<string name="report_note_toggle">Zasady zgłaszania</string>
 	<string name="send_report">Wyślij zgłoszenie</string>
 	<string name="application">Aplikacja</string>
 	<string name="suggest_holiday">Zasugeruj święto</string>

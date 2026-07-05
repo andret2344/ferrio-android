@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.util.Random;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -89,7 +90,7 @@ public class DayActivity extends BaseActivity {
 			return true;
 		}
 		if (item.getItemId() == R.id.menu_day_today) {
-			final LocalDate now = LocalDate.now();
+			final LocalDate now = LocalDate.now(ZoneId.systemDefault());
 			binding.dayPagerDays.setCurrentItem(Util.calculateIndex(now.getMonthValue(), now.getDayOfMonth()), true);
 			return true;
 		}
