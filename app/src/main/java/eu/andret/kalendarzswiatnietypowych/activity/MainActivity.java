@@ -246,7 +246,7 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 				.map(holidayDay -> holidayDay.getHolidaysList(includeUsual, showAdult))
 				.mapToLong(Collection::size)
 				.sum();
-		searchView.setQueryHint(getString(R.string.search_placeholder, holidaysCount));
+		searchView.setQueryHint(getResources().getQuantityString(R.plurals.search_placeholder, (int) holidaysCount, holidaysCount));
 	}
 
 	private void setUpNavDrawer() {

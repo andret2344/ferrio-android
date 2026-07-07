@@ -1,4 +1,5 @@
 /.claude/
 /.gradle/
+/build/
+/graphify-out/
 /local.properties
-/build

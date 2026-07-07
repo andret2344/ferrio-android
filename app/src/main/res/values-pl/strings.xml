@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="unusual_holiday">Nietypowe święto</string>
 	<string name="share_via">Udostępnij przez</string>
-	<string name="today_is">Dzisiaj jest:</string>
-	<string name="share">Udostępnij</string>
-	<string name="yes">Tak</string>
-	<string name="no">Nie</string>
 	<string name="ok">OK</string>
-	<string name="caution">Uwaga!</string>
-	<string name="see_more">%d więcej</string>
+	<plurals name="see_more">
+		<item quantity="one">%d więcej</item>
+		<item quantity="few">%d więcej</item>
+		<item quantity="many">%d więcej</item>
+		<item quantity="other">%d więcej</item>
+	</plurals>
 	<string name="calendar">Kalendarz</string>
 
 	<string name="menu_today">Dzisiaj</string>
@@ -18,7 +17,6 @@
 	<string name="menu_day_random">Losowe</string>
 	<string name="menu_day_share">Udostępnij</string>
 	<string name="menu_holiday_favorite">Ulubione</string>
-	<string name="menu_holiday_report">Zgłoś</string>
 	<string name="no_internet_connection">Brak połączenia z internetem.</string>
 	<string name="no_unusual_holidays">Brak nietypowych świąt.</string>
 	<string name="no_internet">Urządzenie nie jest połączone z internetem.</string>
@@ -45,7 +43,12 @@
 	<string name="my_reports">Moje zgłoszenia</string>
 	<string name="my_suggestions">Moje sugestie</string>
 	<string name="anonymous_user">Użytkownik anonimowy</string>
-	<string name="search_placeholder">Wyszukaj wśród %d świąt…</string>
+	<plurals name="search_placeholder">
+		<item quantity="one">Wyszukaj wśród %d święta…</item>
+		<item quantity="few">Wyszukaj wśród %d świąt…</item>
+		<item quantity="many">Wyszukaj wśród %d świąt…</item>
+		<item quantity="other">Wyszukaj wśród %d świąt…</item>
+	</plurals>
 	<string name="no_description">Brak opisu</string>
 	<string name="fixed">Nieruchome</string>
 	<string name="floating">Ruchome</string>
@@ -86,7 +89,6 @@
 	<string name="content_description_ad">Reklama</string>
 	<string name="content_description_icon_sad">Smuta ikona</string>
 	<string name="content_description_icon_sad_appendix">Smutna ikona $1%s</string>
-	<string name="content_description_more">więcej</string>
 	<string name="content_description_image">zdjęcie</string>
 	<string name="content_description_drawer_open">Otwórz menu</string>
 	<string name="content_description_drawer_close">Zamknij menu</string>
@@ -101,6 +103,7 @@
 	<string name="widget_error">Nie udało się załadować świąt (%1$s). Prosimy o cierpliwość do chwili, gdy problem zostanie rozwiązany.</string>
 	<string name="widget_login_required">Zaloguj się, aby zobaczyć święta</string>
 	<string name="auth_failed">Uwierzytelnianie nie powiodło się</string>
+	<string name="auth_no_credential">Nie znaleziono konta Google na tym urządzeniu</string>
 	<string name="auth_no_internet">Brak połączenia z internetem</string>
 
 	<!-- widget -->

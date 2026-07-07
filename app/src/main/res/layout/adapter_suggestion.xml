@@ -93,7 +93,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginHorizontal="6dp"
-					android:text="\u00B7"
+					android:text="@string/middot"
 					android:textAppearance="?attr/textAppearanceLabelSmall"
 					android:textColor="?android:attr/textColorTertiary" />
 

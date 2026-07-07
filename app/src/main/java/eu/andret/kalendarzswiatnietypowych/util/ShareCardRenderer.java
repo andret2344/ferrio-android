@@ -71,7 +71,8 @@ public final class ShareCardRenderer {
 		}
 
 		if (holidays.size() > MAX_HOLIDAYS_DISPLAYED) {
-			binding.shareCardMore.setText(context.getString(R.string.see_more, holidays.size() - MAX_HOLIDAYS_DISPLAYED));
+			final int moreCount = holidays.size() - MAX_HOLIDAYS_DISPLAYED;
+			binding.shareCardMore.setText(context.getResources().getQuantityString(R.plurals.see_more, moreCount, moreCount));
 			binding.shareCardMore.setVisibility(View.VISIBLE);
 		}
 

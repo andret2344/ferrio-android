@@ -43,6 +43,7 @@ import eu.andret.kalendarzswiatnietypowych.entity.HolidayDay;
 import eu.andret.kalendarzswiatnietypowych.persistence.AppRepository;
 import eu.andret.kalendarzswiatnietypowych.persistence.HolidayViewModel;
 import eu.andret.kalendarzswiatnietypowych.util.PreferenceHelper;
+import eu.andret.kalendarzswiatnietypowych.util.TypefaceStyle;
 import eu.andret.kalendarzswiatnietypowych.util.Util;
 
 public class MonthFragment extends Fragment {
@@ -236,7 +237,7 @@ public class MonthFragment extends Fragment {
 		}
 
 		if (holidaysCountIndicator > 0) {
-			holidayDayViewModel.moreText = context.getString(R.string.see_more, holidaysCountIndicator);
+			holidayDayViewModel.moreText = context.getResources().getQuantityString(R.plurals.see_more, holidaysCountIndicator, holidaysCountIndicator);
 		}
 
 		return holidayDayViewModel;
@@ -252,6 +253,7 @@ public class MonthFragment extends Fragment {
 		private int sadImageVisibility = View.INVISIBLE;
 		private String date;
 		private int holidayCount;
+		@TypefaceStyle
 		private int typeFace;
 		private String holidayText;
 		private String moreText;
@@ -298,6 +300,7 @@ public class MonthFragment extends Fragment {
 			return holidayCount;
 		}
 
+		@TypefaceStyle
 		public int getTypeFace() {
 			return typeFace;
 		}

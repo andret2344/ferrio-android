@@ -19,6 +19,7 @@
 			android:id="@+id/navigation_drawer_image"
 			android:layout_width="match_parent"
 			android:layout_height="80dp"
+			android:contentDescription="@string/content_description_icon_main"
 			android:scaleType="centerCrop" />
 	</androidx.cardview.widget.CardView>
 

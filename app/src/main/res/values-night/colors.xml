@@ -5,7 +5,6 @@
 	<color name="background">#1A1110</color>
 	<color name="surface">#1A1110</color>
 	<color name="surface_variant">#52443C</color>
-	<color name="card_background">#2C2018</color>
 
 	<!-- Surface containers (M3) -->
 	<color name="surface_container_lowest">#110C0A</color>
@@ -37,7 +36,6 @@
 	<color name="outline_variant">#52443C</color>
 
 	<!-- Buttons -->
-	<color name="button_background">#302925</color>
 	<color name="button_border">#52443C</color>
 	<color name="button_text">#EDE0DB</color>
 
@@ -49,16 +47,11 @@
 	<color name="tile_other_month">#1E1E1E</color>
 
 	<!-- Legacy references -->
-	<color name="background_secondary">#2A2A2A</color>
-	<color name="background_accent">#201A17</color>
 	<color name="today_outline">#EF5350</color>
 
 	<!-- Semantic colors -->
 	<color name="error">#FFB4AB</color>
 	<color name="on_error">#690005</color>
-	<color name="success">#81C784</color>
-	<color name="warning">#FFD54F</color>
-	<color name="info">#64B5F6</color>
 
 	<!-- Transparent widget -->
 	<color name="widget_transparent_background">#48000000</color>

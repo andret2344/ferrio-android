@@ -68,7 +68,8 @@
 				android:layout_height="32dp"
 				android:contentDescription="@string/content_description_icon_sad"
 				android:src="@drawable/baseline_emoji_sad"
-				android:tint="@color/widget_transparent_text" />
+				android:tint="@color/widget_transparent_text"
+				tools:ignore="UseAppTint" />
 
 			<TextView
 				android:layout_width="wrap_content"
@@ -114,7 +115,8 @@
 			android:layout_marginTop="8dp"
 			android:contentDescription="@string/widget_login_required"
 			android:src="@drawable/baseline_login_24"
-			android:tint="@color/widget_transparent_text" />
+			android:tint="@color/widget_transparent_text"
+			tools:ignore="UseAppTint" />
 
 	</LinearLayout>
 

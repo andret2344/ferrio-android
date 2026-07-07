@@ -20,6 +20,7 @@ import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.core.content.ContextCompat;
 import androidx.credentials.exceptions.GetCredentialException;
+import androidx.credentials.exceptions.NoCredentialException;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
@@ -166,6 +167,11 @@ public class LoginActivity extends AppCompatActivity {
 					@Override
 					public void onError(@NonNull final GetCredentialException e) {
 						binding.activityLoginLayoutProgress.setVisibility(View.GONE);
+						if (e instanceof NoCredentialException) {
+							Log.w(TAG, "No Google credential available on device", e);
+							authViewModel.reportError(getString(R.string.auth_no_credential));
+							return;
+						}
 						Log.e(TAG, "Sign-in fallback failed", e);
 						authViewModel.reportError(e.getMessage() != null ? e.getMessage() : getString(R.string.auth_failed));
 					}
