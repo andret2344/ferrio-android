@@ -54,6 +54,7 @@ public class FloatingSuggestionFragment extends AuthenticatedFragment {
 			jsonObject.addProperty("description", description);
 			DeviceMetadata.addTo(jsonObject, requireActivity());
 			submitAuthenticated(
+					b.fragmentSuggestionFloatingButtonSend,
 					(token, cancel) -> getApiClient().post(
 							getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FLOATING),
 							token, jsonObject.toString(), cancel),

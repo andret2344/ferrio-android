@@ -61,6 +61,7 @@
 	<string name="month">Month</string>
 	<string name="day">Day</string>
 	<string name="send">Send</string>
+	<string name="sending">Sending…</string>
 	<string name="suggestion_title">Successfully sent the suggestion</string>
 	<string name="suggestion_message">The holiday has been recorded and will now be verified. You\'ll be informed when the holiday is verified.</string>
 	<string name="error_title">Error!</string>

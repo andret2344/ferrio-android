@@ -5,16 +5,20 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import eu.andret.kalendarzswiatnietypowych.FerrioApplication;
+import eu.andret.kalendarzswiatnietypowych.R;
 import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.ApiException;
 import eu.andret.kalendarzswiatnietypowych.util.AuthHelper;
 import eu.andret.kalendarzswiatnietypowych.util.CancellableRequest;
+import eu.andret.kalendarzswiatnietypowych.util.LoadingButton;
 
 public abstract class AuthenticatedFragment extends Fragment {
 	private final List<CancellableRequest> pendingRequests = new ArrayList<>();
@@ -52,9 +56,11 @@ public abstract class AuthenticatedFragment extends Fragment {
 	}
 
 	protected void submitAuthenticated(
+			@NonNull final MaterialButton button,
 			@NonNull final SubmitFunction submitter,
 			@NonNull final Runnable onSuccess,
 			@NonNull final Consumer<ApiException> onError) {
+		final Runnable restoreButton = LoadingButton.start(button, R.string.sending);
 		final CancellableRequest cancel = new CancellableRequest();
 		pendingRequests.add(cancel);
 		CompletableFuture.runAsync(() -> {
@@ -64,6 +70,7 @@ public abstract class AuthenticatedFragment extends Fragment {
 				throw new RuntimeException(ex);
 			}
 		}, FerrioApplication.IO_EXECUTOR).whenComplete((result, throwable) -> postToView(() -> {
+			restoreButton.run();
 			pendingRequests.remove(cancel);
 			if (throwable != null) {
 				onError.accept(unwrapApiException(throwable));

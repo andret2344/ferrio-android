@@ -95,6 +95,7 @@ public class FixedSuggestionFragment extends AuthenticatedFragment {
 			jsonObject.addProperty("description", description);
 			DeviceMetadata.addTo(jsonObject, requireActivity());
 			submitAuthenticated(
+					b.fragmentSuggestionFixedButtonSend,
 					(token, cancel) -> getApiClient().post(
 							getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_SUGGESTION, ApiClient.HOLIDAY_TYPE_FIXED),
 							token, jsonObject.toString(), cancel),

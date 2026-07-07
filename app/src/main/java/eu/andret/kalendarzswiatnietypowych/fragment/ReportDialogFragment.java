@@ -86,6 +86,7 @@ public class ReportDialogFragment extends AuthenticatedDialogFragment {
 				DeviceMetadata.addTo(payload, activity);
 				final String body = payload.toString();
 				submitAuthenticated(
+						b.dialogReportButtonSend,
 						(token, cancel) -> getApiClient().post(
 								getApiClient().buildReportsUrl(ApiClient.REPORT_TYPE_ERROR, holidayType),
 								token, body, cancel),

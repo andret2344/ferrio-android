@@ -56,6 +56,7 @@
 	<string name="month">Miesiąc</string>
 	<string name="day">Dzień</string>
 	<string name="send">Wyślij</string>
+	<string name="sending">Wysyłanie…</string>
 	<string name="suggestion_title">Wysłano sugestię</string>
 	<string name="suggestion_message">Sugestia święta została zapisana i zostanie zweryfikowana. Poinformujemy, kiedy tylko weryfikacja się zakończy.</string>
 	<string name="error_title">Błąd!</string>
