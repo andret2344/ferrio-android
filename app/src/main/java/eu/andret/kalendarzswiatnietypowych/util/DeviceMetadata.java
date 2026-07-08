@@ -25,8 +25,8 @@ public final class DeviceMetadata {
 
 	/**
 	 * Attaches a nested {@code device} object ({@code platform}, {@code model}, {@code os_version},
-	 * {@code app_version} and, when resolvable, {@code country}) to the given request body. Keys
-	 * match the API's {@code DeviceDTO} shape.
+	 * {@code app_version}, {@code app_build} and, when resolvable, {@code country}) to the given
+	 * request body. Keys match the API's {@code DeviceDTO} shape.
 	 */
 	public static void addTo(@NonNull final JsonObject body, @NonNull final Context context) {
 		final JsonObject device = new JsonObject();
@@ -34,6 +34,7 @@ public final class DeviceMetadata {
 		device.addProperty("model", getRealDevice());
 		device.addProperty("os_version", Build.VERSION.RELEASE);
 		device.addProperty("app_version", BuildConfig.VERSION_NAME);
+		device.addProperty("app_build", BuildConfig.VERSION_CODE);
 		final String country = getDeviceCountry(context);
 		if (country != null) {
 			device.addProperty("country", country);
