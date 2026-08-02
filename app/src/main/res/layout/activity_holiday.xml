@@ -107,7 +107,7 @@
 				android:fadingEdgeLength="@dimen/activity_holiday_scroll_fading_edge"
 				android:requiresFadingEdge="vertical"
 				app:layout_constrainedHeight="true"
-				app:layout_constraintBottom_toTopOf="@id/activity_holiday_buttons"
+				app:layout_constraintBottom_toTopOf="@id/activity_holiday_ai_badge"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/activity_holiday_date"
@@ -121,6 +121,47 @@
 					android:orientation="vertical" />
 			</ScrollView>
 
+			<!-- Sits below the ScrollView on purpose: the AI disclosure must stay visible without
+				 scrolling, so it is pinned above the buttons instead of travelling with the text. -->
+			<LinearLayout
+				android:id="@+id/activity_holiday_ai_badge"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				android:orientation="horizontal"
+				android:visibility="gone"
+				app:layout_constraintBottom_toTopOf="@id/activity_holiday_buttons"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/activity_holiday_scroll">
+
+				<ImageView
+					android:id="@+id/activity_holiday_ai_icon"
+					android:layout_width="14dp"
+					android:layout_height="14dp"
+					android:contentDescription="@null"
+					android:src="@drawable/baseline_auto_awesome_24"
+					app:tint="?android:attr/textColorTertiary" />
+
+				<TextView
+					android:id="@+id/activity_holiday_ai_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="6dp"
+					android:text="@string/ai_content"
+					android:textAppearance="?attr/textAppearanceLabelSmall"
+					android:textColor="?android:attr/textColorTertiary" />
+
+				<ImageView
+					android:id="@+id/activity_holiday_ai_help"
+					android:layout_width="48dp"
+					android:layout_height="48dp"
+					android:background="?attr/selectableItemBackgroundBorderless"
+					android:contentDescription="@string/content_description_ai_content_info"
+					android:padding="15dp"
+					android:src="@drawable/baseline_help_outline_24"
+					app:tint="?android:attr/textColorTertiary" />
+			</LinearLayout>
+
 			<LinearLayout
 				android:id="@+id/activity_holiday_buttons"
 				android:layout_width="wrap_content"
@@ -129,7 +170,7 @@
 				android:paddingBottom="@dimen/activity_holiday_buttons_padding_bottom"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/activity_holiday_scroll">
+				app:layout_constraintTop_toBottomOf="@id/activity_holiday_ai_badge">
 
 				<com.google.android.material.button.MaterialButton
 					android:id="@+id/activity_holiday_button_report"

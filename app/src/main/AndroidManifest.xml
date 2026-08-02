@@ -43,6 +43,9 @@
 			android:name=".activity.TabbedListActivity"
 			android:exported="false" />
 		<activity
+			android:name=".activity.FaqActivity"
+			android:exported="false" />
+		<activity
 			android:name=".activity.DayActivity"
 			android:exported="false" />
 		<activity

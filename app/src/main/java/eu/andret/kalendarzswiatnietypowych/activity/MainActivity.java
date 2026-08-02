@@ -301,6 +301,9 @@ public class MainActivity extends BaseActivity implements DayClickListener {
 			} else if (menuItem.getItemId() == R.id.menu_drawer_settings) {
 				startActivity(new Intent(this, SettingsActivity.class));
 				drawer.close();
+			} else if (menuItem.getItemId() == R.id.menu_drawer_faq) {
+				startActivity(new Intent(this, FaqActivity.class));
+				drawer.close();
 			} else if (menuItem.getItemId() == R.id.menu_drawer_about) {
 				createAboutCalendarAlert().show();
 			}

@@ -82,6 +82,40 @@
 	<string name="close">Zamknij</string>
 	<string name="content_description_has_comment">Zawiera notatkę moderatora</string>
 
+	<!-- FAQ -->
+	<string name="faq">FAQ</string>
+	<string name="faq_question_hidden_holidays">Nie widzę części świąt. Dlaczego?</string>
+	<string name="faq_answer_hidden_holidays"><![CDATA[Widoczność świąt zależy od dwóch ustawień, domyślnie wyłączonych. Ustawienie <b>Uwzględniaj święta typowe</b> włącza święta powszechnie znane, takie jak Sylwester. Ustawienie <b>Treści dla dorosłych</b> odsłania święta oznaczone jako 18+, a jego włączenie wymaga potwierdzenia wieku.]]></string>
+	<string name="faq_question_view_modes">Czym różnią się tryby widoku miesiąca?</string>
+	<string name="faq_answer_view_modes"><![CDATA[Dostępne są trzy tryby, przełączane w Ustawieniach. W trybie <b>prostym</b> kratka zawiera wyłącznie numer dnia, co zapewnia najlepszą czytelność samego kalendarza. Tryb <b>kompaktowy</b>, używany domyślnie, dodaje liczbę świąt przypadających na dany dzień. Tryb <b>szczegółowy</b> prezentuje numer dnia, nazwę pierwszego święta (skracaną, jeżeli jest długa) oraz informację \"+N więcej\", a święta typowe wyróżnia pogrubieniem; pokazuje najwięcej informacji kosztem miejsca w kratce.<br/><br/>We wszystkich trybach dzień pozbawiony świąt, po uwzględnieniu ustawionych filtrów, oznaczany jest smutną ikoną. Jeżeli takich dni jest wyjątkowo dużo, sprawdź ustawienia opisane w pytaniu 1.]]></string>
+	<string name="faq_question_missing_holiday">Dlaczego brakuje święta X?</string>
+	<string name="faq_answer_missing_holiday"><![CDATA[Baza świąt podlega stałej moderacji i jest rozbudowywana na podstawie zgłoszeń użytkowników oraz świąt wyszukiwanych przez moderatorów. Jeżeli brakuje konkretnego święta, zasugeruj je: <b>Menu » \"Zasugeruj święto\"</b>. Dołączenie wiarygodnego źródła znacząco przyspiesza rozpatrzenie sugestii.]]></string>
+	<string name="faq_question_who_writes">Kto pisze opisy świąt?</string>
+	<string name="faq_answer_who_writes"><![CDATA[Opisy świąt w Ferrio są w całości generowane przez sztuczną inteligencję na podstawie ogólnodostępnych źródeł. Nie powstają pod nadzorem redakcyjnym ani nie mają autora, dlatego należy traktować je jako punkt wyjścia, a nie jako źródło: model może pomylić datę, nazwisko lub okoliczności historyczne, zachowując przy tym pozory pewności. Istotne informacje warto zweryfikować w innych źródłach, a zauważone błędy zgłosić - są one poprawiane.<br/><br/>Formalnie: opisy tworzone przez sztuczną inteligencję są oznaczone etykietą \"Wygenerowane przez AI\", zgodnie z wymogami przejrzystości rozporządzenia (UE) 2024/1689 (AI Act).]]></string>
+	<string name="faq_question_report_error">Znalazłem błąd w opisie albo w dacie. Co zrobić?</string>
+	<string name="faq_answer_report_error"><![CDATA[Otwórz święto i wybierz \"Zgłoś\". Zgłoszenie trafia do moderatora, a jego decyzja widoczna jest w <b>Menu » \"Moje zgłoszenia\"</b>. Rozpatrzenie zajmuje zwykle do tygodnia; w przypadku zgłoszeń złożonych lub nieobecności moderatora może potrwać do miesiąca. Proste błędy poprawiane są ręcznie, bardziej złożone wymagają ponownego wygenerowania opisu.]]></string>
+	<string name="faq_question_suggest">Jak zasugerować nowe święto?</string>
+	<string name="faq_answer_suggest"><![CDATA[Wybierz <b>Menu » \"Zasugeruj święto\"</b>, a następnie określ typ święta: <b>nieruchome</b> (przypada zawsze tego samego dnia, na przykład 2 sierpnia) albo <b>ruchome</b> (data wyznaczana regułą, na przykład drugi wtorek miesiąca).]]></string>
+	<string name="faq_question_statuses">Co oznaczają statusy moich zgłoszeń i sugestii?</string>
+	<string name="faq_answer_statuses"><![CDATA[Status <b>Zgłoszone</b> oznacza, że pozycja oczekuje na decyzję moderatora, a <b>Wstrzymane</b>, że moderator wstrzymał tę decyzję. <b>Zatwierdzone</b> oznacza przyjęcie i obecność święta w kalendarzu; ten sam skutek ma <b>Już istnieje</b>, gdy święto znajdowało się w nim wcześniej. <b>Odrzucone</b> oznacza nieprzyjęcie, a <b>Duplikat</b>, że identyczne zgłoszenie wpłynęło wcześniej. <b>Nieznane</b> to stan nierozpoznany przez aplikację; jeżeli się pojawi, prosimy o zgłoszenie błędu.<br/><br/>Pozycje opatrzone notatką moderatora oznaczone są ikoną komentarza, która otwiera jej treść.]]></string>
+	<string name="faq_question_rejected">Dlaczego moja sugestia została odrzucona?</string>
+	<string name="faq_answer_rejected"><![CDATA[Każde odrzucenie zawiera komentarz moderatora z uzasadnieniem - otwórz pozycję w \"Moich sugestiach\" i zapoznaj się z notatką. Najczęstszą przyczyną jest brak wiarygodnego źródła potwierdzającego istnienie święta.]]></string>
+	<string name="faq_question_account_types">Czym różni się konto anonimowe od konta Google?</string>
+	<string name="faq_answer_account_types"><![CDATA[Konto anonimowe umożliwia przeglądanie kalendarza, otwieranie opisów oraz wyszukiwanie świąt. Konto Google dodatkowo pozwala sugerować nowe święta, zgłaszać błędy oraz przeglądać historię własnych wysyłek wraz ze statusami i notatkami moderatora. Nieaktywny przycisk \"Zgłoś\" lub brak dostępu do \"Moich sugestii\" oznacza korzystanie z konta anonimowego. Zalogowanie się jest możliwe w dowolnym momencie i nie powoduje utraty dotychczasowego dostępu.]]></string>
+	<string name="faq_question_delete_account">Czy mogę usunąć konto i dane?</string>
+	<string name="faq_answer_delete_account"><![CDATA[Konto anonimowe usuwane jest automatycznie w chwili wylogowania i nie pozostawia żadnych danych. W przypadku konta Google prosimy o kontakt na adres wskazany w polityce prywatności: <a href="https://ferrio.app/pl/privacy">ferrio.app/pl/privacy</a>.]]></string>
+	<string name="faq_question_offline">Czy aplikacja działa offline?</string>
+	<string name="faq_answer_offline"><![CDATA[Tak. Święta zapisywane są na urządzeniu i pozostają dostępne bez połączenia z internetem. Sieć wymagana jest do odświeżenia danych, logowania oraz wysyłania sugestii i zgłoszeń.]]></string>
+	<string name="faq_question_data_freshness">Skąd wiadomo, że mam aktualne dane?</string>
+	<string name="faq_answer_data_freshness"><![CDATA[Aplikacja pobiera święta przy uruchomieniu, po przeciągnięciu listy w dół oraz po zmianie ustawień filtrowania. Niepowodzenie pobierania sygnalizowane jest paskiem z przyciskiem \"Ponów\".]]></string>
+	<string name="faq_question_widget">Widget nie pokazuje dzisiejszego dnia.</string>
+	<string name="faq_answer_widget"><![CDATA[Widget odświeża się samoczynnie o północy oraz mniej więcej co 30 minut, a także po każdym odświeżeniu danych w aplikacji i po zmianie ustawień. Jeżeli prezentuje nieaktualną zawartość, uruchom aplikację i przeciągnij listę w dół. Gdy to nie przyniesie skutku, usuń widget z ekranu i dodaj go ponownie - jest to najpewniejszy sposób wymuszenia odbudowy.]]></string>
+
+	<!-- AI generated content -->
+	<string name="ai_content">Wygenerowane przez AI</string>
+	<string name="ai_content_title">Treść wygenerowana przez AI</string>
+	<string name="ai_content_message">Opis tego święta został wygenerowany przez sztuczną inteligencję na podstawie ogólnodostępnych źródeł.\n\nNie napisał go człowiek i może zawierać nieścisłości. Ważne fakty warto zweryfikować w innych źródłach.\n\nJeśli zauważysz błąd, zgłoś go - każde zgłoszenie trafia do moderatora.</string>
+
 	<!-- refresh -->
 	<string name="refresh_error">Nie udało się odświeżyć świąt</string>
 	<string name="retry">Ponów</string>
@@ -97,6 +131,10 @@
 	<string name="content_description_search_results">Wynik wyszukiwania</string>
 	<string name="content_description_icon_main">Główna ikona</string>
 	<string name="content_description_open_holiday">Otwórz szczegóły święta</string>
+	<string name="content_description_ai_content_info">Co oznacza: wygenerowane przez AI?</string>
+	<string name="content_description_faq_list">Lista najczęściej zadawanych pytań</string>
+	<string name="content_description_faq_expand">Pokaż odpowiedź</string>
+	<string name="content_description_faq_collapse">Ukryj odpowiedź</string>
 	<string name="international">Międzynarodowe</string>
 
 	<string name="loading">Ładowanie…</string>

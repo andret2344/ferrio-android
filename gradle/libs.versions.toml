@@ -33,7 +33,7 @@ assertj = "3.27.7"
 junit = "4.13.2"
 
 # plugins
-plugin-application = "9.2.1"
+plugin-application = "9.3.1"
 plugin-google-services = "4.5.0"
 
 [libraries]

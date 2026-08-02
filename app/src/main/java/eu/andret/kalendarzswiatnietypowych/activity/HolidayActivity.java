@@ -18,6 +18,8 @@ import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.time.Month;
 
 import eu.andret.kalendarzswiatnietypowych.R;
@@ -86,6 +88,15 @@ public class HolidayActivity extends BaseActivity {
 					tv.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.activity_holiday_paragraph_spacing));
 					binding.activityHolidayDescriptionContainer.addView(tv);
 				}
+			}
+			if (holiday.isAiGenerated()) {
+				binding.activityHolidayAiBadge.setVisibility(View.VISIBLE);
+				binding.activityHolidayAiHelp.setOnClickListener(v ->
+						new MaterialAlertDialogBuilder(this)
+								.setTitle(R.string.ai_content_title)
+								.setMessage(R.string.ai_content_message)
+								.setPositiveButton(R.string.ok, null)
+								.show());
 			}
 			final String url = holiday.getUrl();
 			if (url != null && !url.isBlank()) {

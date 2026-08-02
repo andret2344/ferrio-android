@@ -23,6 +23,10 @@
 				android:icon="@drawable/baseline_settings_24"
 				android:title="@string/menu_main_settings" />
 			<item
+				android:id="@+id/menu_drawer_faq"
+				android:icon="@drawable/baseline_help_outline_24"
+				android:title="@string/faq" />
+			<item
 				android:id="@+id/menu_drawer_about"
 				android:icon="@drawable/baseline_info_24"
 				android:title="@string/about_calendar" />

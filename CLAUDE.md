@@ -11,6 +11,16 @@ If a change introduces something new that belongs here (a new pattern, module, c
 intentional non-default), add it — don't leave the file describing only the old state. A change
 that makes this file stale is considered incomplete.
 
+**Keep the in-app FAQ current — but ask, don't guess.** The FAQ (`FaqCatalog`, see Key Patterns)
+describes user-facing behaviour, and a change can silently make an answer wrong or leave a new
+feature undocumented. Whenever a change touches something a user would ask about — a setting, a
+filter, a status, the auth flow, the widget, the share card, where content comes from, the refresh
+or offline behaviour — **ask the user whether it should be added to or corrected in the FAQ before
+finishing the change.** Ask explicitly, name the entry you have in mind, and propose the wording;
+do not add or reword FAQ entries on your own initiative, and do not assume silence means no. The
+same applies in reverse: if you notice an existing answer that no longer matches the code, raise
+it even when the current task did not cause the drift.
+
 **Codex will review the code afterwards.** Assume an external reviewer (Codex) will read every
 change you make. Write code and PR descriptions that stand up to that review: clear intent,
 no dead/speculative code, no unexplained reverts of prior decisions, no "best practice" rewrites
@@ -102,6 +112,17 @@ app's identifier.
 - **SuggestionActivity** hosts the suggestion entry form via ViewPager2 +
   `CustomFragmentAdapter` + `TabLayoutMediator`, with
   `FixedSuggestionFragment`/`FloatingSuggestionFragment` as the two pages.
+- **FAQ:** `FaqActivity` (drawer entry `menu_drawer_faq`) renders `FaqCatalog.getEntries()` through
+  `FaqAdapter`. Entries are `FaqEntry` pairs of `@StringRes` question/answer, so the content ships
+  with the app and follows the `values-pl/` pipeline — it is deliberately **not** served from
+  api.ferrio.app: the screen must work offline and the AI disclosure must never depend on a
+  successful network call. `FaqCatalog` is the only place that knows where the entries come from.
+  Answers are authored as HTML inside `<![CDATA[…]]>` and rendered with `HtmlCompat.fromHtml`.
+- **AI-generated content:** `Holiday.aiGenerated` (API field `ai_generated`) drives the
+  `AI-generated` badge on `HolidayActivity` and on the holiday share card. The badge is the
+  transparency disclosure required by Art. 50(4) of Regulation (EU) 2024/1689, so it must stay
+  visible next to the description rather than being hidden behind the help dialog, and it must
+  travel with any surface that publishes the description outside the app.
 - All adapters use `ListAdapter` with `DiffUtil.ItemCallback`. View Binding is enabled
   (`buildFeatures.viewBinding = true`); use generated `*Binding` classes (e.g.,
   `ActivityMainBinding`, `FragmentMonthBinding`) — do not introduce new `findViewById` calls.
@@ -135,7 +156,8 @@ app's identifier.
 ## Database
 
 Room v2.8.4 with single entity `Holiday` (indexed on month+day). Destructive migration fallback for
-versions 1–3, currently at version 4.
+versions 1–3, real `Migration` for 4→5 (adds `aiGenerated`), currently at version 5. The database
+is built without a `SQLiteDriver`, so migrations override `migrate(SupportSQLiteDatabase)`.
 
 ## Authentication
 

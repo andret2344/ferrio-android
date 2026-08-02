@@ -18,7 +18,7 @@ public class HolidayDayTest {
 	}
 
 	private static Holiday holiday(final String id, final boolean usual, final boolean adult) {
-		return new Holiday(id, 1, 1, "name-" + id, "desc", usual, "PL", null, adult);
+		return new Holiday(id, 1, 1, "name-" + id, "desc", usual, "PL", null, adult, false);
 	}
 
 	@Test

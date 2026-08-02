@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -24,6 +26,16 @@ import eu.andret.kalendarzswiatnietypowych.util.ApiClient;
 import eu.andret.kalendarzswiatnietypowych.util.LoadState;
 
 public class AppRepository {
+	// v4 -> v5 adds the aiGenerated flag. The column defaults to 0 so the cached rows stay usable
+	// offline; the real value arrives with the next HolidayRemoteMediator.refresh(). The database
+	// is built without a SQLiteDriver, so Room runs migrations in SupportSQLiteDatabase mode.
+	private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+		@Override
+		public void migrate(@NonNull final SupportSQLiteDatabase database) {
+			database.execSQL("ALTER TABLE holiday ADD COLUMN aiGenerated INTEGER NOT NULL DEFAULT 0");
+		}
+	};
+
 	private final AppDao appDao;
 	private final LiveData<Map<Integer, HolidayDay>> holidayDayMap;
 	private final LiveData<List<HolidayDay>> allHolidayDays;
@@ -37,6 +49,7 @@ public class AppRepository {
 		// tables MUST be accompanied by a real Migration.
 		final AppDatabase database = Room.databaseBuilder(application, AppDatabase.class, "ferrio")
 				.fallbackToDestructiveMigrationFrom(true, 1, 2, 3)
+				.addMigrations(MIGRATION_4_5)
 				.enableMultiInstanceInvalidation()
 				.build();
 		appDao = database.appDao();

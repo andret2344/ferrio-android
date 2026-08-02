@@ -22,10 +22,11 @@ public class Holiday implements Comparable<Holiday> {
 	private final String country;
 	private final String url;
 	private final boolean matureContent;
+	private final boolean aiGenerated;
 
 	public Holiday(@NonNull final String id, final int day, final int month, final String name,
 			final String description, final boolean usual, final String country,
-			final String url, final boolean matureContent) {
+			final String url, final boolean matureContent, final boolean aiGenerated) {
 		this.id = id;
 		this.day = day;
 		this.month = month;
@@ -35,6 +36,7 @@ public class Holiday implements Comparable<Holiday> {
 		this.country = country;
 		this.url = url;
 		this.matureContent = matureContent;
+		this.aiGenerated = aiGenerated;
 	}
 
 	@NonNull
@@ -74,7 +76,17 @@ public class Holiday implements Comparable<Holiday> {
 		if (country == null) {
 			return null;
 		}
-		return new Locale("", country).getDisplayCountry(Locale.getDefault());
+		// Locale.Builder replaces the deprecated Locale(String, String) constructor, but it rejects
+		// anything that is not a well-formed region, so guard before building.
+		if (country.length() != 2
+				|| !Character.isLetter(country.charAt(0))
+				|| !Character.isLetter(country.charAt(1))) {
+			return "";
+		}
+		return new Locale.Builder()
+				.setRegion(country)
+				.build()
+				.getDisplayCountry(Locale.getDefault());
 	}
 
 	@Nullable
@@ -84,6 +96,10 @@ public class Holiday implements Comparable<Holiday> {
 
 	public boolean isMatureContent() {
 		return matureContent;
+	}
+
+	public boolean isAiGenerated() {
+		return aiGenerated;
 	}
 
 	public boolean isFloating() {
@@ -111,6 +127,7 @@ public class Holiday implements Comparable<Holiday> {
 				&& month == holiday.month
 				&& usual == holiday.usual
 				&& matureContent == holiday.matureContent
+				&& aiGenerated == holiday.aiGenerated
 				&& Objects.equals(id, holiday.id)
 				&& Objects.equals(name, holiday.name)
 				&& Objects.equals(description, holiday.description)
@@ -120,7 +137,8 @@ public class Holiday implements Comparable<Holiday> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, day, month, name, description, usual, country, url, matureContent);
+		return Objects.hash(id, day, month, name, description, usual, country, url, matureContent,
+				aiGenerated);
 	}
 
 	@NonNull
@@ -136,6 +154,7 @@ public class Holiday implements Comparable<Holiday> {
 				", country='" + country + '\'' +
 				", url='" + url + '\'' +
 				", matureContent=" + matureContent +
+				", aiGenerated=" + aiGenerated +
 				'}';
 	}
 

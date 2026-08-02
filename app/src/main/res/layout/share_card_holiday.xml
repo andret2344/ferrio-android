@@ -38,6 +38,20 @@
 		android:textSize="15sp"
 		android:visibility="gone" />
 
+	<TextView
+		android:id="@+id/share_card_ai_badge"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:drawablePadding="6dp"
+		android:gravity="center_vertical"
+		android:text="@string/ai_content"
+		android:textColor="@color/share_card_text_muted"
+		android:textSize="12sp"
+		android:visibility="gone"
+		app:drawableStartCompat="@drawable/baseline_auto_awesome_24"
+		app:drawableTint="@color/share_card_text_muted" />
+
 	<Space
 		android:layout_width="match_parent"
 		android:layout_height="0dp"

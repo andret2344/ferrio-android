@@ -46,6 +46,11 @@ public final class ShareCardRenderer {
 		if (!holiday.getDescription().isBlank()) {
 			binding.shareCardDescription.setText(holiday.getDescription());
 			binding.shareCardDescription.setVisibility(View.VISIBLE);
+			// The card leaves the app, so the AI disclosure has to travel with the generated text.
+			// The badge is tied to the description because that is the only AI-written part shown.
+			if (holiday.isAiGenerated()) {
+				binding.shareCardAiBadge.setVisibility(View.VISIBLE);
+			}
 		}
 
 		final Bitmap bitmap = renderViewToBitmap(binding.getRoot());
